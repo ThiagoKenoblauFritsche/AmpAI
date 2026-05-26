@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Curto-Circuito Industrial - IEC 60909</title>
+    <!-- Google Fonts: Inter and JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #f8fafc; /* Slate 50 (Ultra-light industrial gray background) */
+            --bg-secondary: #ffffff; /* Pure white cards */
+            --bg-tertiary: #f1f5f9; /* Slate 100 (Sleek inputs) */
+            --accent: #f59e0b; /* Professional Electric Amber */
+            --accent-hover: #d97706;
+            --accent-light: rgba(245, 158, 11, 0.08);
+            --text-primary: #0f172a; /* Slate 900 (High contrast technical text) */
+            --text-secondary: #475569; /* Slate 600 */
+            --text-muted: #64748b; /* Slate 500 */
+            --border: #e2e8f0; /* Slate 200 (Extremely thin borders) */
+            --success: #10b981;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Container */
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.25rem;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            background: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-secondary);
+        }
+
+        h1 {
+            font-size: 1.4rem;
+            font-weight: 750;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .header-meta {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .norm-badge {
+            background: var(--accent-light);
+            color: var(--accent-hover);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 750;
+            font-size: 0.7rem;
+        }
+
+        /* Main Grid Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar / Inputs Panel */
+        .sidebar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 1.5rem;
+            max-height: calc(100vh - 3rem);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 1rem;
+            font-weight: 750;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .input-group-title {
+            font-size: 0.75rem;
+            font-weight: 750;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 1.25rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .form-control {
+            margin-bottom: 0.75rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 0.55rem 0.75rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            transition: var(--transition);
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .unit-badge {
+            position: absolute;
+            right: 10px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        /* Removendo as setas de incremento dos inputs numéricos */
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Dicionário de Símbolos */
+        .symbols-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+            font-size: 0.72rem;
+        }
+
+        .symbol-item {
+            display: grid;
+            grid-template-columns: 65px 1fr;
+            gap: 0.5rem;
+            padding: 0.25rem 0.4rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            align-items: center;
+        }
+
+        .symbol-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+            padding: 0.05rem 0.25rem;
+            border-radius: 3px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .symbol-def {
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        .toggle-btn-group {
+            display: flex;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 2px;
+            margin-bottom: 0.75rem;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .toggle-btn.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Dashboard Right Area */
+        .dashboard {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Quick Results / Data-Dense KPI Cards */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--border);
+        }
+
+        .result-card.primary::before { background: var(--accent); }
+        .result-card.success::before { background: var(--success); }
+        .result-card.danger::before { background: var(--danger); }
+        .result-card.info::before { background: var(--info); }
+
+        .result-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .result-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        .result-unit {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-left: 0.15rem;
+        }
+
+        .result-desc {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
+        }
+
+        /* Tabs Navigation */
+        .tabs-header {
+            display: flex;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.25rem;
+            gap: 0.25rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        .tab-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+        }
+
+        /* Tab Content Card */
+        .tab-content-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--card-shadow);
+            min-height: 380px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+            animation: fadeIn 0.15s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Dynamic SVG diagram block */
+        .diagram-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 0.75rem;
+        }
+
+        /* Accordion Memorial Section */
+        .accordion-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .accordion-header {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: none;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 750;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-primary);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s;
+            padding: 0 1.5rem;
+        }
+
+        .accordion-content.open {
+            max-height: 4000px;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .chevron-icon {
+            transition: transform 0.2s ease;
+            color: var(--text-muted);
+        }
+
+        .chevron-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .memorial-step {
+            margin-bottom: 1.5rem;
+            background: var(--bg-primary);
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 0.4rem;
+        }
+
+        .step-num {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 700;
+            font-size: 0.7rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .math-block {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-secondary);
+            padding: 0.85rem;
+            border-radius: 6px;
+            border-left: 3px solid var(--text-primary);
+            margin: 0.75rem 0;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        .math-line {
+            display: block;
+            margin-bottom: 0.35rem;
+        }
+
+        .math-line:last-child {
+            margin-bottom: 0;
+        }
+
+        .math-result {
+            color: var(--accent-hover);
+            font-weight: 700;
+        }
+
+        /* Tech Tables */
+        table.tech-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+            font-size: 0.85rem;
+        }
+
+        table.tech-table th, table.tech-table td {
+            padding: 0.6rem 0.85rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        table.tech-table th {
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+        }
+
+        table.tech-table td {
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border: none;
+            padding: 0.55rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-action:hover {
+            background: #1e293b;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+            transform: translateY(-1px);
+        }
+
+        .actions-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        /* Alert and constraints banner */
+        .alert-banner {
+            display: none;
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .alert-banner.active {
+            display: flex;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        /* A4 Report Styles (Print View) */
+        @media print {
+            body {
+                background: #fff !important;
+                color: #000 !important;
+                font-size: 10pt;
+            }
+            .app-container {
+                max-width: 100%;
+                padding: 0;
+            }
+            .sidebar, header, .tabs-header, .actions-bar, .preset-grid, .toggle-btn-group, .btn-action, .chart-card {
+                display: none !important;
+            }
+            .main-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .tab-content-card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                background: #fff !important;
+            }
+            .tab-pane {
+                display: none !important;
+            }
+            .tab-pane#tab-memorial {
+                display: block !important;
+            }
+            .accordion-content {
+                max-height: 4000px !important;
+                padding: 1.5rem !important;
+                border-top: 1px solid #000 !important;
+            }
+            .result-card {
+                background: #f9fafb !important;
+                color: #000 !important;
+                border: 1px solid #d1d5db !important;
+                box-shadow: none !important;
+                page-break-inside: avoid;
+            }
+            .result-value {
+                color: #000 !important;
+            }
+            .math-block {
+                background: #f9fafb !important;
+                border: 1px solid #d1d5db !important;
+                border-left: 4px solid #000 !important;
+                color: #000 !important;
+            }
+            .math-result {
+                color: #000 !important;
+            }
+            .memorial-step {
+                border: 1px solid #d1d5db !important;
+                background: #fff !important;
+                page-break-inside: avoid;
+            }
+            .tech-table th {
+                background: #f3f4f6 !important;
+                color: #000 !important;
+                border-bottom: 2px solid #000 !important;
+            }
+            .tech-table td {
+                color: #000 !important;
+                border-bottom: 1px solid #e5e7eb !important;
+            }
+            .diagram-container {
+                border: 1px solid #d1d5db !important;
+                background: #fff !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <div class="logo-icon">
+                    <i data-lucide="activity" style="width: 20px; height: 20px;"></i>
+                </div>
+                <div>
+                    <h1>Calculadora de Curto-Circuito Industrial</h1>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Memorial de Cálculo sob a Norma IEC 60909</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <span class="norm-badge">IEC 60909-0</span>
+                <span>Método das Impedâncias Percentuais</span>
+            </div>
+        </header>
+
+        <!-- Main Layout Grid -->
+        <div class="main-layout">
+            <!-- Sidebar (Inputs) -->
+            <aside class="sidebar">
+                <div class="sidebar-title">
+                    <i data-lucide="sliders" style="color: var(--text-primary); width: 16px; height: 16px;"></i>
+                    Parâmetros do Sistema
+                </div>
+
+                <!-- Alert Banner -->
+                <div class="alert-banner" id="alert-error">
+                    <i data-lucide="alert-circle" style="flex-shrink: 0; color: var(--danger); width: 14px; height: 14px;"></i>
+                    <div id="alert-error-msg">Erro físico nos parâmetros.</div>
+                </div>
+
+                <!-- 1. Rede Upstream -->
+                <div class="input-group-title">
+                    <i data-lucide="globe" style="width: 12px; height: 12px;"></i>
+                    1. Rede de Alimentação
+                </div>
+
+                <div class="form-control">
+                    <label>Fator de Tensão da Rede (c)</label>
+                    <select id="input-c" onchange="calculate()">
+                        <option value="1.05">c = 1.05 (Mínimo BT)</option>
+                        <option value="1.10">c = 1.10 (Máximo BT / MT)</option>
+                        <option value="1.00">c = 1.00 (Fator Unitário)</option>
+                    </select>
+                </div>
+
+                <div class="form-control">
+                    <label>Nível da Rede Upstream</label>
+                    <div class="toggle-btn-group">
+                        <button class="toggle-btn active" id="toggle-scc" onclick="setGridInputMode('scc')">Potência (Scc)</button>
+                        <button class="toggle-btn" id="toggle-icc" onclick="setGridInputMode('icc')">Corrente (Icc)</button>
+                    </div>
+                </div>
+
+                <div class="form-control" id="group-scc">
+                    <label>Potência de Curto-Circuito (Scc)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-scc" value="500" min="1" step="50" oninput="calculate()">
+                        <span class="unit-badge">MVA</span>
+                    </div>
+                </div>
+
+                <div class="form-control" id="group-icc" style="display: none;">
+                    <label>Corrente de Curto-Circuito (Icc)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-icc" value="20" min="0.1" step="0.5" oninput="calculate()">
+                        <span class="unit-badge">kA</span>
+                    </div>
+                </div>
+
+                <!-- 2. Transformador -->
+                <div class="input-group-title">
+                    <i data-lucide="box" style="width: 12px; height: 12px;"></i>
+                    2. Transformador
+                </div>
+
+
+
+                <div class="form-control">
+                    <label>Potência Nominal (SnT)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-snt" value="1500" min="10" step="50" oninput="calculate()">
+                        <span class="unit-badge">kVA</span>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Tensão Secundária Nominal (UnT)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-unt" value="380" min="110" max="36000" step="10" oninput="calculate()">
+                        <span class="unit-badge">V</span>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Impedância Percentual (Z% ou uk%)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-zk" value="6.0" min="1" max="25" step="0.1" oninput="calculate()">
+                        <span class="unit-badge">%</span>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Perdas no Cobre (Pcu)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-pcu" value="18" min="0.1" step="0.5" oninput="calculate()">
+                        <span class="unit-badge">kW</span>
+                    </div>
+                </div>
+
+                <!-- 3. Grupo de Ligação e Neutro -->
+                <div class="input-group-title">
+                    <i data-lucide="git-branch" style="width: 12px; height: 12px;"></i>
+                    3. Ligação e Neutro
+                </div>
+
+                <div class="form-control">
+                    <label>Grupo de Ligação (Sequência Zero)</label>
+                    <select id="input-vector-group" onchange="calculate()">
+                        <option value="Dyn11">Dyn11 (Estrela Aterrado / Delta)</option>
+                        <option value="Yzn5">Yzn5 (Estrela-Zigzag Aterrado)</option>
+                        <option value="Ynyn">Ynyn0 (Estrela-Estrela Aterrado)</option>
+                        <option value="Custom">Customizado (R0/R1 e X0/X1)</option>
+                    </select>
+                </div>
+
+                <div id="custom-vector-group-inputs" style="display: none; background: var(--bg-primary); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border);">
+                    <div class="form-control">
+                        <label>Relação R0/R1</label>
+                        <input type="number" id="input-r0r1" value="1.0" min="0.1" max="20" step="0.1" oninput="calculate()">
+                    </div>
+                    <div class="form-control">
+                        <label>Relação X0/X1</label>
+                        <input type="number" id="input-x0x1" value="0.95" min="0.05" max="20" step="0.05" oninput="calculate()">
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Resistência de Aterramento (RN)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-rn" value="0.0" min="0" step="0.01" oninput="calculate()">
+                        <span class="unit-badge">Ω</span>
+                    </div>
+                </div>
+
+                <div class="form-control">
+                    <label>Reatância de Aterramento (XN)</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="input-xn" value="0.0" min="0" step="0.01" oninput="calculate()">
+                        <span class="unit-badge">Ω</span>
+                    </div>
+                </div>
+
+                <!-- 4. Dicionário de Símbolos -->
+                <div class="input-group-title" style="margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem;">
+                    <i data-lucide="book-open" style="width: 12px; height: 12px;"></i>
+                    4. Dicionário de Símbolos
+                </div>
+                <div class="symbols-legend">
+                    <div class="symbol-item">
+                        <span class="symbol-code">Sn</span>
+                        <span class="symbol-def">Potência Nominal do Transformador (kVA)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Vn</span>
+                        <span class="symbol-def">Tensão de Linha Secundária (V)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Z%</span>
+                        <span class="symbol-def">Impedância de Curto-Circuito (%)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Pcu</span>
+                        <span class="symbol-def">Perdas no Cobre do Transformador (kW)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Scc</span>
+                        <span class="symbol-def">Potência de Curto-Circuito da Rede Upstream (MVA)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Icc</span>
+                        <span class="symbol-def">Corrente de Curto-Circuito da Rede Upstream (kA)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">c</span>
+                        <span class="symbol-def">Fator de Tensão de Rede (norma IEC 60909)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">ZQ</span>
+                        <span class="symbol-def">Impedância da Rede Upstream referida ao secundário (Ω)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">ZT</span>
+                        <span class="symbol-def">Impedância Interna do Transformador (Ω)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">RN / XN</span>
+                        <span class="symbol-def">Resistência e Reatância de Aterramento do Neutro (Ω)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Z(1)</span>
+                        <span class="symbol-def">Impedância Equivalente de Sequência Positiva (Ω)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Z(0)</span>
+                        <span class="symbol-def">Impedância Equivalente de Sequência Zero (Ω)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">In</span>
+                        <span class="symbol-def">Corrente Nominal Secundária do Trafo (A)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">Ik''</span>
+                        <span class="symbol-def">Corrente de Curto-Circuito Inicial Simétrica (kA)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">ip</span>
+                        <span class="symbol-def">Corrente de Pico Assimétrica Inicial (kA)</span>
+                    </div>
+                    <div class="symbol-item">
+                        <span class="symbol-code">κ</span>
+                        <span class="symbol-def">Fator de Crista de Pico Assemelhado (IEC 60909)</span>
+                    </div>
+                </div>
+
+            </aside>
+
+            <!-- Dashboard Content Area -->
+            <main class="dashboard">
+                <!-- Data-Dense KPI Summary Cards -->
+                <div class="results-grid">
+                    <div class="result-card primary">
+                        <div class="result-title">
+                            Corrente Nominal (In)
+                            <i data-lucide="shield" style="color: var(--accent); width: 14px; height: 14px;"></i>
+                        </div>
+                        <div class="result-value" id="val-int">-- <span class="result-unit">A</span></div>
+                        <div class="result-desc">Corrente nominal em plena carga secundária.</div>
+                    </div>
+
+                    <div class="result-card danger">
+                        <div class="result-title">
+                            Curto Trifásico (I''k3)
+                            <i data-lucide="zap" style="color: var(--danger); width: 14px; height: 14px;"></i>
+                        </div>
+                        <div class="result-value" id="val-ik3">-- <span class="result-unit">kA</span></div>
+                        <div class="result-desc">Falha trifásica simétrica inicial máxima.</div>
+                    </div>
+
+                    <div class="result-card success">
+                        <div class="result-title">
+                            Curto Bifásico (I''k2)
+                            <i data-lucide="zap-off" style="color: var(--success); width: 14px; height: 14px;"></i>
+                        </div>
+                        <div class="result-value" id="val-ik2">-- <span class="result-unit">kA</span></div>
+                        <div class="result-desc">Curto bifásico livre de terra.</div>
+                    </div>
+
+                    <div class="result-card info">
+                        <div class="result-title">
+                            Curto Monofásico (I''k1)
+                            <i data-lucide="alert-triangle" style="color: var(--info); width: 14px; height: 14px;"></i>
+                        </div>
+                        <div class="result-value" id="val-ik1">-- <span class="result-unit">kA</span></div>
+                        <div class="result-desc">Fase-terra. Altamente dependente do neutro.</div>
+                    </div>
+                </div>
+
+                <!-- Tabs Navigation -->
+                <div class="tabs-header">
+                    <button class="tab-btn active" onclick="switchTab(event, 'tab-results')">
+                        <i data-lucide="table" style="width: 14px; height: 14px;"></i> Impedâncias e Dados
+                    </button>
+                    <button class="tab-btn" onclick="switchTab(event, 'tab-diagram')">
+                        <i data-lucide="git-commit" style="width: 14px; height: 14px;"></i> Diagrama Unifilar
+                    </button>
+                    <button class="tab-btn" onclick="switchTab(event, 'tab-charts')">
+                        <i data-lucide="activity" style="width: 14px; height: 14px;"></i> Curvas Analíticas
+                    </button>
+                </div>
+
+                <!-- Tab Contents Card -->
+                <div class="tab-content-card">
+                    <!-- Tab 1: Results Table -->
+                    <div class="tab-pane active" id="tab-results">
+                        <table class="tech-table">
+                            <thead>
+                                <tr>
+                                    <th>Parâmetro do Sistema</th>
+                                    <th>Símbolo</th>
+                                    <th>Positivo (+) [Ω]</th>
+                                    <th>Zero (0) [Ω]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Resistência da Rede Upstream</td>
+                                    <td>RQ</td>
+                                    <td id="tbl-rq-1">--</td>
+                                    <td>N/A (Rede Isolada)</td>
+                                </tr>
+                                <tr>
+                                    <td>Reatância da Rede Upstream</td>
+                                    <td>XQ</td>
+                                    <td id="tbl-xq-1">--</td>
+                                    <td>N/A (Rede Isolada)</td>
+                                </tr>
+                                <tr>
+                                    <td>Resistência Interna do Transformador</td>
+                                    <td>RT</td>
+                                    <td id="tbl-rt-1">--</td>
+                                    <td id="tbl-rt-0">--</td>
+                                </tr>
+                                <tr>
+                                    <td>Reatância Interna do Transformador</td>
+                                    <td>XT</td>
+                                    <td id="tbl-xt-1">--</td>
+                                    <td id="tbl-xt-0">--</td>
+                                </tr>
+                                <tr>
+                                    <td>Impedância de Aterramento do Neutro</td>
+                                    <td>3ZN</td>
+                                    <td>N/A</td>
+                                    <td id="tbl-zn-0">--</td>
+                                </tr>
+                                <tr style="border-top: 1.5px solid var(--border); font-weight: 700;">
+                                    <td>Resistência Equivalente no Ponto de Falha</td>
+                                    <td>R_eq</td>
+                                    <td id="tbl-req-1">--</td>
+                                    <td id="tbl-req-0">--</td>
+                                </tr>
+                                <tr style="font-weight: 700;">
+                                    <td>Reatância Equivalente no Ponto de Falha</td>
+                                    <td>X_eq</td>
+                                    <td id="tbl-xeq-1">--</td>
+                                    <td id="tbl-xeq-0">--</td>
+                                </tr>
+                                <tr style="font-weight: 700; border-bottom: 2px solid var(--text-primary);">
+                                    <td>Impedância Equivalente Total</td>
+                                    <td>Z_eq</td>
+                                    <td id="tbl-zeq-1" style="color: var(--accent-hover);">--</td>
+                                    <td id="tbl-zeq-0" style="color: var(--accent-hover);">--</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <span style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Corrente de Crista Assimétrica (ip)</span>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);">Corrente máxima de pico mecânico no primeiro semi-ciclo de curto-circuito.</p>
+                            </div>
+                            <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700;" id="val-ip3-aux">-- kA</div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Dynamic Diagram -->
+                    <div class="tab-pane" id="tab-diagram">
+                        <div class="diagram-container">
+                            <svg width="600" height="340" viewBox="0 0 600 340" style="max-width: 100%; height: auto;">
+                                <!-- Grid Upstream -->
+                                <rect x="40" y="40" width="110" height="50" rx="4" fill="var(--bg-secondary)" stroke="var(--border)" stroke-width="1.5"/>
+                                <text x="95" y="62" fill="var(--text-primary)" font-weight="700" font-size="11" text-anchor="middle">Rede Upstream</text>
+                                <text x="95" y="80" id="diag-scc" fill="var(--text-muted)" font-size="9" text-anchor="middle">Scc = -- MVA</text>
+
+                                <!-- Connection Line -->
+                                <line x1="150" y1="65" x2="240" y2="65" stroke="var(--text-muted)" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+                                <!-- Transformer Symbols -->
+                                <circle cx="260" cy="65" r="18" fill="none" stroke="var(--text-primary)" stroke-width="2"/>
+                                <circle cx="282" cy="65" r="18" fill="none" stroke="var(--accent)" stroke-width="2"/>
+                                <text x="271" y="35" fill="var(--text-primary)" font-weight="700" font-size="10" text-anchor="middle">Trafo Industrial</text>
+                                <text x="271" y="98" id="diag-transformer-info" fill="var(--text-muted)" font-size="9" text-anchor="middle">-- kVA</text>
+
+                                <!-- Secondary Busbar -->
+                                <line x1="330" y1="65" x2="480" y2="65" stroke="var(--text-primary)" stroke-width="3"/>
+                                <text x="405" y="52" fill="var(--text-primary)" font-weight="700" font-size="9" text-anchor="middle">BORNES SECUNDÁRIOS</text>
+                                <text x="405" y="80" id="diag-unt" fill="var(--text-secondary)" font-weight="700" font-size="9" text-anchor="middle">-- V</text>
+
+                                <!-- Point of Fault Indicator -->
+                                <path d="M 405,105 L 398,125 L 412,125 Z" fill="var(--danger)"/>
+                                <circle cx="405" cy="120" r="8" fill="none" stroke="var(--danger)" stroke-width="1.5"/>
+                                <text x="405" y="145" fill="var(--danger)" font-weight="700" font-size="10" text-anchor="middle">PONTO DE FALHA (F)</text>
+
+                                <!-- Calculations block in diagram -->
+                                <rect x="300" y="170" width="260" height="130" rx="6" fill="var(--bg-secondary)" stroke="var(--border)" stroke-width="1"/>
+                                <text x="430" y="190" fill="var(--text-primary)" font-weight="700" font-size="10" text-anchor="middle">Correntes Calculadas</text>
+                                <line x1="320" y1="198" x2="540" y2="198" stroke="var(--border)" stroke-width="1"/>
+                                
+                                <text x="320" y="220" fill="var(--text-secondary)" font-size="10">Curto Trifásico (I''k3):</text>
+                                <text x="540" y="220" id="diag-ik3" fill="var(--text-primary)" font-weight="700" font-size="10" text-anchor="end">-- kA</text>
+
+                                <text x="320" y="245" fill="var(--text-secondary)" font-size="10">Curto Bifásico (I''k2):</text>
+                                <text x="540" y="245" id="diag-ik2" fill="var(--text-primary)" font-weight="700" font-size="10" text-anchor="end">-- kA</text>
+
+                                <text x="320" y="270" fill="var(--text-secondary)" font-size="10">Curto Monofásico (I''k1):</text>
+                                <text x="540" y="270" id="diag-ik1" fill="var(--danger)" font-weight="700" font-size="10" text-anchor="end">-- kA</text>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Line charts -->
+                    <div class="tab-pane" id="tab-charts">
+                        <div style="position: relative; height: 320px; width: 100%;">
+                            <canvas id="sensitivity-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Accordion Memorial Section -->
+                <div class="accordion-item">
+                    <button class="accordion-header" onclick="toggleAccordion()">
+                        <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                            <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
+                            Memorial de Cálculo Completo (Norma IEC 60909)
+                        </span>
+                        <i data-lucide="chevron-down" id="accordion-chevron" class="chevron-icon" style="width: 18px; height: 18px;"></i>
+                    </button>
+                    <div class="accordion-content" id="accordion-memorial-content">
+                        <!-- Step 1: Base Parameters -->
+                        <div class="memorial-step">
+                            <div class="step-header">
+                                <span class="step-num">Passo 1</span>
+                                <span class="step-title">Corrente Nominal Secundária do Enrolamento</span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Calculada com base na potência aparente nominal ($S_{nT}$) e tensão nominal secundária entre fases ($U_{nT}$):</p>
+                            <div class="math-block">
+                                <div class="math-line">InT = SnT / (√3 · UnT)</div>
+                                <div class="math-line" id="m-calc-int">InT = -- A</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Grid Upstream -->
+                        <div class="memorial-step">
+                            <div class="step-header">
+                                <span class="step-num">Passo 2</span>
+                                <span class="step-title">Impedância Equivalente da Rede de Média Tensão</span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">A reatância é obtida a partir da potência Scc de curto-circuito de referência e tensão nominal, assumindo relação $R/X = 0.1$:</p>
+                            <div class="math-block">
+                                <div class="math-line">ZQ = (c · UnT²) / Scc</div>
+                                <div class="math-line" id="m-calc-zq">ZQ = -- Ω</div>
+                                <div class="math-line">XQ = 0.995 · ZQ = <span id="m-val-xq">--</span> Ω</div>
+                                <div class="math-line">RQ = 0.1 · XQ = <span id="m-val-rq">--</span> Ω</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Transformer internal impedances -->
+                        <div class="memorial-step">
+                            <div class="step-header">
+                                <span class="step-num">Passo 3</span>
+                                <span class="step-title">Impedâncias de Sequência Positiva e Zero do Transformador</span>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Mapeada via reatância de curto-circuito (Z%) e perdas de Joule no cobre em regime de carga nominal ($P_{cu}$):</p>
+                            <div class="math-block">
+                                <div class="math-line">ZT = (Z% / 100) · (UnT² / SnT)</div>
+                                <div class="math-line" id="m-calc-zt">ZT = -- Ω</div>
+                                <div class="math-line">RT = Pcu · UnT² / SnT²</div>
+                                <div class="math-line" id="m-calc-rt">RT = -- Ω</div>
+                                <div class="math-line">XT = √(ZT² - RT²) = <span id="m-val-xt">--</span> Ω</div>
+                            </div>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">A impedância de sequência zero ($Z_{(0)T}$) é estimada de acordo com o grupo de ligação do enrolamento secundário (<strong id="m-vector-group">Dyn11</strong>):</p>
+                            <div class="math-block">
+                                <div class="math-line" id="m-calc-z0t-factor">Fatores Dyn11</div>
+                                <div class="math-line" id="m-calc-z0t">R0T = -- Ω | X0T = -- Ω</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Total impedance loop -->
+                        <div class="memorial-step">
+                            <div class="step-header">
+                                <span class="step-num">Passo 4</span>
+                                <span class="step-title">Somatório de Impedâncias Equivalentes de Loop</span>
+                            </div>
+                            <div class="math-block">
+                                <div class="math-line">R(1) = RQ + RT = <span id="m-val-req1">--</span> Ω</div>
+                                <div class="math-line">X(1) = XQ + XT = <span id="m-val-xeq1">--</span> Ω</div>
+                                <div class="math-line">Z(1) = √(R(1)² + X(1)²) = <span id="m-val-zeq1">--</span> Ω</div>
+                                <div class="math-line">R(0) = R0T + 3·RN = <span id="m-val-req0">--</span> Ω</div>
+                                <div class="math-line">X(0) = X0T + 3·XN = <span id="m-val-xeq0">--</span> Ω</div>
+                                <div class="math-line">Z(0) = √(R(0)² + X(0)²) = <span id="m-val-zeq0">--</span> Ω</div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Short circuit calculations under IEC 60909 -->
+                        <div class="memorial-step">
+                            <div class="step-header">
+                                <span class="step-num">Passo 5</span>
+                                <span class="step-title">Resoluções Analíticas Finais (IEC 60909)</span>
+                            </div>
+                            <div class="math-block">
+                                <div class="math-line">1. Curto-Circuito Trifásico Simétrico Inicial (I''k3):</div>
+                                <div class="math-line">I''k3 = c · UnT / (√3 · Z(1))</div>
+                                <div class="math-line" id="m-calc-ik3" class="math-result">I''k3 = -- kA</div>
+                                <br>
+                                <div class="math-line">2. Curto-Circuito Bifásico Livre de Terra (I''k2):</div>
+                                <div class="math-line">I''k2 = √3/2 · I''k3</div>
+                                <div class="math-line" id="m-calc-ik2" class="math-result">I''k2 = -- kA</div>
+                                <br>
+                                <div class="math-line">3. Curto-Circuito Monofásico Terra Inicial (I''k1):</div>
+                                <div class="math-line">I''k1 = (√3 · c · UnT) / |2·Z(1) + Z(0)|</div>
+                                <div class="math-line" id="m-calc-ik1" class="math-result">I''k1 = -- kA</div>
+                                <br>
+                                <div class="math-line">4. Fator e Corrente de Pico Assimétrica (ip3):</div>
+                                <div class="math-line">κ = 1.02 + 0.98 · e^(-3 · R(1)/X(1)) = <span id="m-val-kappa">--</span></div>
+                                <div class="math-line">ip3 = κ · √2 · I''k3</div>
+                                <div class="math-line" id="m-calc-ip3" class="math-result">ip3 = -- kA</div>
+                            </div>
+                        </div>
+
+                        <!-- PDF Print Button inside Accordion -->
+                        <div class="actions-bar" style="margin-top: 1rem;">
+                            <button class="btn-action btn-secondary" onclick="window.print()">
+                                <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Imprimir Memorial Técnico
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Calculations Script -->
+    <script>
+        // Lucide Icons initialization
+        lucide.createIcons();
+
+        let currentGridMode = 'scc';
+        let activeTabId = 'tab-results';
+        let sensitivityChart = null;
+
+        function setGridInputMode(mode) {
+            currentGridMode = mode;
+            document.getElementById('toggle-scc').classList.toggle('active', mode === 'scc');
+            document.getElementById('toggle-icc').classList.toggle('active', mode === 'icc');
+
+            document.getElementById('group-scc').style.display = mode === 'scc' ? 'block' : 'none';
+            document.getElementById('group-icc').style.display = mode === 'icc' ? 'block' : 'none';
+            calculate();
+        }
+
+        function toggleAccordion() {
+            const content = document.getElementById('accordion-memorial-content');
+            const chevron = document.getElementById('accordion-chevron');
+            content.classList.toggle('open');
+            chevron.classList.toggle('rotated');
+        }
+
+
+
+        function switchTab(event, tabId) {
+            activeTabId = tabId;
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => pane.classList.remove('active'));
+
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+
+            if (event) {
+                event.currentTarget.classList.add('active');
+            } else {
+                tabButtons.forEach(btn => {
+                    if (btn.getAttribute('onclick').includes(tabId)) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            if (tabId === 'tab-charts') {
+                setTimeout(renderChart, 100);
+            }
+        }
+
+        function calculate() {
+            const alertBox = document.getElementById('alert-error');
+            alertBox.classList.remove('active');
+
+            try {
+                const c = parseFloat(document.getElementById('input-c').value);
+                const SnT = parseFloat(document.getElementById('input-snt').value) * 1000;
+                const UnT = parseFloat(document.getElementById('input-unt').value);
+                const Zk = parseFloat(document.getElementById('input-zk').value);
+                const Pcu = parseFloat(document.getElementById('input-pcu').value) * 1000;
+                const rn = parseFloat(document.getElementById('input-rn').value);
+                const xn = parseFloat(document.getElementById('input-xn').value);
+                const vectorGroup = document.getElementById('input-vector-group').value;
+
+                document.getElementById('custom-vector-group-inputs').style.display = vectorGroup === 'Custom' ? 'block' : 'none';
+
+                if (isNaN(SnT) || SnT <= 0) throw new Error("A potência nominal SnT deve ser superior a zero.");
+                if (isNaN(UnT) || UnT <= 0) throw new Error("A tensão nominal secundária UnT deve ser superior a zero.");
+                if (isNaN(Zk) || Zk <= 0 || Zk > 30) throw new Error("A impedância Z% deve estar entre 1% e 30%.");
+                if (isNaN(Pcu) || Pcu < 0) throw new Error("As perdas no cobre Pcu não podem ser negativas.");
+                if (isNaN(rn) || rn < 0 || isNaN(xn) || xn < 0) throw new Error("Impedâncias de aterramento de neutro inválidas.");
+
+                // 1. Calculate base nominal current
+                const InT = SnT / (Math.sqrt(3) * UnT);
+
+                // 2. Transformer positive-sequence impedance
+                const Z_T_mod = (Zk / 100) * (Math.pow(UnT, 2) / SnT);
+                const R_T = Pcu * (Math.pow(UnT, 2) / Math.pow(SnT, 2));
+
+                if (R_T > Z_T_mod) {
+                    throw new Error(`Inconsistência física: Perdas no cobre Pcu de ${Pcu / 1000}kW geram uma resistência interna RT (${R_T.toFixed(5)} Ω) maior do que a impedância total calculada ZT (${Z_T_mod.toFixed(5)} Ω). Reduza Pcu ou aumente Z%.`);
+                }
+                const X_T = Math.sqrt(Math.pow(Z_T_mod, 2) - Math.pow(R_T, 2));
+
+                // 3. Grid upstream impedance referred to secondary
+                let Z_Q = 0;
+                if (currentGridMode === 'scc') {
+                    const Scc = parseFloat(document.getElementById('input-scc').value) * 1e6;
+                    if (isNaN(Scc) || Scc <= 0) throw new Error("A potência Scc da rede deve ser superior a zero.");
+                    Z_Q = (c * Math.pow(UnT, 2)) / Scc;
+                } else {
+                    const Icc = parseFloat(document.getElementById('input-icc').value) * 1000;
+                    if (isNaN(Icc) || Icc <= 0) throw new Error("A corrente Icc da rede deve ser superior a zero.");
+                    Z_Q = (c * UnT) / (Math.sqrt(3) * Icc);
+                }
+                const X_Q = 0.995 * Z_Q;
+                const R_Q = 0.1 * X_Q;
+
+                // 4. Sum positive loop
+                const R_1 = R_Q + R_T;
+                const X_1 = X_Q + X_T;
+                const Z_1 = Math.sqrt(Math.pow(R_1, 2) + Math.pow(X_1, 2));
+
+                // 5. Zero-sequence parameters
+                let R_0T = 0;
+                let X_0T = 0;
+
+                if (vectorGroup === 'Dyn11') {
+                    R_0T = R_T;
+                    X_0T = 0.95 * X_T;
+                } else if (vectorGroup === 'Yzn5') {
+                    R_0T = R_T;
+                    X_0T = 0.15 * X_T;
+                } else if (vectorGroup === 'Ynyn') {
+                    R_0T = 1.5 * R_T;
+                    X_0T = 10 * X_T;
+                } else if (vectorGroup === 'Custom') {
+                    const r0r1 = parseFloat(document.getElementById('input-r0r1').value);
+                    const x0x1 = parseFloat(document.getElementById('input-x0x1').value);
+                    R_0T = r0r1 * R_T;
+                    X_0T = x0x1 * X_T;
+                }
+
+                const R_0 = R_0T + 3 * rn;
+                const X_0 = X_0T + 3 * xn;
+                const Z_0 = Math.sqrt(Math.pow(R_0, 2) + Math.pow(X_0, 2));
+
+                // 6. Calculate Currents
+                const I_k3_double = (c * UnT) / (Math.sqrt(3) * Z_1);
+                const I_k2_double = (c * UnT) / (2 * Z_1);
+
+                const R_loop_1 = 2 * R_1 + R_0;
+                const X_loop_1 = 2 * X_1 + X_0;
+                const Z_loop_1 = Math.sqrt(Math.pow(R_loop_1, 2) + Math.pow(X_loop_1, 2));
+                const I_k1_double = (Math.sqrt(3) * c * UnT) / Z_loop_1;
+
+                const kappa = 1.02 + 0.98 * Math.exp(-3 * (R_1 / X_1));
+                const i_p3 = kappa * Math.sqrt(2) * I_k3_double;
+
+                // Update KPI Cards
+                document.getElementById('val-int').innerHTML = `${InT.toFixed(1)} <span class="result-unit">A</span>`;
+                document.getElementById('val-ik3').innerHTML = `${(I_k3_double / 1000).toFixed(3)} <span class="result-unit">kA</span>`;
+                document.getElementById('val-ik2').innerHTML = `${(I_k2_double / 1000).toFixed(3)} <span class="result-unit">kA</span>`;
+                document.getElementById('val-ik1').innerHTML = `${(I_k1_double / 1000).toFixed(3)} <span class="result-unit">kA</span>`;
+                
+                document.getElementById('val-ip3-aux').innerHTML = `${(i_p3 / 1000).toFixed(3)} kA`;
+
+                // Update Table
+                document.getElementById('tbl-rq-1').innerText = R_Q.toFixed(6);
+                document.getElementById('tbl-xq-1').innerText = X_Q.toFixed(6);
+                document.getElementById('tbl-rt-1').innerText = R_T.toFixed(6);
+                document.getElementById('tbl-xt-1').innerText = X_T.toFixed(6);
+                document.getElementById('tbl-rt-0').innerText = R_0T.toFixed(6);
+                document.getElementById('tbl-xt-0').innerText = X_0T.toFixed(6);
+                document.getElementById('tbl-zn-0').innerText = `${(3 * rn).toFixed(3)} + j ${(3 * xn).toFixed(3)}`;
+
+                document.getElementById('tbl-req-1').innerText = R_1.toFixed(6);
+                document.getElementById('tbl-xeq-1').innerText = X_1.toFixed(6);
+                document.getElementById('tbl-zeq-1').innerText = Z_1.toFixed(6);
+                document.getElementById('tbl-req-0').innerText = R_0.toFixed(6);
+                document.getElementById('tbl-xeq-0').innerText = X_0.toFixed(6);
+                document.getElementById('tbl-zeq-0').innerText = Z_0.toFixed(6);
+
+                // Update Memorial Calculations
+                document.getElementById('m-calc-int').innerText = `InT = ${SnT / 1000}kVA / (√3 · ${UnT}V) = ${InT.toFixed(2)} A`;
+                document.getElementById('m-calc-zq').innerHTML = `ZQ = (${c} · ${UnT}²) / ${currentGridMode === 'scc' ? (SnT * 10).toFixed(0) : '...'} <br>ZQ = ${Z_Q.toFixed(6)} Ω`;
+                document.getElementById('m-val-xq').innerText = X_Q.toFixed(6);
+                document.getElementById('m-val-rq').innerText = R_Q.toFixed(6);
+
+                document.getElementById('m-calc-zt').innerText = `ZT = (${Zk}% / 100) · (${UnT}² / ${SnT / 1000}kVA) = ${Z_T_mod.toFixed(6)} Ω`;
+                document.getElementById('m-calc-rt').innerText = `RT = ${Pcu / 1000}kW · ${UnT}² / (${SnT / 1000}kVA)² = ${R_T.toFixed(6)} Ω`;
+                document.getElementById('m-val-xt').innerText = X_T.toFixed(6);
+
+                document.getElementById('m-vector-group').innerText = vectorGroup;
+                let vectorGroupFormula = "";
+                if (vectorGroup === 'Dyn11') vectorGroupFormula = "R0T = RT = " + R_T.toFixed(6) + " Ω | X0T = 0.95 · XT = " + X_0T.toFixed(6) + " Ω";
+                else if (vectorGroup === 'Yzn5') vectorGroupFormula = "R0T = RT = " + R_T.toFixed(6) + " Ω | X0T = 0.15 · XT = " + X_0T.toFixed(6) + " Ω";
+                else if (vectorGroup === 'Ynyn') vectorGroupFormula = "R0T = 1.5 · RT = " + R_0T.toFixed(6) + " Ω | X0T = 10.0 · XT = " + X_0T.toFixed(6) + " Ω";
+                else vectorGroupFormula = "Custom: R0T = " + R_0T.toFixed(6) + " Ω | X0T = " + X_0T.toFixed(6) + " Ω";
+
+                document.getElementById('m-calc-z0t-factor').innerText = `Fatores aplicados ao grupo ${vectorGroup}`;
+                document.getElementById('m-calc-z0t').innerText = vectorGroupFormula;
+
+                document.getElementById('m-val-req1').innerText = R_1.toFixed(6);
+                document.getElementById('m-val-xeq1').innerText = X_1.toFixed(6);
+                document.getElementById('m-val-zeq1').innerText = Z_1.toFixed(6);
+                document.getElementById('m-val-req0').innerText = R_0.toFixed(6);
+                document.getElementById('m-val-xeq0').innerText = X_0.toFixed(6);
+                document.getElementById('m-val-zeq0').innerText = Z_0.toFixed(6);
+
+                document.getElementById('m-calc-ik3').innerText = `I''k3 = ${c} · ${UnT}V / (√3 · ${Z_1.toFixed(6)}Ω) = ${(I_k3_double / 1000).toFixed(3)} kA`;
+                document.getElementById('m-calc-ik2').innerText = `I''k2 = √3/2 · ${(I_k3_double / 1000).toFixed(3)}kA = ${(I_k2_double / 1000).toFixed(3)} kA`;
+                document.getElementById('m-calc-ik1').innerText = `I''k1 = (√3 · ${c} · ${UnT}V) / ${Z_loop_1.toFixed(6)}Ω = ${(I_k1_double / 1000).toFixed(3)} kA`;
+                document.getElementById('m-val-kappa').innerText = kappa.toFixed(3);
+                document.getElementById('m-calc-ip3').innerText = `ip3 = ${kappa.toFixed(3)} · √2 · ${(I_k3_double / 1000).toFixed(3)}kA = ${(i_p3 / 1000).toFixed(3)} kA`;
+
+                // Update Diagram Label
+                document.getElementById('diag-scc').textContent = currentGridMode === 'scc' ?
+                    `Scc = ${document.getElementById('input-scc').value} MVA` :
+                    `Icc = ${document.getElementById('input-icc').value} kA`;
+                document.getElementById('diag-transformer-info').textContent = `${SnT / 1000} kVA | Z% = ${Zk}% | ${vectorGroup}`;
+                document.getElementById('diag-unt').textContent = `${UnT} V`;
+                document.getElementById('diag-ik3').textContent = `${(I_k3_double / 1000).toFixed(3)} kA`;
+                document.getElementById('diag-ik2').textContent = `${(I_k2_double / 1000).toFixed(3)} kA`;
+                document.getElementById('diag-ik1').textContent = `${(I_k1_double / 1000).toFixed(3)} kA`;
+
+                if (activeTabId === 'tab-charts') {
+                    renderChart();
+                }
+
+            } catch (err) {
+                alertBox.classList.add('active');
+                document.getElementById('alert-error-msg').innerText = err.message;
+            }
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('sensitivity-chart').getContext('2d');
+
+            const UnT = parseFloat(document.getElementById('input-unt').value);
+            const Zk = parseFloat(document.getElementById('input-zk').value);
+            const c = parseFloat(document.getElementById('input-c').value);
+
+            const kvaRange = [100, 225, 300, 500, 750, 1000, 1500, 2000, 2500, 3000];
+            const ik3Data = [];
+            const ik1Data = [];
+
+            kvaRange.forEach(kva => {
+                const SnT_va = kva * 1000;
+                const R_T_est = (kva <= 1000 ? 0.015 : 0.012) * (Math.pow(UnT, 2) / SnT_va);
+                const Z_T_est = (Zk / 100) * (Math.pow(UnT, 2) / SnT_va);
+                const X_T_est = Math.sqrt(Math.max(0, Math.pow(Z_T_est, 2) - Math.pow(R_T_est, 2)));
+
+                let Z_Q = 0;
+                if (currentGridMode === 'scc') {
+                    const Scc = parseFloat(document.getElementById('input-scc').value) * 1e6;
+                    Z_Q = (c * Math.pow(UnT, 2)) / Scc;
+                } else {
+                    const Icc = parseFloat(document.getElementById('input-icc').value) * 1000;
+                    Z_Q = (c * UnT) / (Math.sqrt(3) * Icc);
+                }
+                const X_Q = 0.995 * Z_Q;
+                const R_Q = 0.1 * X_Q;
+
+                const R_1 = R_Q + R_T_est;
+                const X_1 = X_Q + X_T_est;
+                const Z_1 = Math.sqrt(Math.pow(R_1, 2) + Math.pow(X_1, 2));
+
+                const ik3 = ((c * UnT) / (Math.sqrt(3) * Z_1)) / 1000;
+                ik3Data.push(ik3);
+
+                const R_0T = R_T_est;
+                const X_0T = 0.95 * X_T_est;
+                const Z_loop_1 = Math.sqrt(Math.pow(2 * R_1 + R_0T, 2) + Math.pow(2 * X_1 + X_0T, 2));
+                const ik1 = ((Math.sqrt(3) * c * UnT) / Z_loop_1) / 1000;
+                ik1Data.push(ik1);
+            });
+
+            if (sensitivityChart) {
+                sensitivityChart.destroy();
+            }
+
+            // Minimalist lines with fine weight, zero fill underneath as requested
+            sensitivityChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: kvaRange.map(k => `${k} kVA`),
+                    datasets: [
+                        {
+                            label: 'Curto Trifásico (I\'\'k3) [kA]',
+                            data: ik3Data,
+                            borderColor: '#0f172a',
+                            borderWidth: 2,
+                            pointBackgroundColor: '#0f172a',
+                            pointRadius: 3,
+                            tension: 0.2,
+                            fill: false
+                        },
+                        {
+                            label: 'Curto Monofásico (I\'\'k1) [kA]',
+                            data: ik1Data,
+                            borderColor: '#f59e0b',
+                            borderWidth: 1.5,
+                            pointBackgroundColor: '#f59e0b',
+                            pointRadius: 2,
+                            tension: 0.2,
+                            fill: false,
+                            borderDash: [4, 4]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#475569',
+                                font: { family: 'Inter', size: 11, weight: '600' }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#f1f5f9' },
+                            ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } }
+                        },
+                        y: {
+                            grid: { color: '#f1f5f9' },
+                            ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } },
+                            title: {
+                                display: true,
+                                text: 'Corrente de Curto-Circuito (kA)',
+                                color: '#475569',
+                                font: { family: 'Inter', size: 11, weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        calculate();
+    </script>
+</body>
+
+</html>
