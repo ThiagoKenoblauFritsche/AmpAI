@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" id="html-root">
 
 <head>
     <meta charset="UTF-8">
@@ -185,6 +185,47 @@
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
             padding-left: 0.5rem;
+        }
+
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem 0.5rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.25rem;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            padding: 0.2rem 0.45rem;
+            border-radius: 4px;
+            cursor: pointer;
+            letter-spacing: 0.04em;
+            transition: var(--transition);
+        }
+
+        .lang-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .lang-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border-color: var(--text-primary);
+        }
+
+        .lang-divider {
+            color: var(--border);
+            font-size: 0.65rem;
+            user-select: none;
         }
 
         .nav-item {
@@ -914,13 +955,14 @@
         <header>
             <div class="header-title">
                 <div>
-                    <h1>Assistente de Engenharia Elétrica</h1>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">Soluções de Cálculos e Dimensionamentos</p>
+                    <h1 data-i18n="header.title">Assistente de Engenharia Elétrica</h1>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);" data-i18n="header.subtitle">Soluções de
+                        Cálculos e Dimensionamentos</p>
                 </div>
             </div>
             <div class="header-meta">
                 <span class="norm-badge">IEC 60909-0</span>
-                <span>Método das Impedâncias Percentuais</span>
+                <span data-i18n="header.method">Método das Impedâncias Percentuais</span>
             </div>
         </header>
 
@@ -945,25 +987,35 @@
                             style="color: var(--accent);">AI</span></span>
                 </div>
 
-                <div class="nav-section-title">Soluções</div>
+                <!-- Language Switcher -->
+                <div class="lang-switcher">
+                    <button class="lang-btn active" id="lang-pt" onclick="setLanguage('pt')"
+                        title="Português">PT</button>
+                    <span class="lang-divider">|</span>
+                    <button class="lang-btn" id="lang-en" onclick="setLanguage('en')" title="English">EN</button>
+                    <span class="lang-divider">|</span>
+                    <button class="lang-btn" id="lang-es" onclick="setLanguage('es')" title="Español">ES</button>
+                </div>
+
+                <div class="nav-section-title" data-i18n="nav.solutions">Soluções</div>
 
                 <a href="#" class="nav-item active">
                     <span style="font-size: 1.1rem;">⚡</span>
-                    <span style="flex: 1;">Curto-Circuito Trifásico (IEC 60909)</span>
+                    <span style="flex: 1;" data-i18n="nav.shortCircuit">Curto-Circuito Trifásico (IEC 60909)</span>
                 </a>
 
-                <a href="#" class="nav-item locked" title="Em breve / Bloqueado">
+                <a href="#" class="nav-item locked" data-i18n-title="nav.comingSoon" title="Em breve / Bloqueado">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <span style="font-size: 1.1rem;">🔌</span>
-                        <span>Dimensionamento de Cabos (BT e MT)</span>
+                        <span data-i18n="nav.cableSizing">Dimensionamento de Cabos (BT e MT)</span>
                     </div>
                     <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
                 </a>
 
-                <a href="#" class="nav-item locked" title="Em breve / Bloqueado">
+                <a href="#" class="nav-item locked" data-i18n-title="nav.comingSoon" title="Em breve / Bloqueado">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <span style="font-size: 1.1rem;">⛰️</span>
-                        <span>Derating por Altitude (Motores e Painéis BT/MT)</span>
+                        <span data-i18n="nav.altitudeDerating">Derating por Altitude (Motores e Painéis BT/MT)</span>
                     </div>
                     <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
                 </a>
@@ -973,7 +1025,7 @@
             <aside class="sidebar">
                 <div class="sidebar-title">
                     <i data-lucide="sliders" style="color: var(--text-primary); width: 16px; height: 16px;"></i>
-                    Parâmetros do Sistema
+                    <span data-i18n="inputs.title">Parâmetros do Sistema</span>
                 </div>
 
                 <!-- Alert Banner -->
@@ -986,30 +1038,30 @@
                 <!-- 1. Rede Upstream -->
                 <div class="input-group-title">
                     <i data-lucide="globe" style="width: 12px; height: 12px;"></i>
-                    1. Rede de Alimentação
+                    <span data-i18n="inputs.group1">1. Rede de Alimentação</span>
                 </div>
 
                 <div class="form-control">
-                    <label>Fator de Tensão da Rede (c)</label>
+                    <label data-i18n="inputs.voltageFactor">Fator de Tensão da Rede (c)</label>
                     <select id="input-c" onchange="calculate()">
-                        <option value="1.05">c = 1.05 (Mínimo BT)</option>
-                        <option value="1.10">c = 1.10 (Máximo BT / MT)</option>
-                        <option value="1.00">c = 1.00 (Fator Unitário)</option>
+                        <option value="1.05" data-i18n="inputs.voltageFactorOpt1">c = 1.05 (Mínimo BT)</option>
+                        <option value="1.10" data-i18n="inputs.voltageFactorOpt2">c = 1.10 (Máximo BT / MT)</option>
+                        <option value="1.00" data-i18n="inputs.voltageFactorOpt3">c = 1.00 (Fator Unitário)</option>
                     </select>
                 </div>
 
                 <div class="form-control">
-                    <label>Nível da Rede Upstream</label>
+                    <label data-i18n="inputs.gridLevel">Nível da Rede Upstream</label>
                     <div class="toggle-btn-group">
-                        <button class="toggle-btn active" id="toggle-scc" onclick="setGridInputMode('scc')">Potência
-                            (Scc)</button>
-                        <button class="toggle-btn" id="toggle-icc" onclick="setGridInputMode('icc')">Corrente
-                            (Icc)</button>
+                        <button class="toggle-btn active" id="toggle-scc" onclick="setGridInputMode('scc')"
+                            data-i18n="inputs.gridPower">Potência (Scc)</button>
+                        <button class="toggle-btn" id="toggle-icc" onclick="setGridInputMode('icc')"
+                            data-i18n="inputs.gridCurrent">Corrente (Icc)</button>
                     </div>
                 </div>
 
                 <div class="form-control" id="group-scc">
-                    <label>Potência de Curto-Circuito (Scc)</label>
+                    <label data-i18n="inputs.sccPower">Potência de Curto-Circuito (Scc)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-scc" value="500" min="1" step="50" oninput="calculate()">
                         <span class="unit-badge">MVA</span>
@@ -1017,7 +1069,7 @@
                 </div>
 
                 <div class="form-control" id="group-icc" style="display: none;">
-                    <label>Corrente de Curto-Circuito (Icc)</label>
+                    <label data-i18n="inputs.iccCurrent">Corrente de Curto-Circuito (Icc)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-icc" value="20" min="0.1" step="0.5" oninput="calculate()">
                         <span class="unit-badge">kA</span>
@@ -1027,13 +1079,13 @@
                 <!-- 2. Transformador -->
                 <div class="input-group-title">
                     <i data-lucide="box" style="width: 12px; height: 12px;"></i>
-                    2. Transformador
+                    <span data-i18n="inputs.group2">2. Transformador</span>
                 </div>
 
 
 
                 <div class="form-control">
-                    <label>Potência Nominal (SnT)</label>
+                    <label data-i18n="inputs.nomPower">Potência Nominal (SnT)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-snt" value="1500" min="10" step="50" oninput="calculate()">
                         <span class="unit-badge">kVA</span>
@@ -1041,7 +1093,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label>Tensão Secundária Nominal (UnT)</label>
+                    <label data-i18n="inputs.nomVoltage">Tensão Secundária Nominal (UnT)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-unt" value="380" min="110" max="36000" step="10"
                             oninput="calculate()">
@@ -1050,7 +1102,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label>Impedância Percentual (Z% ou uk%)</label>
+                    <label data-i18n="inputs.impedancePct">Impedância Percentual (Z% ou uk%)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-zk" value="6.0" min="1" max="25" step="0.1"
                             oninput="calculate()">
@@ -1059,7 +1111,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label>Perdas no Cobre (Pcu)</label>
+                    <label data-i18n="inputs.copperLoss">Perdas no Cobre (Pcu)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-pcu" value="18" min="0.1" step="0.5" oninput="calculate()">
                         <span class="unit-badge">kW</span>
@@ -1069,35 +1121,35 @@
                 <!-- 3. Grupo de Ligação e Neutro -->
                 <div class="input-group-title">
                     <i data-lucide="git-branch" style="width: 12px; height: 12px;"></i>
-                    3. Ligação e Neutro
+                    <span data-i18n="inputs.group3">3. Ligação e Neutro</span>
                 </div>
 
                 <div class="form-control">
-                    <label>Grupo de Ligação (Sequência Zero)</label>
+                    <label data-i18n="inputs.vectorGroup">Grupo de Ligação (Sequência Zero)</label>
                     <select id="input-vector-group" onchange="calculate()">
-                        <option value="Dyn11">Dyn11 (Estrela Aterrado / Delta)</option>
-                        <option value="Yzn5">Yzn5 (Estrela-Zigzag Aterrado)</option>
-                        <option value="Ynyn">Ynyn0 (Estrela-Estrela Aterrado)</option>
-                        <option value="Custom">Customizado (R0/R1 e X0/X1)</option>
+                        <option value="Dyn11" data-i18n="inputs.vgDyn11">Dyn11 (Estrela Aterrado / Delta)</option>
+                        <option value="Yzn5" data-i18n="inputs.vgYzn5">Yzn5 (Estrela-Zigzag Aterrado)</option>
+                        <option value="Ynyn" data-i18n="inputs.vgYnyn">Ynyn0 (Estrela-Estrela Aterrado)</option>
+                        <option value="Custom" data-i18n="inputs.vgCustom">Customizado (R0/R1 e X0/X1)</option>
                     </select>
                 </div>
 
                 <div id="custom-vector-group-inputs"
                     style="display: none; background: var(--bg-primary); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border);">
                     <div class="form-control">
-                        <label>Relação R0/R1</label>
+                        <label data-i18n="inputs.r0r1">Relação R0/R1</label>
                         <input type="number" id="input-r0r1" value="1.0" min="0.1" max="20" step="0.1"
                             oninput="calculate()">
                     </div>
                     <div class="form-control">
-                        <label>Relação X0/X1</label>
+                        <label data-i18n="inputs.x0x1">Relação X0/X1</label>
                         <input type="number" id="input-x0x1" value="0.95" min="0.05" max="20" step="0.05"
                             oninput="calculate()">
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label>Resistência de Aterramento (RN)</label>
+                    <label data-i18n="inputs.groundingR">Resistência de Aterramento (RN)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-rn" value="0.0" min="0" step="0.01" oninput="calculate()">
                         <span class="unit-badge">Ω</span>
@@ -1105,7 +1157,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label>Reatância de Aterramento (XN)</label>
+                    <label data-i18n="inputs.groundingX">Reatância de Aterramento (XN)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-xn" value="0.0" min="0" step="0.01" oninput="calculate()">
                         <span class="unit-badge">Ω</span>
@@ -1116,72 +1168,79 @@
                 <div class="input-group-title"
                     style="margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem;">
                     <i data-lucide="book-open" style="width: 12px; height: 12px;"></i>
-                    4. Dicionário de Símbolos
+                    <span data-i18n="inputs.group4">4. Dicionário de Símbolos</span>
                 </div>
                 <div class="symbols-legend">
                     <div class="symbol-item">
                         <span class="symbol-code">Sn</span>
-                        <span class="symbol-def">Potência Nominal do Transformador (kVA)</span>
+                        <span class="symbol-def" data-i18n="sym.Sn">Potência Nominal do Transformador (kVA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Vn</span>
-                        <span class="symbol-def">Tensão de Linha Secundária (V)</span>
+                        <span class="symbol-def" data-i18n="sym.Vn">Tensão de Linha Secundária (V)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Z%</span>
-                        <span class="symbol-def">Impedância de Curto-Circuito (%)</span>
+                        <span class="symbol-def" data-i18n="sym.Zpct">Impedância de Curto-Circuito (%)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Pcu</span>
-                        <span class="symbol-def">Perdas no Cobre do Transformador (kW)</span>
+                        <span class="symbol-def" data-i18n="sym.Pcu">Perdas no Cobre do Transformador (kW)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Scc</span>
-                        <span class="symbol-def">Potência de Curto-Circuito da Rede Upstream (MVA)</span>
+                        <span class="symbol-def" data-i18n="sym.Scc">Potência de Curto-Circuito da Rede Upstream
+                            (MVA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Icc</span>
-                        <span class="symbol-def">Corrente de Curto-Circuito da Rede Upstream (kA)</span>
+                        <span class="symbol-def" data-i18n="sym.Icc">Corrente de Curto-Circuito da Rede Upstream
+                            (kA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">c</span>
-                        <span class="symbol-def">Fator de Tensão de Rede (norma IEC 60909)</span>
+                        <span class="symbol-def" data-i18n="sym.c">Fator de Tensão de Rede (norma IEC 60909)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">ZQ</span>
-                        <span class="symbol-def">Impedância da Rede Upstream referida ao secundário (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.ZQ">Impedância da Rede Upstream referida ao secundário
+                            (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">ZT</span>
-                        <span class="symbol-def">Impedância Interna do Transformador (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.ZT">Impedância Interna do Transformador (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">RN / XN</span>
-                        <span class="symbol-def">Resistência e Reatância de Aterramento do Neutro (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.RNXN">Resistência e Reatância de Aterramento do Neutro
+                            (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Z(1)</span>
-                        <span class="symbol-def">Impedância Equivalente de Sequência Positiva (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.Z1">Impedância Equivalente de Sequência Positiva
+                            (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Z(0)</span>
-                        <span class="symbol-def">Impedância Equivalente de Sequência Zero (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.Z0">Impedância Equivalente de Sequência Zero (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">In</span>
-                        <span class="symbol-def">Corrente Nominal Secundária do Trafo (A)</span>
+                        <span class="symbol-def" data-i18n="sym.In">Corrente Nominal Secundária do Trafo (A)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Ik''</span>
-                        <span class="symbol-def">Corrente de Curto-Circuito Inicial Simétrica (kA)</span>
+                        <span class="symbol-def" data-i18n="sym.Ikpp">Corrente de Curto-Circuito Inicial Simétrica
+                            (kA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">ip</span>
-                        <span class="symbol-def">Corrente de Pico Assimétrica Inicial (kA)</span>
+                        <span class="symbol-def" data-i18n="sym.ip">Corrente de Pico Assimétrica Inicial (kA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">κ</span>
-                        <span class="symbol-def">Fator de Crista de Pico Assemelhado (IEC 60909)</span>
+                        <span class="symbol-def" data-i18n="sym.kappa">Fator de Crista de Pico Assemelhado (IEC
+                            60909)</span>
                     </div>
                 </div>
 
@@ -1193,51 +1252,56 @@
                 <div class="results-grid">
                     <div class="result-card primary">
                         <div class="result-title">
-                            Corrente Nominal (In)
+                            <span data-i18n="kpi.nomCurrentTitle">Corrente Nominal (In)</span>
                             <i data-lucide="shield" style="color: var(--accent); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-int">-- <span class="result-unit">A</span></div>
-                        <div class="result-desc">Corrente nominal em plena carga secundária.</div>
+                        <div class="result-desc" data-i18n="kpi.nomCurrentDesc">Corrente nominal em plena carga
+                            secundária.</div>
                     </div>
 
                     <div class="result-card danger">
                         <div class="result-title">
-                            Curto Trifásico (I''k3)
+                            <span data-i18n="kpi.ik3Title">Curto Trifásico (I''k3)</span>
                             <i data-lucide="zap" style="color: var(--danger); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-ik3">-- <span class="result-unit">kA</span></div>
-                        <div class="result-desc">Falha trifásica simétrica inicial máxima.</div>
+                        <div class="result-desc" data-i18n="kpi.ik3Desc">Falha trifásica simétrica inicial máxima.</div>
                     </div>
 
                     <div class="result-card success">
                         <div class="result-title">
-                            Curto Bifásico (I''k2)
+                            <span data-i18n="kpi.ik2Title">Curto Bifásico (I''k2)</span>
                             <i data-lucide="zap-off" style="color: var(--success); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-ik2">-- <span class="result-unit">kA</span></div>
-                        <div class="result-desc">Curto bifásico livre de terra.</div>
+                        <div class="result-desc" data-i18n="kpi.ik2Desc">Curto bifásico livre de terra.</div>
                     </div>
 
                     <div class="result-card info">
                         <div class="result-title">
-                            Curto Monofásico (I''k1)
+                            <span data-i18n="kpi.ik1Title">Curto Monofásico (I''k1)</span>
                             <i data-lucide="alert-triangle" style="color: var(--info); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-ik1">-- <span class="result-unit">kA</span></div>
-                        <div class="result-desc">Fase-terra. Altamente dependente do neutro.</div>
+                        <div class="result-desc" data-i18n="kpi.ik1Desc">Fase-terra. Altamente dependente do neutro.
+                        </div>
                     </div>
                 </div>
 
                 <!-- Tabs Navigation -->
                 <div class="tabs-header">
                     <button class="tab-btn active" onclick="switchTab(event, 'tab-results')">
-                        <i data-lucide="table" style="width: 14px; height: 14px;"></i> Impedâncias e Dados
+                        <i data-lucide="table" style="width: 14px; height: 14px;"></i> <span
+                            data-i18n="tabs.impedances">Impedâncias e Dados</span>
                     </button>
                     <button class="tab-btn" onclick="switchTab(event, 'tab-diagram')">
-                        <i data-lucide="git-commit" style="width: 14px; height: 14px;"></i> Diagrama Unifilar
+                        <i data-lucide="git-commit" style="width: 14px; height: 14px;"></i> <span
+                            data-i18n="tabs.diagram">Diagrama Unifilar</span>
                     </button>
                     <button class="tab-btn" onclick="switchTab(event, 'tab-charts')">
-                        <i data-lucide="activity" style="width: 14px; height: 14px;"></i> Curvas Analíticas
+                        <i data-lucide="activity" style="width: 14px; height: 14px;"></i> <span
+                            data-i18n="tabs.curves">Curvas Analíticas</span>
                     </button>
                 </div>
 
@@ -1248,57 +1312,57 @@
                         <table class="tech-table">
                             <thead>
                                 <tr>
-                                    <th>Parâmetro do Sistema</th>
-                                    <th>Símbolo</th>
-                                    <th>Positivo (+) [Ω]</th>
-                                    <th>Zero (0) [Ω]</th>
+                                    <th data-i18n="tbl.param">Parâmetro do Sistema</th>
+                                    <th data-i18n="tbl.symbol">Símbolo</th>
+                                    <th data-i18n="tbl.positive">Positivo (+) [Ω]</th>
+                                    <th data-i18n="tbl.zero">Zero (0) [Ω]</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>Resistência da Rede Upstream</td>
+                                    <td data-i18n="tbl.rq">Resistência da Rede Upstream</td>
                                     <td>RQ</td>
                                     <td id="tbl-rq-1">--</td>
-                                    <td>N/A (Rede Isolada)</td>
+                                    <td data-i18n="tbl.naIsolated">N/A (Rede Isolada)</td>
                                 </tr>
                                 <tr>
-                                    <td>Reatância da Rede Upstream</td>
+                                    <td data-i18n="tbl.xq">Reatância da Rede Upstream</td>
                                     <td>XQ</td>
                                     <td id="tbl-xq-1">--</td>
-                                    <td>N/A (Rede Isolada)</td>
+                                    <td data-i18n="tbl.naIsolated">N/A (Rede Isolada)</td>
                                 </tr>
                                 <tr>
-                                    <td>Resistência Interna do Transformador</td>
+                                    <td data-i18n="tbl.rt">Resistência Interna do Transformador</td>
                                     <td>RT</td>
                                     <td id="tbl-rt-1">--</td>
                                     <td id="tbl-rt-0">--</td>
                                 </tr>
                                 <tr>
-                                    <td>Reatância Interna do Transformador</td>
+                                    <td data-i18n="tbl.xt">Reatância Interna do Transformador</td>
                                     <td>XT</td>
                                     <td id="tbl-xt-1">--</td>
                                     <td id="tbl-xt-0">--</td>
                                 </tr>
                                 <tr>
-                                    <td>Impedância de Aterramento do Neutro</td>
+                                    <td data-i18n="tbl.zn">Impedância de Aterramento do Neutro</td>
                                     <td>3ZN</td>
                                     <td>N/A</td>
                                     <td id="tbl-zn-0">--</td>
                                 </tr>
                                 <tr style="border-top: 1.5px solid var(--border); font-weight: 700;">
-                                    <td>Resistência Equivalente no Ponto de Falha</td>
+                                    <td data-i18n="tbl.req">Resistência Equivalente no Ponto de Falha</td>
                                     <td>R_eq</td>
                                     <td id="tbl-req-1">--</td>
                                     <td id="tbl-req-0">--</td>
                                 </tr>
                                 <tr style="font-weight: 700;">
-                                    <td>Reatância Equivalente no Ponto de Falha</td>
+                                    <td data-i18n="tbl.xeq">Reatância Equivalente no Ponto de Falha</td>
                                     <td>X_eq</td>
                                     <td id="tbl-xeq-1">--</td>
                                     <td id="tbl-xeq-0">--</td>
                                 </tr>
                                 <tr style="font-weight: 700; border-bottom: 2px solid var(--text-primary);">
-                                    <td>Impedância Equivalente Total</td>
+                                    <td data-i18n="tbl.zeq">Impedância Equivalente Total</td>
                                     <td>Z_eq</td>
                                     <td id="tbl-zeq-1" style="color: var(--accent-hover);">--</td>
                                     <td id="tbl-zeq-0" style="color: var(--accent-hover);">--</td>
@@ -1310,10 +1374,10 @@
                             style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-primary); border: 1px solid var(--border); border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
                             <div>
                                 <span
-                                    style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;">Corrente
-                                    de Crista Assimétrica (ip)</span>
-                                <p style="font-size: 0.75rem; color: var(--text-muted);">Corrente máxima de pico
-                                    mecânico no primeiro semi-ciclo de curto-circuito.</p>
+                                    style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;"
+                                    data-i18n="diagram.peakTitle">CORRENTE DE CRISTA ASSIMÉTRICA (IP)</span>
+                                <p style="font-size: 0.75rem; color: var(--text-muted);"
+                                    data-i18n="diagram.peakDesc">Corrente máxima de pico mecânico no primeiro semi-ciclo de curto-circuito.</p>
                             </div>
                             <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700;"
                                 id="val-ip3-aux">-- kA</div>
@@ -1327,7 +1391,7 @@
                                 <!-- Grid Upstream -->
                                 <rect x="40" y="40" width="110" height="50" rx="4" fill="var(--bg-secondary)"
                                     stroke="var(--border)" stroke-width="1.5" />
-                                <text x="95" y="62" fill="var(--text-primary)" font-weight="700" font-size="11"
+                                <text x="95" y="62" id="diag-upstream-label" fill="var(--text-primary)" font-weight="700" font-size="11"
                                     text-anchor="middle">Rede Upstream</text>
                                 <text x="95" y="80" id="diag-scc" fill="var(--text-muted)" font-size="9"
                                     text-anchor="middle">Scc = -- MVA</text>
@@ -1340,14 +1404,14 @@
                                 <circle cx="260" cy="65" r="18" fill="none" stroke="var(--text-primary)"
                                     stroke-width="2" />
                                 <circle cx="282" cy="65" r="18" fill="none" stroke="var(--accent)" stroke-width="2" />
-                                <text x="271" y="35" fill="var(--text-primary)" font-weight="700" font-size="10"
+                                <text x="271" y="35" id="diag-transformer-label" fill="var(--text-primary)" font-weight="700" font-size="10"
                                     text-anchor="middle">Trafo Industrial</text>
                                 <text x="271" y="98" id="diag-transformer-info" fill="var(--text-muted)" font-size="9"
                                     text-anchor="middle">-- kVA</text>
 
                                 <!-- Secondary Busbar -->
                                 <line x1="330" y1="65" x2="480" y2="65" stroke="var(--text-primary)" stroke-width="3" />
-                                <text x="405" y="52" fill="var(--text-primary)" font-weight="700" font-size="9"
+                                <text x="405" y="52" id="diag-secondary-label" fill="var(--text-primary)" font-weight="700" font-size="9"
                                     text-anchor="middle">BORNES SECUNDÁRIOS</text>
                                 <text x="405" y="80" id="diag-unt" fill="var(--text-secondary)" font-weight="700"
                                     font-size="9" text-anchor="middle">-- V</text>
@@ -1355,28 +1419,25 @@
                                 <!-- Point of Fault Indicator -->
                                 <path d="M 405,105 L 398,125 L 412,125 Z" fill="var(--danger)" />
                                 <circle cx="405" cy="120" r="8" fill="none" stroke="var(--danger)" stroke-width="1.5" />
-                                <text x="405" y="145" fill="var(--danger)" font-weight="700" font-size="10"
+                                <text x="405" y="145" id="diag-fault-label" fill="var(--danger)" font-weight="700" font-size="10"
                                     text-anchor="middle">PONTO DE FALHA (F)</text>
 
                                 <!-- Calculations block in diagram -->
                                 <rect x="300" y="170" width="260" height="130" rx="6" fill="var(--bg-secondary)"
                                     stroke="var(--border)" stroke-width="1" />
-                                <text x="430" y="190" fill="var(--text-primary)" font-weight="700" font-size="10"
+                                <text x="430" y="190" id="diag-currents-label" fill="var(--text-primary)" font-weight="700" font-size="10"
                                     text-anchor="middle">Correntes Calculadas</text>
                                 <line x1="320" y1="198" x2="540" y2="198" stroke="var(--border)" stroke-width="1" />
 
-                                <text x="320" y="220" fill="var(--text-secondary)" font-size="10">Curto Trifásico
-                                    (I''k3):</text>
+                                <text x="320" y="220" id="diag-ik3-label" fill="var(--text-secondary)" font-size="10">Curto Trifásico (I''k3):</text>
                                 <text x="540" y="220" id="diag-ik3" fill="var(--text-primary)" font-weight="700"
                                     font-size="10" text-anchor="end">-- kA</text>
 
-                                <text x="320" y="245" fill="var(--text-secondary)" font-size="10">Curto Bifásico
-                                    (I''k2):</text>
+                                <text x="320" y="245" id="diag-ik2-label" fill="var(--text-secondary)" font-size="10">Curto Bifásico (I''k2):</text>
                                 <text x="540" y="245" id="diag-ik2" fill="var(--text-primary)" font-weight="700"
                                     font-size="10" text-anchor="end">-- kA</text>
 
-                                <text x="320" y="270" fill="var(--text-secondary)" font-size="10">Curto Monofásico
-                                    (I''k1):</text>
+                                <text x="320" y="270" id="diag-ik1-label" fill="var(--text-secondary)" font-size="10">Curto Monofásico (I''k1):</text>
                                 <text x="540" y="270" id="diag-ik1" fill="var(--danger)" font-weight="700"
                                     font-size="10" text-anchor="end">-- kA</text>
                             </svg>
@@ -1397,7 +1458,7 @@
                         <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
                             <i data-lucide="file-text"
                                 style="width: 18px; height: 18px; color: var(--text-primary);"></i>
-                            Memorial de Cálculo Completo (Norma IEC 60909)
+                            <span data-i18n="memorial.title">Memorial de Cálculo Completo (Norma IEC 60909)</span>
                         </span>
                         <i data-lucide="chevron-down" id="accordion-chevron" class="chevron-icon"
                             style="width: 18px; height: 18px;"></i>
@@ -1406,11 +1467,11 @@
                         <!-- Step 1: Base Parameters -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num">Passo 1</span>
-                                <span class="step-title">Corrente Nominal Secundária do Enrolamento</span>
+                                <span class="step-num" data-i18n="memorial.step1num">Passo 1</span>
+                                <span class="step-title" data-i18n="memorial.step1title">Corrente Nominal Secundária do
+                                    Enrolamento</span>
                             </div>
-                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Calculada com base na potência
-                                aparente nominal ($S_{nT}$) e tensão nominal secundária entre fases ($U_{nT}$):</p>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);" data-i18n="memorial.step1explanation">Calculada com base na potência aparente nominal (SnT) e tensão nominal secundária entre fases (UnT):</p>
                             <div class="math-block">
                                 <div class="math-line">InT = SnT / (√3 · UnT)</div>
                                 <div class="math-line" id="m-calc-int">InT = -- A</div>
@@ -1420,8 +1481,9 @@
                         <!-- Step 2: Grid Upstream -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num">Passo 2</span>
-                                <span class="step-title">Impedância Equivalente da Rede de Média Tensão</span>
+                                <span class="step-num" data-i18n="memorial.step2num">Passo 2</span>
+                                <span class="step-title" data-i18n="memorial.step2title">Impedância Equivalente da Rede
+                                    de Média Tensão</span>
                             </div>
                             <p style="font-size: 0.85rem; color: var(--text-secondary);">A reatância é obtida a partir
                                 da potência Scc de curto-circuito de referência e tensão nominal, assumindo relação $R/X
@@ -1437,9 +1499,9 @@
                         <!-- Step 3: Transformer internal impedances -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num">Passo 3</span>
-                                <span class="step-title">Impedâncias de Sequência Positiva e Zero do
-                                    Transformador</span>
+                                <span class="step-num" data-i18n="memorial.step3num">Passo 3</span>
+                                <span class="step-title" data-i18n="memorial.step3title">Impedâncias de Sequência
+                                    Positiva e Zero do Transformador</span>
                             </div>
                             <p style="font-size: 0.85rem; color: var(--text-secondary);">Mapeada via reatância de
                                 curto-circuito (Z%) e perdas de Joule no cobre em regime de carga nominal ($P_{cu}$):
@@ -1463,8 +1525,9 @@
                         <!-- Step 4: Total impedance loop -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num">Passo 4</span>
-                                <span class="step-title">Somatório de Impedâncias Equivalentes de Loop</span>
+                                <span class="step-num" data-i18n="memorial.step4num">Passo 4</span>
+                                <span class="step-title" data-i18n="memorial.step4title">Somatório de Impedâncias
+                                    Equivalentes de Loop</span>
                             </div>
                             <div class="math-block">
                                 <div class="math-line">R(1) = RQ + RT = <span id="m-val-req1">--</span> Ω</div>
@@ -1479,23 +1542,24 @@
                         <!-- Step 5: Short circuit calculations under IEC 60909 -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num">Passo 5</span>
-                                <span class="step-title">Resoluções Analíticas Finais (IEC 60909)</span>
+                                <span class="step-num" data-i18n="memorial.step5num">Passo 5</span>
+                                <span class="step-title" data-i18n="memorial.step5title">Resoluções Analíticas Finais
+                                    (IEC 60909)</span>
                             </div>
                             <div class="math-block">
-                                <div class="math-line">1. Curto-Circuito Trifásico Simétrico Inicial (I''k3):</div>
+                                <div class="math-line" data-i18n="memorial.step5item1">1. Curto-Circuito Trifásico Simétrico Inicial (I''k3):</div>
                                 <div class="math-line">I''k3 = c · UnT / (√3 · Z(1))</div>
                                 <div class="math-line" id="m-calc-ik3" class="math-result">I''k3 = -- kA</div>
                                 <br>
-                                <div class="math-line">2. Curto-Circuito Bifásico Livre de Terra (I''k2):</div>
+                                <div class="math-line" data-i18n="memorial.step5item2">2. Curto-Circuito Bifásico Livre de Terra (I''k2):</div>
                                 <div class="math-line">I''k2 = √3/2 · I''k3</div>
                                 <div class="math-line" id="m-calc-ik2" class="math-result">I''k2 = -- kA</div>
                                 <br>
-                                <div class="math-line">3. Curto-Circuito Monofásico Terra Inicial (I''k1):</div>
+                                <div class="math-line" data-i18n="memorial.step5item3">3. Curto-Circuito Monofásico Terra Inicial (I''k1):</div>
                                 <div class="math-line">I''k1 = (√3 · c · UnT) / |2·Z(1) + Z(0)|</div>
                                 <div class="math-line" id="m-calc-ik1" class="math-result">I''k1 = -- kA</div>
                                 <br>
-                                <div class="math-line">4. Fator e Corrente de Pico Assimétrica (ip3):</div>
+                                <div class="math-line" data-i18n="memorial.step5item4">4. Fator e Corrente de Pico Assimétrica (ip3):</div>
                                 <div class="math-line">κ = 1.02 + 0.98 · e^(-3 · R(1)/X(1)) = <span
                                         id="m-val-kappa">--</span></div>
                                 <div class="math-line">ip3 = κ · √2 · I''k3</div>
@@ -1506,8 +1570,8 @@
                         <!-- PDF Print Button inside Accordion -->
                         <div class="actions-bar" style="margin-top: 1rem;">
                             <button class="btn-action btn-secondary" onclick="window.print()">
-                                <i data-lucide="printer" style="width: 14px; height: 14px;"></i> Imprimir Memorial
-                                Técnico
+                                <i data-lucide="printer" style="width: 14px; height: 14px;"></i> <span
+                                    data-i18n="memorial.printBtn">Imprimir Memorial Técnico</span>
                             </button>
                         </div>
                     </div>
@@ -1516,17 +1580,377 @@
         </div>
     </div>
 
-    <!-- Calculations Script -->
+    <!-- i18n + Calculations Script -->
     <script>
+        // ─────────────────────────────────────────────
+        // i18n — Translation Dictionary
+        // ─────────────────────────────────────────────
+        const i18nDictionary = {
+            pt: {
+                'header.title': 'Assistente de Engenharia Elétrica',
+                'header.subtitle': 'Soluções de Cálculos e Dimensionamentos',
+                'header.method': 'Método das Impedâncias Percentuais',
+                'nav.solutions': 'Soluções',
+                'nav.shortCircuit': 'Curto-Circuito Trifásico (IEC 60909)',
+                'nav.cableSizing': 'Dimensionamento de Cabos (BT e MT)',
+                'nav.altitudeDerating': 'Derating por Altitude (Motores e Painéis BT/MT)',
+                'nav.comingSoon': 'Em breve / Bloqueado',
+                'inputs.title': 'Parâmetros do Sistema',
+                'inputs.group1': '1. Rede de Alimentação',
+                'inputs.voltageFactor': 'Fator de Tensão da Rede (c)',
+                'inputs.voltageFactorOpt1': 'c = 1.05 (Mínimo BT)',
+                'inputs.voltageFactorOpt2': 'c = 1.10 (Máximo BT / MT)',
+                'inputs.voltageFactorOpt3': 'c = 1.00 (Fator Unitário)',
+                'inputs.gridLevel': 'Nível da Rede Upstream',
+                'inputs.gridPower': 'Potência (Scc)',
+                'inputs.gridCurrent': 'Corrente (Icc)',
+                'inputs.sccPower': 'Potência de Curto-Circuito (Scc)',
+                'inputs.iccCurrent': 'Corrente de Curto-Circuito (Icc)',
+                'inputs.group2': '2. Transformador',
+                'inputs.nomPower': 'Potência Nominal (SnT)',
+                'inputs.nomVoltage': 'Tensão Secundária Nominal (UnT)',
+                'inputs.impedancePct': 'Impedância Percentual (Z% ou uk%)',
+                'inputs.copperLoss': 'Perdas no Cobre (Pcu)',
+                'inputs.group3': '3. Ligação e Neutro',
+                'inputs.vectorGroup': 'Grupo de Ligação (Sequência Zero)',
+                'inputs.vgDyn11': 'Dyn11 (Estrela Aterrado / Delta)',
+                'inputs.vgYzn5': 'Yzn5 (Estrela-Zigzag Aterrado)',
+                'inputs.vgYnyn': 'Ynyn0 (Estrela-Estrela Aterrado)',
+                'inputs.vgCustom': 'Customizado (R0/R1 e X0/X1)',
+                'inputs.r0r1': 'Relação R0/R1',
+                'inputs.x0x1': 'Relação X0/X1',
+                'inputs.groundingR': 'Resistência de Aterramento (RN)',
+                'inputs.groundingX': 'Reatância de Aterramento (XN)',
+                'inputs.group4': '4. Dicionário de Símbolos',
+                'sym.Sn': 'Potência Nominal do Transformador (kVA)',
+                'sym.Vn': 'Tensão de Linha Secundária (V)',
+                'sym.Zpct': 'Impedância de Curto-Circuito (%)',
+                'sym.Pcu': 'Perdas no Cobre do Transformador (kW)',
+                'sym.Scc': 'Potência de Curto-Circuito da Rede Upstream (MVA)',
+                'sym.Icc': 'Corrente de Curto-Circuito da Rede Upstream (kA)',
+                'sym.c': 'Fator de Tensão de Rede (norma IEC 60909)',
+                'sym.ZQ': 'Impedância da Rede Upstream referida ao secundário (Ω)',
+                'sym.ZT': 'Impedância Interna do Transformador (Ω)',
+                'sym.RNXN': 'Resistência e Reatância de Aterramento do Neutro (Ω)',
+                'sym.Z1': 'Impedância Equivalente de Sequência Positiva (Ω)',
+                'sym.Z0': 'Impedância Equivalente de Sequência Zero (Ω)',
+                'sym.In': 'Corrente Nominal Secundária do Trafo (A)',
+                'sym.Ikpp': 'Corrente de Curto-Circuito Inicial Simétrica (kA)',
+                'sym.ip': 'Corrente de Pico Assimétrica Inicial (kA)',
+                'sym.kappa': 'Fator de Crista de Pico Assemelhado (IEC 60909)',
+                'kpi.nomCurrentTitle': 'Corrente Nominal (In)',
+                'kpi.nomCurrentDesc': 'Corrente nominal em plena carga secundária.',
+                'kpi.ik3Title': 'Curto Trifásico (I\'\'k3)',
+                'kpi.ik3Desc': 'Falha trifásica simétrica inicial máxima.',
+                'kpi.ik2Title': 'Curto Bifásico (I\'\'k2)',
+                'kpi.ik2Desc': 'Curto bifásico livre de terra.',
+                'kpi.ik1Title': 'Curto Monofásico (I\'\'k1)',
+                'kpi.ik1Desc': 'Fase-terra. Altamente dependente do neutro.',
+                'tabs.impedances': 'Impedâncias e Dados',
+                'tabs.diagram': 'Diagrama Unifilar',
+                'tabs.curves': 'Curvas Analíticas',
+                'tbl.param': 'Parâmetro do Sistema',
+                'tbl.symbol': 'Símbolo',
+                'tbl.positive': 'Positivo (+) [Ω]',
+                'tbl.zero': 'Zero (0) [Ω]',
+                'tbl.rq': 'Resistência da Rede Upstream',
+                'tbl.xq': 'Reatância da Rede Upstream',
+                'tbl.rt': 'Resistência Interna do Transformador',
+                'tbl.xt': 'Reatância Interna do Transformador',
+                'tbl.zn': 'Impedância de Aterramento do Neutro',
+                'tbl.req': 'Resistência Equivalente no Ponto de Falha',
+                'tbl.xeq': 'Reatância Equivalente no Ponto de Falha',
+                'tbl.zeq': 'Impedância Equivalente Total',
+                'tbl.naIsolated': 'N/A (Rede Isolada)',
+                'memorial.title': 'Memorial de Cálculo Completo (Norma IEC 60909)',
+                'memorial.step1num': 'Passo 1', 'memorial.step1title': 'Corrente Nominal Secundária do Enrolamento',
+                'memorial.step2num': 'Passo 2', 'memorial.step2title': 'Impedância Equivalente da Rede de Média Tensão',
+                'memorial.step3num': 'Passo 3', 'memorial.step3title': 'Impedâncias de Sequência Positiva e Zero do Transformador',
+                'memorial.step4num': 'Passo 4', 'memorial.step4title': 'Somatório de Impedâncias Equivalentes de Loop',
+                'memorial.step5num': 'Passo 5', 'memorial.step5title': 'Resoluções Analíticas Finais (IEC 60909)',
+                'memorial.step1explanation': 'Calculada com base na potência aparente nominal (SnT) e tensão nominal secundária entre fases (UnT):',
+                'memorial.step5item1': "1. Curto-Circuito Trifásico Simétrico Inicial (I''k3):",
+                'memorial.step5item2': "2. Curto-Circuito Bifásico Livre de Terra (I''k2):",
+                'memorial.step5item3': "3. Curto-Circuito Monofásico Terra Inicial (I''k1):",
+                'memorial.step5item4': "4. Fator e Corrente de Pico Assimétrica (ip3):",
+                'memorial.vectorGroupFactors': 'Fatores aplicados ao grupo',
+                'chart.ik3Label': "Curto Trifásico (I''k3) [kA]",
+                'chart.ik1Label': "Curto Monofásico (I''k1) [kA]",
+                'chart.yAxisTitle': 'Corrente de Curto-Circuito (kA)',
+                'memorial.printBtn': 'Imprimir Memorial Técnico',
+                'diagram.peakTitle': 'CORRENTE DE CRISTA ASSIMÉTRICA (IP)',
+                'diagram.peakDesc': 'Corrente máxima de pico mecânico no primeiro semi-ciclo de curto-circuito.',
+                'diagram.upstreamGrid': 'Rede Upstream',
+                'diagram.transformer': 'Trafo Industrial',
+                'diagram.secondaryTerminals': 'BORNES SECUNDÁRIOS',
+                'diagram.faultPoint': 'PONTO DE FALHA (F)',
+                'diagram.calculatedCurrents': 'Correntes Calculadas',
+                'diagram.threePhaseFault': 'Curto Trifásico',
+                'diagram.twoPhaseFault': 'Curto Bifásico',
+                'diagram.singlePhaseFault': 'Curto Monofásico',
+            },
+            en: {
+                'header.title': 'Electrical Engineering Assistant',
+                'header.subtitle': 'Calculation & Sizing Solutions',
+                'header.method': 'Percentage Impedance Method',
+                'nav.solutions': 'Solutions',
+                'nav.shortCircuit': 'Three-Phase Short-Circuit (IEC 60909)',
+                'nav.cableSizing': 'Cable Sizing (LV & MV)',
+                'nav.altitudeDerating': 'Altitude Derating (Motors & LV/MV Panels)',
+                'nav.comingSoon': 'Coming Soon / Locked',
+                'inputs.title': 'System Parameters',
+                'inputs.group1': '1. Upstream Grid',
+                'inputs.voltageFactor': 'Grid Voltage Factor (c)',
+                'inputs.voltageFactorOpt1': 'c = 1.05 (LV Minimum)',
+                'inputs.voltageFactorOpt2': 'c = 1.10 (LV/MV Maximum)',
+                'inputs.voltageFactorOpt3': 'c = 1.00 (Unit Factor)',
+                'inputs.gridLevel': 'Upstream Grid Level',
+                'inputs.gridPower': 'Power (Scc)',
+                'inputs.gridCurrent': 'Current (Icc)',
+                'inputs.sccPower': 'Short-Circuit Power (Scc)',
+                'inputs.iccCurrent': 'Short-Circuit Current (Icc)',
+                'inputs.group2': '2. Transformer',
+                'inputs.nomPower': 'Rated Power (SnT)',
+                'inputs.nomVoltage': 'Rated Secondary Voltage (UnT)',
+                'inputs.impedancePct': 'Percentage Impedance (Z% or uk%)',
+                'inputs.copperLoss': 'Copper Losses (Pcu)',
+                'inputs.group3': '3. Winding & Neutral',
+                'inputs.vectorGroup': 'Vector Group (Zero Sequence)',
+                'inputs.vgDyn11': 'Dyn11 (Star Earthed / Delta)',
+                'inputs.vgYzn5': 'Yzn5 (Star-Zigzag Earthed)',
+                'inputs.vgYnyn': 'Ynyn0 (Star-Star Earthed)',
+                'inputs.vgCustom': 'Custom (R0/R1 & X0/X1)',
+                'inputs.r0r1': 'R0/R1 Ratio',
+                'inputs.x0x1': 'X0/X1 Ratio',
+                'inputs.groundingR': 'Grounding Resistance (RN)',
+                'inputs.groundingX': 'Grounding Reactance (XN)',
+                'inputs.group4': '4. Symbol Dictionary',
+                'sym.Sn': 'Transformer Rated Power (kVA)',
+                'sym.Vn': 'Secondary Line Voltage (V)',
+                'sym.Zpct': 'Short-Circuit Impedance (%)',
+                'sym.Pcu': 'Transformer Copper Losses (kW)',
+                'sym.Scc': 'Upstream Grid Short-Circuit Power (MVA)',
+                'sym.Icc': 'Upstream Grid Short-Circuit Current (kA)',
+                'sym.c': 'Grid Voltage Factor (IEC 60909)',
+                'sym.ZQ': 'Upstream Grid Impedance referred to secondary (Ω)',
+                'sym.ZT': 'Transformer Internal Impedance (Ω)',
+                'sym.RNXN': 'Neutral Grounding Resistance & Reactance (Ω)',
+                'sym.Z1': 'Positive-Sequence Equivalent Impedance (Ω)',
+                'sym.Z0': 'Zero-Sequence Equivalent Impedance (Ω)',
+                'sym.In': 'Transformer Secondary Rated Current (A)',
+                'sym.Ikpp': 'Initial Symmetrical Short-Circuit Current (kA)',
+                'sym.ip': 'Initial Asymmetric Peak Current (kA)',
+                'sym.kappa': 'Peak Factor (IEC 60909)',
+                'kpi.nomCurrentTitle': 'Rated Current (In)',
+                'kpi.nomCurrentDesc': 'Rated current at full secondary load.',
+                'kpi.ik3Title': 'Three-Phase Fault (I\'\'k3)',
+                'kpi.ik3Desc': 'Maximum initial symmetric three-phase fault.',
+                'kpi.ik2Title': 'Two-Phase Fault (I\'\'k2)',
+                'kpi.ik2Desc': 'Phase-to-phase fault, earth free.',
+                'kpi.ik1Title': 'Single-Phase Fault (I\'\'k1)',
+                'kpi.ik1Desc': 'Phase-to-earth. Highly dependent on neutral.',
+                'tabs.impedances': 'Impedances & Data',
+                'tabs.diagram': 'Single-Line Diagram',
+                'tabs.curves': 'Analytical Curves',
+                'tbl.param': 'System Parameter',
+                'tbl.symbol': 'Symbol',
+                'tbl.positive': 'Positive (+) [Ω]',
+                'tbl.zero': 'Zero (0) [Ω]',
+                'tbl.rq': 'Upstream Grid Resistance',
+                'tbl.xq': 'Upstream Grid Reactance',
+                'tbl.rt': 'Transformer Internal Resistance',
+                'tbl.xt': 'Transformer Internal Reactance',
+                'tbl.zn': 'Neutral Grounding Impedance',
+                'tbl.req': 'Equivalent Resistance at Fault Point',
+                'tbl.xeq': 'Equivalent Reactance at Fault Point',
+                'tbl.zeq': 'Total Equivalent Impedance',
+                'tbl.naIsolated': 'N/A (Isolated Grid)',
+                'memorial.title': 'Full Calculation Report (IEC 60909)',
+                'memorial.step1num': 'Step 1', 'memorial.step1title': 'Secondary Rated Current of the Winding',
+                'memorial.step2num': 'Step 2', 'memorial.step2title': 'Equivalent Impedance of the MV Upstream Grid',
+                'memorial.step3num': 'Step 3', 'memorial.step3title': 'Positive & Zero-Sequence Transformer Impedances',
+                'memorial.step4num': 'Step 4', 'memorial.step4title': 'Loop Equivalent Impedance Summation',
+                'memorial.step5num': 'Step 5', 'memorial.step5title': 'Final Analytical Results (IEC 60909)',
+                'memorial.step1explanation': 'Calculated based on the rated apparent power (SnT) and rated secondary line-to-line voltage (UnT):',
+                'memorial.step5item1': "1. Initial Symmetrical Three-Phase Short-Circuit Current (I''k3):",
+                'memorial.step5item2': "2. Line-to-Line Short-Circuit Current, Earth-Free (I''k2):",
+                'memorial.step5item3': "3. Initial Line-to-Earth Short-Circuit Current (I''k1):",
+                'memorial.step5item4': "4. Peak Short-Circuit Current Factor and Value (ip3):",
+                'memorial.vectorGroupFactors': 'Applied factors for vector group',
+                'chart.ik3Label': "Three-Phase Fault (I''k3) [kA]",
+                'chart.ik1Label': "Single-Phase Fault (I''k1) [kA]",
+                'chart.yAxisTitle': 'Short-Circuit Current (kA)',
+                'memorial.printBtn': 'Print Technical Report',
+                'diagram.peakTitle': 'ASYMMETRIC PEAK CURRENT (IP)',
+                'diagram.peakDesc': 'Maximum mechanical peak current in the first short-circuit semi-cycle.',
+                'diagram.upstreamGrid': 'Upstream Grid',
+                'diagram.transformer': 'Industrial Transformer',
+                'diagram.secondaryTerminals': 'SECONDARY TERMINALS',
+                'diagram.faultPoint': 'FAULT POINT (F)',
+                'diagram.calculatedCurrents': 'Calculated Currents',
+                'diagram.threePhaseFault': 'Three-Phase Fault',
+                'diagram.twoPhaseFault': 'Two-Phase Fault',
+                'diagram.singlePhaseFault': 'Single-Phase Fault',
+            },
+            es: {
+                'header.title': 'Asistente de Ingeniería Eléctrica',
+                'header.subtitle': 'Soluciones de Cálculos y Dimensionamiento',
+                'header.method': 'Método de las Impedancias Porcentuales',
+                'nav.solutions': 'Soluciones',
+                'nav.shortCircuit': 'Cortocircuito Trifásico (IEC 60909)',
+                'nav.cableSizing': 'Dimensionamiento de Cables (BT y MT)',
+                'nav.altitudeDerating': 'Derating por Altitud (Motores y Tableros BT/MT)',
+                'nav.comingSoon': 'Próximamente / Bloqueado',
+                'inputs.title': 'Parámetros del Sistema',
+                'inputs.group1': '1. Red de Alimentación',
+                'inputs.voltageFactor': 'Factor de Tensión de Red (c)',
+                'inputs.voltageFactorOpt1': 'c = 1.05 (Mínimo BT)',
+                'inputs.voltageFactorOpt2': 'c = 1.10 (Máximo BT / MT)',
+                'inputs.voltageFactorOpt3': 'c = 1.00 (Factor Unitario)',
+                'inputs.gridLevel': 'Nivel de la Red Upstream',
+                'inputs.gridPower': 'Potencia (Scc)',
+                'inputs.gridCurrent': 'Corriente (Icc)',
+                'inputs.sccPower': 'Potencia de Cortocircuito (Scc)',
+                'inputs.iccCurrent': 'Corriente de Cortocircuito (Icc)',
+                'inputs.group2': '2. Transformador',
+                'inputs.nomPower': 'Potencia Nominal (SnT)',
+                'inputs.nomVoltage': 'Tensión Secundaria Nominal (UnT)',
+                'inputs.impedancePct': 'Impedancia Porcentual (Z% o uk%)',
+                'inputs.copperLoss': 'Pérdidas en el Cobre (Pcu)',
+                'inputs.group3': '3. Grupo de Conexión y Neutro',
+                'inputs.vectorGroup': 'Grupo Vectorial (Secuencia Cero)',
+                'inputs.vgDyn11': 'Dyn11 (Estrella Aterrada / Delta)',
+                'inputs.vgYzn5': 'Yzn5 (Estrella-Zigzag Aterrada)',
+                'inputs.vgYnyn': 'Ynyn0 (Estrella-Estrella Aterrada)',
+                'inputs.vgCustom': 'Personalizado (R0/R1 y X0/X1)',
+                'inputs.r0r1': 'Relación R0/R1',
+                'inputs.x0x1': 'Relación X0/X1',
+                'inputs.groundingR': 'Resistencia de Puesta a Tierra (RN)',
+                'inputs.groundingX': 'Reactancia de Puesta a Tierra (XN)',
+                'inputs.group4': '4. Diccionario de Símbolos',
+                'sym.Sn': 'Potencia Nominal del Transformador (kVA)',
+                'sym.Vn': 'Tensión de Línea Secundaria (V)',
+                'sym.Zpct': 'Impedancia de Cortocircuito (%)',
+                'sym.Pcu': 'Pérdidas en el Cobre del Transformador (kW)',
+                'sym.Scc': 'Potencia de Cortocircuito de la Red Upstream (MVA)',
+                'sym.Icc': 'Corriente de Cortocircuito de la Red Upstream (kA)',
+                'sym.c': 'Factor de Tensión de Red (norma IEC 60909)',
+                'sym.ZQ': 'Impedancia de la Red Upstream referida al secundario (Ω)',
+                'sym.ZT': 'Impedancia Interna del Transformador (Ω)',
+                'sym.RNXN': 'Resistencia y Reactancia de Puesta a Tierra del Neutro (Ω)',
+                'sym.Z1': 'Impedancia Equivalente de Secuencia Positiva (Ω)',
+                'sym.Z0': 'Impedancia Equivalente de Secuencia Cero (Ω)',
+                'sym.In': 'Corriente Nominal Secundaria del Transformador (A)',
+                'sym.Ikpp': 'Corriente de Cortocircuito Inicial Simétrica (kA)',
+                'sym.ip': 'Corriente de Pico Asimétrica Inicial (kA)',
+                'sym.kappa': 'Factor de Cresta de Pico (IEC 60909)',
+                'kpi.nomCurrentTitle': 'Corriente Nominal (In)',
+                'kpi.nomCurrentDesc': 'Corriente nominal a plena carga secundaria.',
+                'kpi.ik3Title': 'Cortocircuito Trifásico (I\'\'k3)',
+                'kpi.ik3Desc': 'Fallo trifásico simétrico inicial máximo.',
+                'kpi.ik2Title': 'Cortocircuito Bifásico (I\'\'k2)',
+                'kpi.ik2Desc': 'Cortocircuito bifásico libre de tierra.',
+                'kpi.ik1Title': 'Cortocircuito Monofásico (I\'\'k1)',
+                'kpi.ik1Desc': 'Fase-tierra. Altamente dependiente del neutro.',
+                'tabs.impedances': 'Impedancias y Datos',
+                'tabs.diagram': 'Diagrama Unifilar',
+                'tabs.curves': 'Curvas Analíticas',
+                'tbl.param': 'Parámetro del Sistema',
+                'tbl.symbol': 'Símbolo',
+                'tbl.positive': 'Positivo (+) [Ω]',
+                'tbl.zero': 'Cero (0) [Ω]',
+                'tbl.rq': 'Resistencia de la Red Upstream',
+                'tbl.xq': 'Reactancia de la Red Upstream',
+                'tbl.rt': 'Resistencia Interna del Transformador',
+                'tbl.xt': 'Reactancia Interna del Transformador',
+                'tbl.zn': 'Impedancia de Puesta a Tierra del Neutro',
+                'tbl.req': 'Resistencia Equivalente en el Punto de Falla',
+                'tbl.xeq': 'Reactancia Equivalente en el Punto de Falla',
+                'tbl.zeq': 'Impedancia Equivalente Total',
+                'tbl.naIsolated': 'N/A (Red Aislada)',
+                'memorial.title': 'Memorial de Cálculo Completo (Norma IEC 60909)',
+                'memorial.step1num': 'Paso 1', 'memorial.step1title': 'Corriente Nominal Secundaria del Devanado',
+                'memorial.step2num': 'Paso 2', 'memorial.step2title': 'Impedancia Equivalente de la Red de Media Tensión',
+                'memorial.step3num': 'Paso 3', 'memorial.step3title': 'Impedancias de Secuencia Positiva y Cero del Transformador',
+                'memorial.step4num': 'Paso 4', 'memorial.step4title': 'Suma de Impedancias Equivalentes de Lazo',
+                'memorial.step5num': 'Paso 5', 'memorial.step5title': 'Resoluciones Analíticas Finales (IEC 60909)',
+                'memorial.step1explanation': 'Calculada con base na la potencia aparente nominal (SnT) y tensión nominal secundaria entre fases (UnT):',
+                'memorial.step5item1': "1. Corriente de Cortocircuito Trifásica Simétrica Inicial (I''k3):",
+                'memorial.step5item2': "2. Corriente de Cortocircuito Bifásica Libre de Tierra (I''k2):",
+                'memorial.step5item3': "3. Corriente de Cortocircuito Monofásica Inicial a Tierra (I''k1):",
+                'memorial.step5item4': "4. Factor y Corriente de Pico Asimétrica (ip3):",
+                'memorial.vectorGroupFactors': 'Factores aplicados al grupo',
+                'chart.ik3Label': "Cortocircuito Trifásico (I''k3) [kA]",
+                'chart.ik1Label': "Cortocircuito Monofásico (I''k1) [kA]",
+                'chart.yAxisTitle': 'Corriente de Cortocircuito (kA)',
+                'memorial.printBtn': 'Imprimir Memorial Técnico',
+                'diagram.peakTitle': 'CORRIENTE DE PICO ASIMÉTRICA (IP)',
+                'diagram.peakDesc': 'Corriente máxima de pico mecánico en el primer semiciclo de cortocircuito.',
+                'diagram.upstreamGrid': 'Red Upstream',
+                'diagram.transformer': 'Trafo Industrial',
+                'diagram.secondaryTerminals': 'BORNES SECUNDARIOS',
+                'diagram.faultPoint': 'PUNTO DE FALLA (F)',
+                'diagram.calculatedCurrents': 'Corrientes Calculadas',
+                'diagram.threePhaseFault': 'Corto Trifásico',
+                'diagram.twoPhaseFault': 'Corto Bifásico',
+                'diagram.singlePhaseFault': 'Corto Monofásico',
+            }
+        };
+
+        // ─────────────────────────────────────────────
+        // i18n — Runtime Engine
+        // ─────────────────────────────────────────────
+        let currentLang = localStorage.getItem('ampai-lang') || 'pt';
+
+        function t(key) {
+            return (i18nDictionary[currentLang] || i18nDictionary['pt'])[key] || key;
+        }
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('ampai-lang', lang);
+
+            // Update html lang attribute
+            document.getElementById('html-root').lang = lang === 'pt' ? 'pt-BR' : lang;
+
+            // Highlight active button
+            ['pt', 'en', 'es'].forEach(l => {
+                document.getElementById('lang-' + l).classList.toggle('active', l === lang);
+            });
+
+            // Translate all data-i18n elements (textContent)
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                el.textContent = t(key);
+            });
+
+            // Translate option elements inside selects
+            document.querySelectorAll('option[data-i18n]').forEach(el => {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+
+            // Translate title attributes
+            document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                el.title = t(el.getAttribute('data-i18n-title'));
+            });
+
+            // Recalculate to refresh formatted numbers with new locale
+            calculate();
+        }
+
+        // ─────────────────────────────────────────────
         // Lucide Icons initialization
+        // ─────────────────────────────────────────────
         lucide.createIcons();
 
         let currentGridMode = 'scc';
         let activeTabId = 'tab-results';
         let sensitivityChart = null;
 
+        // Locale-aware number formatter (PT → comma decimal; EN/ES → dot decimal)
         function fmt(num, digits = 3) {
-            return num.toLocaleString('pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+            const locale = currentLang === 'pt' ? 'pt-BR' : currentLang === 'en' ? 'en-US' : 'es-ES';
+            return num.toLocaleString(locale, { minimumFractionDigits: digits, maximumFractionDigits: digits });
         }
 
         function setGridInputMode(mode) {
@@ -1703,7 +2127,7 @@
                 else if (vectorGroup === 'Ynyn') vectorGroupFormula = "R0T = 1.5 · RT = " + fmt(R_0T, 6) + " Ω | X0T = 10.0 · XT = " + fmt(X_0T, 6) + " Ω";
                 else vectorGroupFormula = "Custom: R0T = " + fmt(R_0T, 6) + " Ω | X0T = " + fmt(X_0T, 6) + " Ω";
 
-                document.getElementById('m-calc-z0t-factor').innerText = `Fatores aplicados ao grupo ${vectorGroup}`;
+                document.getElementById('m-calc-z0t-factor').innerText = `${t('memorial.vectorGroupFactors')} ${vectorGroup}`;
                 document.getElementById('m-calc-z0t').innerText = vectorGroupFormula;
 
                 document.getElementById('m-val-req1').innerText = fmt(R_1, 6);
@@ -1720,13 +2144,24 @@
                 document.getElementById('m-calc-ip3').innerText = `ip3 = ${fmt(kappa, 3)} · √2 · ${fmt(I_k3_double / 1000, 3)}kA = ${fmt(i_p3 / 1000, 3)} kA`;
 
                 // Update Diagram Label
+                document.getElementById('diag-upstream-label').textContent = t('diagram.upstreamGrid');
                 document.getElementById('diag-scc').textContent = currentGridMode === 'scc' ?
                     `Scc = ${fmt(parseFloat(document.getElementById('input-scc').value), 0)} MVA` :
                     `Icc = ${fmt(parseFloat(document.getElementById('input-icc').value), 1)} kA`;
+                document.getElementById('diag-transformer-label').textContent = t('diagram.transformer');
                 document.getElementById('diag-transformer-info').textContent = `${fmt(SnT / 1000, 0)} kVA | Z% = ${fmt(Zk, 1)}% | ${vectorGroup}`;
+                document.getElementById('diag-secondary-label').textContent = t('diagram.secondaryTerminals');
                 document.getElementById('diag-unt').textContent = `${fmt(UnT, 0)} V`;
+                document.getElementById('diag-fault-label').textContent = t('diagram.faultPoint');
+                document.getElementById('diag-currents-label').textContent = t('diagram.calculatedCurrents');
+
+                document.getElementById('diag-ik3-label').textContent = `${t('diagram.threePhaseFault')} (I''k3):`;
                 document.getElementById('diag-ik3').textContent = `${fmt(I_k3_double / 1000, 3)} kA`;
+
+                document.getElementById('diag-ik2-label').textContent = `${t('diagram.twoPhaseFault')} (I''k2):`;
                 document.getElementById('diag-ik2').textContent = `${fmt(I_k2_double / 1000, 3)} kA`;
+
+                document.getElementById('diag-ik1-label').textContent = `${t('diagram.singlePhaseFault')} (I''k1):`;
                 document.getElementById('diag-ik1').textContent = `${fmt(I_k1_double / 1000, 3)} kA`;
 
                 if (activeTabId === 'tab-charts') {
@@ -1792,7 +2227,7 @@
                     labels: kvaRange.map(k => `${k} kVA`),
                     datasets: [
                         {
-                            label: 'Curto Trifásico (I\'\'k3) [kA]',
+                            label: t('chart.ik3Label'),
                             data: ik3Data,
                             borderColor: '#0f172a',
                             borderWidth: 2,
@@ -1802,7 +2237,7 @@
                             fill: false
                         },
                         {
-                            label: 'Curto Monofásico (I\'\'k1) [kA]',
+                            label: t('chart.ik1Label'),
                             data: ik1Data,
                             borderColor: '#f59e0b',
                             borderWidth: 1.5,
@@ -1841,7 +2276,7 @@
                             },
                             title: {
                                 display: true,
-                                text: 'Corrente de Curto-Circuito (kA)',
+                                text: t('chart.yAxisTitle'),
                                 color: '#475569',
                                 font: { family: 'Inter', size: 11, weight: 'bold' }
                             }
