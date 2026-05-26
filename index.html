@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Curto-Circuito Industrial - IEC 60909</title>
+    <title>AmpAI — Assistente de Engenharia Elétrica</title>
     <!-- Google Fonts: Inter and JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -130,15 +130,79 @@
         /* Main Grid Layout */
         .main-layout {
             display: grid;
-            grid-template-columns: 360px 1fr;
+            grid-template-columns: 280px 360px 1fr;
             gap: 1.5rem;
             align-items: start;
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 280px 1fr;
+            }
         }
 
         @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
             }
+        }
+
+        /* SaaS Navigation Sidebar */
+        .nav-sidebar {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 1.5rem;
+            height: calc(100vh - 3rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            overflow-y: auto;
+        }
+
+        .nav-section-title {
+            font-size: 0.7rem;
+            font-weight: 750;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding-left: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover:not(.locked) {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            box-shadow: var(--card-shadow);
+        }
+
+        .nav-item.locked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            justify-content: space-between;
         }
 
         /* Sidebar / Inputs Panel */
@@ -532,18 +596,17 @@
 
         .math-block {
             font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-secondary);
-            padding: 0.85rem;
-            border-radius: 6px;
-            border-left: 3px solid var(--text-primary);
-            margin: 0.75rem 0;
-            font-size: 0.8rem;
+            background: var(--bg-tertiary);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
+            margin: 0.85rem 0;
+            font-size: 0.85rem;
             overflow-x: auto;
             white-space: pre-wrap;
             color: var(--text-primary);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-            border-right: 1px solid var(--border);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            border: 1px solid var(--border);
         }
 
         .math-line {
@@ -663,7 +726,7 @@
                 max-width: 100%;
                 padding: 0;
             }
-            .sidebar, header, .tabs-header, .actions-bar, .preset-grid, .toggle-btn-group, .btn-action, .chart-card {
+            .nav-sidebar, .sidebar, header, .tabs-header, .actions-bar, .preset-grid, .toggle-btn-group, .btn-action, .chart-card {
                 display: none !important;
             }
             .main-layout {
@@ -732,12 +795,9 @@
         <!-- Header -->
         <header>
             <div class="header-title">
-                <div class="logo-icon">
-                    <i data-lucide="activity" style="width: 20px; height: 20px;"></i>
-                </div>
                 <div>
-                    <h1>Calculadora de Curto-Circuito Industrial</h1>
-                    <p style="font-size: 0.75rem; color: var(--text-muted);">Memorial de Cálculo sob a Norma IEC 60909</p>
+                    <h1>Assistente de Engenharia Elétrica</h1>
+                    <p style="font-size: 0.75rem; color: var(--text-muted);">Soluções de Cálculos e Dimensionamentos</p>
                 </div>
             </div>
             <div class="header-meta">
@@ -746,8 +806,48 @@
             </div>
         </header>
 
+
         <!-- Main Layout Grid -->
         <div class="main-layout">
+            <!-- SaaS Navigation Sidebar -->
+            <nav class="nav-sidebar">
+                <!-- Autônomo Logo AmpAI -->
+                <div style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.5rem 1.5rem 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem;">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="32" height="32" rx="8" fill="#0f172a"/>
+                        <path d="M18 6L10 18H16L14 26L22 14H16L18 6Z" fill="#f59e0b"/>
+                        <circle cx="24" cy="8" r="2" fill="#10b981"/>
+                        <circle cx="8" cy="24" r="2" fill="#10b981"/>
+                        <path d="M22 9L18 13" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+                        <path d="M10 23L14 19" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                    <span style="font-weight: 800; font-size: 1.15rem; color: var(--text-primary); letter-spacing: -0.03em;">Amp<span style="color: var(--accent);">AI</span></span>
+                </div>
+
+                <div class="nav-section-title">Soluções</div>
+                
+                <a href="#" class="nav-item active">
+                    <span style="font-size: 1.1rem;">⚡</span>
+                    <span style="flex: 1;">Curto-Circuito Trifásico (IEC 60909)</span>
+                </a>
+
+                <a href="#" class="nav-item locked" title="Em breve / Bloqueado">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 1.1rem;">🔌</span>
+                        <span>Dimensionamento de Cabos (BT e MT)</span>
+                    </div>
+                    <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+                </a>
+
+                <a href="#" class="nav-item locked" title="Em breve / Bloqueado">
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 1.1rem;">⛰️</span>
+                        <span>Derating por Altitude (Motores e Painéis BT/MT)</span>
+                    </div>
+                    <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+                </a>
+            </nav>
+
             <!-- Sidebar (Inputs) -->
             <aside class="sidebar">
                 <div class="sidebar-title">
@@ -1260,6 +1360,10 @@
         let activeTabId = 'tab-results';
         let sensitivityChart = null;
 
+        function fmt(num, digits = 3) {
+            return num.toLocaleString('pt-BR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+        }
+
         function setGridInputMode(mode) {
             currentGridMode = mode;
             document.getElementById('toggle-scc').classList.toggle('active', mode === 'scc');
@@ -1334,7 +1438,7 @@
                 const R_T = Pcu * (Math.pow(UnT, 2) / Math.pow(SnT, 2));
 
                 if (R_T > Z_T_mod) {
-                    throw new Error(`Inconsistência física: Perdas no cobre Pcu de ${Pcu / 1000}kW geram uma resistência interna RT (${R_T.toFixed(5)} Ω) maior do que a impedância total calculada ZT (${Z_T_mod.toFixed(5)} Ω). Reduza Pcu ou aumente Z%.`);
+                    throw new Error(`Inconsistência física: Perdas no cobre Pcu de ${fmt(Pcu / 1000, 1)}kW geram uma resistência interna RT (${fmt(R_T, 5)} Ω) maior do que a impedância total calculada ZT (${fmt(Z_T_mod, 5)} Ω). Reduza Pcu ou aumente Z%.`);
                 }
                 const X_T = Math.sqrt(Math.pow(Z_T_mod, 2) - Math.pow(R_T, 2));
 
@@ -1394,71 +1498,71 @@
                 const i_p3 = kappa * Math.sqrt(2) * I_k3_double;
 
                 // Update KPI Cards
-                document.getElementById('val-int').innerHTML = `${InT.toFixed(1)} <span class="result-unit">A</span>`;
-                document.getElementById('val-ik3').innerHTML = `${(I_k3_double / 1000).toFixed(3)} <span class="result-unit">kA</span>`;
-                document.getElementById('val-ik2').innerHTML = `${(I_k2_double / 1000).toFixed(3)} <span class="result-unit">kA</span>`;
-                document.getElementById('val-ik1').innerHTML = `${(I_k1_double / 1000).toFixed(3)} <span class="result-unit">kA</span>`;
+                document.getElementById('val-int').innerHTML = `${fmt(InT, 1)} <span class="result-unit">A</span>`;
+                document.getElementById('val-ik3').innerHTML = `${fmt(I_k3_double / 1000, 3)} <span class="result-unit">kA</span>`;
+                document.getElementById('val-ik2').innerHTML = `${fmt(I_k2_double / 1000, 3)} <span class="result-unit">kA</span>`;
+                document.getElementById('val-ik1').innerHTML = `${fmt(I_k1_double / 1000, 3)} <span class="result-unit">kA</span>`;
                 
-                document.getElementById('val-ip3-aux').innerHTML = `${(i_p3 / 1000).toFixed(3)} kA`;
+                document.getElementById('val-ip3-aux').innerHTML = `${fmt(i_p3 / 1000, 3)} kA`;
 
                 // Update Table
-                document.getElementById('tbl-rq-1').innerText = R_Q.toFixed(6);
-                document.getElementById('tbl-xq-1').innerText = X_Q.toFixed(6);
-                document.getElementById('tbl-rt-1').innerText = R_T.toFixed(6);
-                document.getElementById('tbl-xt-1').innerText = X_T.toFixed(6);
-                document.getElementById('tbl-rt-0').innerText = R_0T.toFixed(6);
-                document.getElementById('tbl-xt-0').innerText = X_0T.toFixed(6);
-                document.getElementById('tbl-zn-0').innerText = `${(3 * rn).toFixed(3)} + j ${(3 * xn).toFixed(3)}`;
+                document.getElementById('tbl-rq-1').innerText = fmt(R_Q, 6);
+                document.getElementById('tbl-xq-1').innerText = fmt(X_Q, 6);
+                document.getElementById('tbl-rt-1').innerText = fmt(R_T, 6);
+                document.getElementById('tbl-xt-1').innerText = fmt(X_T, 6);
+                document.getElementById('tbl-rt-0').innerText = fmt(R_0T, 6);
+                document.getElementById('tbl-xt-0').innerText = fmt(X_0T, 6);
+                document.getElementById('tbl-zn-0').innerText = `${fmt(3 * rn, 3)} + j ${fmt(3 * xn, 3)}`;
 
-                document.getElementById('tbl-req-1').innerText = R_1.toFixed(6);
-                document.getElementById('tbl-xeq-1').innerText = X_1.toFixed(6);
-                document.getElementById('tbl-zeq-1').innerText = Z_1.toFixed(6);
-                document.getElementById('tbl-req-0').innerText = R_0.toFixed(6);
-                document.getElementById('tbl-xeq-0').innerText = X_0.toFixed(6);
-                document.getElementById('tbl-zeq-0').innerText = Z_0.toFixed(6);
+                document.getElementById('tbl-req-1').innerText = fmt(R_1, 6);
+                document.getElementById('tbl-xeq-1').innerText = fmt(X_1, 6);
+                document.getElementById('tbl-zeq-1').innerText = fmt(Z_1, 6);
+                document.getElementById('tbl-req-0').innerText = fmt(R_0, 6);
+                document.getElementById('tbl-xeq-0').innerText = fmt(X_0, 6);
+                document.getElementById('tbl-zeq-0').innerText = fmt(Z_0, 6);
 
                 // Update Memorial Calculations
-                document.getElementById('m-calc-int').innerText = `InT = ${SnT / 1000}kVA / (√3 · ${UnT}V) = ${InT.toFixed(2)} A`;
-                document.getElementById('m-calc-zq').innerHTML = `ZQ = (${c} · ${UnT}²) / ${currentGridMode === 'scc' ? (SnT * 10).toFixed(0) : '...'} <br>ZQ = ${Z_Q.toFixed(6)} Ω`;
-                document.getElementById('m-val-xq').innerText = X_Q.toFixed(6);
-                document.getElementById('m-val-rq').innerText = R_Q.toFixed(6);
+                document.getElementById('m-calc-int').innerText = `InT = ${fmt(SnT / 1000, 0)}kVA / (√3 · ${fmt(UnT, 0)}V) = ${fmt(InT, 2)} A`;
+                document.getElementById('m-calc-zq').innerHTML = `ZQ = (${fmt(c, 2)} · ${fmt(UnT, 0)}²) / ${currentGridMode === 'scc' ? fmt(parseFloat(document.getElementById('input-scc').value), 0) + ' MVA' : '...'} <br>ZQ = ${fmt(Z_Q, 6)} Ω`;
+                document.getElementById('m-val-xq').innerText = fmt(X_Q, 6);
+                document.getElementById('m-val-rq').innerText = fmt(R_Q, 6);
 
-                document.getElementById('m-calc-zt').innerText = `ZT = (${Zk}% / 100) · (${UnT}² / ${SnT / 1000}kVA) = ${Z_T_mod.toFixed(6)} Ω`;
-                document.getElementById('m-calc-rt').innerText = `RT = ${Pcu / 1000}kW · ${UnT}² / (${SnT / 1000}kVA)² = ${R_T.toFixed(6)} Ω`;
-                document.getElementById('m-val-xt').innerText = X_T.toFixed(6);
+                document.getElementById('m-calc-zt').innerText = `ZT = (${fmt(Zk, 1)}% / 100) · (${fmt(UnT, 0)}² / ${fmt(SnT / 1000, 0)}kVA) = ${fmt(Z_T_mod, 6)} Ω`;
+                document.getElementById('m-calc-rt').innerText = `RT = ${fmt(Pcu / 1000, 1)}kW · ${fmt(UnT, 0)}² / (${fmt(SnT / 1000, 0)}kVA)² = ${fmt(R_T, 6)} Ω`;
+                document.getElementById('m-val-xt').innerText = fmt(X_T, 6);
 
                 document.getElementById('m-vector-group').innerText = vectorGroup;
                 let vectorGroupFormula = "";
-                if (vectorGroup === 'Dyn11') vectorGroupFormula = "R0T = RT = " + R_T.toFixed(6) + " Ω | X0T = 0.95 · XT = " + X_0T.toFixed(6) + " Ω";
-                else if (vectorGroup === 'Yzn5') vectorGroupFormula = "R0T = RT = " + R_T.toFixed(6) + " Ω | X0T = 0.15 · XT = " + X_0T.toFixed(6) + " Ω";
-                else if (vectorGroup === 'Ynyn') vectorGroupFormula = "R0T = 1.5 · RT = " + R_0T.toFixed(6) + " Ω | X0T = 10.0 · XT = " + X_0T.toFixed(6) + " Ω";
-                else vectorGroupFormula = "Custom: R0T = " + R_0T.toFixed(6) + " Ω | X0T = " + X_0T.toFixed(6) + " Ω";
+                if (vectorGroup === 'Dyn11') vectorGroupFormula = "R0T = RT = " + fmt(R_T, 6) + " Ω | X0T = 0.95 · XT = " + fmt(X_0T, 6) + " Ω";
+                else if (vectorGroup === 'Yzn5') vectorGroupFormula = "R0T = RT = " + fmt(R_T, 6) + " Ω | X0T = 0.15 · XT = " + fmt(X_0T, 6) + " Ω";
+                else if (vectorGroup === 'Ynyn') vectorGroupFormula = "R0T = 1.5 · RT = " + fmt(R_0T, 6) + " Ω | X0T = 10.0 · XT = " + fmt(X_0T, 6) + " Ω";
+                else vectorGroupFormula = "Custom: R0T = " + fmt(R_0T, 6) + " Ω | X0T = " + fmt(X_0T, 6) + " Ω";
 
                 document.getElementById('m-calc-z0t-factor').innerText = `Fatores aplicados ao grupo ${vectorGroup}`;
                 document.getElementById('m-calc-z0t').innerText = vectorGroupFormula;
 
-                document.getElementById('m-val-req1').innerText = R_1.toFixed(6);
-                document.getElementById('m-val-xeq1').innerText = X_1.toFixed(6);
-                document.getElementById('m-val-zeq1').innerText = Z_1.toFixed(6);
-                document.getElementById('m-val-req0').innerText = R_0.toFixed(6);
-                document.getElementById('m-val-xeq0').innerText = X_0.toFixed(6);
-                document.getElementById('m-val-zeq0').innerText = Z_0.toFixed(6);
+                document.getElementById('m-val-req1').innerText = fmt(R_1, 6);
+                document.getElementById('m-val-xeq1').innerText = fmt(X_1, 6);
+                document.getElementById('m-val-zeq1').innerText = fmt(Z_1, 6);
+                document.getElementById('m-val-req0').innerText = fmt(R_0, 6);
+                document.getElementById('m-val-xeq0').innerText = fmt(X_0, 6);
+                document.getElementById('m-val-zeq0').innerText = fmt(Z_0, 6);
 
-                document.getElementById('m-calc-ik3').innerText = `I''k3 = ${c} · ${UnT}V / (√3 · ${Z_1.toFixed(6)}Ω) = ${(I_k3_double / 1000).toFixed(3)} kA`;
-                document.getElementById('m-calc-ik2').innerText = `I''k2 = √3/2 · ${(I_k3_double / 1000).toFixed(3)}kA = ${(I_k2_double / 1000).toFixed(3)} kA`;
-                document.getElementById('m-calc-ik1').innerText = `I''k1 = (√3 · ${c} · ${UnT}V) / ${Z_loop_1.toFixed(6)}Ω = ${(I_k1_double / 1000).toFixed(3)} kA`;
-                document.getElementById('m-val-kappa').innerText = kappa.toFixed(3);
-                document.getElementById('m-calc-ip3').innerText = `ip3 = ${kappa.toFixed(3)} · √2 · ${(I_k3_double / 1000).toFixed(3)}kA = ${(i_p3 / 1000).toFixed(3)} kA`;
+                document.getElementById('m-calc-ik3').innerText = `I''k3 = ${fmt(c, 2)} · ${fmt(UnT, 0)}V / (√3 · ${fmt(Z_1, 6)}Ω) = ${fmt(I_k3_double / 1000, 3)} kA`;
+                document.getElementById('m-calc-ik2').innerText = `I''k2 = √3/2 · ${fmt(I_k3_double / 1000, 3)}kA = ${fmt(I_k2_double / 1000, 3)} kA`;
+                document.getElementById('m-calc-ik1').innerText = `I''k1 = (√3 · ${fmt(c, 2)} · ${fmt(UnT, 0)}V) / ${fmt(Z_loop_1, 6)}Ω = ${fmt(I_k1_double / 1000, 3)} kA`;
+                document.getElementById('m-val-kappa').innerText = fmt(kappa, 3);
+                document.getElementById('m-calc-ip3').innerText = `ip3 = ${fmt(kappa, 3)} · √2 · ${fmt(I_k3_double / 1000, 3)}kA = ${fmt(i_p3 / 1000, 3)} kA`;
 
                 // Update Diagram Label
                 document.getElementById('diag-scc').textContent = currentGridMode === 'scc' ?
-                    `Scc = ${document.getElementById('input-scc').value} MVA` :
-                    `Icc = ${document.getElementById('input-icc').value} kA`;
-                document.getElementById('diag-transformer-info').textContent = `${SnT / 1000} kVA | Z% = ${Zk}% | ${vectorGroup}`;
-                document.getElementById('diag-unt').textContent = `${UnT} V`;
-                document.getElementById('diag-ik3').textContent = `${(I_k3_double / 1000).toFixed(3)} kA`;
-                document.getElementById('diag-ik2').textContent = `${(I_k2_double / 1000).toFixed(3)} kA`;
-                document.getElementById('diag-ik1').textContent = `${(I_k1_double / 1000).toFixed(3)} kA`;
+                    `Scc = ${fmt(parseFloat(document.getElementById('input-scc').value), 0)} MVA` :
+                    `Icc = ${fmt(parseFloat(document.getElementById('input-icc').value), 1)} kA`;
+                document.getElementById('diag-transformer-info').textContent = `${fmt(SnT / 1000, 0)} kVA | Z% = ${fmt(Zk, 1)}% | ${vectorGroup}`;
+                document.getElementById('diag-unt').textContent = `${fmt(UnT, 0)} V`;
+                document.getElementById('diag-ik3').textContent = `${fmt(I_k3_double / 1000, 3)} kA`;
+                document.getElementById('diag-ik2').textContent = `${fmt(I_k2_double / 1000, 3)} kA`;
+                document.getElementById('diag-ik1').textContent = `${fmt(I_k1_double / 1000, 3)} kA`;
 
                 if (activeTabId === 'tab-charts') {
                     renderChart();
@@ -1563,7 +1667,13 @@
                         },
                         y: {
                             grid: { color: '#f1f5f9' },
-                            ticks: { color: '#64748b', font: { family: 'Inter', size: 10 } },
+                            ticks: { 
+                                color: '#64748b', 
+                                font: { family: 'Inter', size: 10 },
+                                callback: function(value) {
+                                    return value.toLocaleString('pt-BR');
+                                }
+                            },
                             title: {
                                 display: true,
                                 text: 'Corrente de Curto-Circuito (kA)',
