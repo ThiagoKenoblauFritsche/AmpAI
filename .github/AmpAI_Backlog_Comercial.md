@@ -7,3 +7,4 @@
 - [ ] **O.S. #006** | `[ALTA]` Bug #04: Loops de Feedback nos Inputs e Perda de Foco durante a Digitação.
 - [ ] **O.S. #007** | `[MÉDIA]` Feature: Redesenho do Header e Elevação da Identidade Visual da Norma.
 - [ ] **O.S. #008** | `[MÉDIA]` Feature: Reestruturação do Seletor de Idiomas para o Header Global.
+- [ ] **O.S. #009** | `[BAIXA]` Teste de estresse de sincronização automática com o NotebookLM via Git e Link Simbólico.
