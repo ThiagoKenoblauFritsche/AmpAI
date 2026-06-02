@@ -1,7 +1,5 @@
 #!/bin/bash
-# AmpAI - Script Automatizado de Extração de Contratos para o Obsidian RAG
-
-OUTPUT_FILE=".github/AmpAI_Contratos_E_Estrutura_De_Codigo.md"
+OUTPUT_FILE="AmpAI_Contratos_E_Estrutura_De_Codigo.md"
 
 echo "---" > $OUTPUT_FILE
 echo "type: architecture/contracts" >> $OUTPUT_FILE
@@ -21,5 +19,3 @@ for file in js/*.js; do
         echo "" >> $OUTPUT_FILE
     fi
 done
-
-echo "✅ Contratos de engenharia extraídos com sucesso para $OUTPUT_FILE"
