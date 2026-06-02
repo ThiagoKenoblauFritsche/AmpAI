@@ -16,3 +16,4 @@ Este arquivo mapeia as funções e contratos de payload para alimentar o context
 - renderCablingMTResults(results) 
 
 ## 📄 js/core_cabos_mt.js (Atualização de Teste de Sincronização)
+- function calculateInductiveReactance(cableType, frequency)
