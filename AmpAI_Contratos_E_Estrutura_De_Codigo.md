@@ -15,3 +15,4 @@ Este arquivo mapeia as funções e contratos de payload para alimentar o context
 ### 🔄 Funções Identificadas:
 - renderCablingMTResults(results) 
 
+## 📄 js/core_cabos_mt.js (Atualização de Teste de Sincronização)
