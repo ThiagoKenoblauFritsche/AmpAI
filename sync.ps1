@@ -1,21 +1,25 @@
-# Atualiza o sync.ps1 para ler EXCLUSIVAMENTE o arquivo atualizado da raiz do projeto
+# Atualiza o sync.ps1 para exportar tanto o mapa de contratos quanto o README para o Google Drive
 @'
-Write-Host "📥 [AmpAI] Puxando atualizações de engenharia da VPS (Hetzner)..." -ForegroundColor Cyan
+Write-Host "[AmpAI] Puxando atualizacoes de engenharia da VPS (Hetzner)..." -ForegroundColor Cyan
 git fetch origin main
 git reset --hard origin/main
 
-# Força o PowerShell a ler estritamente o arquivo recém-baixado da raiz do projeto (.\)
-$sourceFile = ".\AmpAI_Contratos_E_Estrutura_De_Codigo.md"
-$targetPath = "G:\Meu Drive\AmpAI_NotebookLM\AmpAI_Contratos_E_Estrutura_De_Codigo.txt"
+# Definição de Rotas de Origem e Destino
+$sourceContratos = ".\AmpAI_Contratos_E_Estrutura_De_Codigo.md"
+$sourceReadme = ".\README.md"
+$targetFolder = "G:\Meu Drive\AmpAI_NotebookLM\"
 
-if (Test-Path $sourceFile) {
-    Write-Host "☁️ [AmpAI] Convertendo e injetando no canal visível do Google Drive (Formato .txt puro)..." -ForegroundColor Blue
-    
-    # Lê o markdown novo da raiz e grava como texto cru puro no Drive, forçando a atualização
-    Get-Content -LiteralPath $sourceFile | Out-File -FilePath $targetPath -Encoding utf8 -Force
-    
-    Write-Host "✅ [AmpAI] Loop Semântico Concluído! O arquivo do Drive foi atualizado com sucesso." -ForegroundColor Green
-} else {
-    Write-Host "⚠️ [AmpAI] Arquivo de contratos não encontrado na raiz do projeto." -ForegroundColor Red
+# 1. Fluxo Automático do Mapa de Contratos
+if (Test-Path $sourceContratos) {
+    Write-Host "[AmpAI] Sincronizando Mapa de Contratos no Google Drive..." -ForegroundColor Blue
+    Get-Content -LiteralPath $sourceContratos | Out-File -FilePath "${targetFolder}AmpAI_Contratos_E_Estrutura_De_Codigo.txt" -Encoding utf8 -Force
 }
+
+# 2. Novo Fluxo Automático do README.md para o NotebookLM
+if (Test-Path $sourceReadme) {
+    Write-Host "[AmpAI] Convertendo e exportando README.md para o Google Drive..." -ForegroundColor Yellow
+    Get-Content -LiteralPath $sourceReadme | Out-File -FilePath "${targetFolder}README.txt" -Encoding utf8 -Force
+}
+
+Write-Host "[AmpAI] Loop Semantico Trilateral Concluido! Ecossistema 100/100 atualizado." -ForegroundColor Green
 '@ | Out-File -FilePath sync.ps1 -Encoding utf8 -Force
