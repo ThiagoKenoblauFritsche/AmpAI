@@ -15,3 +15,4 @@ Este arquivo mapeia as funções e contratos de payload para alimentar o context
 ### 🔄 Funções Identificadas:
 - renderCablingMTResults(results) 
 
+- function checkShieldingThermalCapacity(i_short, t_short, k_factor)
