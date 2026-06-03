@@ -28,3 +28,4 @@ function calculateCablingMT(inputs) {
     };
 }
 function calculateVoltageDropMT(voltage, current, distance, reactance) { return (voltage - (current * distance * reactance)); }
+function calculateVoltageDropMT(voltage, current, distance, reactance) { return (voltage - (current * distance * reactance)); }
