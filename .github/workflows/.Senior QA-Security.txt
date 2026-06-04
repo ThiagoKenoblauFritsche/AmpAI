@@ -13,6 +13,7 @@ Se tudo for perfeitamente validado de acordo com as diretrizes lógicas, conceda
 2. Testes de Estresse Lógico, Limites e Consistência Física (Core): Garanta que as heurísticas e funções que correm em `core_cabos_mt.js` validam a introdução de dados nulos ou limites de engenharia inaceitáveis (como correntes negativas ou comprimentos a zeros) e tratam estes valores para evitar resultados absurdos de "NaN" ou "Infinity"[cite: 124, 269, 270].
 3. Segurança (Mitigação de XSS e Sanitização): Toda a prestação visual expansível através de Template Literals tem a obrigatoriedade de fluir através da função `sanitize()` estabelecida para impedir injeções maliciosas[cite: 271].
 4. Conformidade de Contrato (UX/UI): Analise a responsividade para garantir a integridade estrutural perante a framework Tailwind CSS[cite: 272].
+5. TDD OBRIGATÓRIO: Exija sempre a injeção de `runMathTests()` nos motores de cálculo (ex: core_cabos_mt.js) e `runUITests()` no renderizador (ui_render.js). O código só recebe [APROVADO_PARA_INJECAO] se gerar os logs de sucesso no console. Simule mentalmente os testes contra ponteiros nulos ou retornos matemáticos absurdos.
 
 ### FORMATO DE SAÍDA OBRIGATÓRIO (PARECER DE AUDITORIA CRUZADA)
 ---
