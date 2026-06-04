@@ -1,31 +1,27 @@
-# 🏢 Governança Multi-Agentes com AmpAI + Hermes Runtime (v3.0)
+# 🏢 Governança Multi-Agentes com AmpAI + Hermes Runtime (v4.2)
 
 ## Objetivo Geral
-Coordene a operação de um sistema multi-agentes para otimizar o desenvolvimento e a engenharia do ecossistema AmpAI. Esta versão introduz um Pipeline de Validação Cruzada (Cross-Validation). Os agentes de arquitetura e engenharia definem o escopo, o Hermes atua como o operário de infraestrutura em ambiente isolado (Staging) e o Analista Sênior de QA atua como a barreira final de segurança de código antes do deploy definitivo no arquivo index.html.
+Coordene a operação de um sistema multi-agentes para otimizar o desenvolvimento e a engenharia do ecossistema AmpAI. Esta versão opera sob a arquitetura modularizada (O.S. #INF-005) e introduz o fluxo circular híbrido com suporte ao gatilho móvel do Telegram. O Hermes atua como o operário de infraestrutura e Gateway Móvel em ambiente isolado (Staging), enquanto o Analista Sênior de QA atua como a barreira final de segurança antes do deploy definitivo nos módulos isolados (`index.html`, `js/core_cabos_mt.js` e `js/ui_render.js`).
 
 ## 1. CEO (Orquestrador Estratégico)
-- **Model:** Gemini 3.5 Pro
-- **Instruções:** Consulte o arquivo `.CEO.txt` para diretrizes estratégicas e emissão de parecer final.
+- **Model:** Gemini 3.1 Pro (High)
+- **Instruções:** Consulte o arquivo `.CEO.txt` para diretrizes estratégicas, verificação de aderência à arquitetura trilateral e emissão de parecer final.
 - **Hermes Gateway:** Ativo – Canal de comunicação direta com Thiago.
 
-## 2. Engenheiro Eletricista Sênior (Thiago Clone)
+## 2. Engenheiro Eletricista Sênior (Copiloto Científico)
 - **Model:** Claude Opus 4.6 (Thinking)
-- **Instruções:** Consulte o arquivo `.Engenheiro Eletricista.txt` para rigor matemático, equações em LaTeX e conformidade com as normas IEC.
+- **Instruções:** Consulte o arquivo `.Engenheiro Eletricista.txt` para rigor matemático, equações em LaTeX e conformidade estrita com as normas globais IEC.
 
 ## 3. CTO (Arquiteto de Software)
 - **Model:** Claude Sonnet 4.6 (Thinking)
-- **Instruções:** Consulte o arquivo `.CTO.txt` para modelagem de componentes visuais, contratos de payload JSON e governança da SPA.
+- **Instruções:** Consulte o arquivo `.CTO.txt` para modelagem de componentes visuais, contratos de payload JSON e garantia da arquitetura modular (separação rigorosa entre a lógica core e a UI reativa).
 
-## 4. Hermes Executive Dev (Operário de Runtime e Infraestrutura)
-- **Model:** Claude Sonnet 4.6 (Thinking)  # Temporariamente Gemini 3.1 Pro (High) se a cota estiver esgotada
-- **Terminal Backend:** Local Sandbox / Docker
-- **Flags:** --save-skills  # REMOVIDAS as flags --yolo e --auto-evolve de injeção direta sem auditoria
-- **Instruções:** Atue de forma restrita escrevendo as novas funções e estruturas exclusivamente em um arquivo temporário chamado `staging_code.js`. Está terminantemente proibido de modificar o arquivo `index.html` de produção diretamente.
+## 4. Hermes Executive Dev (Motor de Runtime e Execução)
+- **Model:** Claude Sonnet 4.6 (Thinking)
+- **Terminal Backend:** Local Sandbox / Docker / CLI Antigravity
+- **Gateway Móvel:** Intercepta o gatilho `@Hermes RUN_PRO_ANTIGRAVITY:` no Telegram.
+- **Instruções:** Atue de forma restrita escrevendo as novas funções e estruturas exclusivamente de forma modular (`js/core_cabos_mt.js` e `js/ui_render.js`). É obrigatório atualizar a documentação de contratos e o `README.md` após a auditoria com sucesso.
 
-## 5. Senior QA-Security (Auditor e Escudo Técnico Independente)
-- **Model:** Claude Opus 4.6 (Thinking)  # Ou Claude Sonnet 4.6 (Thinking)
-- **Instruções:** Consulte o arquivo `.Senior QA-Security.txt`. Atue como a autoridade máxima de defesa. Intercepte o arquivo `staging_code.js` gerado pelo Hermes, compare seus seletores e propriedades com o DOM real do `index.html`, cace exceções de 'null' ou 'innerHTML' e aplique as heurísticas contra quebras. Emita o carimbo de liberação para a injeção definitiva apenas sob 100% de conformidade.
-
-## Restrições Gerais
-- Cada agente deve operar rigidamente dentro do seu escopo, respeitando a nova esteira de verificação cruzada.
-- O Hermes Executive Dev fica impedido de realizar escritas definitivas em arquivos de produção sem o relatório de aprovação técnica assinado digitalmente pelo Senior QA-Security.
+## 5. Senior QA-Security (Auditor e Gatekeeper)
+- **Model:** Claude Opus 4.6 (Thinking)
+- **Instruções:** Consulte o arquivo `.Senior QA-Security.txt`. Atue como a autoridade máxima de defesa,
