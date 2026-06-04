@@ -999,17 +999,14 @@
 
                 <div class="nav-section-title" data-i18n="nav.solutions">Soluções</div>
 
-                <a href="#" class="nav-item active">
+                <a href="#" class="nav-item active" id="nav-shortcircuit" onclick="window.switchModule('shortcircuit'); return false;">
                     <span style="font-size: 1.1rem;">⚡</span>
                     <span style="flex: 1;" data-i18n="nav.shortCircuit">Curto-Circuito Trifásico (IEC 60909)</span>
                 </a>
 
-                <a href="#" class="nav-item locked" data-i18n-title="nav.comingSoon" title="Em breve / Bloqueado">
-                    <div style="display: flex; align-items: center; gap: 0.75rem;">
-                        <span style="font-size: 1.1rem;">🔌</span>
-                        <span data-i18n="nav.cableSizing">Dimensionamento de Cabos (BT e MT)</span>
-                    </div>
-                    <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+                <a href="#" class="nav-item" id="nav-cabling" onclick="window.switchModule('cabling'); return false;">
+                    <span style="font-size: 1.1rem;">🔌</span>
+                    <span style="flex: 1;" data-i18n="nav.cableSizing">Dimensionamento de Cabos (BT e MT)</span>
                 </a>
 
                 <a href="#" class="nav-item locked" data-i18n-title="nav.comingSoon" title="Em breve / Bloqueado">
@@ -1577,7 +1574,219 @@
                     </div>
                 </div>
             </main>
-        </div>
+
+
+        
+            <!-- ════════════════════════════════════════════════════════════════
+                 MÓDULO: DIMENSIONAMENTO DE CABOS BT / MT
+                 ════════════════════════════════════════════════════════════════ -->
+            <div id="module-cabling" style="display:none; padding: 0; max-width:1440px; margin:0 auto; grid-column: 2 / -1;">
+                <!-- Cabeçalho do Módulo -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:1rem;">
+                    <div>
+                        <h2 style="font-size:1.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;">Dimensionamento de Cabos</h2>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">IEC 60502-2 · IEC 60364-5-52 · IEC 60949 · IEC 60287</p>
+                    </div>
+                    <!-- Toggle BT / MT -->
+                    <div style="display:flex; gap:0.5rem; background:var(--bg-tertiary); padding:4px; border-radius:8px;">
+                        <button id="cb-toggle-bt" class="toggle-btn active" data-action="switch-bt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">⚡ BT (≤ 1 kV)</button>
+                        <button id="cb-toggle-mt" class="toggle-btn" data-action="switch-mt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">🔆 MT (6–30 kV)</button>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════
+                     CARD BT — Baixa Tensão (IEC 60364-5-52)
+                     ═══════════════════════════════════════════════ -->
+                <div id="wrapper-bt" style="display:block;">
+                    <div style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
+                        <!-- Sidebar BT -->
+                        <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
+                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;">Parâmetros BT</div>
+                            <div class="alert-banner" id="bt-alert-error" style="margin-bottom:0.75rem;">
+                                <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                                <div id="bt-alert-msg">Erro nos parâmetros.</div>
+                            </div>
+
+                            <div class="form-control"><label>Método de Instalação</label>
+                                <select id="bt-method" data-input-bt="true">
+                                    <option value="B1">B1 — Eletroduto Embutido em Parede</option>
+                                    <option value="B2">B2 — Eletroduto Aparente</option>
+                                    <option value="C">C — Superfície / Bandeja Perfilada</option>
+                                    <option value="D1">D1 — Enterrado em Conduto</option>
+                                    <option value="E">E — Bandeja Perfurada (Ao Ar)</option>
+                                    <option value="F">F — Cabo Unipolares, Bandeja (Trifólio)</option>
+                                </select>
+                            </div>
+                            <div class="form-control"><label>Material do Condutor</label>
+                                <div class="toggle-btn-group">
+                                    <button class="toggle-btn active" id="bt-btn-cu" data-action="set-bt-cu">Cu</button>
+                                    <button class="toggle-btn" id="bt-btn-al" data-action="set-bt-al">Al</button>
+                                </div>
+                            </div>
+                            <div class="form-control"><label>Isolação</label>
+                                <div class="toggle-btn-group">
+                                    <button class="toggle-btn active" id="bt-btn-xlpe" data-action="set-bt-xlpe">XLPE 90°C</button>
+                                    <button class="toggle-btn" id="bt-btn-pvc" data-action="set-bt-pvc">PVC 70°C</button>
+                                </div>
+                            </div>
+                            <div class="form-control"><label>Fases do Sistema</label>
+                                <select id="bt-phases" data-input-bt="true">
+                                    <option value="3">Trifásico (3F+N)</option>
+                                    <option value="1">Monofásico (1F+N)</option>
+                                </select>
+                            </div>
+                            <div class="form-control"><label>Corrente de Projeto Ib (A)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-ib" value="100" min="1" step="1" data-input-bt="true"><span class="unit-badge">A</span></div>
+                            </div>
+                            <div class="form-control"><label>Corrente Nominal do Disjuntor In (A)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-in" value="125" min="1" step="1" data-input-bt="true"><span class="unit-badge">A</span></div>
+                            </div>
+                            <div class="form-control"><label>Tensão de Linha ULL (V)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-ull" value="380" min="110" max="1000" data-input-bt="true"><span class="unit-badge">V</span></div>
+                            </div>
+                            <div class="form-control"><label>Comprimento (m)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-length" value="50" min="1" data-input-bt="true"><span class="unit-badge">m</span></div>
+                            </div>
+                            <div class="form-control"><label>Fator de Potência cosφ</label>
+                                <div class="input-wrapper"><input type="number" id="bt-cosphi" value="0.92" min="0.7" max="1" step="0.01" data-input-bt="true"><span class="unit-badge">—</span></div>
+                            </div>
+                            <div class="form-control"><label>Queda de Tensão Máx. ΔU%</label>
+                                <div class="input-wrapper"><input type="number" id="bt-du-max" value="3.0" min="0.5" max="10" step="0.5" data-input-bt="true"><span class="unit-badge">%</span></div>
+                            </div>
+                            <div class="form-control"><label>Temperatura Ambiente (°C)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-tamb" value="30" min="0" max="60" data-input-bt="true"><span class="unit-badge">°C</span></div>
+                            </div>
+                            <div class="form-control"><label>Nº de Circuitos Agrupados</label>
+                                <div class="input-wrapper"><input type="number" id="bt-ncirc" value="1" min="1" max="20" data-input-bt="true"><span class="unit-badge">—</span></div>
+                            </div>
+                            <div class="form-control"><label>Icc no ponto de instalação (kA)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-icc" value="10" min="0.1" step="0.5" data-input-bt="true"><span class="unit-badge">kA</span></div>
+                            </div>
+                            <div class="form-control"><label>Tempo de atuação da proteção (s)</label>
+                                <div class="input-wrapper"><input type="number" id="bt-tprot" value="0.2" min="0.01" max="5" step="0.01" data-input-bt="true"><span class="unit-badge">s</span></div>
+                            </div>
+                            <button id="btn-bt" data-action="calc-bt" style="width:100%; margin-top:0.5rem; padding:0.7rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem;">⚡ Calcular BT</button>
+                        </aside>
+
+                        <!-- Resultados BT -->
+                        <main id="card-bt">
+                            <div class="results-grid" style="margin-bottom:1rem;">
+                                <div class="result-card primary">
+                                    <div class="result-title">Seção Adotada</div>
+                                    <div class="result-value" id="bt-val-section">-- <span class="result-unit">mm²</span></div>
+                                    <div class="result-desc" id="bt-val-dominant">Dominante: --</div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════
+                     CARD MT — Média Tensão (IEC 60502-2)
+                     ═══════════════════════════════════════════════ -->
+                <div id="wrapper-mt" style="display:none;">
+                    <div style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
+                        <!-- Sidebar MT -->
+                        <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
+                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;">Parâmetros MT</div>
+
+                            <div class="alert-banner" id="mt-alert-error" style="margin-bottom:0.75rem;">
+                                <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                                <div id="mt-alert-msg">Erro nos parâmetros.</div>
+                            </div>
+
+                            <div class="form-control"><label>Tensão do Sistema ULL (kV)</label>
+                                <select id="mt-ull" data-input-mt="true">
+                                    <option value="11">11 kV</option>
+                                    <option value="13.8" selected>13.8 kV</option>
+                                    <option value="22">22 kV</option>
+                                    <option value="33">33 kV</option>
+                                    <option value="34.5">34.5 kV</option>
+                                </select>
+                            </div>
+                            <div class="form-control"><label>Material do Condutor</label>
+                                <div class="toggle-btn-group">
+                                    <button class="toggle-btn active" id="mt-btn-cu" data-action="set-mt-cu">Cu</button>
+                                    <button class="toggle-btn" id="mt-btn-al" data-action="set-mt-al">Al</button>
+                                </div>
+                            </div>
+                            <div class="form-control"><label>Isolação</label>
+                                <div class="toggle-btn-group">
+                                    <button class="toggle-btn active" id="mt-btn-xlpe" data-action="set-mt-xlpe">XLPE 90°C</button>
+                                    <button class="toggle-btn" id="mt-btn-epr" data-action="set-mt-epr">EPR 90°C</button>
+                                </div>
+                            </div>
+                            <div class="form-control"><label>Tipo de Instalação</label>
+                                <select id="mt-installation" data-input-mt="true">
+                                    <option value="UNDERGROUND_DUCT">Duto Enterrado</option>
+                                    <option value="DIRECT_BURIED">Diretamente Enterrado</option>
+                                    <option value="IN_AIR">Ao Ar Livre (Bandeja/Leito)</option>
+                                </select>
+                            </div>
+                            <div class="form-control"><label>Formação dos Cabos</label>
+                                <select id="mt-formation" data-input-mt="true">
+                                    <option value="TREFOIL">Trifólio (Trefoil)</option>
+                                    <option value="FLAT_TOUCHING">Plano Tocado (Flat)</option>
+                                    <option value="FLAT_SPACED">Plano Espaçado</option>
+                                </select>
+                            </div>
+                            <div class="form-control"><label>Corrente de Projeto Ib (A)</label>
+                                <div class="input-wrapper"><input type="number" id="mt-ib" value="250" min="1" step="1" data-input-mt="true"><span class="unit-badge">A</span></div>
+                            </div>
+                            <div class="form-control"><label>Comprimento do Circuito (m)</label>
+                                <div class="input-wrapper"><input type="number" id="mt-length" value="150" min="1" data-input-mt="true"><span class="unit-badge">m</span></div>
+                            </div>
+                            <div class="form-control"><label>Fator de Potência cosφ</label>
+                                <div class="input-wrapper"><input type="number" id="mt-cosphi" value="0.90" min="0.7" max="1" step="0.01" data-input-mt="true"><span class="unit-badge">—</span></div>
+                            </div>
+                            <div class="form-control"><label>Queda de Tensão Máx. ΔU%</label>
+                                <div class="input-wrapper"><input type="number" id="mt-du-max" value="2.0" min="0.5" max="10" step="0.1" data-input-mt="true"><span class="unit-badge">%</span></div>
+                            </div>
+                            <div class="form-control"><label>Icc no ponto de instalação (kA)</label>
+                                <div class="input-wrapper"><input type="number" id="mt-icc" value="12.5" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
+                            </div>
+                            <div class="form-control"><label>Icc Fase-Terra (kA) - P/ Tela Metálica</label>
+                                <div class="input-wrapper"><input type="number" id="mt-ifault" value="1" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
+                            </div>
+                            <div class="form-control"><label>Tempo de atuação Fase (s)</label>
+                                <div class="input-wrapper"><input type="number" id="mt-tcond" value="0.5" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
+                            </div>
+                            <div class="form-control"><label>Tempo de atuação Terra (s)</label>
+                                <div class="input-wrapper"><input type="number" id="mt-tscreen" value="1.0" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
+                            </div>
+                            <div style="padding-top:1rem; border-top:1px solid var(--border); margin-top:1rem;">
+                                <div style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem;">Fatores Ambientais</div>
+                                <div class="form-control"><label>Temperatura Ambiente (°C)</label>
+                                    <div class="input-wrapper"><input type="number" id="mt-tamb" value="20" min="0" max="60" data-input-mt="true"><span class="unit-badge">°C</span></div>
+                                </div>
+                                <div class="form-control"><label>Profundidade (m)</label>
+                                    <div class="input-wrapper"><input type="number" id="mt-depth" value="0.8" min="0.3" max="3" step="0.1" data-input-mt="true"><span class="unit-badge">m</span></div>
+                                </div>
+                                <div class="form-control"><label>Resistividade do Solo (K·m/W)</label>
+                                    <div class="input-wrapper"><input type="number" id="mt-rho-soil" value="1.0" min="0.5" max="3" step="0.1" data-input-mt="true"><span class="unit-badge"></span></div>
+                                </div>
+                                <div class="form-control"><label>Circuitos Agrupados</label>
+                                    <div class="input-wrapper"><input type="number" id="mt-ncirc" value="1" min="1" max="10" step="1" data-input-mt="true"><span class="unit-badge">—</span></div>
+                                </div>
+                            </div>
+                            <button id="btn-mt" data-action="calc-mt" style="width:100%; margin-top:0.5rem; padding:0.7rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem;">🔆 Calcular MT</button>
+                        </aside>
+
+                        <!-- Resultados MT -->
+                        <main id="card-mt">
+                            <div class="results-grid" style="margin-bottom:1rem;">
+                                <div class="result-card primary">
+                                    <div class="result-title">Seção Adotada</div>
+                                    <div class="result-value" id="mt-val-section">-- <span class="result-unit">mm²</span></div>
+                                    <div class="result-desc" id="mt-val-dominant">Dominante: --</div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+            </div>
+
+</div>
     </div>
 
     <!-- i18n + Calculations Script -->
@@ -2286,8 +2495,9 @@
             });
         }
 
-        calculate();
     </script>
+    <script src="js/core_cabos_bt.js" defer></script>
+    <script src="js/core_cabos_mt.js" defer></script>
+    <script src="js/ui_render.js" defer></script>
 </body>
-
 </html>

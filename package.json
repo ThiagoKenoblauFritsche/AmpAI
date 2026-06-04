@@ -1,0 +1,27 @@
+{
+  "name": "ampai",
+  "version": "1.0.0",
+  "description": "SaaS inovador focado em automação de cálculos e memoriais de engenharia elétrica (Baixa e Média Tensão) sob as normas internacionais IEC.",
+  "main": "staging_code.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThiagoKenoblauFritsche/AmpAI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ThiagoKenoblauFritsche/AmpAI/issues"
+  },
+  "homepage": "https://github.com/ThiagoKenoblauFritsche/AmpAI#readme",
+  "dependencies": {
+    "puppeteer": "^25.1.0"
+  }
+}
