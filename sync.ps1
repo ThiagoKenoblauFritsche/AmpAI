@@ -1,12 +1,10 @@
-@'
-Write-Host "[AmpAI] Puxando atualizacoes de engenharia do GitHub..." -ForegroundColor Cyan
+﻿Write-Host "[AmpAI] Puxando atualizacoes de engenharia do GitHub..." -ForegroundColor Cyan
 git fetch origin main
 git reset --hard origin/main
 
 # =========================================================================
 # 0. Definição de Rotas Base
 # =========================================================================
-# Ajuste aqui caso a letra do seu Google Drive mude no futuro
 $targetFolder = "G:\Meu Drive\AmpAI_NotebookLM"
 
 # =========================================================================
@@ -17,7 +15,7 @@ $destContratos = Join-Path -Path $targetFolder -ChildPath "AmpAI_Contratos_E_Est
 
 if (Test-Path $sourceContratos) {
     Write-Host "[AmpAI] Sincronizando Mapa de Contratos no Google Drive..." -ForegroundColor Blue
-    Get-Content -LiteralPath $sourceContratos | Out-File -FilePath $destContratos -Encoding utf8 -Force
+    Copy-Item -Path $sourceContratos -Destination $destContratos -Force
 }
 
 # =========================================================================
@@ -28,7 +26,7 @@ $destReadme = Join-Path -Path $targetFolder -ChildPath "README.txt"
 
 if (Test-Path $sourceReadme) {
     Write-Host "[AmpAI] Convertendo e exportando README.md para o Google Drive..." -ForegroundColor Yellow
-    Get-Content -LiteralPath $sourceReadme | Out-File -FilePath $destReadme -Encoding utf8 -Force
+    Copy-Item -Path $sourceReadme -Destination $destReadme -Force
 }
 
 # =========================================================================
@@ -36,7 +34,6 @@ if (Test-Path $sourceReadme) {
 # =========================================================================
 $agentsFolder = ".\.github\workflows"
 
-# Lista dos arquivos da esteira v4.2
 $filesToSync = @(
     "AGENTS.md", 
     ".CEO.txt", 
@@ -52,12 +49,11 @@ foreach ($file in $filesToSync) {
     $sourcePath = Join-Path -Path $agentsFolder -ChildPath $file
     
     if (Test-Path $sourcePath) {
-        # Converte a extensão .md para .txt no destino, mantendo os que já são .txt
         $destName = $file.Replace(".md", ".txt")
         $destPath = Join-Path -Path $targetFolder -ChildPath $destName
         
-        # Copia forçando o Encoding UTF-8 para não quebrar acentuação no NotebookLM
-        Get-Content -LiteralPath $sourcePath | Out-File -FilePath $destPath -Encoding utf8 -Force
+        # A MÁGICA: Usar Copy-Item faz uma cópia bruta (byte-for-byte), preservando 100% da acentuação.
+        Copy-Item -Path $sourcePath -Destination $destPath -Force
         Write-Host " -> Espelhado com sucesso: $destName" -ForegroundColor DarkGray
     } else {
         Write-Host " [Aviso] Arquivo não encontrado: $sourcePath" -ForegroundColor Yellow
@@ -65,4 +61,3 @@ foreach ($file in $filesToSync) {
 }
 
 Write-Host "[AmpAI] Loop Semantico Trilateral Concluido! Ecossistema 100/100 atualizado." -ForegroundColor Green
-'@ | Out-File -FilePath sync.ps1 -Encoding utf8 -Force
