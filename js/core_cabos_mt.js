@@ -138,9 +138,11 @@ const MT = {
     },
 
     // ── Helpers ────────────────────────────────────────────────────────────
-    getMaxSection() { return Math.max(...this.series); },
+    getMaxSection() { return Math.max.apply(null, this.series); },
     getIzFromTable(section, conductor, insulation) {
-        return this.IZ_BASE_MT[conductor]?.[insulation]?.[section] || 1500;
+        const iz = this.IZ_BASE_MT[conductor]?.[insulation]?.[section];
+        if (typeof iz !== 'number') throw new Error(`[QA-MT-046] Ampacidade não encontrada na tabela para Seção ${section} mm², Condutor ${conductor}, Isolação ${insulation}.`);
+        return iz;
     },
 
     SQRT3: Math.sqrt(3)
@@ -153,8 +155,7 @@ window.roundToIEC_MT     = (sCalc) => MT.series.find(s => s >= sCalc) || MT.getM
 // ═══════════════════════════════════════════════════════════════════════════
 // Estado Modular MT (compartilhado com index.html)
 // ═══════════════════════════════════════════════════════════════════════════
-if (typeof window.mtConductor === 'undefined') window.mtConductor = 'Cu';
-if (typeof window.mtInsulation === 'undefined') window.mtInsulation = 'XLPE';
+// Globais descontinuadas: O cálculo utiliza estritamente o window.AmpAI_State
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Leitura de Inputs
@@ -163,12 +164,7 @@ function readMTInputs() {
     const safe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
     
     const ull = parseFloat(safe('mt-ull')) || 13.8;
-    let vClass = '8.7/15';
-    if (ull <= 7.2) vClass = '3.6/6';
-    else if (ull <= 12) vClass = '6/10';
-    else if (ull <= 17.5) vClass = '8.7/15';
-    else if (ull <= 24) vClass = '12/20';
-    else vClass = '18/30';
+    const vClass = safe('mt-insulation-class') || '8.7/15';
 
     return {
         voltageClass:   vClass,
@@ -177,6 +173,7 @@ function readMTInputs() {
         conductor:      window.AmpAI_State?.mtCond || 'Cu',
         insulation:     window.AmpAI_State?.mtIns || 'XLPE',
         Ib_A:           parseFloat(safe('mt-ib')),
+        In_A:           parseFloat(safe('mt-in')),
         cosPhi:         parseFloat(safe('mt-cosphi')),
         ULL_V:          ull * 1000,
         length_m:       parseFloat(safe('mt-length')),
@@ -205,9 +202,11 @@ function validateMTInputs(i) {
     if (i.insulation === 'PVC' && V.U0 > 6) throw new Error('[QA-MT-003] Isolação PVC não aplicável acima de 6 kV (IEC 60502-2).');
 
     if (isNaN(i.Ib_A) || i.Ib_A <= 0) throw new Error('[QA-MT-005] Corrente de projeto Ib deve ser positiva.');
+    if (isNaN(i.In_A) || i.In_A <= 0) throw new Error('[QA-MT-044] Corrente nominal do disjuntor In deve ser positiva.');
+    if (i.In_A < i.Ib_A) throw new Error(`[QA-MT-045] O Disjuntor/Fusível (In = ${i.In_A}A) não pode ser menor que a Corrente de Projeto (Ib = ${i.Ib_A}A).`);
     if (isNaN(i.cosPhi) || i.cosPhi < 0.70 || i.cosPhi > 1.00) throw new Error('[QA-MT-006] Fator de potência deve estar entre 0,70 e 1,00.');
     if (isNaN(i.ULL_V) || i.ULL_V <= 0) throw new Error('[QA-MT-007] Tensão ULL deve ser positiva.');
-    if (V.ULL < i.ULL_V)            throw new Error('[QA-MT-043] Tensão de operação superior à classe de isolação do cabo — verifique o campo ULL.');
+    if (i.ULL_V > V.Um * 1000)      throw new Error(`[QA-MT-043] Tensão de operação ULL (${i.ULL_V / 1000}kV) é superior à suportada pela classe de isolação ${i.voltageClass} (Um = ${V.Um}kV).`);
 
     if (isNaN(i.Icc_A) || i.Icc_A <= 0) throw new Error('[QA-MT-010] Corrente de curto-circuito deve ser estritamente positiva.');
     if (i.Icc_A > 100000) i._warnings.push('[QA-MT-011] Icc > 100 kA é fisicamente improvável em MT.');
@@ -379,8 +378,8 @@ window.calculateCablingMT = function(mockInput = null) {
         }
 
     } catch (err) {
-        const alertBox = document.getElementById('cb-alert-error');
-        const alertMsg = document.getElementById('cb-alert-msg');
+        const alertBox = document.getElementById('mt-alert-error');
+        const alertMsg = document.getElementById('mt-alert-msg');
         if (alertBox) alertBox.classList.add('active');
         if (alertMsg) alertMsg.innerText = err.message;
 
@@ -402,7 +401,7 @@ window.calculateCablingMT = function(mockInput = null) {
     try {
         const mockInput = {
             voltageClass: '8.7/15', earthing: 'solid', iFault_A: 1000,
-            conductor: 'Cu', insulation: 'XLPE', Ib_A: 150, cosPhi: 0.9,
+            conductor: 'Cu', insulation: 'XLPE', Ib_A: 150, In_A: 200, cosPhi: 0.9,
             ULL_V: 13800, length_m: 100, duMax_pct: 2, formation: 'flat',
             nCircuits: 1, rhoSoil_KmW: 1.0, depth_m: 0.8, thetaAmb_C: 25,
             Icc_A: 12500, tConductor_s: 0.5, tScreen_s: 0.5, sheath: 'PVC',
@@ -420,6 +419,41 @@ window.calculateCablingMT = function(mockInput = null) {
             console.log('%c[TDD CORE] PASSOU: Motor Matemático MT Funcional! (Seção Final: ' + interceptedPayload.sFinal + ' mm²)', 'color:green;font-weight:bold;');
         } else {
             console.error('[TDD CORE] FALHA: Cálculo retornou Vazio ou Inválido');
+        }
+
+        // Teste Anti-Happy Path
+        try {
+            const badInput = Object.assign({}, mockInput, { Ib_A: 1000, In_A: 40 });
+            validateMTInputs(badInput); // Calling validation directly to catch the throw
+            console.error('[TDD CORE MT] FALHA CRÍTICA (ANTI-HAPPY PATH): Motor permitiu validação com In < Ib!');
+        } catch (err) {
+            if (err.message.includes('não pode ser menor')) {
+                console.log('%c[TDD CORE MT] PASSOU (ANTI-HAPPY PATH): Trava In < Ib funcionou corretamente. O motor bloqueou o cálculo.', 'color:green;font-weight:bold;');
+            } else {
+                console.error('[TDD CORE MT] FALHA (ANTI-HAPPY PATH): Erro incorreto disparado.', err);
+            }
+        }
+
+        // Teste 1: Simule ULL = 13.8 e Um = 12/20 kV. O motor DEVE passar.
+        try {
+            const t1 = Object.assign({}, mockInput, { ULL_V: 13800, voltageClass: '12/20' });
+            validateMTInputs(t1);
+            console.log('%c[TDD CORE MT] PASSOU (ANTI-HAPPY PATH DIELÉTRICO): Tensão 13.8kV validada corretamente na classe 12/20.', 'color:green;font-weight:bold;');
+        } catch (err) {
+            console.error('[TDD CORE MT] FALHA (ANTI-HAPPY PATH DIELÉTRICO): Sistema rejeitou Tensão 13.8kV em classe 12/20.', err);
+        }
+
+        // Teste 2: Simule ULL = 25 e Um = 8.7/15 kV. O motor DEVE bloquear.
+        try {
+            const t2 = Object.assign({}, mockInput, { ULL_V: 25000, voltageClass: '8.7/15' });
+            validateMTInputs(t2);
+            console.error('[TDD CORE MT] FALHA CRÍTICA (ANTI-HAPPY PATH DIELÉTRICO): Motor permitiu validação com ULL > Um!');
+        } catch (err) {
+            if (err.message.includes('superior à suportada')) {
+                console.log('%c[TDD CORE MT] PASSOU (ANTI-HAPPY PATH DIELÉTRICO): Trava ULL <= Um funcionou corretamente.', 'color:green;font-weight:bold;');
+            } else {
+                console.error('[TDD CORE MT] FALHA (ANTI-HAPPY PATH DIELÉTRICO): Erro incorreto disparado.', err);
+            }
         }
     } catch (e) {
         console.error('[TDD CORE] FALHA: Exceção durante o teste:', e);

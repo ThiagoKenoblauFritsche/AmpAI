@@ -125,9 +125,17 @@ document.addEventListener('click', function(e) {
 
     switch (action) {
         case 'calc-bt':
+            if (document.getElementById('cb-alert-error')) {
+                document.getElementById('cb-alert-error').classList.remove('active');
+                if (document.getElementById('cb-alert-msg')) document.getElementById('cb-alert-msg').innerText = '';
+            }
             if (typeof window.calculateCablingBT === 'function') window.calculateCablingBT();
             break;
         case 'calc-mt':
+            if (document.getElementById('mt-alert-error')) {
+                document.getElementById('mt-alert-error').classList.remove('active');
+                if (document.getElementById('mt-alert-msg')) document.getElementById('mt-alert-msg').innerText = '';
+            }
             if (typeof window.calculateCablingMT === 'function') window.calculateCablingMT();
             break;
         case 'switch-bt':
