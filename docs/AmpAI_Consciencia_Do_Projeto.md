@@ -178,3 +178,29 @@ Write-Host "[AmpAI] Loop Semantico Trilateral Concluido! Ecossistema 100/100." -
 - **Fase 2 (Instalação e Autenticação CLI PRO na VPS):** 100% Concluída.
 - **Fase 3 (Sincronização e Contexto Técnico RAG):** 100% Concluída (NotebookLM indexado via auto-sync do arquivo `.txt` no Meu Drive).
 - **Fase 4 (Gateway Móvel do Telegram):** PRÓXIMO PASSO ATIVO (Iniciando na O.S. #INF-012 via `@BotFather`).
+
+  
+--------------------------------------------------------------------------------
+
+## 📋6. PROTOCOLO OFICIAL DE EXECUÇÃO E FECHAMENTO DE CICLO (v5.1)
+
+[!important] **Diretriz de Ouro: Sistemas Auto-Evolutivos e Prioridade** Este protocolo rege o fluxo de trabalho imutável do ecossistema AmpAI para garantir a segurança da infraestrutura, rastreabilidade documental e a evolução contínua da inteligência artificial.
+
+1. Regra de Priorização Estrita e Memória Evolutiva
+
+- **Ataque Baseado em Risco:** A esteira de desenvolvimento DEVE sempre priorizar as Ordens de Serviço (O.S.) marcadas como `[CRÍTICA]`. Somente após a resolução das críticas, o sistema avança para as de prioridade `[ALTA]`, `[MÉDIA]` e `[BAIXA]`.
+- **Registro Obrigatório de Skills (Vacina):** Sempre que uma O.S. `[CRÍTICA]` for resolvida com sucesso, é mandatório que o comando para os agentes exija a geração de um arquivo físico de _Skill_. O Hermes deve documentar a solução do problema e as regras de arquitetura adotadas, salvando estritamente no diretório `~/.hermes/skills/ampai/` [cite: 8]. Isso garante que a IA nunca mais cometa o mesmo erro [cite: 8].
+
+2. Protocolo de Fechamento de Ciclo Semântico (O Loop)
+
+Após a entrega de código pelo Antigravity/Hermes, o fluxo de consolidação DEVE respeitar esta ordem imutável [cite: 479]:
+
+1. **Validação Humana:** O utilizador testa a interface no navegador (`localhost`) para atestar o sucesso da funcionalidade e do TDD.
+2. **Consolidação do Código (Git):** Execução do bloco exato de comandos no terminal (`git add`, `git commit` com semântica e `git push origin main`).
+3. **Atualização Humana (Obsidian):** O utilizador marca a O.S. como concluída (`[x]`) no arquivo de backlog correspondente.
+4. **O Gatilho de Sincronização:** O utilizador executa o script nativo `./sync.ps1` no PowerShell para forçar o espelhamento trilateral (Código -> Drive -> RAG) [cite: 19].
+5. **Trava de Governança do Copiloto:** A Inteligência Artificial (NotebookLM) entra imediatamente em **STATUS: [AGUARDANDO DOCUMENTAÇÃO PARA AVALIAÇÃO]**.
+6. **O Sinal Verde:** O utilizador responde com a palavra "Sincronizado" no chat.
+7. **A Nova Missão:** Somente após o sinal verde, o Copiloto IA faz a varredura da arquitetura atualizada e sugere a próxima O.S. lógica baseada na Regra de Priorização.
+
+--------------------------------------------------------------------------------
