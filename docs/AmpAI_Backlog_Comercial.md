@@ -25,3 +25,5 @@ status: em-andamento
 - [ ] **O.S. #013** | `[ALTA]` Feature: Memorial de Cálculo Exportável para Média Tensão (MT). (Replicar a lógica de exportação e geração de relatório dinâmico para os resultados da IEC 60502-2).
 - [x] **O.S. #014** | `[CRÍTICA]` Correção de Bugs e Estabilização do Módulo de Média Tensão (MT). (Revisar motor físico e resolver bugs pendentes de dimensionamento identificados durante os testes).
 - [ ] **O.S. #015** | `[MÉDIA]` Refatoração UI/UX Global: Padronização Visual e Construtiva. (Compatibilizar as premissas de frontend, componentes, cards e paleta de cores para que os módulos de BT, MT e Curto-Circuito tenham a mesma identidade e comportamento).
+- [ ] **O.S. #016** | `[MÉDIA]` Correção Visual: Padronizar a cor de fundo divergente no componente da Tela Metálica para que herde o estado e a paleta do ecossistema global.
+- [ ] **O.S. #017** | `[ALTA]` Internacionalização Semântica (i18n): Aplicar tradução profunda mapeando os textos e strings internas geradas pelo motor de UI, não limitando a tradução apenas aos cabeçalhos da casca visual.
