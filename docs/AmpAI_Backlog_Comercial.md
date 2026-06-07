@@ -18,5 +18,10 @@ status: em-andamento
 - [ ] **O.S. #006** | `[ALTA]` Bug #04: Loops de Feedback nos Inputs e Perda de Foco durante a Digitação.
 - [ ] **O.S. #007** | `[MÉDIA]` Feature: Redesenho do Header e Elevação da Identidade Visual da Norma.
 - [ ] **O.S. #008** | `[MÉDIA]` Feature: Reestruturação do Seletor de Idiomas para o Header Global.
-- [ ] **O.S. #009** | `[CRÍTICA]` Recuperação do Módulo de Baixa Tensão (BT) com TDD. (Cálculo reconstruído do zero, isolado em js/core_cabos_bt.js e aprovado com matriz de Alumínio e trava de desigualdade In < Ib).
-- [x] **O.S. #010 a #014** | `[ALTA]` Retrofit TDD e Refinamento Físico de MT/BT. (Motores blindados com runMathTests e runUITests. Módulo MT expandido para abranger matrizes dielétricas de 13.8kV, 24kV e 34.5kV).
+- [x] **O.S. #009-HOTFIX** | `[CRÍTICA]` Resolução F12: Trava física Anti-Happy Path ($I_b \le I_n$), reatividade e correção de UX/caminhos relativos.
+- [x] **O.S. #010** | `[ALTA]` Refinamento de Acessibilidade (A11y): Correção de forms, contrastes CSS e validações nativas.
+- [x] **O.S. #011** | `[ALTA]` Depreciação do cálculo em tempo real e fix do State Binding nos seletores (Submissão Intencional).
+- [ ] **O.S. #012** | `[ALTA]` Feature: Memorial de Cálculo Exportável para Baixa Tensão (BT). (Implementar geração de relatório dinâmico e exportável seguindo os moldes do módulo de curto-circuito).
+- [ ] **O.S. #013** | `[ALTA]` Feature: Memorial de Cálculo Exportável para Média Tensão (MT). (Replicar a lógica de exportação e geração de relatório dinâmico para os resultados da IEC 60502-2).
+- [ ] **O.S. #014** | `[CRÍTICA]` Correção de Bugs e Estabilização do Módulo de Média Tensão (MT). (Revisar motor físico e resolver bugs pendentes de dimensionamento identificados durante os testes).
+- [ ] **O.S. #015** | `[MÉDIA]` Refatoração UI/UX Global: Padronização Visual e Construtiva. (Compatibilizar as premissas de frontend, componentes, cards e paleta de cores para que os módulos de BT, MT e Curto-Circuito tenham a mesma identidade e comportamento).
