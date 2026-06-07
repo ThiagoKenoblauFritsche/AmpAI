@@ -1,6 +1,8 @@
-Write-Host "[AmpAI] Puxando atualizacoes do GitHub (VPS/Rua)..." -ForegroundColor Cyan
+﻿Write-Host "[AmpAI] Puxando atualizacoes do GitHub (VPS/Rua)..." -ForegroundColor Cyan
 git fetch origin main
 git reset --hard origin/main
+Write-Host "[AmpAI] Rastreiando novos modulos JS e gerando contratos..." -ForegroundColor Cyan
+bash ./generate_contracts.sh
 
 # =========================================================================
 # 0. Definição de Rotas Base
@@ -12,7 +14,7 @@ $obsidianAmpAIFolder = "C:\Users\ACER\Desktop\Thiago_2.0\03-Trabalho\200 Projeto
 # =========================================================================
 # 1. Fluxo Automático do Mapa de Contratos e README
 # =========================================================================
-$sourceContratos = ".\AmpAI_Contratos_E_Estrutura_De_Codigo.txt"
+$sourceContratos = ".\AmpAI_Contratos_E_Estrutura_De_Codigo.md"
 if (Test-Path $sourceContratos) {
     Copy-Item -Path $sourceContratos -Destination (Join-Path $targetFolder "AmpAI_Contratos_E_Estrutura_De_Codigo.txt") -Force
 }
@@ -25,7 +27,7 @@ if (Test-Path $sourceReadme) {
 # =========================================================================
 # 2. Fluxo Automático: Matriz de Governança (Agentes)
 # =========================================================================
-$filesToSync = @("AGENTS.md", ".CEO.txt", ".CTO.txt", ".Engenheiro Eletricista.txt", ".Hermes Executive Dev.txt", ".Senior QA-Security.txt")
+$filesToSync = @("AGENTS.md", ".CEO.txt", ".CTO.txt", ".Engenheiro Eletricista.txt", ".Hermes Executive Dev.txt", ".Senior QA-Security.txt", ".Senior_Backend_Dev.txt", ".Senior_Frontend_Dev.txt")
 foreach ($file in $filesToSync) {
     $sourcePath = Join-Path -Path ".\.github\workflows" -ChildPath $file
     if (Test-Path $sourcePath) {

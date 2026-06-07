@@ -18,5 +18,5 @@ status: em-andamento
 - [ ] **O.S. #006** | `[ALTA]` Bug #04: Loops de Feedback nos Inputs e Perda de Foco durante a Digitação.
 - [ ] **O.S. #007** | `[MÉDIA]` Feature: Redesenho do Header e Elevação da Identidade Visual da Norma.
 - [ ] **O.S. #008** | `[MÉDIA]` Feature: Reestruturação do Seletor de Idiomas para o Header Global.
-- [x] **O.S. #009** | `[CRÍTICA]` Recuperação do Módulo de Baixa Tensão (BT) com TDD. (Cálculo reconstruído do zero, isolado em js/core_cabos_bt.js e aprovado com matriz de Alumínio e trava de desigualdade In < Ib).
+- [ ] **O.S. #009** | `[CRÍTICA]` Recuperação do Módulo de Baixa Tensão (BT) com TDD. (Cálculo reconstruído do zero, isolado em js/core_cabos_bt.js e aprovado com matriz de Alumínio e trava de desigualdade In < Ib).
 - [x] **O.S. #010 a #014** | `[ALTA]` Retrofit TDD e Refinamento Físico de MT/BT. (Motores blindados com runMathTests e runUITests. Módulo MT expandido para abranger matrizes dielétricas de 13.8kV, 24kV e 34.5kV).

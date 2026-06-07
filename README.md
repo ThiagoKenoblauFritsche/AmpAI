@@ -2,12 +2,12 @@
 
 SaaS inovador focado em automação de cálculos e memoriais de engenharia elétrica (Baixa e Média Tensão) sob as normas internacionais IEC.
 
-## 🛠️ Stack Tecnológica e Arquitetura (v4.2)
+## 🛠️ Stack Tecnológica e Arquitetura (v5.0)
 - **Frontend / Interface:** Single Page Application (SPA) pura em HTML5, Tailwind CSS e Chart.js (`index.html`).
-- **Motor Matemático Isolado:** JavaScript Puro (`js/core_cabos_mt.js`) sob a norma IEC 60502-2.
-- **Motor de UI / Reatividade:** Manipulação direta do DOM (`js/ui_render.js`).
-- **Infraestrutura de IA:** Antigravity CLI Oficial da Google rodando em modo Headless autenticada via cota **Google AI Pro**.
+- **Motor Matemático (Backend Lógico):** JavaScript Puro isolado (`js/core_cabos_mt.js` e `js/core_cabos_bt.js`), retornando estritamente contratos JSON.
+- **Motor de UI / Reatividade:** Manipulação segura do DOM (`js/ui_render.js`).
+- **Qualidade (QA):** Muralha TDD in-browser obrigatória para deploy (Calibração Red -> Green local).
+- **Infraestrutura de IA:** Antigravity CLI rodando em modo Headless autenticada via Google AI Pro.
 
 ## 🔄 Canal de Sincronização Móvel
-O projeto opera com o protocolo Loop Semântico Infinito v4.2, alimentando a base de conhecimento RAG do Google NotebookLM através de um canal exclusivo de Auto-Sync de arquivos de texto (.txt) hospedados no Meu Drive.
-- **Última Homologação de Sistema:** Concluída com sucesso total em junho de 2026.
+O projeto opera com o protocolo Loop Semântico Infinito v5.0, alimentando a base RAG do Google NotebookLM via script `sync.ps1`.

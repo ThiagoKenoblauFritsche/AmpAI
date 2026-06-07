@@ -11,11 +11,17 @@ echo "# 📂 Mapa Geral de Contratos e Assinaturas de Código (Autogerado)" >> $
 echo "Este arquivo mapeia as funções e contratos de payload para alimentar o contexto do NotebookLM." >> $OUTPUT_FILE
 echo "" >> $OUTPUT_FILE
 
+# Varre dinamicamente TODOS os arquivos .js dentro da pasta js/
 for file in js/*.js; do
     if [ -f "$file" ]; then
         echo "## 📄 $file" >> $OUTPUT_FILE
         echo "### 🔄 Funções Identificadas:" >> $OUTPUT_FILE
-        grep -E "function " "$file" | sed 's/function /- /g' | sed 's/ {/ /g' >> $OUTPUT_FILE
+        
+        # [ATUALIZAÇÃO v5.0] Captura funções padrão E funções exportadas no objeto window.*
+        grep -E "function |window\." "$file" | sed 's/^[ \t]*//' | sed 's/^/- /' >> $OUTPUT_FILE
+        
         echo "" >> $OUTPUT_FILE
     fi
 done
+
+echo "✅ Mapa de contratos gerado com sucesso!"
