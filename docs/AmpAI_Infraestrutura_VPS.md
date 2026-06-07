@@ -2,7 +2,7 @@
 tags:
   - infraestrutura/vps
   - devops/runtime
-versao: 4.2
+versao: 5
 status: ativo
 provedor: Hetzner Cloud (Alemanha)
 ---

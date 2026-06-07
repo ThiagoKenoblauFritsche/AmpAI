@@ -2,7 +2,7 @@
 tags:
   - arquitetura/ia
   - ampai/consciencia
-versao: 4.2
+versao: 5
 status: ativo
 ---
 
@@ -11,12 +11,13 @@ status: ativo
 ## 📋 1. Propósito do Ecossistema
 Este arquivo é o DNA técnico do AmpAI, projetado para blindar o contexto e a memória dos copilotos de IA contra amnésia de chat. O AmpAI é um SaaS inovador focado em automação de cálculos e memoriais de engenharia elétrica (Baixa e Média Tensão) sob as normas internacionais **IEC**.
 
-## 📁 2. Arquitetura Física e Estrutura de Arquivos (v4.2)
-O software foi cirurgicamente modularizado (O.S. #INF-005) para mitigar a degradação de contexto. O monolito de 172 KB foi quebrado em:
-- `index.html`: Casca visual e interface principal do usuário (SPA).
-- `js/core_cabos_mt.js`: Motor matemático puro e isolado (43 heurísticas de validação IEC 60502-2).
-- `js/ui_render.js`: Motor de renderização reativa do DOM e gráficos (Chart.js), tolerante a falhas com try/catch.
-- `sync.ps1`: Script PowerShell local do Windows para automação trilateral.
+## 📁 2. Arquitetura Física e Estrutura de Arquivos (v5.0) 
+
+O software superou a modularização inicial e agora opera sob a Governança v5.0 (Linha de Montagem Especializada). Os agentes possuem separação estrita de funções (SoC) com TDD in-browser obrigatório:
+- `index.html`: Casca visual principal do usuário (SPA).
+- `js/core_cabos_bt.js` e `js/core_cabos_mt.js`: Motores matemáticos puros, gerenciados pelo @Senior_Backend_Dev, retornando apenas JSON.
+- `js/ui_render.js`: Motor de reatividade do DOM e UI, gerenciado pelo @Senior_Frontend_Dev, blindado com Null Pointer Mitigation.
+- `sync.ps1`: Script PowerShell para automação trilateral.
 
 ## 🖥️ 3. Infraestrutura e Governança de Ambientes
 O projeto opera em um triângulo de sincronização perfeito:
@@ -27,70 +28,149 @@ O projeto opera em um triângulo de sincronização perfeito:
 ## 🔄 4. O Script de Sincronização Unificada (`./sync.ps1`)
 Para trazer as alterações de código da VPS para o computador do Thiago com esforço zero e alimentar a IA de forma invisível, o script PowerShell local executa:
 ```powershell
-Write-Host "[AmpAI] Puxando atualizacoes de engenharia do GitHub..." -ForegroundColor Cyan
+Write-Host "[AmpAI] Puxando atualizacoes do GitHub (VPS/Rua)..." -ForegroundColor Cyan
+
 git fetch origin main
+
 git reset --hard origin/main
 
+  
+
 # =========================================================================
+
 # 0. Definição de Rotas Base
+
 # =========================================================================
+
 $targetFolder = "G:\Meu Drive\AmpAI_NotebookLM"
 
+# Caminho EXATO da sua subpasta dedicada ao projeto no Obsidian
+
+$obsidianAmpAIFolder = "C:\Users\ACER\Desktop\Thiago_2.0\03-Trabalho\200 Projetos Ativos\Principais\AmpAI"
+
+  
+
 # =========================================================================
-# 1. Fluxo Automático do Mapa de Contratos
+
+# 1. Fluxo Automático do Mapa de Contratos e README
+
 # =========================================================================
+
 $sourceContratos = ".\AmpAI_Contratos_E_Estrutura_De_Codigo.txt"
-$destContratos = Join-Path -Path $targetFolder -ChildPath "AmpAI_Contratos_E_Estrutura_De_Codigo.txt"
 
 if (Test-Path $sourceContratos) {
-    Write-Host "[AmpAI] Sincronizando Mapa de Contratos no Google Drive..." -ForegroundColor Blue
-    Copy-Item -Path $sourceContratos -Destination $destContratos -Force
+
+    Copy-Item -Path $sourceContratos -Destination (Join-Path $targetFolder "AmpAI_Contratos_E_Estrutura_De_Codigo.txt") -Force
+
 }
 
-# =========================================================================
-# 2. Fluxo Automático do README.md para o NotebookLM
-# =========================================================================
+  
+
 $sourceReadme = ".\README.md"
-$destReadme = Join-Path -Path $targetFolder -ChildPath "README.txt"
 
 if (Test-Path $sourceReadme) {
-    Write-Host "[AmpAI] Convertendo e exportando README.md para o Google Drive..." -ForegroundColor Yellow
-    Copy-Item -Path $sourceReadme -Destination $destReadme -Force
+
+    Copy-Item -Path $sourceReadme -Destination (Join-Path $targetFolder "README.txt") -Force
+
 }
 
-# =========================================================================
-# 3. Fluxo Automático: Matriz de Governança e Mentes dos Agentes
-# =========================================================================
-$agentsFolder = ".\.github\workflows"
+  
 
-$filesToSync = @(
-    "AGENTS.md", 
-    ".CEO.txt", 
-    ".CTO.txt", 
-    ".Engenheiro Eletricista.txt", 
-    ".Hermes Executive Dev.txt", 
-    ".Senior QA-Security.txt"
-)
+# =========================================================================
 
-Write-Host "[AmpAI] Sincronizando Matriz de Governanca Multi-Agentes para o Google Drive..." -ForegroundColor Magenta
+# 2. Fluxo Automático: Matriz de Governança (Agentes)
+
+# =========================================================================
+
+$filesToSync = @("AGENTS.md", ".CEO.txt", ".CTO.txt", ".Engenheiro Eletricista.txt", ".Hermes Executive Dev.txt", ".Senior QA-Security.txt", ".Senior_Backend_Dev.txt", ".Senior_Frontend_Dev.txt")
 
 foreach ($file in $filesToSync) {
-    $sourcePath = Join-Path -Path $agentsFolder -ChildPath $file
-    
-    if (Test-Path $sourcePath) {
-        # Converte a extensão para .txt no destino para leitura RAG
-        $destName = $file.Replace(".md", ".txt")
-        $destPath = Join-Path -Path $targetFolder -ChildPath $destName
-        
-        # Cópia binária pura (Copy-Item) preserva 100% da acentuação UTF-8
-        Copy-Item -Path $sourcePath -Destination $destPath -Force
-        Write-Host " -> Espelhado com sucesso: $destName" -ForegroundColor DarkGray
-    } else {
-        Write-Host " [Aviso] Arquivo não encontrado: $sourcePath" -ForegroundColor Yellow
-    }
+
+    $sourcePath = Join-Path -Path ".\.github\workflows" -ChildPath $file
+
+    if (Test-Path $sourcePath) {
+
+        $destPath = Join-Path -Path $targetFolder -ChildPath $file.Replace(".md", ".txt")
+
+        # Cópia binária preserva UTF-8 integralmente
+
+        Copy-Item -Path $sourcePath -Destination $destPath -Force
+
+    }
+
 }
 
-Write-Host "[AmpAI] Loop Semantico Trilateral Concluido! Ecossistema 100/100 atualizado." -ForegroundColor Green
+  
+
+# =========================================================================
+
+# 3. NOVO: Fluxo Inverso - Varredura Automática do Obsidian -> Git -> Drive
+
+# =========================================================================
+
+Write-Host "[AmpAI] Lendo subpasta do Obsidian (Varredura Automatica)..." -ForegroundColor Cyan
+
+  
+
+if (!(Test-Path ".\docs")) { New-Item -ItemType Directory -Path ".\docs" | Out-Null }
+
+  
+
+if (Test-Path $obsidianAmpAIFolder) {
+
+    # Lê automaticamente TODOS os arquivos .md que existirem dentro dessa subpasta
+
+    $obsidianFiles = Get-ChildItem -Path $obsidianAmpAIFolder -Filter "*.md" -File -Recurse
+
+  
+
+    foreach ($file in $obsidianFiles) {
+
+        $sourceDoc = $file.FullName
+
+        $docName = $file.Name
+
+        # A) Copia para a pasta docs/ local para fazer o backup no Git
+
+        Copy-Item -Path $sourceDoc -Destination (Join-Path ".\docs" $docName) -Force
+
+        # B) Converte para .txt via cópia binária e manda pro Google Drive
+
+        $driveDest = Join-Path $targetFolder $docName.Replace(".md", ".txt")
+
+        Copy-Item -Path $sourceDoc -Destination $driveDest -Force
+
+        Write-Host " -> Espelhado com sucesso: $docName" -ForegroundColor DarkGray
+
+    }
+
+}
+
+else {
+
+    Write-Host " [Aviso] Pasta do Obsidian não encontrada: $obsidianAmpAIFolder" -ForegroundColor Yellow
+
+}
+
+  
+
+# =========================================================================
+
+# 4. Auto-Commit para o GitHub (A Fonte da Verdade)
+
+# =========================================================================
+
+Write-Host "[AmpAI] Salvando documentacao humana na nuvem (GitHub)..." -ForegroundColor Magenta
+
+git add .\docs\*
+
+git commit -m "docs: atualizacao automatica da pasta AmpAI do Obsidian via sync.ps1"
+
+git push origin main
+
+  
+
+Write-Host "[AmpAI] Loop Semantico Trilateral Concluido! Ecossistema 100/100." -ForegroundColor Green
 ```
 
 ## 📈 5. Estado Atual do Backlog Macro

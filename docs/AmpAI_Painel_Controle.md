@@ -2,7 +2,7 @@
 tags:
   - gestao/painel
   - ampai/governança
-versao: 4.2
+versao: 5
 status: ativo
 ---
 
@@ -18,12 +18,14 @@ status: ativo
 - **Motor de Runtime / Automação:** `Antigravity CLI (agy)` rodando nativo na VPS Hetzner.
 - **Licença Operacional:** Google AI Pro (`thiagokenoblaufritsche@gmail.com`).
 
-### 🏢 Diretoria de Agentes Ativa (Workspace Antigravity)
-- **@CEO:** `Gemini 3.1 Pro (High)` (Orquestrador Estratégico, Governança e Memória de Longo Contexto).
-- **@Engenheiro_Eletricista:** `Claude Opus 4.6 (Thinking)` (Copiloto Científico, Física Aplicada e Rigor das Normas IEC).
-- **@CTO:** `Claude Sonnet 4.6 (Thinking)` (Arquiteto de Software, Revisão de Código e Contratos JSON).
-- **@Hermes_Executive_Dev:** `Claude Sonnet 4.6 (Thinking)` (Motor de Runtime, Injeção Modular Isolada e Gateway Móvel).
-- **@Senior_QA_Security:** `Claude Opus 4.6 (Thinking)` (Auditor Sênior, Escudo Final e Validação Cruzada de Comunicação DOM ↔ Lógica).
+### 🏢 Diretoria de Agentes Ativa (Workspace Antigravity v5.0)
+- **@CEO:** `Gemini 3.1 Pro (High)` (Gatekeeper comercial e aprovação final).
+- **@CTO:** `Claude Sonnet 4.6 (Thinking)` (Arquiteto de Software e Contratos JSON).
+- **@Engenheiro_Eletricista:** `Claude Opus 4.6 (Thinking)` (Rigor Científico IEC).
+- **@Hermes_Executive_Dev:** `Claude Sonnet 4.6 (Thinking)` (Mestre de Obras e Gateway Móvel. Não escreve código).
+- **@Senior_Backend_Dev:** `Claude Sonnet 4.6 (Thinking)` (Lógica pesada e matemática. Zero manipulação de DOM).
+- **@Senior_Frontend_Dev:** `Claude Sonnet 4.6 (Thinking)` (Reatividade segura e arquitetura visual).
+- **@Senior_QA_Security:** `Claude Opus 4.6 (Thinking)` (Muralha TDD Física In-Browser).
 
 ---
 

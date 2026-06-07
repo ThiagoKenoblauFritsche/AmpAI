@@ -2,7 +2,7 @@
 tags:
   - arquitetura/ia
   - notebooklm/instrucoes
-versao: 4.2
+versao: 5
 status: ativo
 ---
 
