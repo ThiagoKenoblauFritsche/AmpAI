@@ -14,7 +14,7 @@ status: em-andamento
 	- *Cenário:* Os KPIs superiores calculam curto-circuito de tela (35mm²), mas as abas inferiores e o memorial congelam exibindo lógica antiga de BT (S1=95mm²).
 	- *Ação Futura:* Refatorar o motor de renderização reativa em `js/ui_render.js` para ler e integrar os outputs matemáticos gerados pelo módulo isolado `js/core_cabos_mt.js`.
 - [ ] **O.S. #004** | `[ALTA]` Bug #02: Badge Normativo do Header Estático/Hardcoded na Interface SPA.
-- [ ] **O.S. #005** | `[ALTA]` Bug #03: Inconsistência Física e Falta de Reatividade nos Inputs de Tensão ($U_{LL}$ / $U_{LN}$).
+- [x] **O.S. #005** | `[ALTA]` Bug #03: Inconsistência Física e Falta de Reatividade nos Inputs de Tensão ($U_{LL}$ / $U_{LN}$).
 - [ ] **O.S. #006** | `[ALTA]` Bug #04: Loops de Feedback nos Inputs e Perda de Foco durante a Digitação.
 - [ ] **O.S. #007** | `[MÉDIA]` Feature: Redesenho do Header e Elevação da Identidade Visual da Norma.
 - [ ] **O.S. #008** | `[MÉDIA]` Feature: Reestruturação do Seletor de Idiomas para o Header Global.
@@ -23,5 +23,5 @@ status: em-andamento
 - [x] **O.S. #011** | `[ALTA]` Depreciação do cálculo em tempo real e fix do State Binding nos seletores (Submissão Intencional).
 - [ ] **O.S. #012** | `[ALTA]` Feature: Memorial de Cálculo Exportável para Baixa Tensão (BT). (Implementar geração de relatório dinâmico e exportável seguindo os moldes do módulo de curto-circuito).
 - [ ] **O.S. #013** | `[ALTA]` Feature: Memorial de Cálculo Exportável para Média Tensão (MT). (Replicar a lógica de exportação e geração de relatório dinâmico para os resultados da IEC 60502-2).
-- [ ] **O.S. #014** | `[CRÍTICA]` Correção de Bugs e Estabilização do Módulo de Média Tensão (MT). (Revisar motor físico e resolver bugs pendentes de dimensionamento identificados durante os testes).
+- [x] **O.S. #014** | `[CRÍTICA]` Correção de Bugs e Estabilização do Módulo de Média Tensão (MT). (Revisar motor físico e resolver bugs pendentes de dimensionamento identificados durante os testes).
 - [ ] **O.S. #015** | `[MÉDIA]` Refatoração UI/UX Global: Padronização Visual e Construtiva. (Compatibilizar as premissas de frontend, componentes, cards e paleta de cores para que os módulos de BT, MT e Curto-Circuito tenham a mesma identidade e comportamento).
