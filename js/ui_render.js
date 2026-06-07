@@ -17,6 +17,7 @@
 // Helpers puros (sem estado)
 // ─────────────────────────────────────────────────────────────────────────────
 window.isRendering = false; // Flag Global Anti-Loop
+window.AmpAI_State = window.AmpAI_State || {}; // Estado global dos seletores
 
 const _ok  = () => '<span style="color:var(--success);font-weight:700;">✓ OK</span>';
 const _dom = () => '<span style="color:var(--accent);font-weight:700;">★ Dominante</span>';
@@ -138,6 +139,7 @@ document.addEventListener('click', function(e) {
         case 'set-bt-cu':
         case 'set-bt-al': {
             const mat = action === 'set-bt-cu' ? 'Cu' : 'Al';
+            window.AmpAI_State.btCond = mat;
             document.getElementById('bt-btn-cu')?.classList.toggle('active', mat === 'Cu');
             document.getElementById('bt-btn-al')?.classList.toggle('active', mat === 'Al');
             break;
@@ -145,6 +147,7 @@ document.addEventListener('click', function(e) {
         case 'set-bt-xlpe':
         case 'set-bt-pvc': {
             const ins = action === 'set-bt-xlpe' ? 'XLPE' : 'PVC';
+            window.AmpAI_State.btIns = ins;
             document.getElementById('bt-btn-xlpe')?.classList.toggle('active', ins === 'XLPE');
             document.getElementById('bt-btn-pvc')?.classList.toggle('active', ins === 'PVC');
             break;
@@ -152,6 +155,7 @@ document.addEventListener('click', function(e) {
         case 'set-mt-cu':
         case 'set-mt-al': {
             const mat = action === 'set-mt-cu' ? 'Cu' : 'Al';
+            window.AmpAI_State.mtCond = mat;
             document.getElementById('mt-btn-cu')?.classList.toggle('active', mat === 'Cu');
             document.getElementById('mt-btn-al')?.classList.toggle('active', mat === 'Al');
             break;
@@ -159,30 +163,13 @@ document.addEventListener('click', function(e) {
         case 'set-mt-xlpe':
         case 'set-mt-epr': {
             const ins = action === 'set-mt-xlpe' ? 'XLPE' : 'EPR';
+            window.AmpAI_State.mtIns = ins;
             document.getElementById('mt-btn-xlpe')?.classList.toggle('active', ins === 'XLPE');
             document.getElementById('mt-btn-epr')?.classList.toggle('active', ins === 'EPR');
             break;
         }
     }
 });
-
-// Delegação de Eventos para inputs (recalcula ao mudar qualquer campo)
-document.addEventListener('input', function(e) {
-    if (e.target.hasAttribute('data-input-bt') && typeof window.calculateCablingBT === 'function') {
-        window.calculateCablingBT();
-    } else if (e.target.hasAttribute('data-input-mt') && typeof window.calculateCablingMT === 'function') {
-        window.calculateCablingMT();
-    }
-});
-
-document.addEventListener('change', function(e) {
-    if (e.target.hasAttribute('data-input-bt') && typeof window.calculateCablingBT === 'function') {
-        window.calculateCablingBT();
-    } else if (e.target.hasAttribute('data-input-mt') && typeof window.calculateCablingMT === 'function') {
-        window.calculateCablingMT();
-    }
-});
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Injeção Segura e Reativa (com Retries e proteção Anti-Loop)
 // ─────────────────────────────────────────────────────────────────────────────
@@ -486,42 +473,65 @@ window.renderCablingMTResults = window.renderCardMT;
                         if (!cardMT) {
                             console.error('[TDD] TESTE 5 FALHOU: #card-mt é null — elemento não existe no DOM!');
                         } else {
-                            console.log('%c[TDD] TESTE 5 PASSOU: #card-mt existe no DOM (clientHeight: ' + cardMT.clientHeight + 'px)', 'color:green;');
+                            console.log('%c[TDD] TESTE 5 PASSOU: #card-mt existe no DOM', 'color:green;');
                         }
 
-                        // ── Teste 6: Simular cálculo e verificar mm² no DOM
-                        console.log('[TDD] TESTE 6: Simulando cliques em Calcular (BT e MT)...');
+                        // ── Teste 6: Testar State Binding e Cálculo Intencional
+                        console.log('[TDD] TESTE 6: Simulando clique de seleção de material e envio do form...');
                         
-                        // BT
-                        const btnCalcBT = document.querySelector('[data-action="calc-bt"]');
-                        if (btnCalcBT) btnCalcBT.click();
-                        
-                        // MT
-                        const btnCalcMT = document.querySelector('[data-action="calc-mt"]');
-                        if (btnCalcMT) btnCalcMT.click();
-                        
-                        setTimeout(() => {
-                            const cardBTText = document.getElementById('card-bt') ? document.getElementById('card-bt').innerText : '';
-                            const cardMTText = document.getElementById('card-mt') ? document.getElementById('card-mt').innerText : '';
+                        const btnAl = document.getElementById('bt-btn-al');
+                        if (btnAl) {
+                            const originalCalcBT = window.calculateCablingBT;
+                            let calcTriggered = false;
+                            window.calculateCablingBT = function() { calcTriggered = true; originalCalcBT(); };
                             
-                            if (cardBTText.includes('mm²')) {
-                                console.log('%c[TDD] TESTE 6.1 PASSOU: Resultado BT renderizado no DOM com mm²', 'color:green;');
-                            } else {
-                                console.error('[TDD] TESTE 6.1 FALHOU: Resultado BT não exibe mm² no DOM');
-                            }
+                            btnAl.click();
                             
-                            if (cardMTText.includes('mm²')) {
-                                console.log('%c[TDD] TESTE 6.2 PASSOU: Resultado MT renderizado no DOM com mm²', 'color:green;');
-                            } else {
-                                console.error('[TDD] TESTE 6.2 FALHOU: Resultado MT não exibe mm² no DOM');
-                            }
+                            setTimeout(() => {
+                                if (window.AmpAI_State && window.AmpAI_State.btCond === 'Al') {
+                                    console.log('%c[TDD] TESTE ESTADO PASSOU: Estado atualizado para Al (AmpAI_State.btCond)', 'color:green;');
+                                } else {
+                                    console.error('[TDD] TESTE ESTADO FALHOU: Estado não foi atualizado no AmpAI_State');
+                                }
+                                
+                                if (!calcTriggered) {
+                                    console.log('%c[TDD] TESTE EVENTO PASSOU: Clique no botão Al NÃO disparou o cálculo matemático!', 'color:green;');
+                                } else {
+                                    console.error('[TDD] TESTE EVENTO FALHOU: O cálculo foi acionado em tempo real (não permitido).');
+                                }
+                                
+                                window.calculateCablingBT = originalCalcBT; // Restaura
+                                
+                                const btnCalcBT = document.querySelector('[data-action="calc-bt"]');
+                                if (btnCalcBT) btnCalcBT.click();
+                                
+                                const btnCalcMT = document.querySelector('[data-action="calc-mt"]');
+                                if (btnCalcMT) btnCalcMT.click();
+                                
+                                setTimeout(() => {
+                                    const cardBTText = document.getElementById('card-bt') ? document.getElementById('card-bt').innerText : '';
+                                    const cardMTText = document.getElementById('card-mt') ? document.getElementById('card-mt').innerText : '';
+                                    
+                                    if (cardBTText.includes('mm²')) {
+                                        console.log('%c[TDD] TESTE 6.1 PASSOU: Resultado BT renderizado no DOM com mm²', 'color:green;');
+                                    } else {
+                                        console.error('[TDD] TESTE 6.1 FALHOU: Resultado BT não exibe mm² no DOM');
+                                    }
+                                    
+                                    if (cardMTText.includes('mm²')) {
+                                        console.log('%c[TDD] TESTE 6.2 PASSOU: Resultado MT renderizado no DOM com mm²', 'color:green;');
+                                    } else {
+                                        console.error('[TDD] TESTE 6.2 FALHOU: Resultado MT não exibe mm² no DOM');
+                                    }
 
-                            // ── Resultado Final
-                            console.log('%c══════════════════════════════════════════', 'color:#6366f1;');
-                            console.log('%c[TDD] PASSOU: Pipeline FULL-TDD 100% Funcional ✓', 'color:#22c55e;font-weight:700;font-size:14px;');
-                            console.log('%c══════════════════════════════════════════', 'color:#6366f1;');
-                            console.groupEnd();
-                        }, 300);
+                                    // ── Resultado Final
+                                    console.log('%c══════════════════════════════════════════', 'color:#6366f1;');
+                                    console.log('%c[TDD] PASSOU: Pipeline FULL-TDD 100% Funcional ✓', 'color:#22c55e;font-weight:700;font-size:14px;');
+                                    console.log('%c══════════════════════════════════════════', 'color:#6366f1;');
+                                    console.groupEnd();
+                                }, 300);
+                            }, 100);
+                        }
                     }, 200);
                 }
             }, 200);

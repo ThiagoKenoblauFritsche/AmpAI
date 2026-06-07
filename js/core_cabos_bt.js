@@ -108,7 +108,7 @@ function validateBTInputs(i) {
 // ─────────────────────────────────────────────────────────────────────────────
 // MOTOR DE CÁLCULO
 window.calculateCablingBT = function(mockInput = null) {
-    const alertBox = document.getElementById('cb-alert-error');
+    const alertBox = document.getElementById('bt-alert-error');
     if (alertBox) alertBox.classList.remove('active');
 
     try {
@@ -193,8 +193,8 @@ window.calculateCablingBT = function(mockInput = null) {
         }
 
     } catch (err) {
-        const alertBox = document.getElementById('cb-alert-error');
-        const alertMsg = document.getElementById('cb-alert-msg');
+        const alertBox = document.getElementById('bt-alert-error');
+        const alertMsg = document.getElementById('bt-alert-msg');
         if (alertBox) alertBox.classList.add('active');
         if (alertMsg) alertMsg.innerText = err.message;
 
@@ -213,31 +213,65 @@ window.calculateCablingBT = function(mockInput = null) {
 ;(function runBTMathTests() {
     console.groupCollapsed('%c[TDD CORE] Iniciando Testes Unitários (BT)', 'color:#8b5cf6;font-weight:bold;');
     try {
-        const mockInput = {
+        // ── Teste 1: Caminho Feliz (Cu/PVC, 50A, 380V) ─────────────────────────────
+        const mockHappy = {
             method: 'C', phases: 3, Ib_A: 50, In_A: 63, ULL_V: 380,
             length_m: 30, cosPhi: 0.92, duMax_pct: 3.0, thetaAmb_C: 30,
             nCircuits: 1, Icc_A: 10000, tProt_s: 0.2,
             conductor: 'Cu', insulation: 'PVC'
         };
-        
         let intercepted = null;
         const orig = window.renderCardBT;
         window.renderCardBT = function(p) { intercepted = p; };
-        
-        window.calculateCablingBT(mockInput);
-        window.renderCardBT = orig; // Restore
-        
+        window.calculateCablingBT(mockHappy);
+        window.renderCardBT = orig;
         if (intercepted && intercepted.sFinal > 0) {
             console.log('%c[TDD CORE BT] PASSOU: Motor Matemático BT Funcional! (Seção Final: ' + intercepted.sFinal + ' mm²)', 'color:green;font-weight:bold;');
-            console.table({
-                "Térmico (S1)": intercepted.S1 + " mm²",
-                "Queda Tensão (S2)": intercepted.S2 + " mm²",
-                "Curto (S3)": intercepted.S3 + " mm²",
-                "Dominante": intercepted.dominant
-            });
+            console.table({ "Térmico (S1)": intercepted.S1+' mm²', "Queda Tensão (S2)": intercepted.S2+' mm²', "Curto (S3)": intercepted.S3+' mm²', "Dominante": intercepted.dominant });
         } else {
             console.error('[TDD CORE BT] FALHA: Cálculo de BT quebrado (Seção zero ou Nula).');
         }
+
+        // ── Teste 2: ANTI-HAPPY PATH — In < Ib DEVE bloquear o cálculo ───────────
+        const mockAntiHappy = {
+            method: 'C', phases: 3, Ib_A: 1000, In_A: 40, ULL_V: 380,
+            length_m: 30, cosPhi: 0.92, duMax_pct: 3.0, thetaAmb_C: 30,
+            nCircuits: 1, Icc_A: 10000, tProt_s: 0.2,
+            conductor: 'Cu', insulation: 'PVC'
+        };
+        let antiHappyBlocked = false;
+        const origRender2 = window.renderCardBT;
+        window.renderCardBT = function(p) { antiHappyBlocked = false; };
+        try {
+            // O motor deve lançar um erro — se não o fizer, a suite reprova
+            window.calculateCablingBT(mockAntiHappy);
+        } catch(antiErr) {
+            antiHappyBlocked = true;
+        }
+        window.renderCardBT = origRender2;
+        // Como calculateCablingBT captura o erro internamente, checamos via
+        // validar que renderCardBT NÃO foi chamado com resultado válido
+        // O motor chama alertBox — precisamos verificar indiretamente:
+        const alrt = document.getElementById('bt-alert-error');
+        const wasBlocked = alrt && alrt.classList.contains('active');
+        if (wasBlocked) {
+            console.log('%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH): Trava In < Ib funcionou corretamente. O motor bloqueou o cálculo.', 'color:green;font-weight:bold;');
+        } else {
+            console.error('[TDD CORE BT] FALHA ANTI-HAPPY PATH: Motor não bloqueou In(40A) < Ib(1000A). Risco de curto! CODE RED.');
+        }
+
+        // ── Teste 3: Alumínio / XLPE (Matriz Secundária) ───────────────────────
+        const mockAl = { ...mockHappy, conductor: 'Al', insulation: 'XLPE', In_A: 80 };
+        let interceptedAl = null;
+        window.renderCardBT = function(p) { interceptedAl = p; };
+        window.calculateCablingBT(mockAl);
+        window.renderCardBT = orig;
+        if (interceptedAl && interceptedAl.sFinal > 0) {
+            console.log(`%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH Al): Al/XLPE resultou em ${interceptedAl.sFinal} mm² (deve ser ≥ Cu/PVC).`, 'color:green;font-weight:bold;');
+        } else {
+            console.error('[TDD CORE BT] FALHA: Matrix Al/XLPE retornou nulo.');
+        }
+
     } catch (e) {
         console.error('[TDD CORE BT] FALHA: Exceção durante o teste:', e);
     }

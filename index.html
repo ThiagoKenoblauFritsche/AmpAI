@@ -131,9 +131,9 @@
         }
 
         .norm-badge {
-            background: var(--accent-light);
-            color: var(--accent-hover);
-            border: 1px solid rgba(245, 158, 11, 0.2);
+            background: #92400e;
+            color: #fef3c7;
+            border: 1px solid rgba(146, 64, 14, 0.3);
             padding: 0.15rem 0.4rem;
             border-radius: 4px;
             font-weight: 750;
@@ -204,7 +204,9 @@
             font-size: 0.7rem;
             font-weight: 700;
             font-family: 'Inter', sans-serif;
-            padding: 0.2rem 0.45rem;
+            padding: 0.35rem 0.6rem;
+            min-width: 28px;
+            min-height: 28px;
             border-radius: 4px;
             cursor: pointer;
             letter-spacing: 0.04em;
@@ -318,7 +320,7 @@
         input[type="number"],
         select {
             width: 100%;
-            padding: 0.55rem 0.75rem;
+            padding: 0.55rem 2.5rem 0.55rem 0.75rem;
             background: var(--bg-primary);
             border: 1px solid var(--border);
             border-radius: 6px;
@@ -989,12 +991,12 @@
 
                 <!-- Language Switcher -->
                 <div class="lang-switcher">
-                    <button class="lang-btn active" id="lang-pt" onclick="setLanguage('pt')"
+                    <button type="button" class="lang-btn active" id="lang-pt" onclick="setLanguage('pt')"
                         title="Português">PT</button>
                     <span class="lang-divider">|</span>
-                    <button class="lang-btn" id="lang-en" onclick="setLanguage('en')" title="English">EN</button>
+                    <button type="button" class="lang-btn" id="lang-en" onclick="setLanguage('en')" title="English">EN</button>
                     <span class="lang-divider">|</span>
-                    <button class="lang-btn" id="lang-es" onclick="setLanguage('es')" title="Español">ES</button>
+                    <button type="button" class="lang-btn" id="lang-es" onclick="setLanguage('es')" title="Español">ES</button>
                 </div>
 
                 <div class="nav-section-title" data-i18n="nav.solutions">Soluções</div>
@@ -1050,9 +1052,9 @@
                 <div class="form-control">
                     <label data-i18n="inputs.gridLevel">Nível da Rede Upstream</label>
                     <div class="toggle-btn-group">
-                        <button class="toggle-btn active" id="toggle-scc" onclick="setGridInputMode('scc')"
+                        <button type="button" class="toggle-btn active" id="toggle-scc" onclick="setGridInputMode('scc')"
                             data-i18n="inputs.gridPower">Potência (Scc)</button>
-                        <button class="toggle-btn" id="toggle-icc" onclick="setGridInputMode('icc')"
+                        <button type="button" class="toggle-btn" id="toggle-icc" onclick="setGridInputMode('icc')"
                             data-i18n="inputs.gridCurrent">Corrente (Icc)</button>
                     </div>
                 </div>
@@ -1589,8 +1591,8 @@
                     </div>
                     <!-- Toggle BT / MT -->
                     <div style="display:flex; gap:0.5rem; background:var(--bg-tertiary); padding:4px; border-radius:8px;">
-                        <button id="cb-toggle-bt" class="toggle-btn active" data-action="switch-bt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">⚡ BT (≤ 1 kV)</button>
-                        <button id="cb-toggle-mt" class="toggle-btn" data-action="switch-mt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">🔆 MT (6–30 kV)</button>
+                        <button type="button" id="cb-toggle-bt" class="toggle-btn active" data-action="switch-bt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">⚡ BT (≤ 1 kV)</button>
+                        <button type="button" id="cb-toggle-mt" class="toggle-btn" data-action="switch-mt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">🔆 MT (6–30 kV)</button>
                     </div>
                 </div>
 
@@ -1606,6 +1608,7 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
+                            <form id="form-bt" novalidate onsubmit="event.preventDefault(); if(typeof window.calculateCablingBT==='function') window.calculateCablingBT();">
 
                             <div class="form-control"><label>Método de Instalação</label>
                                 <select id="bt-method" data-input-bt="true">
@@ -1619,14 +1622,14 @@
                             </div>
                             <div class="form-control"><label>Material do Condutor</label>
                                 <div class="toggle-btn-group">
-                                    <button class="toggle-btn active" id="bt-btn-cu" data-action="set-bt-cu">Cu</button>
-                                    <button class="toggle-btn" id="bt-btn-al" data-action="set-bt-al">Al</button>
+                                    <button type="button" class="toggle-btn active" id="bt-btn-cu" data-action="set-bt-cu" aria-label="Condutor de Cobre">Cu</button>
+                                    <button type="button" class="toggle-btn" id="bt-btn-al" data-action="set-bt-al" aria-label="Condutor de Alumínio">Al</button>
                                 </div>
                             </div>
                             <div class="form-control"><label>Isolação</label>
                                 <div class="toggle-btn-group">
-                                    <button class="toggle-btn active" id="bt-btn-xlpe" data-action="set-bt-xlpe">XLPE 90°C</button>
-                                    <button class="toggle-btn" id="bt-btn-pvc" data-action="set-bt-pvc">PVC 70°C</button>
+                                    <button type="button" class="toggle-btn active" id="bt-btn-xlpe" data-action="set-bt-xlpe" aria-label="Isolação XLPE 90°C">XLPE 90°C</button>
+                                    <button type="button" class="toggle-btn" id="bt-btn-pvc" data-action="set-bt-pvc" aria-label="Isolação PVC 70°C">PVC 70°C</button>
                                 </div>
                             </div>
                             <div class="form-control"><label>Fases do Sistema</label>
@@ -1636,10 +1639,10 @@
                                 </select>
                             </div>
                             <div class="form-control"><label>Corrente de Projeto Ib (A)</label>
-                                <div class="input-wrapper"><input type="number" id="bt-ib" value="100" min="1" step="1" data-input-bt="true"><span class="unit-badge">A</span></div>
+                                <div class="input-wrapper"><input type="number" id="bt-ib" value="100" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
                             <div class="form-control"><label>Corrente Nominal do Disjuntor In (A)</label>
-                                <div class="input-wrapper"><input type="number" id="bt-in" value="125" min="1" step="1" data-input-bt="true"><span class="unit-badge">A</span></div>
+                                <div class="input-wrapper"><input type="number" id="bt-in" value="125" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
                             <div class="form-control"><label>Tensão de Linha ULL (V)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ull" value="380" min="110" max="1000" data-input-bt="true"><span class="unit-badge">V</span></div>
@@ -1666,6 +1669,7 @@
                                 <div class="input-wrapper"><input type="number" id="bt-tprot" value="0.2" min="0.01" max="5" step="0.01" data-input-bt="true"><span class="unit-badge">s</span></div>
                             </div>
                             <button id="btn-bt" data-action="calc-bt" style="width:100%; margin-top:0.5rem; padding:0.7rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem;">⚡ Calcular BT</button>
+                            </form>
                         </aside>
 
                         <!-- Resultados BT -->
@@ -1694,6 +1698,7 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="mt-alert-msg">Erro nos parâmetros.</div>
                             </div>
+                            <form id="form-mt" novalidate onsubmit="event.preventDefault(); if(typeof window.calculateCablingMT==='function') window.calculateCablingMT();">
 
                             <div class="form-control"><label>Tensão do Sistema ULL (kV)</label>
                                 <select id="mt-ull" data-input-mt="true">
@@ -1706,14 +1711,14 @@
                             </div>
                             <div class="form-control"><label>Material do Condutor</label>
                                 <div class="toggle-btn-group">
-                                    <button class="toggle-btn active" id="mt-btn-cu" data-action="set-mt-cu">Cu</button>
-                                    <button class="toggle-btn" id="mt-btn-al" data-action="set-mt-al">Al</button>
+                                    <button type="button" class="toggle-btn active" id="mt-btn-cu" data-action="set-mt-cu" aria-label="Condutor de Cobre">Cu</button>
+                                    <button type="button" class="toggle-btn" id="mt-btn-al" data-action="set-mt-al" aria-label="Condutor de Alumínio">Al</button>
                                 </div>
                             </div>
                             <div class="form-control"><label>Isolação</label>
                                 <div class="toggle-btn-group">
-                                    <button class="toggle-btn active" id="mt-btn-xlpe" data-action="set-mt-xlpe">XLPE 90°C</button>
-                                    <button class="toggle-btn" id="mt-btn-epr" data-action="set-mt-epr">EPR 90°C</button>
+                                    <button type="button" class="toggle-btn active" id="mt-btn-xlpe" data-action="set-mt-xlpe" aria-label="Isolação XLPE 90°C">XLPE 90°C</button>
+                                    <button type="button" class="toggle-btn" id="mt-btn-epr" data-action="set-mt-epr" aria-label="Isolação EPR 90°C">EPR 90°C</button>
                                 </div>
                             </div>
                             <div class="form-control"><label>Tipo de Instalação</label>
@@ -1770,6 +1775,7 @@
                                 </div>
                             </div>
                             <button id="btn-mt" data-action="calc-mt" style="width:100%; margin-top:0.5rem; padding:0.7rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem;">🔆 Calcular MT</button>
+                            </form>
                         </aside>
 
                         <!-- Resultados MT -->
