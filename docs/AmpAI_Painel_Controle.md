@@ -49,9 +49,10 @@ Habilidades analíticas e critérios de dimensionamento extraídos e consolidado
 - [x] **Módulo 3: Dimensionamento de Cabos MT**
 	- *Norma:* IEC 60502-2 (6 kV a 30 kV)
 	- *Escopo:* Critério de Curto-Circuito Adiabático para condutor e blindagem de cobre (tela metálica). Isolamento completo de escopo (O.S. #INF-005).
+ - [x] **O.S. #003 (Bug #01):** Correção da reatividade da UI nas abas inferiores do módulo de Média Tensão.
 
 ### 🟡 Em Desenvolvimento (Sprint Ativa - Correção de Bug)
-- [ ] **O.S. #003 (Bug #01):** Correção da reatividade da UI nas abas inferiores do módulo de Média Tensão.
+
 
 ### 🔴 Backlog (Próximas Etapas)
 - [ ] **Módulo 4: Derating por Altitude** (Correções térmicas e dielétricas acima de 1000m).
