@@ -19,11 +19,11 @@ O software superou a modularização inicial e agora opera sob a Governança v5.
 - `js/ui_render.js`: Motor de reatividade do DOM e UI, gerenciado pelo @Senior_Frontend_Dev, blindado com Null Pointer Mitigation.
 - `sync.ps1`: Script PowerShell para automação trilateral.
 
-## 🖥️ 3. Infraestrutura e Governança de Ambientes
-O projeto opera em um triângulo de sincronização perfeito:
-1. **Ambiente de Produção (VPS Hetzner):** Instância Linux Ubuntu 24.04 LTS localizada na Alemanha (`178.105.252.252`). Possui o repositório clonado em `/app/ampai` e a **Antigravity CLI da Google** instalada e autenticada sob a licença **PRO** (`thiagokenoblaufritsche@gmail.com`).
-2. **Ambiente Central (GitHub Private):** Repositório seguro que serve de ponte inteligente de sincronização de código.
-3. **Ambiente do PC Local (IDE Antigravity & Obsidian):** Pasta de desenvolvimento conectada ao Git. O cofre do Obsidian (`Thiago_2.0`) está estruturado de forma visível e limpa em subpastas numéricas.
+## 🖥️ 3. Infraestrutura e Governança de Ambientes (v6.0)
+O projeto superou o desenvolvimento unificado e agora opera numa tripartição de responsabilidades:
+1. **Plano Semântico (Insights):** O Google NotebookLM atua como "memória de longo prazo". Faz RAG de contexto infinito sem cobrar tokens, ajudando no brainstorming comercial na rua. Tem zero autoridade de código.
+2. **Plano de Produção Científica (PC Local):** O Claude Code Pro (Fable 5) atua na máquina do Thiago. Focado em codificar matemática complexa, aplicar mitigação de Null Pointer e construir as interfaces. Submetido estritamente ao Air Gap.
+3. **Plano de Governança (VPS Hetzner):** A VPS Ubuntu na Alemanha rodando a Antigravity CLI. É o "Juiz Supremo". Intercepta os commits, compila na Sandbox, roda o TDD de forma hermética e dita o deploy em produção.
 
 ## 🔄 4. O Script de Sincronização Unificada (`./sync.ps1`)
 Para trazer as alterações de código da VPS para o computador do Thiago com esforço zero e alimentar a IA de forma invisível, o script PowerShell local executa:
