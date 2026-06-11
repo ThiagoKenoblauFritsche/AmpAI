@@ -2,6 +2,12 @@
 
 // ═══════════════════════════════════════════════════════════════════════════
 // NÚCLEO DE CÁLCULO — BAIXA TENSÃO (BT) — IEC 60364-5-52 / NBR 5410
+//
+// MOTOR 100% PURO (Governança v6.0 — SoC estrita):
+// • NÃO lê DOM. NÃO renderiza. NÃO conhece ui_render.js.
+// • Contrato: window.calculateCablingBT(input) → payload JSON ou throw.
+// • Toda leitura de formulário e reatividade vive em js/ui_render.js
+//   (window.readBTInputsFromUI + delegação de eventos).
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BT = {
@@ -9,22 +15,22 @@ const BT = {
 
     standardSections: [1.5, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120, 150, 185, 240, 300],
 
-    // Constante 'K' para cálculo de curto-circuito (IEC 60364-4-43)
+    // Constante 'k' para cálculo de curto-circuito (IEC 60364-4-43, Tabela 43A)
     kFactor: {
         'Cu': { 'PVC': 115, 'XLPE': 143 },
         'Al': { 'PVC': 76,  'XLPE': 94 }
     },
 
-    // Resistividade a quente (Ohm.mm²/m)
+    // Resistividade a quente (Ω·mm²/m) — Cu/Al a 70°C (PVC) e 90°C (XLPE)
     rho: {
-        'Cu': { 'PVC': 0.021, 'XLPE': 0.0225 }, // 70C vs 90C
+        'Cu': { 'PVC': 0.021, 'XLPE': 0.0225 },
         'Al': { 'PVC': 0.034, 'XLPE': 0.036 }
     },
 
-    // Limites de Temperatura
+    // Limites de Temperatura da isolação (IEC 60364-5-52, Tabela 52.1)
     thetaMax: { 'PVC': 70, 'XLPE': 90 },
 
-    // Tabela B.52.2 até B.52.5 Simplificada (Ampacidade para Cu XLPE/EPR a 30°C - 3 condutores carregados)
+    // Tabela B.52.2 até B.52.5 Simplificada (Ampacidade para Cu a 30°C - 3 condutores carregados)
     // Métodos B1 (Eletroduto alvenaria), B2 (Eletroduto aparente), C (Parede), D (Enterrado)
     // Referência aproximada
     ampacity: {
@@ -46,8 +52,7 @@ const BT = {
     // Fator de agrupamento B.52.17 (Simplificado para cabos em feixe)
     f_group: [1.0, 0.80, 0.70, 0.65, 0.60, 0.57, 0.54, 0.52, 0.50, 0.48], // índice é (n-1)
 
-    // Fatores de temperatura para PVC (base 30C ambiente e base 20C solo)
-    // Simplificaremos o cálculo matematicamente.
+    // Fator de temperatura ambiente: base 30°C (ar) / 20°C (solo, método D)
     getTempFactor: function(insulation, method, tamb) {
         const tBase = (method === 'D') ? 20 : 30;
         const tMax = this.thetaMax[insulation];
@@ -64,36 +69,11 @@ const BT = {
         const arr = table[method] || table['C'];
         let Iz = arr[sIdx];
         if (phases === 2) Iz *= 1.15; // Aproximação de 3 para 2 condutores carregados
-        if (conductor === 'Al') Iz *= 0.78; // Equivalência aproximada Cu -> Al
+        if (conductor === 'Al') Iz *= 0.78; // [MVP] Equivalência aproximada Cu -> Al (fator fixo não cobre todas as faixas normativas IEC)
         return Iz;
     }
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LEITURA DOS INPUTS DA DOM
-function safe(id) { const el = document.getElementById(id); return el ? el.value : ''; }
-
-function readBTInputs() {
-    const input = {
-        method:      safe('bt-method') || 'C',
-        phases:      parseInt(safe('bt-phases')) || 3,
-        Ib_A:        parseFloat(safe('bt-ib')) || 100,
-        In_A:        parseFloat(safe('bt-in')) || 125,
-        ULL_V:       parseFloat(safe('bt-ull')) || 380,
-        length_m:    parseFloat(safe('bt-length')) || 50,
-        cosPhi:      parseFloat(safe('bt-cosphi')) || 0.92,
-        duMax_pct:   parseFloat(safe('bt-du-max')) || 3.0,
-        thetaAmb_C:  parseFloat(safe('bt-tamb')) || 30,
-        nCircuits:   parseInt(safe('bt-ncirc')) || 1,
-        Icc_A:       (parseFloat(safe('bt-icc')) || 10) * 1000,
-        tProt_s:     parseFloat(safe('bt-tprot')) || 0.2,
-
-        // Estado dos toggle buttons do card-cabling (presumido global via UI)
-        conductor:   window.AmpAI_State?.btCond || 'Cu',
-        insulation:  window.AmpAI_State?.btIns  || 'PVC'
-    };
-    return input;
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // VALIDAÇÃO DOS INPUTS
@@ -103,114 +83,108 @@ function validateBTInputs(i) {
     }
     if (i.nCircuits < 1) throw new Error('[QA-BT-002] O número de circuitos agrupados deve ser >= 1.');
     if (i.length_m <= 0) throw new Error('[QA-BT-003] O comprimento deve ser > 0m.');
+    if (i.Icc_A <= 0) throw new Error('[QA-BT-004] Corrente de curto-circuito deve ser > 0.');
+    if (i.tProt_s > 5) console.warn('[QA-BT-005] Tempo de proteção > 5s invalida hipótese adiabática.');
+    if (i.cosPhi < 0.7 || i.cosPhi > 1) throw new Error('[QA-BT-006] Fator de potência fora dos limites (0.7 a 1.0).');
+    const tMax = BT.thetaMax[i.insulation];
+    if (i.thetaAmb_C >= tMax) throw new Error(`[QA-BT-007] Temperatura ambiente (${i.thetaAmb_C}°C) >= Limite da Isolação (${tMax}°C).`);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// MOTOR DE CÁLCULO
-window.calculateCablingBT = function(mockInput = null) {
-    const alertBox = document.getElementById('bt-alert-error');
-    if (alertBox) alertBox.classList.remove('active');
+// MOTOR DE CÁLCULO PURO
+window.calculateCablingBT = function(input) {
+    if (!input) throw new Error("Input payload is required");
+    validateBTInputs(input);
 
-    try {
-        const input = mockInput || readBTInputs();
-        validateBTInputs(input);
-
-        // Fatores de Correção
-        const f_temp = BT.getTempFactor(input.insulation, input.method, input.thetaAmb_C);
-        const gIdx = Math.min(input.nCircuits - 1, BT.f_group.length - 1);
-        const f_group = BT.f_group[gIdx];
-        const f_combined = f_temp * f_group;
-
-        // 1. Critério Térmico (Ampacidade) - S1
-        let S1 = 1.5, Iz_corr_S1 = 0;
-        for (let s of BT.standardSections) {
-            const Iz_tab = BT.getIzFromTable(s, input.conductor, input.insulation, input.method, input.phases);
-            const Iz_c = Iz_tab * f_combined;
-            if (Iz_c >= input.In_A) {
-                S1 = s;
-                Iz_corr_S1 = Iz_c;
-                break;
-            }
-            S1 = s; // Fallback se passar do limite max, vai retornar 300
-        }
-
-        // 2. Critério da Queda de Tensão - S2
-        const duMax_V = (input.duMax_pct / 100) * input.ULL_V;
-        const rho_op = BT.rho[input.conductor][input.insulation];
-        
-        let dV_factor = 1;
-        if (input.phases === 3) dV_factor = BT.SQRT3;
-        else if (input.phases === 2) dV_factor = 2;
-
-        const S2_cont = (dV_factor * rho_op * input.length_m * input.Ib_A * input.cosPhi) / duMax_V;
-        const S2 = BT.standardSections.find(s => s >= S2_cont) || 300;
-
-        // 3. Critério de Curto-Circuito (Adíabático) - S3
-        const k = BT.kFactor[input.conductor][input.insulation];
-        const S3_cont = (input.Icc_A * Math.sqrt(input.tProt_s)) / k;
-        const S3 = BT.standardSections.find(s => s >= S3_cont) || 300;
-
-        // SEÇÃO FINAL
-        const sFinal = Math.max(S1, S2, S3);
-
-        // Identificar Fator Dominante
-        let dominant = '';
-        if (sFinal === S1) dominant = 'CAPACIDADE TÉRMICA';
-        else if (sFinal === S2) dominant = 'QUEDA DE TENSÃO';
-        else dominant = 'CURTO-CIRCUITO';
-
-        // Recalcular parâmetros reais do S_final
-        const Iz_base = BT.getIzFromTable(sFinal, input.conductor, input.insulation, input.method, input.phases);
-        const Iz_corr = Iz_base * f_combined;
-        
-        const du_V_final = (dV_factor * rho_op * input.length_m * input.Ib_A * input.cosPhi) / sFinal;
-        const du_pct_final = (du_V_final / input.ULL_V) * 100;
-
-        const thetaMax = BT.thetaMax[input.insulation];
-        const thetaOp = input.thetaAmb_C + Math.pow(input.Ib_A / Iz_corr, 2) * (thetaMax - input.thetaAmb_C);
-
-        // Payload para renderCardBT
-        const payload = {
-            duPct_final: du_pct_final, duMax: input.duMax_pct,
-            sFinal: sFinal, dominant: dominant,
-            IzFinal: Iz_corr, Ib: input.Ib_A,
-            duV_final: du_V_final,
-            thetaOp: thetaOp, tMax: thetaMax, ins: input.insulation,
-            S1: S1, S2: S2, S3: S3, S2_cont: S2_cont, S3_cont: S3_cont,
-            sNeutro: sFinal <= 16 ? sFinal : sFinal / 2, // simplificação NBR 5410
-            sPE: sFinal <= 16 ? sFinal : (sFinal <= 35 ? 16 : sFinal / 2),
-            FCT: f_temp, FCA: f_group, rho: rho_op, tAmb: input.thetaAmb_C,
-            IzRef: Iz_base, phases: input.phases, L: input.length_m,
-            cosPhi: input.cosPhi, Icc: input.Icc_A, tProt: input.tProt_s,
-            k: k, In: input.In_A, nCir: input.nCircuits, method: input.method,
-            input: input
-        };
-
-        if (typeof window.renderCardBT === 'function') {
-            window.renderCardBT(payload);
-        } else {
-            console.error('[AmpAI] renderCardBT não encontrado!');
-        }
-
-    } catch (err) {
-        const alertBox = document.getElementById('bt-alert-error');
-        const alertMsg = document.getElementById('bt-alert-msg');
-        if (alertBox) alertBox.classList.add('active');
-        if (alertMsg) alertMsg.innerText = err.message;
-
-        ['bt-val-section', 'bt-val-iz', 'bt-val-du', 'bt-val-temp'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = '--';
-        });
-
-        console.error('[AmpAI][BT] Erro no motor:', err.message);
+    // Fatores de Correção
+    const f_temp = BT.getTempFactor(input.insulation, input.method, input.thetaAmb_C);
+    const gIdx = Math.min(input.nCircuits - 1, BT.f_group.length - 1);
+    const f_group = BT.f_group[gIdx];
+    if (input.method.startsWith('D') && input.nCircuits > 1) {
+        console.warn('[QA-BT-011] Fator de agrupamento para método enterrado usando aproximação de feixe de superfície.');
     }
+    const f_combined = f_temp * f_group;
+
+    // 1. Critério Térmico (Ampacidade) - S1
+    let S1 = 1.5, Iz_corr_S1 = 0;
+    for (let s of BT.standardSections) {
+        const Iz_tab = BT.getIzFromTable(s, input.conductor, input.insulation, input.method, input.phases);
+        const Iz_c = Iz_tab * f_combined;
+        if (Iz_c >= input.In_A) {
+            S1 = s;
+            Iz_corr_S1 = Iz_c;
+            break;
+        }
+        S1 = s; // Fallback se passar do limite max, vai retornar 300
+    }
+
+    const Iz_base_S1 = BT.getIzFromTable(S1, input.conductor, input.insulation, input.method, input.phases);
+    const Iz_corr_check = Iz_base_S1 * f_combined;
+    if (Iz_corr_check < input.In_A) {
+        throw new Error(`[QA-BT-010] Ampacidade máxima disponível (${Iz_corr_check.toFixed(1)} A para 300 mm²) é inferior à proteção (In = ${input.In_A} A).`);
+    }
+
+    // 2. Critério da Queda de Tensão - S2
+    const duMax_V = (input.duMax_pct / 100) * input.ULL_V;
+    const rho_op = BT.rho[input.conductor][input.insulation];
+
+    let dV_factor = 1;
+    if (input.phases === 3) dV_factor = BT.SQRT3;
+    else if (input.phases === 2) dV_factor = 2;
+
+    const S2_cont = (dV_factor * rho_op * input.length_m * input.Ib_A * input.cosPhi) / duMax_V;
+    const S2 = BT.standardSections.find(s => s >= S2_cont) || 300;
+
+    // 3. Critério de Curto-Circuito (Adiabático) - S3
+    const k = BT.kFactor[input.conductor][input.insulation];
+    const S3_cont = (input.Icc_A * Math.sqrt(input.tProt_s)) / k;
+    const S3 = BT.standardSections.find(s => s >= S3_cont) || 300;
+
+    // SEÇÃO FINAL
+    const sFinal = Math.max(S1, S2, S3);
+
+    // Identificar Fator Dominante (composto em caso de empate)
+    const domParts = [];
+    if (sFinal === S1) domParts.push('AMPACIDADE');
+    if (sFinal === S2) domParts.push('QUEDA DE TENSÃO');
+    if (sFinal === S3) domParts.push('CURTO-CIRCUITO');
+    const dominant = domParts.join(' + ');
+
+    // Recalcular parâmetros reais do S_final
+    const Iz_base = BT.getIzFromTable(sFinal, input.conductor, input.insulation, input.method, input.phases);
+    const Iz_corr = Iz_base * f_combined;
+
+    const du_V_final = (dV_factor * rho_op * input.length_m * input.Ib_A * input.cosPhi) / sFinal;
+    const du_pct_final = (du_V_final / input.ULL_V) * 100;
+
+    const thetaMax = BT.thetaMax[input.insulation];
+    const thetaOp = input.thetaAmb_C + Math.pow(input.Ib_A / Iz_corr, 2) * (thetaMax - input.thetaAmb_C);
+
+    // Payload JSON puro (sem HTML — apresentação é responsabilidade da UI)
+    return {
+        duPct_final: du_pct_final, duMax: input.duMax_pct,
+        sFinal: sFinal, dominant: dominant,
+        IzFinal: Iz_corr, Ib: input.Ib_A,
+        duV_final: du_V_final,
+        thetaOp: thetaOp, tMax: thetaMax, ins: input.insulation,
+        S1: S1, S2: S2, S3: S3, S2_cont: S2_cont, S3_cont: S3_cont,
+        // Neutro/PE conforme NBR 5410 6.2.3.1 / IEC 60364-5-54: S≤16 → S; 16<S≤35 → 16; S>35 → S/2
+        sNeutro: sFinal <= 16 ? sFinal : (sFinal <= 35 ? 16 : sFinal / 2),
+        sPE: sFinal <= 16 ? sFinal : (sFinal <= 35 ? 16 : sFinal / 2),
+        FCT: f_temp, FCA: f_group, rho: rho_op, tAmb: input.thetaAmb_C,
+        IzRef: Iz_base, phases: input.phases, L: input.length_m,
+        cosPhi: input.cosPhi, Icc: input.Icc_A, tProt: input.tProt_s,
+        k: k, In: input.In_A, nCir: input.nCircuits, method: input.method,
+        input: input
+    };
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TDD CORE — Testes Matemáticos Injetados (Senior_QA_Security)
+// Gabarito S3_cont validado por AUD-2026-001 (contra-auditoria 2026-06-11):
+// S3_cont = 10000·√0,2 / 115 (Cu/PVC) = 38,89 mm² → S3 = 50 mm²
 // ═══════════════════════════════════════════════════════════════════════════
-;(function runBTMathTests() {
+function runBTMathTests() {
     console.groupCollapsed('%c[TDD CORE] Iniciando Testes Unitários (BT)', 'color:#8b5cf6;font-weight:bold;');
     try {
         // ── Teste 1: Caminho Feliz (Cu/PVC, 50A, 380V) ─────────────────────────────
@@ -220,14 +194,12 @@ window.calculateCablingBT = function(mockInput = null) {
             nCircuits: 1, Icc_A: 10000, tProt_s: 0.2,
             conductor: 'Cu', insulation: 'PVC'
         };
-        let intercepted = null;
-        const orig = window.renderCardBT;
-        window.renderCardBT = function(p) { intercepted = p; };
-        window.calculateCablingBT(mockHappy);
-        window.renderCardBT = orig;
-        if (intercepted && intercepted.sFinal > 0) {
-            console.log('%c[TDD CORE BT] PASSOU: Motor Matemático BT Funcional! (Seção Final: ' + intercepted.sFinal + ' mm²)', 'color:green;font-weight:bold;');
-            console.table({ "Térmico (S1)": intercepted.S1+' mm²', "Queda Tensão (S2)": intercepted.S2+' mm²', "Curto (S3)": intercepted.S3+' mm²', "Dominante": intercepted.dominant });
+        const resHappy = window.calculateCablingBT(mockHappy);
+        if (resHappy && resHappy.sFinal > 0) {
+            console.log('%c[TDD CORE BT] PASSOU: Motor Matemático BT Funcional! (Seção Final: ' + resHappy.sFinal + ' mm²)', 'color:green;font-weight:bold;');
+            console.assert(Math.abs(resHappy.S3_cont - 38.89) < 0.2, 'F009: S3_cont numérico incorreto BT (esperado 38,89 mm² = 10000·√0,2/115)');
+            console.assert(resHappy.S3 === 50, 'F009b: S3 normalizado incorreto BT (esperado 50 mm²)');
+            console.table({ "Térmico (S1)": resHappy.S1+' mm²', "Queda Tensão (S2)": resHappy.S2+' mm²', "Curto (S3)": resHappy.S3+' mm²', "Dominante": resHappy.dominant });
         } else {
             console.error('[TDD CORE BT] FALHA: Cálculo de BT quebrado (Seção zero ou Nula).');
         }
@@ -239,41 +211,39 @@ window.calculateCablingBT = function(mockInput = null) {
             nCircuits: 1, Icc_A: 10000, tProt_s: 0.2,
             conductor: 'Cu', insulation: 'PVC'
         };
-        let antiHappyBlocked = false;
-        const origRender2 = window.renderCardBT;
-        window.renderCardBT = function(p) { antiHappyBlocked = false; };
         try {
-            // O motor deve lançar um erro — se não o fizer, a suite reprova
             window.calculateCablingBT(mockAntiHappy);
-        } catch(antiErr) {
-            antiHappyBlocked = true;
-        }
-        window.renderCardBT = origRender2;
-        // Como calculateCablingBT captura o erro internamente, checamos via
-        // validar que renderCardBT NÃO foi chamado com resultado válido
-        // O motor chama alertBox — precisamos verificar indiretamente:
-        const alrt = document.getElementById('bt-alert-error');
-        const wasBlocked = alrt && alrt.classList.contains('active');
-        if (wasBlocked) {
-            console.log('%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH): Trava In < Ib funcionou corretamente. O motor bloqueou o cálculo.', 'color:green;font-weight:bold;');
-        } else {
             console.error('[TDD CORE BT] FALHA ANTI-HAPPY PATH: Motor não bloqueou In(40A) < Ib(1000A). Risco de curto! CODE RED.');
+        } catch(err) {
+            console.log('%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH): Trava In < Ib funcionou corretamente. O motor bloqueou o cálculo: ' + err.message, 'color:green;font-weight:bold;');
         }
 
         // ── Teste 3: Alumínio / XLPE (Matriz Secundária) ───────────────────────
         const mockAl = { ...mockHappy, conductor: 'Al', insulation: 'XLPE', In_A: 80 };
-        let interceptedAl = null;
-        window.renderCardBT = function(p) { interceptedAl = p; };
-        window.calculateCablingBT(mockAl);
-        window.renderCardBT = orig;
-        if (interceptedAl && interceptedAl.sFinal > 0) {
-            console.log(`%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH Al): Al/XLPE resultou em ${interceptedAl.sFinal} mm² (deve ser ≥ Cu/PVC).`, 'color:green;font-weight:bold;');
+        const resAl = window.calculateCablingBT(mockAl);
+        if (resAl && resAl.sFinal > 0) {
+            console.log(`%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH Al): Al/XLPE resultou em ${resAl.sFinal} mm² (deve ser ≥ Cu/PVC).`, 'color:green;font-weight:bold;');
         } else {
             console.error('[TDD CORE BT] FALHA: Matrix Al/XLPE retornou nulo.');
+        }
+
+        // ── Teste 4: Overflow Ampacidade ─────────────────────────────
+        const mockOverflow = { ...mockHappy, In_A: 800, thetaAmb_C: 55 };
+        try {
+            window.calculateCablingBT(mockOverflow);
+            console.error('[TDD CORE BT] FALHA ANTI-HAPPY PATH: Motor não detectou QA-BT-010.');
+        } catch(err) {
+            if (err.message.includes('QA-BT-010')) {
+                console.log('%c[TDD CORE BT] PASSOU (ANTI-HAPPY PATH OVERFLOW): Motor bloqueou In muito alto (QA-BT-010).', 'color:green;font-weight:bold;');
+            } else {
+                console.error('[TDD CORE BT] FALHA ANTI-HAPPY PATH: Erro incorreto no overflow: ' + err.message);
+            }
         }
 
     } catch (e) {
         console.error('[TDD CORE BT] FALHA: Exceção durante o teste:', e);
     }
     console.groupEnd();
-})();
+}
+
+setTimeout(runBTMathTests, 1500);

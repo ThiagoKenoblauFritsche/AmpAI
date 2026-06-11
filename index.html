@@ -852,8 +852,13 @@
                 display: none !important;
             }
 
-            .tab-pane#tab-results {
+            .tab-pane#tab-results,
+            .tab-pane#tab-results-bt {
                 display: block !important;
+            }
+
+            .print-header {
+                display: flex !important;
             }
 
             .accordion-content {
@@ -1608,7 +1613,7 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
-                            <form id="form-bt" novalidate onsubmit="event.preventDefault(); if(typeof window.calculateCablingBT==='function') window.calculateCablingBT();">
+                            <form id="form-bt" novalidate>
 
                             <div class="form-control"><label>Método de Instalação</label>
                                 <select id="bt-method" data-input-bt="true">
@@ -1674,13 +1679,7 @@
 
                         <!-- Resultados BT -->
                         <main id="card-bt">
-                            <div class="results-grid" style="margin-bottom:1rem;">
-                                <div class="result-card primary">
-                                    <div class="result-title">Seção Adotada</div>
-                                    <div class="result-value" id="bt-val-section">-- <span class="result-unit">mm²</span></div>
-                                    <div class="result-desc" id="bt-val-dominant">Dominante: --</div>
-                                </div>
-                            </div>
+                            <!-- O conteúdo dinâmico (Clonagem Curto-Circuito) será injetado via js/ui_render.js -->
                         </main>
                     </div>
                 </div>
@@ -1698,7 +1697,7 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="mt-alert-msg">Erro nos parâmetros.</div>
                             </div>
-                            <form id="form-mt" novalidate onsubmit="event.preventDefault(); if(typeof window.calculateCablingMT==='function') window.calculateCablingMT();">
+                            <form id="form-mt" novalidate>
 
                             <div class="form-control"><label for="mt-ull">Tensão de Operação (U<sub>LL</sub> - kV)</label>
                                 <input type="number" step="any" min="0" id="mt-ull" value="13.8" data-input-mt="true" required>
@@ -1733,9 +1732,10 @@
                             </div>
                             <div class="form-control"><label>Formação dos Cabos</label>
                                 <select id="mt-formation" data-input-mt="true">
-                                    <option value="TREFOIL">Trifólio (Trefoil)</option>
-                                    <option value="FLAT_TOUCHING">Plano Tocado (Flat)</option>
-                                    <option value="FLAT_SPACED">Plano Espaçado</option>
+                                    <option value="TREFOIL_TOUCHING">Trifólio Tocando (Trefoil Touching)</option>
+                                    <option value="TREFOIL_SPACED">Trifólio Espaçado (Trefoil Spaced)</option>
+                                    <option value="FLAT_TOUCHING">Plano Tocado (Flat Touching)</option>
+                                    <option value="FLAT_SPACED">Plano Espaçado (Flat Spaced)</option>
                                 </select>
                             </div>
                             <div class="form-control"><label>Corrente de Projeto Ib (A)</label>

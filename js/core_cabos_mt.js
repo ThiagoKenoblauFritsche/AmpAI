@@ -83,7 +83,11 @@ const MT = {
     kScreen: { PVC: 115, PE: 143, LSZH: 128 },
 
     // ── Resistividade operacional (Ω·mm²/m) ───────────────────────────────
-    rho90: 0.02341,   // Cu a 90°C (XLPE/EPR em regime permanente)
+    // AUD-2026-001/F005 — Rastreabilidade: condutor de cobre ENCORDOADO classe 2
+    // (IEC 60228): ρ20 = 0,01836 Ω·mm²/m → ρ90 = 0,01836 × [1 + 0,00393·(90−20)]
+    // = 0,01836 × 1,2751 = 0,02341. Conservador ≈ +6,5% vs Cu sólido puro da
+    // IEC 60287-1-1 (ρ90,DC = 0,021985), cobrindo encordoamento sem efeitos CA.
+    rho90: 0.02341,   // Cu encordoado a 90°C (XLPE/EPR em regime permanente)
 
     // ── Condições de Referência (IEC 60287) ───────────────────────────────
     ref: {
@@ -264,10 +268,16 @@ function getMTFdepth(depth) {
     return 1.00;
 }
 
-/** Fator de agrupamento (IEC 60287-1-1, Tabela B.2) */
+/** Fator de agrupamento (IEC 60287-1-1, Tabela B.2)
+ *  AUD-2026-001/F001: normalização de caixa + fail-fast. O retorno silencioso
+ *  de 1,00 para formações desconhecidas anulava o derating de agrupamento e
+ *  subdimensionava criticamente cabos multi-circuito. */
 function getMTFgrouping(nCircuits, formation) {
-    const table = MT.grouping[formation];
-    if (!table) return 1.00;
+    const key = String(formation || '').toLowerCase();
+    const table = MT.grouping[key];
+    if (!table) {
+        throw new Error(`[QA-MT-047] REJECT_UNKNOWN_GROUPING: Formação de instalação não reconhecida: "${formation}". Valores válidos: trefoil_touching, trefoil_spaced, flat_touching, flat_spaced.`);
+    }
     const n = Math.min(Math.max(1, Math.round(nCircuits)), table.length - 1);
     return table[n];
 }
@@ -402,23 +412,52 @@ window.calculateCablingMT = function(mockInput = null) {
         const mockInput = {
             voltageClass: '8.7/15', earthing: 'solid', iFault_A: 1000,
             conductor: 'Cu', insulation: 'XLPE', Ib_A: 150, In_A: 200, cosPhi: 0.9,
-            ULL_V: 13800, length_m: 100, duMax_pct: 2, formation: 'flat',
+            ULL_V: 13800, length_m: 100, duMax_pct: 2, formation: 'flat_touching',
             nCircuits: 1, rhoSoil_KmW: 1.0, depth_m: 0.8, thetaAmb_C: 25,
             Icc_A: 12500, tConductor_s: 0.5, tScreen_s: 0.5, sheath: 'PVC',
             _warnings: []
         };
-        
+
         let interceptedPayload = null;
         const originalRender = window.renderCablingMTResults;
         window.renderCablingMTResults = function(payload) { interceptedPayload = payload; };
-        
+
         window.calculateCablingMT(mockInput);
         window.renderCablingMTResults = originalRender; // Restore
-        
+
         if (interceptedPayload && interceptedPayload.sFinal > 0) {
             console.log('%c[TDD CORE] PASSOU: Motor Matemático MT Funcional! (Seção Final: ' + interceptedPayload.sFinal + ' mm²)', 'color:green;font-weight:bold;');
+            // ── Gabaritos numéricos (AUD-2026-001 §8, re-derivados na contra-auditoria 2026-06-11)
+            console.assert(Math.abs(interceptedPayload.S3_cont - 61.8) < 0.1, '[TC-MT-003] S3_cont incorreto (esperado 61,8 mm² = 12500·√0,5/143)');
+            console.assert(interceptedPayload.S3 === 70, '[TC-MT-003] S3 normalizado incorreto (esperado 70 mm²)');
+            console.assert(Math.abs(interceptedPayload.S_screen_cont - 6.15) < 0.05, '[TC-MT-004] S_screen_cont incorreto (esperado 6,15 mm² = 1000·√0,5/115)');
+            console.assert(interceptedPayload.S_screen === 10, '[TC-MT-004] S_screen incorreto (esperado 10 mm²)');
         } else {
             console.error('[TDD CORE] FALHA: Cálculo retornou Vazio ou Inválido');
+        }
+
+        // ── Teste F001: fator de agrupamento deve mapear caixa alta do HTML ──
+        try {
+            const fg = getMTFgrouping(3, 'FLAT_TOUCHING');
+            if (fg === 0.67) {
+                console.log('%c[TDD CORE MT] PASSOU (TC-MT-001/F001): f_group(3, FLAT_TOUCHING) = 0,67 — derating de agrupamento ATIVO.', 'color:green;font-weight:bold;');
+            } else {
+                console.error('[TDD CORE MT] FALHA (TC-MT-001/F001): f_group(3, FLAT_TOUCHING) = ' + fg + ' (esperado 0,67).');
+            }
+        } catch (err) {
+            console.error('[TDD CORE MT] FALHA (TC-MT-001/F001): exceção inesperada: ' + err.message);
+        }
+
+        // ── Teste F001 fail-fast: formação desconhecida DEVE ser rejeitada ──
+        try {
+            getMTFgrouping(3, 'FORMACAO_INEXISTENTE');
+            console.error('[TDD CORE MT] FALHA (F001 FAIL-FAST): Motor aceitou formação desconhecida sem erro!');
+        } catch (err) {
+            if (err.message.includes('REJECT_UNKNOWN_GROUPING')) {
+                console.log('%c[TDD CORE MT] PASSOU (F001 FAIL-FAST): Formação desconhecida rejeitada (QA-MT-047).', 'color:green;font-weight:bold;');
+            } else {
+                console.error('[TDD CORE MT] FALHA (F001 FAIL-FAST): Erro incorreto disparado: ' + err.message);
+            }
         }
 
         // Teste Anti-Happy Path

@@ -179,17 +179,28 @@ $$k_{\text{tela}} = 226 \cdot \sqrt{\ln\!\left(\frac{234{,}5 + \theta_{f,\text{c
 
 #### Tabela 5 — Valores de $k_{\text{tela}}$ para Tela de Cobre por Tipo de Capa
 
-| Capa Externa | $\theta_i\;[°\text{C}]$ | $\theta_f\;[°\text{C}]$ | $k_{\text{tela}}\;[\text{A}\cdot\text{s}^{1/2}/\text{mm}^2]$ |
+| Capa Externa | $\theta_i\;[°\text{C}]$ ² | $\theta_f\;[°\text{C}]$ | $k_{\text{tela}}\;[\text{A}\cdot\text{s}^{1/2}/\text{mm}^2]$ |
 |:---|:---:|:---:|:---:|
 | **PVC** | $70$ | $160$ | $115$ |
-| **PE (MDPE)** | $70$ | $250$ | $143$ |
-| **LSZH** | $70$ | $200$ | $128$ |
+| **PE (MDPE)** | $90$ | $250$ | $143$ |
+| **LSZH** | $80$ | $200$ | $128$ |
 
-**Exemplo de cálculo (PVC):**
+> ² **Premissa de $\theta_i$ por tipo de capa (AUD-2026-001/F004):** para capas **PE**, a temperatura inicial da tela é assumida igual à temperatura máxima de regime do condutor adjacente ($90\,°\text{C}$, XLPE/EPR) — premissa conservadora, pois a tela acompanha termicamente o condutor sob carga plena. Para **LSZH**, adota-se $\theta_i = 80\,°\text{C}$ (valor de fabricante, intermediário entre o limite da capa e o regime do condutor). Para **PVC**, mantém-se $\theta_i = 70\,°\text{C}$ (limite térmico do próprio PVC governa). Com estes $\theta_i$, **todos os valores de $k$ da tabela são deriváveis pela equação acima** — verificações abaixo.
 
-$$k_{\text{tela,PVC}} = 226 \cdot \sqrt{\ln\!\left(\frac{234{,}5 + 160}{234{,}5 + 70}\right)} = 226 \cdot \sqrt{\ln\!\left(\frac{394{,}5}{304{,}5}\right)} = 226 \cdot \sqrt{\ln(1{,}296)}$$
+**Verificação (PVC):**
 
-$$k_{\text{tela,PVC}} = 226 \cdot \sqrt{0{,}2593} = 226 \times 0{,}5092 \approx 115\;\text{A}\cdot\text{s}^{1/2}/\text{mm}^2$$
+$$k_{\text{tela,PVC}} = 226 \cdot \sqrt{\ln\!\left(\frac{234{,}5 + 160}{234{,}5 + 70}\right)} = 226 \cdot \sqrt{\ln\!\left(\frac{394{,}5}{304{,}5}\right)} = 226 \cdot \sqrt{0{,}2593} = 226 \times 0{,}5092 \approx 115 \;\checkmark$$
+
+**Verificação (PE, $\theta_i = 90\,°\text{C}$):**
+
+$$k_{\text{tela,PE}} = 226 \cdot \sqrt{\ln\!\left(\frac{234{,}5 + 250}{234{,}5 + 90}\right)} = 226 \cdot \sqrt{\ln\!\left(\frac{484{,}5}{324{,}5}\right)} = 226 \cdot \sqrt{0{,}4008} = 226 \times 0{,}6331 \approx 143 \;\checkmark$$
+
+**Verificação (LSZH, $\theta_i = 80\,°\text{C}$):**
+
+$$k_{\text{tela,LSZH}} = 226 \cdot \sqrt{\ln\!\left(\frac{234{,}5 + 200}{234{,}5 + 80}\right)} = 226 \cdot \sqrt{\ln\!\left(\frac{434{,}5}{314{,}5}\right)} = 226 \cdot \sqrt{0{,}3232} = 226 \times 0{,}5685 \approx 128 \;\checkmark$$
+
+> [!NOTE]
+> Caso se adotasse $\theta_i = 70\,°\text{C}$ também para PE e LSZH (temperaturas de regime da Tabela 2), os valores resultantes seriam $k_{\text{PE}} = 154$ e $k_{\text{LSZH}} = 135$ — **menos conservadores** (telas ~7% menores). A escolha de projeto desta especificação mantém $k = 143/128$, na direção segura.
 
 ---
 
