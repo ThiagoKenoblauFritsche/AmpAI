@@ -48,9 +48,32 @@ window.readBTInputsFromUI = function() {
         Icc_A:       (parseFloat(safe('bt-icc')) || 10) * 1000,
         tProt_s:     parseFloat(safe('bt-tprot')) || 0.2,
         conductor:   window.AmpAI_State?.btCond || 'Cu',
-        insulation:  window.AmpAI_State?.btIns  || 'PVC'
+        insulation:  window.AmpAI_State?.btIns  || 'XLPE'
     };
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Semeadura do estado no load (DOM → AmpAI_State)
+// O HTML define quais toggles nascem .active; sem esta leitura inicial, o
+// estado só seria populado no primeiro clique e os cálculos usariam os
+// fallbacks dos leitores, divergindo do visual (ex.: card PVC com botão XLPE).
+// Os fallbacks acima e em readMTInputs devem espelhar os .active do index.html.
+// ─────────────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    const seed = (key, pairs) => {
+        for (const [id, value] of pairs) {
+            const el = document.getElementById(id);
+            if (el && el.classList.contains('active')) {
+                window.AmpAI_State[key] = value;
+                return;
+            }
+        }
+    };
+    seed('btCond', [['bt-btn-cu', 'Cu'],     ['bt-btn-al', 'Al']]);
+    seed('btIns',  [['bt-btn-xlpe', 'XLPE'], ['bt-btn-pvc', 'PVC']]);
+    seed('mtCond', [['mt-btn-cu', 'Cu'],     ['mt-btn-al', 'Al']]);
+    seed('mtIns',  [['mt-btn-xlpe', 'XLPE'], ['mt-btn-epr', 'EPR']]);
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // window.App — API global limpa
@@ -252,10 +275,16 @@ document.addEventListener('click', function(e) {
             break;
         }
         case 'toggle-memorial-bt': {
+            // O CSS do acordeão colapsa por max-height:0; a abertura visual
+            // exige a classe 'open' (padrão homologado do módulo Curto-Circuito)
             const el = document.getElementById('cb-mem-bt-container');
             if (el) {
-                el.classList.toggle('hidden');
-                if (!el.classList.contains('hidden')) {
+                const abrir = el.classList.contains('hidden');
+                el.classList.toggle('hidden', !abrir);
+                el.classList.toggle('open', abrir);
+                const chev = document.getElementById('accordion-chevron-bt');
+                if (chev) chev.classList.toggle('rotated', abrir);
+                if (abrir) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             }
@@ -265,7 +294,10 @@ document.addEventListener('click', function(e) {
             const container = document.getElementById('cb-mem-bt-container');
             if (container) {
                 container.classList.remove('hidden');
+                container.classList.add('open');
             }
+            const chevBT = document.getElementById('accordion-chevron-bt');
+            if (chevBT) chevBT.classList.add('rotated');
             // Pequeno delay para garantir o render antes da impressão nativa
             setTimeout(() => window.print(), 100);
             break;
@@ -273,8 +305,12 @@ document.addEventListener('click', function(e) {
         case 'toggle-memorial-mt': {
             const container = document.getElementById('cb-mem-mt-container');
             if (container) {
-                container.classList.toggle('hidden');
-                if (!container.classList.contains('hidden')) {
+                const abrir = container.classList.contains('hidden');
+                container.classList.toggle('hidden', !abrir);
+                container.classList.toggle('open', abrir);
+                const chev = document.getElementById('accordion-chevron-mt');
+                if (chev) chev.classList.toggle('rotated', abrir);
+                if (abrir) {
                     container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             }
@@ -284,6 +320,7 @@ document.addEventListener('click', function(e) {
             const container = document.getElementById('cb-mem-mt-container');
             if (container) {
                 container.classList.remove('hidden');
+                container.classList.add('open');
             }
             setTimeout(() => window.print(), 100);
             break;
