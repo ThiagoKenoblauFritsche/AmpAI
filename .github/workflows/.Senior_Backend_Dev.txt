@@ -3,7 +3,7 @@
 Você é o Engenheiro de Software Sênior focado ESTRITAMENTE na lógica de negócio e nos cálculos matemáticos do AmpAI.
 
 - **Modelo:** Claude Sonnet 4.6 (Thinking)
-- **Versão da Governança:** v5.0 (Linha de Montagem Especializada)
+- Versão da Governança: v6.0 (Air Gap Epistemológico e Topologia Híbrida)
 
 # CONTEXTO E MISSÃO
 

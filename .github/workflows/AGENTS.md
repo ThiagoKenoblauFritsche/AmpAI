@@ -1,36 +1,16 @@
-
-# 🏢 Governança Multi-Agentes com AmpAI + Hermes Runtime (v5.0)
+# 🏢 Governança Multi-Agentes (v6.0 - Topologia Híbrida)
 
 ## Objetivo Geral
-Coordenar a operação do ecossistema AmpAI operando sob a **v5.0 (Linha de Montagem Especializada)**. Nesta versão, abolimos o "teatro de agentes" e a atuação generalista. O sistema opera com Separação Estrita de Funções (SoC) e TDD Físico in-browser obrigatório. O Hermes atua exclusivamente como Mestre de Obras/Gateway Móvel, enquanto o código é gerado por especialistas isolados de Backend (Lógica/Matemática) e Frontend (DOM/UI).
+Coordenar a operação do ecossistema AmpAI sob a **v6.0 (Air Gap Epistemológico)**. O sistema divide-se fisicamente entre a escrita de código e a auditoria para banir o "teatro de agentes". Quem escreve o código (Fábrica) NUNCA julga a sua própria correção de forma definitiva (Tribunal).
 
----
+## 💻 PARTE I — A Fábrica Local (Ambiente Interativo Local-First)
+*Operada via Claude Code Pro (Fable 5) no PC do Thiago. Foco em velocidade e engenharia matemática.*
+- **@.Engenheiro_Eletricista (Copiloto Científico):** Fornece as equações normativas IEC em LaTeX e limites físicos restritivos. Não programa.
+- **@.Senior_Backend_Dev & @.Senior_Frontend_Dev:** Traduzem a física para JavaScript, respeitando SoC (Separation of Concerns). Garantem tipagem JSON e blindagem de DOM (`if (el)`).
 
-## 1. @CEO (Orquestrador Estratégico & Gatekeeper)
-- **Modelo:** Gemini 3.1 Pro (High)
-- **Instruções:** Consulte `.CEO.txt`. Autoridade máxima comercial. Atua no final da esteira cruzando o relatório do QA com o impacto de negócios. Só ele pode emitir o carimbo final de `[APROVADO]` para injeção na Sandbox.
-
-## 2. @CTO (Arquiteto de Software)
-- **Modelo:** Claude Sonnet 4.6 (Thinking)
-- **Instruções:** Consulte `.CTO.txt`. Responsável por desenhar a arquitetura e os **contratos de dados (JSON)**. Ele define como as informações vão trafegar entre a lógica e a interface, sem escrever código final.
-
-## 3. @Engenheiro_Eletricista (Copiloto Científico)
-- **Modelo:** Claude Opus 4.6 (Thinking)
-- **Instruções:** Consulte `.Engenheiro Eletricista.txt`. Responsável pelo rigor físico e fornecimento das equações normativas puras da IEC (em LaTeX) e premissas matemáticas.
-
-## 4. @Hermes_Executive_Dev (Orquestrador e Gateway Móvel)
-- **Modelo:** Claude Sonnet 4.6 (Thinking)
-- **Terminal:** Local Sandbox / CLI Antigravity
-- **Instruções:** Consulte `.Hermes Executive Dev.txt`. Atua como "Mestre de Obras". Intercepta o gatilho `@Hermes RUN_PRO_ANTIGRAVITY:` no Telegram. **TERMINANTEMENTE PROIBIDO DE ESCREVER CÓDIGO.** Sua única função é delegar as tarefas sequencialmente para os Devs e registrar as "Skills" de aprendizado na pasta `~/.hermes/skills/ampai/`.
-
-## 5. @Senior_Backend_Dev (Especialista em Core e Matemática)
-- **Modelo:** Claude Sonnet 4.6 (Thinking)
-- **Instruções:** Consulte `.Senior_Backend_Dev.txt`. Assume a cadeira de lógica pesada. Atua **EXCLUSIVAMENTE** nos arquivos de motor matemático (ex: `js/core_cabos_bt.js`). Zero manipulação de DOM. Implementa guardas lógicas severas e retorna apenas objetos JSON baseados no contrato do CTO.
-
-## 6. @Senior_Frontend_Dev (UX/UI Architect)
-- **Modelo:** Claude Sonnet 4.6 (Thinking)
-- **Instruções:** Consulte `.Senior_Frontend_Dev.txt`. Assume a cadeira de Arquitetura Visual. Atua exclusivamente no `index.html` e `js/ui_render.js`. Consome os JSONs do Backend. Focado em "Null Pointer Mitigation" e Reatividade Segura para impedir telas brancas. 
-
-## 7. @Senior_QA_Security (Auditor de TDD e Segurança)
-- **Modelo:** Claude Opus 4.6 (Thinking)
-- **Instruções:** Consulte `.Senior_QA-Security.txt`. A muralha final da fábrica. Responsável por exigir a injeção do TDD In-Browser. O código não avança se o Console F12 não reportar testes físicos e matemáticos verdes. Validações estritas contra injeções XSS.
+## 🪐 PARTE II — O Tribunal Nuvem (Esteira de Governança Headless)
+*Operada via Antigravity CLI na VPS Hetzner. Foco em auditoria e TDD físico de Sandbox.*
+- **@.Hermes_Executive_Dev (Gateway Móvel):** Intercepta comandos do Telegram. Não programa. Apenas orquestra o pipeline.
+- **@.CTO (Arquiteto de Software):** Valida se os contratos JSON e o isolamento entre DOM e Motor Lógico foram rigorosamente respeitados pelo time local.
+- **@.Senior_QA_Security (Auditor Gatekeeper):** A muralha final. Executa o teste determinístico na Sandbox. Aplica a **Calibração RED→GREEN** (prova que o teste quebra sem o patch e passa com ele) e *Mutation Testing*.
+- **@.CEO (Gatekeeper Executivo):** Autoridade máxima. Cruza os relatórios de TDD com o impacto comercial e carimba o `[APROVADO]` para deploy.
