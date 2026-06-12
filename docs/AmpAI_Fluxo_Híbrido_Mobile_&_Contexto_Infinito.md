@@ -2,7 +2,7 @@
 tags:
   - arquitetura/ia
   - ampai/fluxo
-versao: 5
+versao: 6
 status: ativo
 ---
 
@@ -12,49 +12,30 @@ status: ativo
 > Esta documentação estabelece o fluxo circular perfeito do ecossistema AmpAI. O objetivo é permitir que o Thiago desenvolva o software 24h por dia pelo celular, utilizando IA de longo contexto GRATUITA para pensar/refinar e a assinatura ANTIGRAVITY PRO na VPS para executar o código com custo zero de tokens externos (OpenRouter).
 
 ---
+## 🗺️ 1. O Loop Circular de Dados (Arquitetura v6.0)
 
-## 🗺️ 1. O Loop Circular de Dados (Arquitetura)
-
-```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 📱 CELULAR (Na Rua)                                                    │
-│                                                                        │
-│ [Passo 1] Realiza Brainstorming e Valida o Prompt de GRAÇA             │
-│           no Google NotebookLM (Janela de Contexto Infinito).          │
-│                                                                        │
-│ [Passo 2] Copia o prompt final e dispara no Telegram:                  │
-│           "@Hermes RUN_PRO_ANTIGRAVITY: [Prompt Otimizado]"            │
+│ 📱 FASE 1: ESTRATÉGIA (Mobile/Web)                                     │
+│ [Google NotebookLM] Brainstorming gratuito e RAG de contexto infinito. │
 └───────────────────────────────┬────────────────────────────────────────┘
-                                │
-                                ▼ (Gatilho Webhook)
+▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 🖥️ VPS HETZNER (Alemanha)                                              │
-│                                                                        │
-│ [Passo 3] O Hermes Agent intercepta o comando pelo Telegram e o        │
-│           injeta diretamente na CLI do Antigravity IDE (Nuvem).        │
-│                                                                        │
-│ [Passo 4] O Antigravity executa a lógica consumindo a assinatura PRO,  │
-│           fatia os arquivos (js/core_cabos_mt.js) de forma autônoma.   │
+│ 💻 FASE 2: FÁBRICA LOCAL (PC de Casa)                                  │
+│ [Claude Code Pro] Escreve código JS, aplica SoC e comita no Git.       │
+│ NUNCA audita seu próprio código definitivamente.                       │
 └───────────────────────────────┬────────────────────────────────────────┘
-                                │
-                                ▼ (git push automático)
+▼ (git push & Telegram Handoff)
 ┌────────────────────────────────────────────────────────────────────────┐
-│ 🐙 REPOSITÓRIO GITHUB                                                  │
-│                                                                        │
-│ [Passo 5] Centraliza o código estável e as notas de documentação.      │
+│ 🖥️ FASE 3: TRIBUNAL NA NUVEM (VPS Hetzner)                             │
+│ [Antigravity CLI] Puxa o código e roda a Muralha TDD na Sandbox.       │
+│ Se verde, o CEO carimba o Deploy.                                      │
 └───────────────────────────────┬────────────────────────────────────────┘
-                                │
-                                ▼ (Sincronização Unificada via ./sync.ps1)
+▼ (Sincronização Unificada via ./sync.ps1)
 ┌────────────────────────────────────────────────────────────────────────┐
-│ ☁️ CANAL GOOGLE DRIVE (Meu Drive - Disco G:)                           │
-│                                                                        │
-│ [Passo 6] O script `./sync.ps1` no PC baixa o update do Git, atualiza  │
-│           o Obsidian e gera a cópia .txt direto no Meu Drive (G:\).     │
-│                                                                        │
-│ [Passo 7] O Google NotebookLM lê o arquivo .txt através do Auto-Sync  │
-│           nativo e atualiza a mente da IA de forma 100% invisível.      │
+│ ☁️ FASE 4: ATUALIZAÇÃO DA CONSCIÊNCIA                                  │
+│ O script `sync.ps1` converte tudo para .txt e joga no Drive,           │
+│ alimentando o NotebookLM e reiniciando o ciclo com contexto cravado.   │
 └────────────────────────────────────────────────────────────────────────┘
-```
 
 ---
 

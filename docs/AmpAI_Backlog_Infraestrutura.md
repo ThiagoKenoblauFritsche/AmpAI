@@ -3,21 +3,14 @@ tags:
   - infraestrutura/vps
   - devops/backlog
   - ampai/core
-versao: 5
-status: em-andamento
----
----
-tags:
-  - infraestrutura/vps
-  - devops/backlog
-versao: 4.2
-status: em-andamento
+versao: 6
+status: ativo
 ---
 
-# 📈 Backlog de Infraestrutura — Implementação v4.2
+# 📈 Backlog de Infraestrutura — Implementação v6.0
 
 > [!todo] **Diretriz de Execução (State Lock)**
-> A Fase 3 foi liquidada com sucesso através do canal de Auto-Sync estruturado no formato `.txt` direto no G:\Meu Drive\AmpAI_NotebookLM\ . O foco da esteira avança agora obrigatoriamente para a Fase 4 (Gatilho Móvel).
+> As Fases 1 a 4 foram liquidadas com sucesso através da automação trilateral, e a infraestrutura básica da Fase 5 já está em operação. **O foco oficial da esteira agora engloba a sustentação da Fase 6 (Air Gap Epistemológico)**, garantindo o isolamento absoluto entre a máquina local e a nuvem [cite: 18, 22].
 
 ---
 
@@ -44,10 +37,10 @@ status: em-andamento
 
 ---
 
-### 📲 FASE 4: Gateway do Telegram e Automação do Hermes Agent (PRÓXIMO PASSO ATIVO)
-- [x] **O.S. #INF-012** | [ALTA] Criação do Bot Oficial no Telegram via @BotFather e captura do HTTP API Token.
-- [x] **O.S. #INF-013** | [CRÍTICA] Atualização do arquivo .github/AGENTS.md e injeção do gateway de comunicação móvel no Hermes. **(STATUS: CONCLUÍDA)**
-- [x] **O.S. #INF-014** | [CRÍTICA] Programação do Gatilho `RUN_PRO_ANTIGRAVITY:` amarrado ao comando de terminal agy logado na conta PRO.
+### 📲 FASE 4: Gateway do Telegram e Automação do Hermes Agent (CONCLUÍDA)
+- [x] **O.S. #INF-012** | `[ALTA]` Criação do Bot Oficial no Telegram via @BotFather e captura do HTTP API Token.
+- [x] **O.S. #INF-013** | `[CRÍTICA]` Atualização do arquivo .github/AGENTS.md e injeção do gateway de comunicação móvel no Hermes. **(STATUS: CONCLUÍDA)**
+- [x] **O.S. #INF-014** | `[CRÍTICA]` Programação do Gatilho `RUN_PRO_ANTIGRAVITY:` amarrado ao comando de terminal agy logado na conta PRO.
 
 ___
 
@@ -57,3 +50,10 @@ ___
 - [ ] **O.S. #INF-017** | `[ALTA]` Configuração de Pre-commit Hooks para bloqueio de merge em caso de falhas nos testes ou linters.
 - [x] **O.S. #015-ANTI-HAPPY-PATH** | `[ALTA]` Diretrizes de agentes refatoradas com regras de testes de estresse (Edge Cases) e gravação obrigatória de Skills na pasta `~/.hermes/skills/ampai/`.
 - [x] **O.S. #INF-018** | `[MÉDIA]` Configuração do Plugin Obsidian Git no ambiente mobile. Fluxo autônomo entre Celular -> GitHub estabelecido para edição de arquitetura na rua.
+
+___
+
+### 🪐 FASE 6: Implantação do Air Gap Epistemológico (CONCLUÍDA)
+- [x] **O.S. #INF-019** | `[CRÍTICA]` **Segregação Oficial da Topologia Híbrida (v6.0):** Implementação da infraestrutura dividida entre a "Fábrica Local" (Claude Code Pro no PC) e o "Tribunal na Nuvem" (Antigravity na VPS Hetzner) [cite: 18, 159, 160].
+- [x] **O.S. #INF-020** | `[CRÍTICA]` **Estabelecimento do Veredito Puro:** Configuração da Sandbox hermética garantindo que o agente local nunca julga a sua própria correção [cite: 161, 168]. 
+- [x] **O.S. #INF-021** | `[ALTA]` Exigência da Calibração **RED→GREEN** obrigatória executada na Alemanha como Gatekeeper para Deploy [cite: 161, 167].

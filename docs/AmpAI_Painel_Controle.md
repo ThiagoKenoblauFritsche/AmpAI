@@ -2,7 +2,7 @@
 tags:
   - gestao/painel
   - ampai/governança
-versao: 5
+versao: 6
 status: ativo
 ---
 
@@ -18,7 +18,7 @@ status: ativo
 - **Motor de Runtime / Automação:** `Antigravity CLI (agy)` rodando nativo na VPS Hetzner.
 - **Licença Operacional:** Google AI Pro (`thiagokenoblaufritsche@gmail.com`).
 
-### 🏢 Diretoria de Agentes Ativa (Workspace Antigravity v5.0)
+### 🏢 **Diretoria de Agentes (Governança v6.0 - Topologia Híbrida)**  "Atores Locais (Claude Code)" e "Atores Nuvem (Antigravity)"
 - **@CEO:** `Gemini 3.1 Pro (High)` (Gatekeeper comercial e aprovação final).
 - **@CTO:** `Claude Sonnet 4.6 (Thinking)` (Arquiteto de Software e Contratos JSON).
 - **@Engenheiro_Eletricista:** `Claude Opus 4.6 (Thinking)` (Rigor Científico IEC).

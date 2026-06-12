@@ -2,7 +2,7 @@
 tags:
   - arquitetura/ia
   - ampai/consciencia
-versao: 5
+versao: 6
 status: ativo
 ---
 

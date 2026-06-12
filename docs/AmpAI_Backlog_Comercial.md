@@ -2,7 +2,7 @@
 tags:
   - gestao/backlog
   - ampai/business
-versao: 5
+versao: 6
 status: em-andamento
 ---
 
