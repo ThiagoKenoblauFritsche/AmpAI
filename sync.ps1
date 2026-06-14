@@ -71,24 +71,19 @@ foreach ($file in $filesToSync) {
 }
 
 # =========================================================================
-# 3. Fluxo Inverso - Varredura Automática do Obsidian -> Git -> Drive
+# 3. Fluxo Docs as Code - Sincronização Local (docs) -> Drive
 # =========================================================================
-Write-Host "[AmpAI] Lendo subpasta do Obsidian (Varredura Automatica)..." -ForegroundColor Cyan
+Write-Host "[AmpAI] Sincronizando documentacao local (Docs as Code)..." -ForegroundColor Cyan
 
-if (!(Test-Path ".\docs")) { New-Item -ItemType Directory -Path ".\docs" | Out-Null }
+if (Test-Path ".\docs") {
+    # Lê automaticamente TODOS os arquivos .md da pasta local docs
+    $docsFiles = Get-ChildItem -Path ".\docs" -Filter "*.md" -File -Recurse
 
-if (Test-Path $obsidianAmpAIFolder) {
-    # Lê automaticamente TODOS os arquivos .md que existirem dentro dessa subpasta
-    $obsidianFiles = Get-ChildItem -Path $obsidianAmpAIFolder -Filter "*.md" -File -Recurse
-
-    foreach ($file in $obsidianFiles) {
+    foreach ($file in $docsFiles) {
         $sourceDoc = $file.FullName
         $docName = $file.Name
         
-        # A) Copia para a pasta docs/ local para fazer o backup no Git
-        Copy-Item -Path $sourceDoc -Destination (Join-Path ".\docs" $docName) -Force
-        
-        # B) Converte para .txt via cópia binária e manda pro Google Drive
+        # Converte para .txt via cópia binária e manda pro Google Drive
         $driveDest = Join-Path $targetFolder $docName.Replace(".md", ".txt")
         Copy-Item -Path $sourceDoc -Destination $driveDest -Force
         
@@ -96,7 +91,7 @@ if (Test-Path $obsidianAmpAIFolder) {
     }
 }
 else {
-    Write-Host " [Aviso] Pasta do Obsidian não encontrada: $obsidianAmpAIFolder" -ForegroundColor Yellow
+    Write-Host " [Aviso] Pasta local 'docs' não encontrada!" -ForegroundColor Yellow
 }
 
 # =========================================================================
