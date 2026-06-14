@@ -5,6 +5,21 @@ Este documento descreve os passos operacionais para configurar a VPS Hetzner com
 2. **Cloud Factory (Fábrica Isolada):** Rodar o `claude-code` de forma autônoma para escrever código, isolado do `Antigravity` via Docker (Air Gap Epistemológico).
 
 ---
+## 0. Credenciais de Acesso Mestre (Root)
+
+> [!warning] **Segurança Crítica**
+> Mantenha estas informações protegidas. Não envie este arquivo para repositórios públicos.
+
+*   **Nome do Servidor (Hostname):** `ampai-core-production`
+*   **Endereço IP:** `178.105.252.252`
+*   **Usuário:** `root`
+*   **Acesso SSH:** `ssh root@178.105.252.252`
+*   **Diretório do Projeto:** `/app/ampai`
+*   **Senha Inicial:** `9KwtLXPAdrqwnH33dHmW`
+*   **GitHub PAT:** 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
+*   **Antigravity CLI Auth:** `thiagokenoblaufritsche@gmail.com`
+
+---
 
 ## 1. Configurando o Sincronizador do Drive (Rclone)
 

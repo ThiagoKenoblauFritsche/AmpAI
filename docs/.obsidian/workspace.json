@@ -1,0 +1,197 @@
+{
+  "main": {
+    "id": "665feef34e8140cb",
+    "type": "split",
+    "children": [
+      {
+        "id": "a8e53e27bfa2d873",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "3fb088b6de14dff1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AmpAI_Backlog_Comercial.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "AmpAI_Backlog_Comercial"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "8840b6e6f63a40c5",
+    "type": "split",
+    "children": [
+      {
+        "id": "2f6e7fa4af957125",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "77668e34b051a3f9",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "0ffbb33f5805ef69",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "51fee9c0d357bd3f",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "be0645fccacfff17",
+    "type": "split",
+    "children": [
+      {
+        "id": "5d2520f2b4bb66ab",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "416e777d8a0b5e47",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "AmpAI_Backlog_Comercial.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos para AmpAI_Backlog_Comercial"
+            }
+          },
+          {
+            "id": "2cf4bb52ec8a5db7",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "AmpAI_Backlog_Comercial.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída para AmpAI_Backlog_Comercial"
+            }
+          },
+          {
+            "id": "045f2afec645f154",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "354baffb1e278ac5",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "acaa0d6d6358005f",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "AmpAI_Backlog_Comercial.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário de AmpAI_Backlog_Comercial"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "3fb088b6de14dff1",
+  "lastOpenFiles": [
+    "features/OS002_Tooltips_Vanilla.feature",
+    "features/OS007_008_Redesenho_Header.feature",
+    "features/OS016_Cor_Tela_Metalica.feature",
+    "features/OS015_Padronizacao_UI_UX.feature",
+    "features/OS017_i18n_Semantico.feature",
+    "features/OS006_Input_Focus.feature",
+    "features/OS013_Memorial_MT.feature"
+  ]
+}
