@@ -1,6 +1,5 @@
-﻿Write-Host "[AmpAI] Puxando atualizacoes do GitHub (VPS/Rua)..." -ForegroundColor Cyan
-git fetch origin main
-git reset --hard origin/main
+Write-Host "[AmpAI] Puxando atualizacoes do GitHub (VPS/Rua)..." -ForegroundColor Cyan
+git pull origin main --rebase
 
 # =========================================================================
 # 0.5 Geração Automática de Contratos Dinâmicos (Nativo PowerShell)
