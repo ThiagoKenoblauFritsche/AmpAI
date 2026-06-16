@@ -186,6 +186,7 @@
   },
   "active": "3fb088b6de14dff1",
   "lastOpenFiles": [
+    "features/OS033_A11y_Contrast_Residue.feature",
     "features/OS032_A11y_Forms.feature",
     "features/OS031_A11y_Contrast.feature",
     "features/OS030_Table_Styles_And_Badge.feature",
@@ -195,7 +196,6 @@
     "features/OS026_Botao_PDF_MT.feature",
     "features/OS025_Print_Grid_Fix.feature",
     "features/OS025_Landscape_Print.feature",
-    "features/OS024_Bug_09_Print_Cabling_Memorial_i18n.feature",
-    "features/OS023_Bug_08_ReRender_MT_Badge.feature"
+    "features/OS024_Bug_09_Print_Cabling_Memorial_i18n.feature"
   ]
 }

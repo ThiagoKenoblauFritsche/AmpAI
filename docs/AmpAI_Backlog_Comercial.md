@@ -48,3 +48,4 @@ status: em-andamento
 ### Epic: Accessibility & Compliance (A11y)
 - [x] **O.S. #031** | `[ALTA]` A11y: Correção de Contraste Insuficiente. Ajustar a cor do Logo AmpAI (`#b45309`) e corrigir a legibilidade de botões inativos e textos claros no menu lateral para passar no teste de contraste WCAG AA (4.5:1).
 - [x] **O.S. #032** | `[CRÍTICA]` A11y: Formulários Acessíveis para Leitores de Tela. Adicionar o atributo `for` em todas as tags `<label>` associando-as obrigatoriamente aos respectivos `id`s dos `input`s e `select`s.
+- [x] **O.S. #033** | `[ALTA]` A11y: Contrastes Residuais (Variável Accent e Result Cards). Alterar `--accent` global para `#b45309` e aplicar fundo escuro (`var(--text-primary)`) nos Cards de Resultado Principais para permitir texto branco com alto contraste.
