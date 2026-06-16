@@ -1026,17 +1026,19 @@
                     <span style="font-size: 1.1rem; font-weight: 500; color: var(--text-muted); margin-left: 0.25rem;"> - <span data-i18n="header.subtitle">Soluções em Engenharia Elétrica</span></span>
                 </h1>
             </div>
-            <div class="header-meta">
-                <span class="norm-badge" id="header-norm-badge">IEC 60909-0</span>
-                <span id="header-method-span" data-i18n="header.method">Método das Impedâncias Percentuais</span>
-            </div>
-            <!-- Seletor de idiomas no header (O.S. 007/008) -->
-            <div class="lang-switcher" aria-label="Language selector">
-                <button type="button" class="lang-btn active" id="header-lang-pt" data-lang="pt" onclick="setLanguage('pt')" title="Português">PT</button>
-                <span class="lang-divider">|</span>
-                <button type="button" class="lang-btn" id="header-lang-en" data-lang="en" onclick="setLanguage('en')" title="English">EN</button>
-                <span class="lang-divider">|</span>
-                <button type="button" class="lang-btn" id="header-lang-es" data-lang="es" onclick="setLanguage('es')" title="Español">ES</button>
+            <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem;">
+                <div class="header-meta">
+                    <span class="norm-badge" id="header-norm-badge">IEC 60909-0</span>
+                    <span id="header-method-span" data-i18n="header.method">Método das Impedâncias Percentuais</span>
+                </div>
+                <!-- Seletor de idiomas no header (O.S. 007/008) -->
+                <div class="lang-switcher" aria-label="Language selector">
+                    <button type="button" class="lang-btn active" id="header-lang-pt" data-lang="pt" onclick="setLanguage('pt')" title="Português">PT</button>
+                    <span class="lang-divider">|</span>
+                    <button type="button" class="lang-btn" id="header-lang-en" data-lang="en" onclick="setLanguage('en')" title="English">EN</button>
+                    <span class="lang-divider">|</span>
+                    <button type="button" class="lang-btn" id="header-lang-es" data-lang="es" onclick="setLanguage('es')" title="Español">ES</button>
+                </div>
             </div>
         </header>
 
