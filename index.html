@@ -256,7 +256,8 @@
         }
 
         .nav-item.locked {
-            opacity: 0.6;
+            opacity: 1;
+            color: var(--text-muted);
             cursor: not-allowed;
             justify-content: space-between;
         }
@@ -1021,7 +1022,7 @@
                     style="display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.5rem 1.5rem 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 0.5rem;">
                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="32" height="32" rx="8" fill="#0f172a" />
-                        <path d="M18 6L10 18H16L14 26L22 14H16L18 6Z" fill="#f59e0b" />
+                        <path d="M18 6L10 18H16L14 26L22 14H16L18 6Z" fill="#b45309" />
                         <circle cx="24" cy="8" r="2" fill="#10b981" />
                         <circle cx="8" cy="24" r="2" fill="#10b981" />
                         <path d="M22 9L18 13" stroke="#e2e8f0" stroke-width="1.5" stroke-linecap="round" />
@@ -1074,7 +1075,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.voltageFactor">Fator de Tensão da Rede (c)</label>
+                    <label data-i18n="inputs.voltageFactor" for="input-c">Fator de Tensão da Rede (c)</label>
                     <select id="input-c" onchange="calculate()">
                         <option value="1.05" data-i18n="inputs.voltageFactorOpt1">c = 1.05 (Mínimo BT)</option>
                         <option value="1.10" data-i18n="inputs.voltageFactorOpt2">c = 1.10 (Máximo BT / MT)</option>
@@ -1093,7 +1094,7 @@
                 </div>
 
                 <div class="form-control" id="group-scc">
-                    <label data-i18n="inputs.sccPower">Potência de Curto-Circuito (Scc)</label>
+                    <label data-i18n="inputs.sccPower" for="input-scc">Potência de Curto-Circuito (Scc)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-scc" value="500" min="1" step="50" oninput="calculate()">
                         <span class="unit-badge">MVA</span>
@@ -1101,7 +1102,7 @@
                 </div>
 
                 <div class="form-control" id="group-icc" style="display: none;">
-                    <label data-i18n="inputs.iccCurrent">Corrente de Curto-Circuito (Icc)</label>
+                    <label data-i18n="inputs.iccCurrent" for="input-icc">Corrente de Curto-Circuito (Icc)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-icc" value="20" min="0.1" step="0.5" oninput="calculate()">
                         <span class="unit-badge">kA</span>
@@ -1117,7 +1118,7 @@
 
 
                 <div class="form-control">
-                    <label data-i18n="inputs.nomPower">Potência Nominal (SnT)</label>
+                    <label data-i18n="inputs.nomPower" for="input-snt">Potência Nominal (SnT)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-snt" value="1500" min="10" step="50" oninput="calculate()">
                         <span class="unit-badge">kVA</span>
@@ -1125,7 +1126,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.nomVoltage">Tensão Secundária Nominal (UnT)</label>
+                    <label data-i18n="inputs.nomVoltage" for="input-unt">Tensão Secundária Nominal (UnT)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-unt" value="380" min="110" max="36000" step="10"
                             oninput="calculate()">
@@ -1134,7 +1135,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.impedancePct">Impedância Percentual (Z% ou uk%)</label>
+                    <label data-i18n="inputs.impedancePct" for="input-zk">Impedância Percentual (Z% ou uk%)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-zk" value="6.0" min="1" max="25" step="0.1"
                             oninput="calculate()">
@@ -1143,7 +1144,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.copperLoss">Perdas no Cobre (Pcu)</label>
+                    <label data-i18n="inputs.copperLoss" for="input-pcu">Perdas no Cobre (Pcu)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-pcu" value="18" min="0.1" step="0.5" oninput="calculate()">
                         <span class="unit-badge">kW</span>
@@ -1157,7 +1158,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.vectorGroup">Grupo de Ligação (Sequência Zero)</label>
+                    <label data-i18n="inputs.vectorGroup" for="input-vector-group">Grupo de Ligação (Sequência Zero)</label>
                     <select id="input-vector-group" onchange="calculate()">
                         <option value="Dyn11" data-i18n="inputs.vgDyn11">Dyn11 (Estrela Aterrado / Delta)</option>
                         <option value="Yzn5" data-i18n="inputs.vgYzn5">Yzn5 (Estrela-Zigzag Aterrado)</option>
@@ -1169,19 +1170,19 @@
                 <div id="custom-vector-group-inputs"
                     style="display: none; background: var(--bg-primary); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border);">
                     <div class="form-control">
-                        <label data-i18n="inputs.r0r1">Relação R0/R1</label>
+                        <label data-i18n="inputs.r0r1" for="input-r0r1">Relação R0/R1</label>
                         <input type="number" id="input-r0r1" value="1.0" min="0.1" max="20" step="0.1"
                             oninput="calculate()">
                     </div>
                     <div class="form-control">
-                        <label data-i18n="inputs.x0x1">Relação X0/X1</label>
+                        <label data-i18n="inputs.x0x1" for="input-x0x1">Relação X0/X1</label>
                         <input type="number" id="input-x0x1" value="0.95" min="0.05" max="20" step="0.05"
                             oninput="calculate()">
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.groundingR">Resistência de Aterramento (RN)</label>
+                    <label data-i18n="inputs.groundingR" for="input-rn">Resistência de Aterramento (RN)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-rn" value="0.0" min="0" step="0.01" oninput="calculate()">
                         <span class="unit-badge">Ω</span>
@@ -1189,7 +1190,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.groundingX">Reatância de Aterramento (XN)</label>
+                    <label data-i18n="inputs.groundingX" for="input-xn">Reatância de Aterramento (XN)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-xn" value="0.0" min="0" step="0.01" oninput="calculate()">
                         <span class="unit-badge">Ω</span>
@@ -1643,7 +1644,7 @@
                             </div>
                             <form id="form-bt" novalidate>
 
-                            <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method">Método de Instalação</label>
+                            <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method" for="bt-method">Método de Instalação</label>
                                 <select id="bt-method" data-input-bt="true">
                                     <option value="B1">B1 — Eletroduto Embutido em Parede</option>
                                     <option value="B2">B2 — Eletroduto Aparente</option>
@@ -1665,40 +1666,40 @@
                                     <button type="button" class="toggle-btn" id="bt-btn-pvc" data-action="set-bt-pvc" aria-label="Isolação PVC 70°C">PVC 70°C</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.phases">Fases do Sistema</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.phases" for="bt-phases">Fases do Sistema</label>
                                 <select id="bt-phases" data-input-bt="true">
                                     <option value="3">Trifásico (3F+N)</option>
                                     <option value="1">Monofásico (1F+N)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.ib">Corrente de Projeto Ib (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ib" for="bt-ib">Corrente de Projeto Ib (A)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ib" value="100" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.in">Corrente Nominal do Disjuntor In (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.in" for="bt-in">Corrente Nominal do Disjuntor In (A)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-in" value="125" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.ull">Tensão de Linha ULL (V)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ull" for="bt-ull">Tensão de Linha ULL (V)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ull" value="380" min="110" max="1000" data-input-bt="true"><span class="unit-badge">V</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.length">Comprimento (m)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.length" for="bt-length">Comprimento (m)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-length" value="50" min="1" data-input-bt="true"><span class="unit-badge">m</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.cosphi">Fator de Potência cosφ</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.cosphi" for="bt-cosphi">Fator de Potência cosφ</label>
                                 <div class="input-wrapper"><input type="number" id="bt-cosphi" value="0.92" min="0.7" max="1" step="0.01" data-input-bt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.voltdrop">Queda de Tensão Máx. ΔU%</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.voltdrop" for="bt-du-max">Queda de Tensão Máx. ΔU%</label>
                                 <div class="input-wrapper"><input type="number" id="bt-du-max" value="3.0" min="0.5" max="10" step="0.5" data-input-bt="true"><span class="unit-badge">%</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.tamb">Temperatura Ambiente (°C)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.tamb" for="bt-tamb">Temperatura Ambiente (°C)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tamb" value="30" min="0" max="60" data-input-bt="true"><span class="unit-badge">°C</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.ncirc">Nº de Circuitos Agrupados</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ncirc" for="bt-ncirc">Nº de Circuitos Agrupados</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ncirc" value="1" min="1" max="20" data-input-bt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.icc">Icc no ponto de instalação (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.icc" for="bt-icc">Icc no ponto de instalação (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-icc" value="10" min="0.1" step="0.5" data-input-bt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.tprot">Tempo de atuação da proteção (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.tprot" for="bt-tprot">Tempo de atuação da proteção (s)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tprot" value="0.2" min="0.01" max="5" step="0.01" data-input-bt="true"><span class="unit-badge">s</span></div>
                             </div>
                             <button id="btn-bt" data-action="calc-bt" style="width:100%; margin-top:0.5rem; padding:0.7rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem;">⚡ Calcular BT</button>
@@ -1751,14 +1752,14 @@
                                     <button type="button" class="toggle-btn" id="mt-btn-epr" data-action="set-mt-epr" aria-label="Isolação EPR 90°C">EPR 90°C</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label data-tooltip="Tipo de instalação MT conforme IEC 60502-2: duto enterrado, cabo diretamente enterrado no solo ou ao ar livre em bandeja/leito." data-i18n="cabling.mt.install">Tipo de Instalação</label>
+                            <div class="form-control"><label data-tooltip="Tipo de instalação MT conforme IEC 60502-2: duto enterrado, cabo diretamente enterrado no solo ou ao ar livre em bandeja/leito." data-i18n="cabling.mt.install" for="mt-installation">Tipo de Instalação</label>
                                 <select id="mt-installation" data-input-mt="true">
                                     <option value="UNDERGROUND_DUCT">Duto Enterrado</option>
                                     <option value="DIRECT_BURIED">Diretamente Enterrado</option>
                                     <option value="IN_AIR">Ao Ar Livre (Bandeja/Leito)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.formation">Formação dos Cabos</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.formation" for="mt-formation">Formação dos Cabos</label>
                                 <select id="mt-formation" data-input-mt="true">
                                     <option value="TREFOIL_TOUCHING">Trifólio Tocando (Trefoil Touching)</option>
                                     <option value="TREFOIL_SPACED">Trifólio Espaçado (Trefoil Spaced)</option>
@@ -1766,45 +1767,45 @@
                                     <option value="FLAT_SPACED">Plano Espaçado (Flat Spaced)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.ib">Corrente de Projeto Ib (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.ib" for="mt-ib">Corrente de Projeto Ib (A)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-ib" value="250" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-mt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.in">Corrente Nominal do Disjuntor In (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.in" for="mt-in">Corrente Nominal do Disjuntor In (A)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-in" value="300" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-mt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.length">Comprimento do Circuito (m)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.length" for="mt-length">Comprimento do Circuito (m)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-length" value="150" min="1" required aria-label="Comprimento do Circuito em Metros" data-input-mt="true"><span class="unit-badge">m</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.cosphi">Fator de Potência cosφ</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.cosphi" for="mt-cosphi">Fator de Potência cosφ</label>
                                 <div class="input-wrapper"><input type="number" id="mt-cosphi" value="0.90" min="0.7" max="1" step="0.01" data-input-mt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.voltdrop">Queda de Tensão Máx. ΔU%</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.voltdrop" for="mt-du-max">Queda de Tensão Máx. ΔU%</label>
                                 <div class="input-wrapper"><input type="number" id="mt-du-max" value="2.0" min="0.5" max="10" step="0.1" data-input-mt="true"><span class="unit-badge">%</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.icc">Icc no ponto de instalação (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.icc" for="mt-icc">Icc no ponto de instalação (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-icc" value="12.5" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.ifault">Icc Fase-Terra (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.ifault" for="mt-ifault">Icc Fase-Terra (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-ifault" value="1" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.tcond">Tempo de atuação Fase (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.tcond" for="mt-tcond">Tempo de atuação Fase (s)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-tcond" value="0.5" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.tscreen">Tempo de atuação Terra (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.tscreen" for="mt-tscreen">Tempo de atuação Terra (s)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-tscreen" value="1.0" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
                             </div>
                             <div style="padding-top:1rem; border-top:1px solid var(--border); margin-top:1rem;">
                                 <div style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem;" data-i18n="cabling.mt.envFactors">Fatores Ambientais</div>
-                                <div class="form-control"><label data-i18n="cabling.mt.tamb">Temperatura Ambiente (°C)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.tamb" for="mt-tamb">Temperatura Ambiente (°C)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-tamb" value="20" min="0" max="60" data-input-mt="true"><span class="unit-badge">°C</span></div>
                                 </div>
-                                <div class="form-control"><label data-i18n="cabling.mt.depth">Profundidade (m)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.depth" for="mt-depth">Profundidade (m)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-depth" value="0.8" min="0.3" max="3" step="0.1" data-input-mt="true"><span class="unit-badge">m</span></div>
                                 </div>
-                                <div class="form-control"><label data-i18n="cabling.mt.rhoSoil">Resistividade do Solo (K·m/W)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.rhoSoil" for="mt-rho-soil">Resistividade do Solo (K·m/W)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-rho-soil" value="1.0" min="0.5" max="3" step="0.1" data-input-mt="true"><span class="unit-badge"></span></div>
                                 </div>
-                                <div class="form-control"><label data-i18n="cabling.mt.ncirc">Circuitos Agrupados</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.ncirc" for="mt-ncirc">Circuitos Agrupados</label>
                                     <div class="input-wrapper"><input type="number" id="mt-ncirc" value="1" min="1" max="10" step="1" data-input-mt="true"><span class="unit-badge">—</span></div>
                                 </div>
                             </div>

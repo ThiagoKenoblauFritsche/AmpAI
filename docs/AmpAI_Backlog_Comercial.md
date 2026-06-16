@@ -43,3 +43,8 @@ status: em-andamento
 - [x] **O.S. #028** | `[MÉDIA]` UX Polish: Redesign dos Cards de KPI (Soft Shadows, Sem Bordas Duras e Destaque Visual no Resultado Principal).
 - [x] **O.S. #029** | `[MÉDIA]` UX Polish: Estilização Premium de Inputs (Gap, Border Radius, Focus Rings e Segmented Controls).
 - [x] **O.S. #030** | `[BAIXA]` UX Polish: Correção do Badge Dinâmico no Header e Estilos de Tabela.
+
+---
+### Epic: Accessibility & Compliance (A11y)
+- [x] **O.S. #031** | `[ALTA]` A11y: Correção de Contraste Insuficiente. Ajustar a cor do Logo AmpAI (`#b45309`) e corrigir a legibilidade de botões inativos e textos claros no menu lateral para passar no teste de contraste WCAG AA (4.5:1).
+- [x] **O.S. #032** | `[CRÍTICA]` A11y: Formulários Acessíveis para Leitores de Tela. Adicionar o atributo `for` em todas as tags `<label>` associando-as obrigatoriamente aos respectivos `id`s dos `input`s e `select`s.
