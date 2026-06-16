@@ -49,3 +49,8 @@ status: em-andamento
 - [x] **O.S. #031** | `[ALTA]` A11y: Correção de Contraste Insuficiente. Ajustar a cor do Logo AmpAI (`#b45309`) e corrigir a legibilidade de botões inativos e textos claros no menu lateral para passar no teste de contraste WCAG AA (4.5:1).
 - [x] **O.S. #032** | `[CRÍTICA]` A11y: Formulários Acessíveis para Leitores de Tela. Adicionar o atributo `for` em todas as tags `<label>` associando-as obrigatoriamente aos respectivos `id`s dos `input`s e `select`s.
 - [x] **O.S. #033** | `[ALTA]` A11y: Contrastes Residuais (Variável Accent e Result Cards). Alterar `--accent` global para `#b45309` e aplicar fundo escuro (`var(--text-primary)`) nos Cards de Resultado Principais para permitir texto branco com alto contraste.
+- [x] **O.S. #034** | `[ALTA]` A11y: Contraste de Textos Secundários no Card Principal. Clarear as cores das classes `.result-desc` e `.result-unit` dentro do card primário escuro para atingir o mínimo de 4.5:1.
+
+---
+### Epic: Performance Optimization (Perf)
+- [ ] **O.S. #035** | `[ALTA]` Perf: Melhoria de FCP/LCP e Thread Principal. Adicionar o atributo `defer` aos scripts externos (`chart.js` e `lucide@latest`) e envolver as chamadas de inicialização como `lucide.createIcons()` em `requestAnimationFrame` para desobstruir a renderização inicial do navegador.
