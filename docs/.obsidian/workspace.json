@@ -186,6 +186,7 @@
   },
   "active": "3fb088b6de14dff1",
   "lastOpenFiles": [
+    "features/OS038_Branding_Logo.feature",
     "features/OS037_Spacing_System.feature",
     "features/OS036_Estetica_Fina.feature",
     "features/OS035_Performance.feature",
@@ -195,7 +196,6 @@
     "features/OS031_A11y_Contrast.feature",
     "features/OS030_Table_Styles_And_Badge.feature",
     "features/OS029_Premium_Inputs.feature",
-    "features/OS028_Premium_Cards.feature",
-    "features/OS027_i18n_BT_Export_Button.feature"
+    "features/OS028_Premium_Cards.feature"
   ]
 }
