@@ -58,4 +58,4 @@ status: em-andamento
 ---
 ### Epic: UI/UX Aesthetic Refinement
 - [x] **O.S. #036** | `[BAIXA]` UX Polish: Estética Fina (Fontes, Botões e Espaçamento). Padronizar `font-family: inherit` nos botões para adotarem Inter, aumentar `border-radius` dos `.btn-action` para 8px, e aumentar o `margin-bottom` do `<header>` para 2.5rem para respiro visual (Whitespace).
-- [ ] **O.S. #037** | `[ALTA]` UX Polish: Sistema de Design de Espaçamento e Grid. Unificar inconsistências de padding/margin criando variáveis `--spacing-*` baseadas em múltiplos de 8px e aplicando-as aos elementos `.app-container`, `header`, `.main-layout`, `.nav-sidebar` e `.tab-content-card`.
+- [x] **O.S. #037** | `[ALTA]` UX Polish: Sistema de Design de Espaçamento e Grid. Unificar inconsistências de padding/margin criando variáveis `--spacing-*` baseadas em múltiplos de 8px e aplicando-as aos elementos `.app-container`, `header`, `.main-layout`, `.nav-sidebar` e `.tab-content-card`.
