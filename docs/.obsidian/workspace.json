@@ -186,6 +186,8 @@
   },
   "active": "3fb088b6de14dff1",
   "lastOpenFiles": [
+    "features/OS030_Table_Styles_And_Badge.feature",
+    "features/OS029_Premium_Inputs.feature",
     "features/OS028_Premium_Cards.feature",
     "features/OS027_i18n_BT_Export_Button.feature",
     "features/OS026_Botao_PDF_MT.feature",
@@ -194,8 +196,6 @@
     "features/OS024_Bug_09_Print_Cabling_Memorial_i18n.feature",
     "features/OS023_Bug_08_ReRender_MT_Badge.feature",
     "features/OS022_Bug_07_Botao_Memorial_MT.feature",
-    "features/OS021_Bug_06_Print_Media.feature",
-    "features/OS020_Bug_05_Persistencia_Idioma.feature",
-    "features/OS018_019_UX_Clean_State.feature"
+    "features/OS021_Bug_06_Print_Media.feature"
   ]
 }

@@ -40,6 +40,6 @@ status: em-andamento
 
 ---
 ### Epic: UI/UX Premium Polish
-- [ ] **O.S. #028** | `[MÉDIA]` UX Polish: Redesign dos Cards de KPI (Soft Shadows, Sem Bordas Duras e Destaque Visual no Resultado Principal).
-- [ ] **O.S. #029** | `[MÉDIA]` UX Polish: Estilização Premium de Inputs (Gap, Border Radius, Focus Rings e Segmented Controls).
-- [ ] **O.S. #030** | `[BAIXA]` UX Polish: Correção do Badge Dinâmico no Header e Estilos de Tabela.
+- [x] **O.S. #028** | `[MÉDIA]` UX Polish: Redesign dos Cards de KPI (Soft Shadows, Sem Bordas Duras e Destaque Visual no Resultado Principal).
+- [x] **O.S. #029** | `[MÉDIA]` UX Polish: Estilização Premium de Inputs (Gap, Border Radius, Focus Rings e Segmented Controls).
+- [x] **O.S. #030** | `[BAIXA]` UX Polish: Correção do Badge Dinâmico no Header e Estilos de Tabela.

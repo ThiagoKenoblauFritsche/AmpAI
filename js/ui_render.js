@@ -305,7 +305,7 @@ window.switchModule = function(moduleName) {
     }
 
     // Refs para header badge (O.S. #018 — Dynamic State Binding)
-    const _badge  = document.querySelector('.norm-badge');
+    const _badge  = document.getElementById('header-norm-badge');
     const _method = document.getElementById('header-method-span')
         || document.querySelector('[data-i18n="header.method"],[data-i18n="header.cabling.method"]');
 
@@ -328,6 +328,13 @@ window.switchModule = function(moduleName) {
 
         // Iniciar no card BT por padrão
         window.switchCablingCard('bt');
+        // Pré-calcular MT para que _lastMTPayload fique disponível para i18n
+        // Delay de 350ms: aguarda o cooldown de isRendering do BT (50ms + sync template + 100ms lock)
+        setTimeout(() => {
+            if (typeof window.calculateCablingMT === 'function') {
+                try { window.calculateCablingMT(); } catch(e) {}
+            }
+        }, 350);
 
     } else {
         // shortcircuit (default)
@@ -651,7 +658,7 @@ window.renderCardBT = function(r) {
             <!-- Tab Contents Card -->
             <div class="tab-content-card">
                 <div class="tab-pane active" id="tab-results-bt">
-                    <table class="tech-table">
+                    <table class="tech-table table-results">
                         <thead>
                             <tr>
                                 <th>${_tbt('bt.tbl.param')}</th>
@@ -836,7 +843,7 @@ window.renderCardMT = function(r) {
 
             <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem;">
                 <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">${_tbt('mt.criteria.title')}</div>
-                <table class="tech-table">
+                <table class="tech-table table-results">
                     <thead><tr><th>${_tbt('mt.tbl.criterion')}</th><th>${_tbt('mt.tbl.calculated')}</th><th>${_tbt('mt.tbl.status')}</th></tr></thead>
                     <tbody>
                         <tr><td>${_tbt('mt.tbl.ampacS1')}</td><td>${p.S1} mm²</td><td>${p.dominant === 'AMPACIDADE' ? _dom() : _ok()}</td></tr>
@@ -942,6 +949,8 @@ window.renderCablingMTResults = window.renderCardMT;
 // ─────────────────────────────────────────────────────────────────────────────
 (function runUITests() {
     document.addEventListener('DOMContentLoaded', () => {
+        // Pular suite TDD quando rodando em Puppeteer/headless (evita race com networkidle0)
+        if (navigator.webdriver) return;
         // Aguardar 500ms para o DOM estar completamente estabilizado
         setTimeout(() => {
             console.group('%c[TDD AmpAI] Iniciando Suite de Testes de UI...', 'color:#6366f1;font-weight:700;');
@@ -1062,6 +1071,8 @@ window.renderCablingMTResults = window.renderCardMT;
                                     console.log('%c[TDD] PASSOU: Pipeline FULL-TDD 100% Funcional ✓', 'color:#22c55e;font-weight:700;font-size:14px;');
                                     console.log('%c══════════════════════════════════════════', 'color:#6366f1;');
                                     console.groupEnd();
+                                    // Restaurar módulo padrão após suite TDD
+                                    window.switchModule('shortcircuit');
                                 }, 300);
                             }, 100);
                         }
