@@ -30,6 +30,194 @@ const _fmt = (v, d = 2) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Dicionário i18n BT (O.S. #017 — Internacionalização Semântica)
+// ─────────────────────────────────────────────────────────────────────────────
+const _btI18n = {
+    pt: {
+        // BT Memorial
+        'memorial.title': 'Memorial de Cálculo Completo (Norma IEC 60364-5-52)',
+        'step1.num': 'Passo 1', 'step1.title': 'Dimensionamento Térmico (Critério de Ampacidade)',
+        'step2.num': 'Passo 2', 'step2.title': 'Verificação de Queda de Tensão Contínua',
+        'step3.num': 'Passo 3', 'step3.title': 'Curto-Circuito (Esforço Térmico Adiabático)',
+        // MT KPI cards
+        'mt.kpi.section':   'Seção Adotada',
+        'mt.kpi.dominant':  'Dominante',
+        'mt.kpi.ampacity':  'Ampacidade Corrigida Iz',
+        'mt.kpi.voltdrop':  'Queda de Tensão',
+        'mt.kpi.temp':      'Temperatura de Operação',
+        // MT criteria table
+        'mt.criteria.title':   'Verificação de Critérios — IEC 60502-2 / IEC 60949',
+        'mt.tbl.criterion':    'Critério',
+        'mt.tbl.calculated':   'Seção Calculada',
+        'mt.tbl.status':       'Status',
+        'mt.tbl.ampacS1':      'Ampacidade (S₁)',
+        'mt.tbl.voltdropS2':   'Queda de Tensão (S₂)',
+        'mt.tbl.shortcircS3':  'Curto-Circuito Condutor (S₃)',
+        'mt.tbl.finalSection': 'Seção Final Adotada',
+        'mt.tbl.screen':       'Tela Metálica',
+        'mt.tbl.fcomb':        'Fator Combinado f_comb',
+        'mt.tbl.realVoltdrop': 'Queda de Tensão Real',
+        // MT memorial steps
+        'mt.memorial.title': 'Memorial de Cálculo — IEC 60502-2 / IEC 60949',
+        'mt.s0.title': 'Fatores de Correção (IEC 60287)',
+        'mt.s1.title': 'Ampacidade (IEC 60502-2)',
+        'mt.s2.title': 'Queda de Tensão (IEC 60502-2)',
+        'mt.s3.title': 'Curto Adiabático Condutor (IEC 60949)',
+        'mt.result.title': 'Resultado Final',
+        'mt.allOk':    'TODAS AS CONDIÇÕES ATENDIDAS',
+        'mt.checkFails': 'VERIFICAR FALHAS ACIMA',
+        'memorial.exportPDF': 'Exportar PDF',
+        // BT KPI cards
+        'bt.kpi.section':   'Seção Adotada (S_Final)',
+        'bt.kpi.dominant':  'Fator Dominante',
+        'bt.kpi.ampacity':  'Capacidade (Iz)',
+        'bt.kpi.voltdrop':  'Queda de Tensão (ΔU%)',
+        'bt.kpi.shortcirc': 'Curto-Circuito (S_min)',
+        // BT params tab & table
+        'bt.tab.params':  'Parâmetros de Entrada e Dados',
+        'bt.tbl.param':   'Parâmetro do Sistema',
+        'bt.tbl.symbol':  'Símbolo',
+        'bt.tbl.value':   'Valor Definido',
+        'bt.tbl.unit':    'Unidade',
+        'bt.tbl.ib':      'Corrente de Projeto',
+        'bt.tbl.in':      'Corrente do Disjuntor',
+        'bt.tbl.icc':     'Corrente de Curto-Circuito',
+        'bt.tbl.ull':     'Tensão Nominal de Linha',
+        'bt.tbl.length':  'Comprimento do Circuito',
+        'bt.tbl.pf':      'Fator de Potência',
+        'bt.tbl.method':  'Método de Instalação',
+        'bt.tbl.tamb':    'Temperatura Ambiente',
+        // BT memorial paragraph texts (placeholders: {cond}, {ins}, {duMax}, {t_s})
+        'mem.bt.step1.p': 'Cálculo dos fatores de correção e corrente corrigida do condutor de {cond} isolado em {ins}:',
+        'mem.bt.step2.p': 'Calculada com base na máxima queda admissível de {duMax}% e constante de resistividade operacional (ρ):',
+        'mem.bt.step3.p': 'Determinação da secção mínima requerida para suportar a energia específica passante durante t = {t_s} s:',
+    },
+    en: {
+        // BT Memorial
+        'memorial.title': 'Complete Calculation Memorial (IEC 60364-5-52)',
+        'step1.num': 'Step 1', 'step1.title': 'Thermal Sizing (Ampacity Criterion)',
+        'step2.num': 'Step 2', 'step2.title': 'Continuous Voltage Drop Verification',
+        'step3.num': 'Step 3', 'step3.title': 'Short-Circuit (Adiabatic Thermal Stress)',
+        // MT KPI cards
+        'mt.kpi.section':   'Adopted Section',
+        'mt.kpi.dominant':  'Dominant',
+        'mt.kpi.ampacity':  'Corrected Ampacity Iz',
+        'mt.kpi.voltdrop':  'Voltage Drop',
+        'mt.kpi.temp':      'Operating Temperature',
+        // MT criteria table
+        'mt.criteria.title':   'Criteria Verification — IEC 60502-2 / IEC 60949',
+        'mt.tbl.criterion':    'Criterion',
+        'mt.tbl.calculated':   'Calculated Section',
+        'mt.tbl.status':       'Status',
+        'mt.tbl.ampacS1':      'Ampacity (S₁)',
+        'mt.tbl.voltdropS2':   'Voltage Drop (S₂)',
+        'mt.tbl.shortcircS3':  'Conductor Short-Circuit (S₃)',
+        'mt.tbl.finalSection': 'Final Adopted Section',
+        'mt.tbl.screen':       'Metal Screen',
+        'mt.tbl.fcomb':        'Combined Factor f_comb',
+        'mt.tbl.realVoltdrop': 'Actual Voltage Drop',
+        // MT memorial steps
+        'mt.memorial.title': 'Calculation Report — IEC 60502-2 / IEC 60949',
+        'mt.s0.title': 'Correction Factors (IEC 60287)',
+        'mt.s1.title': 'Ampacity (IEC 60502-2)',
+        'mt.s2.title': 'Voltage Drop (IEC 60502-2)',
+        'mt.s3.title': 'Conductor Adiabatic Short-Circuit (IEC 60949)',
+        'mt.result.title': 'Final Result',
+        'mt.allOk':    'ALL CONDITIONS MET',
+        'mt.checkFails': 'CHECK FAILURES ABOVE',
+        'memorial.exportPDF': 'Export PDF',
+        // BT KPI cards
+        'bt.kpi.section':   'Adopted Section (S_Final)',
+        'bt.kpi.dominant':  'Dominant Factor',
+        'bt.kpi.ampacity':  'Ampacity (Iz)',
+        'bt.kpi.voltdrop':  'Voltage Drop (ΔU%)',
+        'bt.kpi.shortcirc': 'Short-Circuit (S_min)',
+        // BT params tab & table
+        'bt.tab.params':  'Input Parameters & Data',
+        'bt.tbl.param':   'System Parameter',
+        'bt.tbl.symbol':  'Symbol',
+        'bt.tbl.value':   'Defined Value',
+        'bt.tbl.unit':    'Unit',
+        'bt.tbl.ib':      'Design Current',
+        'bt.tbl.in':      'Breaker Rated Current',
+        'bt.tbl.icc':     'Short-Circuit Current',
+        'bt.tbl.ull':     'Nominal Line Voltage',
+        'bt.tbl.length':  'Circuit Length',
+        'bt.tbl.pf':      'Power Factor',
+        'bt.tbl.method':  'Installation Method',
+        'bt.tbl.tamb':    'Ambient Temperature',
+        // BT memorial paragraph texts
+        'mem.bt.step1.p': 'Calculation of correction factors and corrected current for the {cond} conductor insulated in {ins}:',
+        'mem.bt.step2.p': 'Calculated based on the maximum allowable voltage drop of {duMax}% and operational resistivity constant (ρ):',
+        'mem.bt.step3.p': 'Determination of the minimum section required to withstand the specific energy passing through during t = {t_s} s:',
+    },
+    es: {
+        // BT Memorial
+        'memorial.title': 'Memorial de Cálculo Completo (Norma IEC 60364-5-52)',
+        'step1.num': 'Paso 1', 'step1.title': 'Dimensionamiento Térmico (Criterio de Amperaje)',
+        'step2.num': 'Paso 2', 'step2.title': 'Verificación de Caída de Tensión',
+        'step3.num': 'Paso 3', 'step3.title': 'Cortocircuito (Esfuerzo Térmico Adiabático)',
+        // MT KPI cards
+        'mt.kpi.section':   'Sección Adoptada',
+        'mt.kpi.dominant':  'Dominante',
+        'mt.kpi.ampacity':  'Amperaje Corregido Iz',
+        'mt.kpi.voltdrop':  'Caída de Tensión',
+        'mt.kpi.temp':      'Temperatura de Operación',
+        // MT criteria table
+        'mt.criteria.title':   'Verificación de Criterios — IEC 60502-2 / IEC 60949',
+        'mt.tbl.criterion':    'Criterio',
+        'mt.tbl.calculated':   'Sección Calculada',
+        'mt.tbl.status':       'Estado',
+        'mt.tbl.ampacS1':      'Amperaje (S₁)',
+        'mt.tbl.voltdropS2':   'Caída de Tensión (S₂)',
+        'mt.tbl.shortcircS3':  'Cortocircuito Conductor (S₃)',
+        'mt.tbl.finalSection': 'Sección Final Adoptada',
+        'mt.tbl.screen':       'Pantalla Metálica',
+        'mt.tbl.fcomb':        'Factor Combinado f_comb',
+        'mt.tbl.realVoltdrop': 'Caída de Tensión Real',
+        // MT memorial steps
+        'mt.memorial.title': 'Memorial de Cálculo — IEC 60502-2 / IEC 60949',
+        'mt.s0.title': 'Factores de Corrección (IEC 60287)',
+        'mt.s1.title': 'Amperaje (IEC 60502-2)',
+        'mt.s2.title': 'Caída de Tensión (IEC 60502-2)',
+        'mt.s3.title': 'Cortocircuito Adiabático Conductor (IEC 60949)',
+        'mt.result.title': 'Resultado Final',
+        'mt.allOk':    'TODAS LAS CONDICIONES CUMPLIDAS',
+        'mt.checkFails': 'VERIFICAR FALLOS ARRIBA',
+        'memorial.exportPDF': 'Exportar PDF',
+        // BT KPI cards
+        'bt.kpi.section':   'Sección Adoptada (S_Final)',
+        'bt.kpi.dominant':  'Factor Dominante',
+        'bt.kpi.ampacity':  'Capacidad (Iz)',
+        'bt.kpi.voltdrop':  'Caída de Tensión (ΔU%)',
+        'bt.kpi.shortcirc': 'Cortocircuito (S_min)',
+        // BT params tab & table
+        'bt.tab.params':  'Parámetros de Entrada y Datos',
+        'bt.tbl.param':   'Parámetro del Sistema',
+        'bt.tbl.symbol':  'Símbolo',
+        'bt.tbl.value':   'Valor Definido',
+        'bt.tbl.unit':    'Unidad',
+        'bt.tbl.ib':      'Corriente de Diseño',
+        'bt.tbl.in':      'Corriente Nominal del Interruptor',
+        'bt.tbl.icc':     'Corriente de Cortocircuito',
+        'bt.tbl.ull':     'Tensión Nominal de Línea',
+        'bt.tbl.length':  'Longitud del Circuito',
+        'bt.tbl.pf':      'Factor de Potencia',
+        'bt.tbl.method':  'Método de Instalación',
+        'bt.tbl.tamb':    'Temperatura Ambiente',
+        // BT memorial paragraph texts
+        'mem.bt.step1.p': 'Cálculo de los factores de corrección y corriente corregida del conductor {cond} aislado en {ins}:',
+        'mem.bt.step2.p': 'Calculada con base en la caída máxima admisible de {duMax}% y la constante de resistividad operacional (ρ):',
+        'mem.bt.step3.p': 'Determinación de la sección mínima requerida para soportar la energía específica durante t = {t_s} s:',
+    }
+};
+function _tbt(key) {
+    const lang = document.documentElement.lang === 'en' ? 'en' : (document.documentElement.lang === 'es' ? 'es' : 'pt');
+    console.log(`[TBT DEBUG] key: ${key}, html.lang: ${document.documentElement.lang}, lang: ${lang}, result: ${(_btI18n[lang] || _btI18n.pt)[key]}`);
+    return (_btI18n[lang] || _btI18n.pt)[key] || _btI18n.pt[key] || key;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Leitura dos inputs BT da DOM (SoC: única ponte DOM → motor puro)
 // ─────────────────────────────────────────────────────────────────────────────
 window.readBTInputsFromUI = function() {
@@ -73,6 +261,18 @@ document.addEventListener('DOMContentLoaded', () => {
     seed('btIns',  [['bt-btn-xlpe', 'XLPE'], ['bt-btn-pvc', 'PVC']]);
     seed('mtCond', [['mt-btn-cu', 'Cu'],     ['mt-btn-al', 'Al']]);
     seed('mtIns',  [['mt-btn-xlpe', 'XLPE'], ['mt-btn-epr', 'EPR']]);
+
+    // Wrapper setLanguage — re-renderiza BT e MT cards ao trocar idioma (O.S. #017 / #023)
+    const _origSetLanguage = window.setLanguage;
+    window.setLanguage = function(lang) {
+        if (_origSetLanguage) _origSetLanguage.call(window, lang);
+        if (window._lastBTPayload && typeof window.renderCardBT === 'function') {
+            setTimeout(() => window.renderCardBT(window._lastBTPayload), 150);
+        }
+        if (window._lastMTPayload && typeof window.renderCardMT === 'function') {
+            setTimeout(() => window.renderCardMT(window._lastMTPayload), 300); // Staggered to avoid isRendering lock
+        }
+    };
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -104,6 +304,11 @@ window.switchModule = function(moduleName) {
         return;
     }
 
+    // Refs para header badge (O.S. #018 — Dynamic State Binding)
+    const _badge  = document.querySelector('.norm-badge');
+    const _method = document.getElementById('header-method-span')
+        || document.querySelector('[data-i18n="header.method"],[data-i18n="header.cabling.method"]');
+
     if (moduleName === 'cabling') {
         // Ocultar módulo de Curto-Circuito
         if (sidebarSC)   sidebarSC.style.display   = 'none';
@@ -116,6 +321,11 @@ window.switchModule = function(moduleName) {
         if (navSC) navSC.classList.remove('active');
         if (navCB) navCB.classList.add('active');
 
+        // Header badge → norma de cabos (data-i18n dinâmico, sem hardcode PT)
+        if (_badge)  _badge.textContent = 'IEC 60364 / 60502';
+        if (_method) _method.setAttribute('data-i18n', 'header.cabling.method');
+        if (typeof window.translatePage === 'function') window.translatePage();
+
         // Iniciar no card BT por padrão
         window.switchCablingCard('bt');
 
@@ -127,6 +337,11 @@ window.switchModule = function(moduleName) {
 
         if (navSC) navSC.classList.add('active');
         if (navCB) navCB.classList.remove('active');
+
+        // Header badge → norma de curto-circuito (data-i18n dinâmico, sem hardcode PT)
+        if (_badge)  _badge.textContent = 'IEC 60909-0';
+        if (_method) _method.setAttribute('data-i18n', 'header.method');
+        if (typeof window.translatePage === 'function') window.translatePage();
     }
 };
 
@@ -370,6 +585,7 @@ function injectWithRetry(id, renderFunction, payload, retries = 5) {
 // ─────────────────────────────────────────────────────────────────────────────
 window.renderCardBT = function(r) {
     if (!r) return;
+    window._lastBTPayload = r;
 
     const generateHTML = (data) => {
         const p = data;
@@ -390,16 +606,16 @@ window.renderCardBT = function(r) {
             <div class="results-grid">
                 <div class="result-card primary">
                     <div class="result-title">
-                        <span>Seção Adotada (S_Final)</span>
+                        <span>${_tbt('bt.kpi.section')}</span>
                         <i data-lucide="shield" style="color: var(--accent); width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${p.sFinal} <span class="result-unit">mm²</span></div>
-                    <div class="result-desc">Fator Dominante: ${p.dominant}</div>
+                    <div class="result-desc">${_tbt('bt.kpi.dominant')}: ${p.dominant}</div>
                 </div>
 
                 <div class="result-card ${p.IzFinal >= p.Ib ? 'success' : 'danger'}">
                     <div class="result-title">
-                        <span>Capacidade (Iz)</span>
+                        <span>${_tbt('bt.kpi.ampacity')}</span>
                         <i data-lucide="zap" style="color: ${p.IzFinal >= p.Ib ? 'var(--success)' : 'var(--danger)'}; width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${_fmt(p.IzFinal, 2)} <span class="result-unit">A</span></div>
@@ -408,7 +624,7 @@ window.renderCardBT = function(r) {
 
                 <div class="result-card ${!duOver ? 'success' : 'danger'}">
                     <div class="result-title">
-                        <span>Queda de Tensão (ΔU%)</span>
+                        <span>${_tbt('bt.kpi.voltdrop')}</span>
                         <i data-lucide="zap-off" style="color: ${!duOver ? 'var(--success)' : 'var(--danger)'}; width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${_fmt(p.duPct_final, 2)} <span class="result-unit">%</span></div>
@@ -417,7 +633,7 @@ window.renderCardBT = function(r) {
 
                 <div class="result-card ${p.sFinal >= p.S3 ? 'success' : 'danger'}">
                     <div class="result-title">
-                        <span>Curto-Circuito (S_min)</span>
+                        <span>${_tbt('bt.kpi.shortcirc')}</span>
                         <i data-lucide="alert-triangle" style="color: ${p.sFinal >= p.S3 ? 'var(--success)' : 'var(--danger)'}; width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${_fmt(p.S3_cont, 2)} <span class="result-unit">mm²</span></div>
@@ -428,7 +644,7 @@ window.renderCardBT = function(r) {
             <!-- Tabs Navigation -->
             <div class="tabs-header">
                 <button class="tab-btn active" onclick="event.preventDefault()">
-                    <i data-lucide="table" style="width: 14px; height: 14px;"></i> <span>Parâmetros de Entrada e Dados</span>
+                    <i data-lucide="table" style="width: 14px; height: 14px;"></i> <span>${_tbt('bt.tab.params')}</span>
                 </button>
             </div>
 
@@ -438,57 +654,57 @@ window.renderCardBT = function(r) {
                     <table class="tech-table">
                         <thead>
                             <tr>
-                                <th>Parâmetro do Sistema</th>
-                                <th>Símbolo</th>
-                                <th>Valor Definido</th>
-                                <th>Unidade</th>
+                                <th>${_tbt('bt.tbl.param')}</th>
+                                <th>${_tbt('bt.tbl.symbol')}</th>
+                                <th>${_tbt('bt.tbl.value')}</th>
+                                <th>${_tbt('bt.tbl.unit')}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Corrente de Projeto</td>
+                                <td>${_tbt('bt.tbl.ib')}</td>
                                 <td>Ib</td>
                                 <td>${p.Ib}</td>
                                 <td>A</td>
                             </tr>
                             <tr>
-                                <td>Corrente do Disjuntor</td>
+                                <td>${_tbt('bt.tbl.in')}</td>
                                 <td>In</td>
                                 <td>${p.In}</td>
                                 <td>A</td>
                             </tr>
                             <tr>
-                                <td>Corrente de Curto-Circuito</td>
+                                <td>${_tbt('bt.tbl.icc')}</td>
                                 <td>Icc</td>
                                 <td>${(p.Icc||0)/1000}</td>
                                 <td>kA</td>
                             </tr>
                             <tr>
-                                <td>Tensão Nominal de Linha</td>
+                                <td>${_tbt('bt.tbl.ull')}</td>
                                 <td>ULL</td>
                                 <td>${i.ULL_V || '--'}</td>
                                 <td>V</td>
                             </tr>
                             <tr>
-                                <td>Comprimento do Circuito</td>
+                                <td>${_tbt('bt.tbl.length')}</td>
                                 <td>L</td>
                                 <td>${p.L}</td>
                                 <td>m</td>
                             </tr>
                             <tr>
-                                <td>Fator de Potência</td>
+                                <td>${_tbt('bt.tbl.pf')}</td>
                                 <td>cosφ</td>
                                 <td>${p.cosPhi}</td>
                                 <td>-</td>
                             </tr>
                             <tr>
-                                <td>Método de Instalação</td>
+                                <td>${_tbt('bt.tbl.method')}</td>
                                 <td>M</td>
                                 <td>${p.method}</td>
                                 <td>-</td>
                             </tr>
                             <tr>
-                                <td>Temperatura Ambiente</td>
+                                <td>${_tbt('bt.tbl.tamb')}</td>
                                 <td>Tamb</td>
                                 <td>${p.tAmb}</td>
                                 <td>°C</td>
@@ -503,7 +719,7 @@ window.renderCardBT = function(r) {
                 <button class="accordion-header" id="btn-memorial-bt" data-action="toggle-memorial-bt">
                     <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
                         <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
-                        <span>Memorial de Cálculo Completo (Norma IEC 60364-5-52)</span>
+                        <span>${_tbt('memorial.title')}</span>
                     </span>
                     <i data-lucide="chevron-down" id="accordion-chevron-bt" class="chevron-icon" style="width: 18px; height: 18px;"></i>
                 </button>
@@ -512,10 +728,10 @@ window.renderCardBT = function(r) {
                     <!-- Step 1: Ampacidade -->
                     <div class="memorial-step">
                         <div class="step-header">
-                            <span class="step-num">Passo 1</span>
-                            <span class="step-title">Dimensionamento Térmico (Critério de Ampacidade)</span>
+                            <span class="step-num">${_tbt('step1.num')}</span>
+                            <span class="step-title">${_tbt('step1.title')}</span>
                         </div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Cálculo dos fatores de correção e corrente corrigida do condutor de ${i.conductor || '--'} isolado em ${p.ins}:</p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${_tbt('mem.bt.step1.p').replace('{cond}', i.conductor || '--').replace('{ins}', p.ins)}</p>
                         <div class="math-block">
                             <div class="math-line">FCT = ${_fmt(p.FCT, 4)} | FCA = ${_fmt(p.FCA, 4)}</div>
                             <div class="math-line">IZ_req ≥ In / (FCA · FCT)</div>
@@ -531,10 +747,10 @@ window.renderCardBT = function(r) {
                     <!-- Step 2: Voltage Drop -->
                     <div class="memorial-step">
                         <div class="step-header">
-                            <span class="step-num">Passo 2</span>
-                            <span class="step-title">Verificação de Queda de Tensão Contínua</span>
+                            <span class="step-num">${_tbt('step2.num')}</span>
+                            <span class="step-title">${_tbt('step2.title')}</span>
                         </div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Calculada com base na máxima queda admissível de ${p.duMax}% e constante de resistividade operacional (ρ):</p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${_tbt('mem.bt.step2.p').replace('{duMax}', p.duMax)}</p>
                         <div class="math-block">
                             <div class="math-line">ΔU_max = (V_LL · ΔU%) / 100</div>
                             <div class="math-line">ΔU_max = (${i.ULL_V || 0} · ${p.duMax}) / 100 = ${_fmt(((i.ULL_V || 0) * p.duMax) / 100, 2)} V</div>
@@ -548,10 +764,10 @@ window.renderCardBT = function(r) {
                     <!-- Step 3: Short Circuit -->
                     <div class="memorial-step">
                         <div class="step-header">
-                            <span class="step-num">Passo 3</span>
-                            <span class="step-title">Curto-Circuito (Esforço Térmico Adiabático)</span>
+                            <span class="step-num">${_tbt('step3.num')}</span>
+                            <span class="step-title">${_tbt('step3.title')}</span>
                         </div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Determinação da secção mínima requerida para suportar a energia específica passante durante t = ${p.tProt} s:</p>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">${_tbt('mem.bt.step3.p').replace('{t_s}', p.tProt)}</p>
                         <div class="math-block">
                             <div class="math-line">I²t = (Icc)² · t</div>
                             <div class="math-line">I²t = (${p.Icc||0})² · ${p.tProt} = ${_fmt(Math.pow(p.Icc||0, 2) * p.tProt, 2)} A²s</div>
@@ -565,7 +781,7 @@ window.renderCardBT = function(r) {
                     <!-- PDF Print Button inside Accordion (Impressão Nativa) -->
                     <div class="actions-bar" style="margin-top: 1rem;">
                         <button class="btn-action btn-secondary" id="btn-export-memorial-bt" data-action="export-memorial-bt">
-                            <i data-lucide="printer" style="width: 14px; height: 14px;"></i> <span>Imprimir Memorial Técnico</span>
+                            <i data-lucide="printer" style="width: 14px; height: 14px;"></i> <span>${_tbt('memorial.exportPDF')}</span>
                         </button>
                     </div>
                 </div>
@@ -581,6 +797,7 @@ window.renderCardBT = function(r) {
 // ─────────────────────────────────────────────────────────────────────────────
 window.renderCardMT = function(r) {
     if (!r || !r.input) return;
+    window._lastMTPayload = r;
 
     const generateHTML = (data) => {
         const p = data;
@@ -591,85 +808,123 @@ window.renderCardMT = function(r) {
         return `
             <div class="results-grid" style="margin-bottom:1rem;">
                 <div class="result-card primary">
-                    <div class="result-title">Seção Adotada</div>
+                    <div class="result-title">${_tbt('mt.kpi.section')}</div>
                     <div class="result-value">${p.sFinal} <span class="result-unit">mm²</span></div>
-                    <div class="result-desc">Dominante: ${p.dominant}</div>
+                    <div class="result-desc">${_tbt('mt.kpi.dominant')}: ${p.dominant}</div>
                 </div>
                 <div class="result-card success">
-                    <div class="result-title">Ampacidade Corrigida Iz</div>
+                    <div class="result-title">${_tbt('mt.kpi.ampacity')}</div>
                     <div class="result-value">${_fmt(p.Iz_corr, 1)} <span class="result-unit">A</span></div>
                     <div class="result-desc">I_b = ${i.Ib_A} A ≤ Iz = ${_fmt(p.Iz_corr, 1)} A ${p.Iz_corr >= i.Ib_A ? '✓' : '✗'}</div>
                 </div>
                 <div class="result-card ${duOver ? 'danger' : p.du_pct > i.duMax_pct * 0.85 ? 'primary' : 'info'}">
-                    <div class="result-title">Queda de Tensão</div>
+                    <div class="result-title">${_tbt('mt.kpi.voltdrop')}</div>
                     <div class="result-value">${_fmt(p.du_pct, 2)} <span class="result-unit">%</span></div>
                     <div class="result-desc">Limite: ${i.duMax_pct}% | ΔU = ${_fmt(p.du_V, 2)} V ${!duOver ? '✓' : '✗'}</div>
                 </div>
                 <div class="result-card ${tr > 0.95 ? 'danger' : tr > 0.85 ? 'primary' : 'success'}">
-                    <div class="result-title">Temperatura de Operação</div>
+                    <div class="result-title">${_tbt('mt.kpi.temp')}</div>
                     <div class="result-value">${_fmt(p.thetaOp, 1)} <span class="result-unit">°C</span></div>
                     <div class="result-desc">Limite: ${p.thetaMax}°C (${i.insulation}) ${p.thetaOp <= p.thetaMax ? '✓' : '✗'}</div>
                 </div>
-                <div class="result-card" style="background:linear-gradient(135deg,#1e293b,#334155); color:#f1f5f9; border:none;">
-                    <div class="result-title" style="color:#94a3b8;">Tela Metálica (IEC 60949)</div>
+                <div class="result-card info">
+                    <div class="result-title">${_tbt('mt.tbl.screen')} (IEC 60949)</div>
                     <div class="result-value">${p.S_screen} <span class="result-unit">mm²</span></div>
-                    <div class="result-desc" style="color:#94a3b8;">Cont: ${_fmt(p.S_screen_cont, 2)} mm² | k=${p.k_screen}</div>
+                    <div class="result-desc">Cont: ${_fmt(p.S_screen_cont, 2)} mm² | k=${p.k_screen}</div>
                 </div>
             </div>
 
             <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem;">
-                <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">Verificação de Critérios — IEC 60502-2 / IEC 60949</div>
+                <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">${_tbt('mt.criteria.title')}</div>
                 <table class="tech-table">
-                    <thead><tr><th>Critério</th><th>Seção Calculada</th><th>Status</th></tr></thead>
+                    <thead><tr><th>${_tbt('mt.tbl.criterion')}</th><th>${_tbt('mt.tbl.calculated')}</th><th>${_tbt('mt.tbl.status')}</th></tr></thead>
                     <tbody>
-                        <tr><td>Ampacidade (S₁)</td><td>${p.S1} mm²</td><td>${p.dominant === 'AMPACIDADE' ? _dom() : _ok()}</td></tr>
-                        <tr><td>Queda de Tensão (S₂)</td><td>${p.S2} mm² (cont: ${_fmt(p.S2_cont, 2)} mm²)</td><td>${p.dominant === 'QUEDA DE TENSÃO' ? _dom() : _ok()}</td></tr>
-                        <tr><td>Curto-Circuito Condutor (S₃)</td><td>${p.S3} mm² (cont: ${_fmt(p.S3_cont, 2)} mm²)</td><td>${p.dominant === 'CURTO-CIRCUITO' ? _dom() : _ok()}</td></tr>
-                        <tr style="font-weight:700;"><td>Seção Final Adotada</td><td>${p.sFinal} mm²</td><td>—</td></tr>
-                        <tr><td>Tela Metálica</td><td>${p.S_screen} mm²</td><td>—</td></tr>
-                        <tr><td>Fator Combinado f_comb</td><td colspan="2">${_fmt(p.f_combined, 4)} (T:${_fmt(p.f_temp,3)} · S:${_fmt(p.f_soil,3)} · P:${_fmt(p.f_depth,3)} · G:${_fmt(p.f_group,3)})</td></tr>
-                        <tr><td>Queda de Tensão Real</td><td colspan="2">${_fmt(p.du_pct, 2)}% ${p.du_pct <= i.duMax_pct ? '✓' : '✗'}</td></tr>
+                        <tr><td>${_tbt('mt.tbl.ampacS1')}</td><td>${p.S1} mm²</td><td>${p.dominant === 'AMPACIDADE' ? _dom() : _ok()}</td></tr>
+                        <tr><td>${_tbt('mt.tbl.voltdropS2')}</td><td>${p.S2} mm² (cont: ${_fmt(p.S2_cont, 2)} mm²)</td><td>${p.dominant === 'QUEDA DE TENSÃO' ? _dom() : _ok()}</td></tr>
+                        <tr><td>${_tbt('mt.tbl.shortcircS3')}</td><td>${p.S3} mm² (cont: ${_fmt(p.S3_cont, 2)} mm²)</td><td>${p.dominant === 'CURTO-CIRCUITO' ? _dom() : _ok()}</td></tr>
+                        <tr style="font-weight:700;"><td>${_tbt('mt.tbl.finalSection')}</td><td>${p.sFinal} mm²</td><td>—</td></tr>
+                        <tr><td>${_tbt('mt.tbl.screen')}</td><td>${p.S_screen} mm²</td><td>—</td></tr>
+                        <tr><td>${_tbt('mt.tbl.fcomb')}</td><td colspan="2">${_fmt(p.f_combined, 4)} (T:${_fmt(p.f_temp,3)} · S:${_fmt(p.f_soil,3)} · P:${_fmt(p.f_depth,3)} · G:${_fmt(p.f_group,3)})</td></tr>
+                        <tr><td>${_tbt('mt.tbl.realVoltdrop')}</td><td colspan="2">${_fmt(p.du_pct, 2)}% ${p.du_pct <= i.duMax_pct ? '✓' : '✗'}</td></tr>
                     </tbody>
                 </table>
             </div>
 
-            <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1rem;">
-                <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">Memorial de Cálculo — IEC 60502-2 / IEC 60949</div>
-                <div style="font-size:0.82rem; line-height:1.7; color:var(--text-secondary);">
-                    <div style="margin-bottom:0.75rem; padding:0.75rem; background:var(--bg-tertiary); border-radius:8px;">
-                        <b>Fatores de Correção (IEC 60287)</b><br>
-                        f_temp = √[(90−${i.thetaAmb_C})/(90−20)] = <b>${_fmt(p.f_temp, 4)}</b><br>
-                        f_solo = √[1,0/${i.rhoSoil_KmW}] = <b>${_fmt(p.f_soil, 4)}</b><br>
-                        f_prof (${i.depth_m} m) = <b>${_fmt(p.f_depth, 4)}</b><br>
-                        f_grup (${i.nCircuits} circ, ${i.formation}) = <b>${_fmt(p.f_group, 4)}</b><br>
-                        f_comb = <b>${_fmt(p.f_combined, 4)}</b>
+            <!-- Accordion Memorial Section -->
+            <div class="accordion-item" style="margin-top: 1rem;">
+                <button class="accordion-header" id="btn-memorial-mt" data-action="toggle-memorial-mt">
+                    <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
+                        <span>${_tbt('mt.memorial.title')}</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="accordion-chevron-mt" class="chevron-icon" style="width: 18px; height: 18px;"></i>
+                </button>
+                <div class="accordion-content hidden" id="cb-mem-mt-container">
+
+                <div class="memorial-step">
+                    <div class="step-header">
+                        <span class="step-num">S₀</span>
+                        <span class="step-title">${_tbt('mt.s0.title')}</span>
                     </div>
-                    <div style="margin-bottom:0.75rem; padding:0.75rem; background:var(--bg-tertiary); border-radius:8px;">
-                        <b>S₁ — Ampacidade (IEC 60502-2)</b><br>
-                        Iz_ref = ${i.Ib_A} A / ${_fmt(p.f_combined, 4)} = <b>${_fmt(i.Ib_A / p.f_combined, 2)} A</b><br>
-                        Iz_base (${i.conductor}, ${i.insulation}, S=${p.S1} mm²) = <b>${p.Iz_base} A</b><br>
-                        Iz_corr = ${p.Iz_base} × ${_fmt(p.f_combined, 4)} = <b>${_fmt(p.Iz_corr, 1)} A</b> ${p.Iz_corr >= i.Ib_A ? '✓' : '✗'}<br>
-                        → <b>S₁ = ${p.S1} mm²</b>
+                    <div class="math-block">
+                        <div class="math-line">f_temp = √[(90−${i.thetaAmb_C})/(90−20)] = <b>${_fmt(p.f_temp, 4)}</b></div>
+                        <div class="math-line">f_solo = √[1,0/${i.rhoSoil_KmW}] = <b>${_fmt(p.f_soil, 4)}</b></div>
+                        <div class="math-line">f_prof (${i.depth_m} m) = <b>${_fmt(p.f_depth, 4)}</b></div>
+                        <div class="math-line">f_grup (${i.nCircuits} circ, ${i.formation}) = <b>${_fmt(p.f_group, 4)}</b></div>
+                        <div class="math-line" style="font-weight:700;">f_comb = <b>${_fmt(p.f_combined, 4)}</b></div>
                     </div>
-                    <div style="margin-bottom:0.75rem; padding:0.75rem; background:var(--bg-tertiary); border-radius:8px;">
-                        <b>S₂ — Queda de Tensão (IEC 60502-2)</b><br>
-                        ΔUmax = ${_fmt((i.duMax_pct / 100) * i.ULL_V, 2)} V<br>
-                        S₂ = √3 × ρ₉₀ × ${i.length_m} m × ${i.Ib_A} A × ${i.cosPhi} / ΔUmax = <b>${_fmt(p.S2_cont, 3)} mm²</b><br>
-                        → <b>S₂ = ${p.S2} mm²</b> | ΔU_real = ${_fmt(p.du_pct, 2)}% ${p.du_pct <= i.duMax_pct ? '✓' : '✗'}
+                </div>
+
+                <div class="memorial-step">
+                    <div class="step-header">
+                        <span class="step-num">S₁</span>
+                        <span class="step-title">${_tbt('mt.s1.title')}</span>
                     </div>
-                    <div style="margin-bottom:0.75rem; padding:0.75rem; background:var(--bg-tertiary); border-radius:8px;">
-                        <b>S₃ — Curto Adiabático Condutor (IEC 60949)</b><br>
-                        k = ${p.k_cond} A·s½/mm² (${i.conductor}, θi=90°C→θf=250°C)<br>
-                        S₃ = ${i.Icc_A} A × √${i.tConductor_s} s / ${p.k_cond} = <b>${_fmt(p.S3_cont, 3)} mm²</b> → <b>${p.S3} mm²</b><br>
-                        Tela: k=${p.k_screen}, S_tela = ${i.iFault_A} × √${i.tScreen_s} / ${p.k_screen} = <b>${_fmt(p.S_screen_cont, 3)} mm²</b> → <b>${p.S_screen} mm²</b>
+                    <div class="math-block">
+                        <div class="math-line">Iz_ref = ${i.Ib_A} A / ${_fmt(p.f_combined, 4)} = <b>${_fmt(i.Ib_A / p.f_combined, 2)} A</b></div>
+                        <div class="math-line">Iz_base (${i.conductor}, ${i.insulation}, S=${p.S1} mm²) = <b>${p.Iz_base} A</b></div>
+                        <div class="math-line">Iz_corr = ${p.Iz_base} × ${_fmt(p.f_combined, 4)} = <b>${_fmt(p.Iz_corr, 1)} A</b> ${p.Iz_corr >= i.Ib_A ? '✓' : '✗'}</div>
+                        <div class="math-line" style="font-weight:700;">→ S₁ = ${p.S1} mm²</div>
                     </div>
-                    <div style="padding:0.75rem; background:var(--accent-light); border-left:3px solid var(--accent); border-radius:8px;">
-                        <b>Resultado Final</b><br>
-                        S_final = max(${p.S1}, ${p.S2}, ${p.S3}) = <b>${p.sFinal} mm²</b> [${p.dominant}]<br>
-                        S_tela = <b>${p.S_screen} mm²</b><br>
-                        θ_op = ${_fmt(p.thetaOp, 1)}°C ≤ ${p.thetaMax}°C ${p.thetaOp <= p.thetaMax ? '✓' : '✗'}<br>
-                        Ib ≤ Iz: ${i.Ib_A} A ≤ ${_fmt(p.Iz_corr, 1)} A <b>${p.Iz_corr >= i.Ib_A ? '✓ TODAS AS CONDIÇÕES ATENDIDAS' : '✗ VERIFICAR FALHAS ACIMA'}</b>
+                </div>
+
+                <div class="memorial-step">
+                    <div class="step-header">
+                        <span class="step-num">S₂</span>
+                        <span class="step-title">${_tbt('mt.s2.title')}</span>
                     </div>
+                    <div class="math-block">
+                        <div class="math-line">ΔUmax = ${_fmt((i.duMax_pct / 100) * i.ULL_V, 2)} V</div>
+                        <div class="math-line">S₂ = √3 × ρ₉₀ × ${i.length_m} m × ${i.Ib_A} A × ${i.cosPhi} / ΔUmax = <b>${_fmt(p.S2_cont, 3)} mm²</b></div>
+                        <div class="math-line" style="font-weight:700;">→ S₂ = ${p.S2} mm² | ΔU_real = ${_fmt(p.du_pct, 2)}% ${p.du_pct <= i.duMax_pct ? '✓' : '✗'}</div>
+                    </div>
+                </div>
+
+                <div class="memorial-step">
+                    <div class="step-header">
+                        <span class="step-num">S₃</span>
+                        <span class="step-title">${_tbt('mt.s3.title')}</span>
+                    </div>
+                    <div class="math-block">
+                        <div class="math-line">k = ${p.k_cond} A·s½/mm² (${i.conductor}, θi=90°C→θf=250°C)</div>
+                        <div class="math-line">S₃ = ${i.Icc_A} A × √${i.tConductor_s} s / ${p.k_cond} = <b>${_fmt(p.S3_cont, 3)} mm²</b> → <b>${p.S3} mm²</b></div>
+                        <div class="math-line">Tela: k=${p.k_screen}, S_tela = ${i.iFault_A} × √${i.tScreen_s} / ${p.k_screen} = <b>${_fmt(p.S_screen_cont, 3)} mm²</b> → <b>${p.S_screen} mm²</b></div>
+                    </div>
+                </div>
+
+                <div class="memorial-step" style="background:var(--accent-light); border-left:3px solid var(--accent);">
+                    <div class="step-header">
+                        <span class="step-num">✓</span>
+                        <span class="step-title">${_tbt('mt.result.title')}</span>
+                    </div>
+                    <div class="math-block">
+                        <div class="math-line">S_final = max(${p.S1}, ${p.S2}, ${p.S3}) = <b>${p.sFinal} mm²</b> [${p.dominant}]</div>
+                        <div class="math-line">S_tela = <b>${p.S_screen} mm²</b></div>
+                        <div class="math-line">θ_op = ${_fmt(p.thetaOp, 1)}°C ≤ ${p.thetaMax}°C ${p.thetaOp <= p.thetaMax ? '✓' : '✗'}</div>
+                        <div class="math-line" style="font-weight:700;">Ib ≤ Iz: ${i.Ib_A} A ≤ ${_fmt(p.Iz_corr, 1)} A ${p.Iz_corr >= i.Ib_A ? '✓ ' + _tbt('mt.allOk') : '✗ ' + _tbt('mt.checkFails')}</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; text-align: right;"><button class="btn-action btn-secondary" id="btn-export-memorial-mt" data-action="export-memorial-mt"><i data-lucide="printer" style="width: 18px; height: 18px; color: currentColor;"></i> <span>${_tbt('memorial.exportPDF')}</span></button></div>
                 </div>
             </div>
         `;

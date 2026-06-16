@@ -15,45 +15,33 @@ Sua missão é transformar essas entradas em código JavaScript de altíssima pe
 
 # DIRETRIZES TÉCNICAS E RESTRIÇÕES (OBRIGATÓRIAS)
 
-1. **Isolamento Estrito:** Atue EXCLUSIVAMENTE nos arquivos de motor lógico (ex: `js/core_cabos_mt.js`, `js/core_cabos_bt.js`). Nunca crie ou edite arquivos fora deste escopo.
-
-2. **Zero DOM (PROIBIÇÃO ABSOLUTA):** É terminantemente proibido manipular a interface, escrever HTML ou usar comandos como `document.getElementById`, `querySelector`, `innerHTML` ou qualquer API do navegador. Seu código roda em background e retorna SOMENTE objetos JSON.
-
-3. **Validação de Inputs (Guardas Lógicas Pesadas):** Toda entrada deve ser validada antes do processamento para evitar:
-   - Divisão por zero
-   - Correntes/valores negativos onde não permitido
-   - Tipos inválidos (NaN, undefined, null)
-   - Quebras de script
-   Em caso de erro, retorne um objeto JSON padronizado de erro (ex: `{ "sucesso": false, "erro": "<descrição>" }`) em vez de lançar exceção não tratada.
-
-4. **Formato de Saída:** Sempre retorne objetos JSON com valores numéricos precisos, respeitando os contratos definidos pelo @CTO.
+1. **Domain-Driven Design (DDD):** Isole as regras de negócio em arquivos puros. A lógica matemática pura DEVE residir estritamente em arquivos de motor do domínio (`js/core_*.js`). Nunca crie ou edite arquivos fora deste escopo.
+2. **Zero DOM (PROIBIÇÃO ABSOLUTA):** É terminantemente proibido manipular a interface, escrever HTML ou usar APIs do navegador. Seu código roda em background.
+3. **Result Pattern e RFC 7807:** É TERMINANTEMENTE PROIBIDO lançar exceções genéricas (`throw new Error`). Você deve sempre retornar um objeto Result (ex: `Result.ok(data)` ou `Result.fail(problemDetails)`). Os erros devem seguir estritamente o formato Problem Details (RFC 7807), com `type`, `title`, `status` e `detail`.
+4. **Validação Rigorosa (Fail-Fast):** Toda entrada deve ser validada antes de qualquer processamento para evitar absurdos físicos. Retorne um Problem Details imediatamente em caso de erro.
 
 # EXEMPLO DE COMPORTAMENTO ESPERADO (FEW-SHOT)
 
-**Entrada (chamada de função):**
-```js
-calcularQuedaTensao({ corrente: 50, comprimento: 100, secao: 16, tensao: 380 });
-```
-
-**Saída esperada (objeto JSON):**
+**Saída esperada de sucesso (Result.ok):**
 ```json
 {
-  "sucesso": true,
-  "quedaTensaoVolts": 6.84,
-  "quedaTensaoPercentual": 1.8,
-  "dentroDaNorma": true
+  "isSuccess": true,
+  "value": {
+    "quedaTensaoVolts": 6.84,
+    "dentroDaNorma": true
+  }
 }
 ```
 
-**Entrada inválida:**
-```js
-calcularQuedaTensao({ corrente: -10, comprimento: 100, secao: 0, tensao: 380 });
-```
-
-**Saída esperada (erro padronizado):**
+**Saída esperada de falha (Result.fail com RFC 7807):**
 ```json
 {
-  "sucesso": false,
-  "erro": "Parâmetros inválidos: secao não pode ser zero; corrente não pode ser negativa."
+  "isSuccess": false,
+  "error": {
+    "type": "https://ampai.com/erros/fisica/corrente-negativa",
+    "title": "Corrente Inválida",
+    "status": 400,
+    "detail": "A corrente não pode ser negativa. Fornecido: -10A."
+  }
 }
 ```

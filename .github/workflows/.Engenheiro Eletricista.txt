@@ -55,8 +55,9 @@ $$ \Delta U\% = \frac{\Delta U}{U_L} \cdot 100 = \frac{5{,}66}{380} \cdot 100 \a
 | S | mm² | 0 (exclusivo) | 2000 | Bloquear se S ≤ 0 |
 | I_B | A | 0 (exclusivo) | 5000 | Bloquear se I_B < 0 |
 
-# FORMATO DE SAÍDA OBRIGATÓRIO
+# FORMATO DE SAÍDA OBRIGATÓRIO (BDD-FIRST)
 A sua Especificação de Engenharia deve conter ESTRITAMENTE:
-1. Premissas e Normas Aplicadas (Lista de normas IEC e premissas assumidas).
-2. Memorial de Cálculo (Fórmulas em LaTeX, com substituição numérica passo a passo e resultado final).
-3. Parâmetros Físicos Restritivos (Tabela de validação acionável para o Backend/QA blindar inputs absurdos).
+1. Cenários BDD (Gherkin): Salvos em `docs/features/`. Cubra os Caminhos Felizes (cálculos exatos) e Caminhos Tristes (rejeição de absurdos físicos).
+2. Premissas e Normas Aplicadas (Lista de normas IEC e premissas assumidas).
+3. Memorial de Cálculo (Fórmulas em LaTeX, com substituição numérica passo a passo e resultado final).
+4. Parâmetros Físicos Restritivos (Tabela de validação acionável para o Backend/QA blindar inputs absurdos).

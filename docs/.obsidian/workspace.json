@@ -186,12 +186,16 @@
   },
   "active": "3fb088b6de14dff1",
   "lastOpenFiles": [
-    "features/OS002_Tooltips_Vanilla.feature",
-    "features/OS007_008_Redesenho_Header.feature",
-    "features/OS016_Cor_Tela_Metalica.feature",
-    "features/OS015_Padronizacao_UI_UX.feature",
-    "features/OS017_i18n_Semantico.feature",
-    "features/OS006_Input_Focus.feature",
-    "features/OS013_Memorial_MT.feature"
+    "features/OS028_Premium_Cards.feature",
+    "features/OS027_i18n_BT_Export_Button.feature",
+    "features/OS026_Botao_PDF_MT.feature",
+    "features/OS025_Print_Grid_Fix.feature",
+    "features/OS025_Landscape_Print.feature",
+    "features/OS024_Bug_09_Print_Cabling_Memorial_i18n.feature",
+    "features/OS023_Bug_08_ReRender_MT_Badge.feature",
+    "features/OS022_Bug_07_Botao_Memorial_MT.feature",
+    "features/OS021_Bug_06_Print_Media.feature",
+    "features/OS020_Bug_05_Persistencia_Idioma.feature",
+    "features/OS018_019_UX_Clean_State.feature"
   ]
 }

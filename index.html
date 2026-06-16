@@ -439,38 +439,23 @@
 
         .result-card {
             background: var(--bg-secondary);
-            border: 1px solid var(--border);
+            border: none;
             border-radius: 12px;
             padding: 1.25rem;
-            box-shadow: var(--card-shadow);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
             position: relative;
             transition: var(--transition);
         }
 
-        .result-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: var(--border);
-        }
-
-        .result-card.primary::before {
+        .result-card.primary {
             background: var(--accent);
+            color: white;
+            border: none;
         }
 
-        .result-card.success::before {
-            background: var(--success);
-        }
-
-        .result-card.danger::before {
-            background: var(--danger);
-        }
-
-        .result-card.info::before {
-            background: var(--info);
+        .result-card.primary .result-title,
+        .result-card.primary .result-value {
+            color: white !important;
         }
 
         .result-title {
@@ -819,7 +804,6 @@
             }
 
             .app-container,
-            .main-layout,
             .tab-content-card,
             .tab-pane,
             .accordion-item,
@@ -832,6 +816,32 @@
                 max-width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
+            }
+
+            .main-layout {
+                display: block !important;
+                height: auto !important;
+                min-height: 0 !important;
+                max-height: none !important;
+                overflow: visible !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .tab-content-card,
+            .accordion-item {
+                box-shadow: none !important;
+            }
+
+            #wrapper-bt aside,
+            #wrapper-mt aside {
+                display: none !important;
+            }
+
+            .cabling-grid {
+                grid-template-columns: 1fr !important;
             }
 
             .nav-sidebar,
@@ -953,6 +963,21 @@
                 box-shadow: none !important;
             }
         }
+
+        /* Tooltip Vanilla CSS (O.S. 002) */
+        [data-tooltip] { position: relative; cursor: help; }
+        [data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute; bottom: 130%; left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary); color: var(--text-primary);
+            padding: 0.45rem 0.7rem; border-radius: 6px; font-size: 0.72rem;
+            line-height: 1.4; white-space: normal; max-width: 260px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.35); border: 1px solid var(--border);
+            z-index: 1000; opacity: 0; visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease; pointer-events: none;
+        }
+        [data-tooltip]:hover::after { opacity: 1; visibility: visible; }
     </style>
 </head>
 
@@ -969,7 +994,15 @@
             </div>
             <div class="header-meta">
                 <span class="norm-badge">IEC 60909-0</span>
-                <span data-i18n="header.method">Método das Impedâncias Percentuais</span>
+                <span id="header-method-span" data-i18n="header.method">Método das Impedâncias Percentuais</span>
+            </div>
+            <!-- Seletor de idiomas no header (O.S. 007/008) -->
+            <div class="lang-switcher" aria-label="Language selector">
+                <button type="button" class="lang-btn active" id="header-lang-pt" data-lang="pt" onclick="setLanguage('pt')" title="Português">PT</button>
+                <span class="lang-divider">|</span>
+                <button type="button" class="lang-btn" id="header-lang-en" data-lang="en" onclick="setLanguage('en')" title="English">EN</button>
+                <span class="lang-divider">|</span>
+                <button type="button" class="lang-btn" id="header-lang-es" data-lang="es" onclick="setLanguage('es')" title="Español">ES</button>
             </div>
         </header>
 
@@ -994,24 +1027,14 @@
                             style="color: var(--accent);">AI</span></span>
                 </div>
 
-                <!-- Language Switcher -->
-                <div class="lang-switcher">
-                    <button type="button" class="lang-btn active" id="lang-pt" onclick="setLanguage('pt')"
-                        title="Português">PT</button>
-                    <span class="lang-divider">|</span>
-                    <button type="button" class="lang-btn" id="lang-en" onclick="setLanguage('en')" title="English">EN</button>
-                    <span class="lang-divider">|</span>
-                    <button type="button" class="lang-btn" id="lang-es" onclick="setLanguage('es')" title="Español">ES</button>
-                </div>
-
                 <div class="nav-section-title" data-i18n="nav.solutions">Soluções</div>
 
-                <a href="#" class="nav-item active" id="nav-shortcircuit" onclick="window.switchModule('shortcircuit'); return false;">
+                <a href="#" class="nav-item nav-link active" id="nav-shortcircuit" onclick="window.switchModule('shortcircuit'); return false;">
                     <span style="font-size: 1.1rem;">⚡</span>
                     <span style="flex: 1;" data-i18n="nav.shortCircuit">Curto-Circuito Trifásico (IEC 60909)</span>
                 </a>
 
-                <a href="#" class="nav-item" id="nav-cabling" onclick="window.switchModule('cabling'); return false;">
+                <a href="#" class="nav-item nav-link" id="nav-cabling" onclick="window.switchModule('cabling'); return false;">
                     <span style="font-size: 1.1rem;">🔌</span>
                     <span style="flex: 1;" data-i18n="nav.cableSizing">Dimensionamento de Cabos (BT e MT)</span>
                 </a>
@@ -1591,7 +1614,7 @@
                 <!-- Cabeçalho do Módulo -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:1rem;">
                     <div>
-                        <h2 style="font-size:1.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;">Dimensionamento de Cabos</h2>
+                        <h2 style="font-size:1.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;" data-i18n="cabling.title">Dimensionamento de Cabos</h2>
                         <p style="font-size:0.8rem; color:var(--text-muted);">IEC 60502-2 · IEC 60364-5-52 · IEC 60949 · IEC 60287</p>
                     </div>
                     <!-- Toggle BT / MT -->
@@ -1605,17 +1628,17 @@
                      CARD BT — Baixa Tensão (IEC 60364-5-52)
                      ═══════════════════════════════════════════════ -->
                 <div id="wrapper-bt" style="display:block;">
-                    <div style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
+                    <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
                         <!-- Sidebar BT -->
                         <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
-                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;">Parâmetros BT</div>
+                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.bt.params">Parâmetros BT</div>
                             <div class="alert-banner" id="bt-alert-error" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
                             <form id="form-bt" novalidate>
 
-                            <div class="form-control"><label>Método de Instalação</label>
+                            <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method">Método de Instalação</label>
                                 <select id="bt-method" data-input-bt="true">
                                     <option value="B1">B1 — Eletroduto Embutido em Parede</option>
                                     <option value="B2">B2 — Eletroduto Aparente</option>
@@ -1625,52 +1648,52 @@
                                     <option value="F">F — Cabo Unipolares, Bandeja (Trifólio)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label>Material do Condutor</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.conductor">Material do Condutor</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="bt-btn-cu" data-action="set-bt-cu" aria-label="Condutor de Cobre">Cu</button>
                                     <button type="button" class="toggle-btn" id="bt-btn-al" data-action="set-bt-al" aria-label="Condutor de Alumínio">Al</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label>Isolação</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.insulation">Isolação</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="bt-btn-xlpe" data-action="set-bt-xlpe" aria-label="Isolação XLPE 90°C">XLPE 90°C</button>
                                     <button type="button" class="toggle-btn" id="bt-btn-pvc" data-action="set-bt-pvc" aria-label="Isolação PVC 70°C">PVC 70°C</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label>Fases do Sistema</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.phases">Fases do Sistema</label>
                                 <select id="bt-phases" data-input-bt="true">
                                     <option value="3">Trifásico (3F+N)</option>
                                     <option value="1">Monofásico (1F+N)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label>Corrente de Projeto Ib (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ib">Corrente de Projeto Ib (A)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ib" value="100" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label>Corrente Nominal do Disjuntor In (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.in">Corrente Nominal do Disjuntor In (A)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-in" value="125" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label>Tensão de Linha ULL (V)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ull">Tensão de Linha ULL (V)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ull" value="380" min="110" max="1000" data-input-bt="true"><span class="unit-badge">V</span></div>
                             </div>
-                            <div class="form-control"><label>Comprimento (m)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.length">Comprimento (m)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-length" value="50" min="1" data-input-bt="true"><span class="unit-badge">m</span></div>
                             </div>
-                            <div class="form-control"><label>Fator de Potência cosφ</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.cosphi">Fator de Potência cosφ</label>
                                 <div class="input-wrapper"><input type="number" id="bt-cosphi" value="0.92" min="0.7" max="1" step="0.01" data-input-bt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label>Queda de Tensão Máx. ΔU%</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.voltdrop">Queda de Tensão Máx. ΔU%</label>
                                 <div class="input-wrapper"><input type="number" id="bt-du-max" value="3.0" min="0.5" max="10" step="0.5" data-input-bt="true"><span class="unit-badge">%</span></div>
                             </div>
-                            <div class="form-control"><label>Temperatura Ambiente (°C)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.tamb">Temperatura Ambiente (°C)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tamb" value="30" min="0" max="60" data-input-bt="true"><span class="unit-badge">°C</span></div>
                             </div>
-                            <div class="form-control"><label>Nº de Circuitos Agrupados</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ncirc">Nº de Circuitos Agrupados</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ncirc" value="1" min="1" max="20" data-input-bt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label>Icc no ponto de instalação (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.icc">Icc no ponto de instalação (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-icc" value="10" min="0.1" step="0.5" data-input-bt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label>Tempo de atuação da proteção (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.tprot">Tempo de atuação da proteção (s)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tprot" value="0.2" min="0.01" max="5" step="0.01" data-input-bt="true"><span class="unit-badge">s</span></div>
                             </div>
                             <button id="btn-bt" data-action="calc-bt" style="width:100%; margin-top:0.5rem; padding:0.7rem; background:var(--accent); color:#fff; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:0.9rem;">⚡ Calcular BT</button>
@@ -1688,10 +1711,10 @@
                      CARD MT — Média Tensão (IEC 60502-2)
                      ═══════════════════════════════════════════════ -->
                 <div id="wrapper-mt" style="display:none;">
-                    <div style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
+                    <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
                         <!-- Sidebar MT -->
-                        <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
-                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;">Parâmetros MT</div>
+                        <aside id="mt-params" style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
+                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.mt.params">Parâmetros MT</div>
 
                             <div class="alert-banner" id="mt-alert-error" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
@@ -1699,10 +1722,10 @@
                             </div>
                             <form id="form-mt" novalidate>
 
-                            <div class="form-control"><label for="mt-ull">Tensão de Operação (U<sub>LL</sub> - kV)</label>
+                            <div class="form-control"><label for="mt-ull" data-i18n="cabling.mt.ull">Tensão de Operação (ULL - kV)</label>
                                 <input type="number" step="any" min="0" id="mt-ull" value="13.8" data-input-mt="true" required>
                             </div>
-                            <div class="form-control"><label for="mt-insulation-class">Classe de Isolação IEC (U<sub>m</sub>)</label>
+                            <div class="form-control"><label for="mt-insulation-class" data-i18n="cabling.mt.insulClass">Classe de Isolação IEC (Um)</label>
                                 <select id="mt-insulation-class" data-input-mt="true" required>
                                     <option value="3.6/6">3.6/6 kV</option>
                                     <option value="6/10">6/10 kV</option>
@@ -1711,26 +1734,26 @@
                                     <option value="18/30">18/30 kV</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label>Material do Condutor</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.conductor">Material do Condutor</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="mt-btn-cu" data-action="set-mt-cu" aria-label="Condutor de Cobre">Cu</button>
                                     <button type="button" class="toggle-btn" id="mt-btn-al" data-action="set-mt-al" aria-label="Condutor de Alumínio">Al</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label>Isolação</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.insulation">Isolação</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="mt-btn-xlpe" data-action="set-mt-xlpe" aria-label="Isolação XLPE 90°C">XLPE 90°C</button>
                                     <button type="button" class="toggle-btn" id="mt-btn-epr" data-action="set-mt-epr" aria-label="Isolação EPR 90°C">EPR 90°C</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label>Tipo de Instalação</label>
+                            <div class="form-control"><label data-tooltip="Tipo de instalação MT conforme IEC 60502-2: duto enterrado, cabo diretamente enterrado no solo ou ao ar livre em bandeja/leito." data-i18n="cabling.mt.install">Tipo de Instalação</label>
                                 <select id="mt-installation" data-input-mt="true">
                                     <option value="UNDERGROUND_DUCT">Duto Enterrado</option>
                                     <option value="DIRECT_BURIED">Diretamente Enterrado</option>
                                     <option value="IN_AIR">Ao Ar Livre (Bandeja/Leito)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label>Formação dos Cabos</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.formation">Formação dos Cabos</label>
                                 <select id="mt-formation" data-input-mt="true">
                                     <option value="TREFOIL_TOUCHING">Trifólio Tocando (Trefoil Touching)</option>
                                     <option value="TREFOIL_SPACED">Trifólio Espaçado (Trefoil Spaced)</option>
@@ -1738,45 +1761,45 @@
                                     <option value="FLAT_SPACED">Plano Espaçado (Flat Spaced)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label>Corrente de Projeto Ib (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.ib">Corrente de Projeto Ib (A)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-ib" value="250" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-mt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label>Corrente Nominal do Disjuntor In (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.in">Corrente Nominal do Disjuntor In (A)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-in" value="300" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-mt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label>Comprimento do Circuito (m)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.length">Comprimento do Circuito (m)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-length" value="150" min="1" required aria-label="Comprimento do Circuito em Metros" data-input-mt="true"><span class="unit-badge">m</span></div>
                             </div>
-                            <div class="form-control"><label>Fator de Potência cosφ</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.cosphi">Fator de Potência cosφ</label>
                                 <div class="input-wrapper"><input type="number" id="mt-cosphi" value="0.90" min="0.7" max="1" step="0.01" data-input-mt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label>Queda de Tensão Máx. ΔU%</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.voltdrop">Queda de Tensão Máx. ΔU%</label>
                                 <div class="input-wrapper"><input type="number" id="mt-du-max" value="2.0" min="0.5" max="10" step="0.1" data-input-mt="true"><span class="unit-badge">%</span></div>
                             </div>
-                            <div class="form-control"><label>Icc no ponto de instalação (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.icc">Icc no ponto de instalação (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-icc" value="12.5" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label>Icc Fase-Terra (kA) - P/ Tela Metálica</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.ifault">Icc Fase-Terra (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-ifault" value="1" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label>Tempo de atuação Fase (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.tcond">Tempo de atuação Fase (s)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-tcond" value="0.5" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
                             </div>
-                            <div class="form-control"><label>Tempo de atuação Terra (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.tscreen">Tempo de atuação Terra (s)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-tscreen" value="1.0" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
                             </div>
                             <div style="padding-top:1rem; border-top:1px solid var(--border); margin-top:1rem;">
-                                <div style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem;">Fatores Ambientais</div>
-                                <div class="form-control"><label>Temperatura Ambiente (°C)</label>
+                                <div style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem;" data-i18n="cabling.mt.envFactors">Fatores Ambientais</div>
+                                <div class="form-control"><label data-i18n="cabling.mt.tamb">Temperatura Ambiente (°C)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-tamb" value="20" min="0" max="60" data-input-mt="true"><span class="unit-badge">°C</span></div>
                                 </div>
-                                <div class="form-control"><label>Profundidade (m)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.depth">Profundidade (m)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-depth" value="0.8" min="0.3" max="3" step="0.1" data-input-mt="true"><span class="unit-badge">m</span></div>
                                 </div>
-                                <div class="form-control"><label>Resistividade do Solo (K·m/W)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.rhoSoil">Resistividade do Solo (K·m/W)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-rho-soil" value="1.0" min="0.5" max="3" step="0.1" data-input-mt="true"><span class="unit-badge"></span></div>
                                 </div>
-                                <div class="form-control"><label>Circuitos Agrupados</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.ncirc">Circuitos Agrupados</label>
                                     <div class="input-wrapper"><input type="number" id="mt-ncirc" value="1" min="1" max="10" step="1" data-input-mt="true"><span class="unit-badge">—</span></div>
                                 </div>
                             </div>
@@ -1811,6 +1834,7 @@
                 'header.title': 'Assistente de Engenharia Elétrica',
                 'header.subtitle': 'Soluções de Cálculos e Dimensionamentos',
                 'header.method': 'Método das Impedâncias Percentuais',
+                'header.cabling.method': 'Capacidade de Condução e Limites',
                 'nav.solutions': 'Soluções',
                 'nav.shortCircuit': 'Curto-Circuito Trifásico (IEC 60909)',
                 'nav.cableSizing': 'Dimensionamento de Cabos (BT e MT)',
@@ -1909,11 +1933,49 @@
                 'diagram.threePhaseFault': 'Curto Trifásico',
                 'diagram.twoPhaseFault': 'Curto Bifásico',
                 'diagram.singlePhaseFault': 'Curto Monofásico',
+                'cabling.title': 'Dimensionamento de Cabos',
+                'cabling.bt.params': 'Parâmetros BT',
+                'cabling.mt.params': 'Parâmetros MT',
+                'cabling.bt.method': 'Método de Instalação',
+                'cabling.bt.conductor': 'Material do Condutor',
+                'cabling.bt.insulation': 'Isolação',
+                'cabling.bt.phases': 'Fases do Sistema',
+                'cabling.bt.ib': 'Corrente de Projeto Ib (A)',
+                'cabling.bt.in': 'Corrente Nominal do Disjuntor In (A)',
+                'cabling.bt.ull': 'Tensão de Linha ULL (V)',
+                'cabling.bt.length': 'Comprimento (m)',
+                'cabling.bt.cosphi': 'Fator de Potência cosφ',
+                'cabling.bt.voltdrop': 'Queda de Tensão Máx. ΔU%',
+                'cabling.bt.tamb': 'Temperatura Ambiente (°C)',
+                'cabling.bt.ncirc': 'Nº de Circuitos Agrupados',
+                'cabling.bt.icc': 'Icc no ponto de instalação (kA)',
+                'cabling.bt.tprot': 'Tempo de atuação da proteção (s)',
+                'cabling.mt.install': 'Tipo de Instalação',
+                'cabling.mt.ull': 'Tensão de Operação (ULL - kV)',
+                'cabling.mt.insulClass': 'Classe de Isolação IEC (Um)',
+                'cabling.mt.conductor': 'Material do Condutor',
+                'cabling.mt.insulation': 'Isolação',
+                'cabling.mt.formation': 'Formação dos Cabos',
+                'cabling.mt.ib': 'Corrente de Projeto Ib (A)',
+                'cabling.mt.in': 'Corrente Nominal do Disjuntor In (A)',
+                'cabling.mt.length': 'Comprimento do Circuito (m)',
+                'cabling.mt.cosphi': 'Fator de Potência cosφ',
+                'cabling.mt.voltdrop': 'Queda de Tensão Máx. ΔU%',
+                'cabling.mt.icc': 'Icc no ponto de instalação (kA)',
+                'cabling.mt.ifault': 'Icc Fase-Terra (kA)',
+                'cabling.mt.tcond': 'Tempo de atuação Fase (s)',
+                'cabling.mt.tscreen': 'Tempo de atuação Terra (s)',
+                'cabling.mt.envFactors': 'Fatores Ambientais',
+                'cabling.mt.tamb': 'Temperatura Ambiente (°C)',
+                'cabling.mt.depth': 'Profundidade (m)',
+                'cabling.mt.rhoSoil': 'Resistividade do Solo (K·m/W)',
+                'cabling.mt.ncirc': 'Circuitos Agrupados',
             },
             en: {
                 'header.title': 'Electrical Engineering Assistant',
                 'header.subtitle': 'Calculation & Sizing Solutions',
                 'header.method': 'Percentage Impedance Method',
+                'header.cabling.method': 'Ampacity and Limits',
                 'nav.solutions': 'Solutions',
                 'nav.shortCircuit': 'Three-Phase Short-Circuit (IEC 60909)',
                 'nav.cableSizing': 'Cable Sizing (LV & MV)',
@@ -2012,11 +2074,49 @@
                 'diagram.threePhaseFault': 'Three-Phase Fault',
                 'diagram.twoPhaseFault': 'Two-Phase Fault',
                 'diagram.singlePhaseFault': 'Single-Phase Fault',
+                'cabling.title': 'Cable Sizing',
+                'cabling.bt.params': 'LV Parameters',
+                'cabling.mt.params': 'MV Parameters',
+                'cabling.bt.method': 'Installation Method',
+                'cabling.bt.conductor': 'Conductor Material',
+                'cabling.bt.insulation': 'Insulation',
+                'cabling.bt.phases': 'System Phases',
+                'cabling.bt.ib': 'Design Current Ib (A)',
+                'cabling.bt.in': 'Breaker Rated Current In (A)',
+                'cabling.bt.ull': 'Line Voltage ULL (V)',
+                'cabling.bt.length': 'Length (m)',
+                'cabling.bt.cosphi': 'Power Factor cosφ',
+                'cabling.bt.voltdrop': 'Max. Voltage Drop ΔU%',
+                'cabling.bt.tamb': 'Ambient Temperature (°C)',
+                'cabling.bt.ncirc': 'No. of Grouped Circuits',
+                'cabling.bt.icc': 'Icc at installation point (kA)',
+                'cabling.bt.tprot': 'Protection trip time (s)',
+                'cabling.mt.install': 'Installation Type',
+                'cabling.mt.ull': 'Operating Voltage (ULL - kV)',
+                'cabling.mt.insulClass': 'IEC Insulation Class (Um)',
+                'cabling.mt.conductor': 'Conductor Material',
+                'cabling.mt.insulation': 'Insulation',
+                'cabling.mt.formation': 'Cable Formation',
+                'cabling.mt.ib': 'Design Current Ib (A)',
+                'cabling.mt.in': 'Breaker Rated Current In (A)',
+                'cabling.mt.length': 'Circuit Length (m)',
+                'cabling.mt.cosphi': 'Power Factor cosφ',
+                'cabling.mt.voltdrop': 'Max. Voltage Drop ΔU%',
+                'cabling.mt.icc': 'Icc at installation point (kA)',
+                'cabling.mt.ifault': 'Phase-Earth Fault Current (kA)',
+                'cabling.mt.tcond': 'Phase trip time (s)',
+                'cabling.mt.tscreen': 'Earth trip time (s)',
+                'cabling.mt.envFactors': 'Environmental Factors',
+                'cabling.mt.tamb': 'Ambient Temperature (°C)',
+                'cabling.mt.depth': 'Burial Depth (m)',
+                'cabling.mt.rhoSoil': 'Soil Resistivity (K·m/W)',
+                'cabling.mt.ncirc': 'Grouped Circuits',
             },
             es: {
                 'header.title': 'Asistente de Ingeniería Eléctrica',
                 'header.subtitle': 'Soluciones de Cálculos y Dimensionamiento',
                 'header.method': 'Método de las Impedancias Porcentuales',
+                'header.cabling.method': 'Capacidad de Conducción y Límites',
                 'nav.solutions': 'Soluciones',
                 'nav.shortCircuit': 'Cortocircuito Trifásico (IEC 60909)',
                 'nav.cableSizing': 'Dimensionamiento de Cables (BT y MT)',
@@ -2115,6 +2215,43 @@
                 'diagram.threePhaseFault': 'Corto Trifásico',
                 'diagram.twoPhaseFault': 'Corto Bifásico',
                 'diagram.singlePhaseFault': 'Corto Monofásico',
+                'cabling.title': 'Dimensionamiento de Cables',
+                'cabling.bt.params': 'Parámetros BT',
+                'cabling.mt.params': 'Parámetros MT',
+                'cabling.bt.method': 'Método de Instalación',
+                'cabling.bt.conductor': 'Material del Conductor',
+                'cabling.bt.insulation': 'Aislamiento',
+                'cabling.bt.phases': 'Fases del Sistema',
+                'cabling.bt.ib': 'Corriente de Diseño Ib (A)',
+                'cabling.bt.in': 'Corriente Nominal del Interruptor In (A)',
+                'cabling.bt.ull': 'Tensión de Línea ULL (V)',
+                'cabling.bt.length': 'Longitud (m)',
+                'cabling.bt.cosphi': 'Factor de Potencia cosφ',
+                'cabling.bt.voltdrop': 'Caída de Tensión Máx. ΔU%',
+                'cabling.bt.tamb': 'Temperatura Ambiente (°C)',
+                'cabling.bt.ncirc': 'Nº de Circuitos Agrupados',
+                'cabling.bt.icc': 'Icc en el punto de instalación (kA)',
+                'cabling.bt.tprot': 'Tiempo de actuación de protección (s)',
+                'cabling.mt.install': 'Tipo de Instalación',
+                'cabling.mt.ull': 'Tensión de Operación (ULL - kV)',
+                'cabling.mt.insulClass': 'Clase de Aislamiento IEC (Um)',
+                'cabling.mt.conductor': 'Material del Conductor',
+                'cabling.mt.insulation': 'Aislamiento',
+                'cabling.mt.formation': 'Formación de Cables',
+                'cabling.mt.ib': 'Corriente de Diseño Ib (A)',
+                'cabling.mt.in': 'Corriente Nominal del Interruptor In (A)',
+                'cabling.mt.length': 'Longitud del Circuito (m)',
+                'cabling.mt.cosphi': 'Factor de Potencia cosφ',
+                'cabling.mt.voltdrop': 'Caída de Tensión Máx. ΔU%',
+                'cabling.mt.icc': 'Icc en el punto de instalación (kA)',
+                'cabling.mt.ifault': 'Icc Fase-Tierra (kA)',
+                'cabling.mt.tcond': 'Tiempo de actuación Fase (s)',
+                'cabling.mt.tscreen': 'Tiempo de actuación Tierra (s)',
+                'cabling.mt.envFactors': 'Factores Ambientales',
+                'cabling.mt.tamb': 'Temperatura Ambiente (°C)',
+                'cabling.mt.depth': 'Profundidad (m)',
+                'cabling.mt.rhoSoil': 'Resistividad del Suelo (K·m/W)',
+                'cabling.mt.ncirc': 'Circuitos Agrupados',
             }
         };
 
@@ -2134,9 +2271,12 @@
             // Update html lang attribute
             document.getElementById('html-root').lang = lang === 'pt' ? 'pt-BR' : lang;
 
-            // Highlight active button
+            // Highlight active button (null-safe — sidebar buttons may not exist)
             ['pt', 'en', 'es'].forEach(l => {
-                document.getElementById('lang-' + l).classList.toggle('active', l === lang);
+                const _sb = document.getElementById('lang-' + l);
+                if (_sb) _sb.classList.toggle('active', l === lang);
+                const _hd = document.getElementById('header-lang-' + l);
+                if (_hd) _hd.classList.toggle('active', l === lang);
             });
 
             // Translate all data-i18n elements (textContent)
@@ -2158,6 +2298,16 @@
             // Recalculate to refresh formatted numbers with new locale
             calculate();
         }
+
+        // Expõe tradução de elementos [data-i18n] sem disparar calculate() (O.S. #023)
+        window.translatePage = function() {
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
+                el.title = t(el.getAttribute('data-i18n-title'));
+            });
+        };
 
         // ─────────────────────────────────────────────
         // Lucide Icons initialization

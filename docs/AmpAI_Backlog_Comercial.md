@@ -27,3 +27,19 @@ status: em-andamento
 - [x] **O.S. #015** | `[MÉDIA]` Refatoração UI/UX Global: Padronização Visual e Construtiva. (Compatibilizar as premissas de frontend, componentes, cards e paleta de cores para que os módulos de BT, MT e Curto-Circuito tenham a mesma identidade e comportamento).
 - [x] **O.S. #016** | `[MÉDIA]` Correção Visual: Padronizar a cor de fundo divergente no componente da Tela Metálica para que herde o estado e a paleta do ecossistema global.
 - [x] **O.S. #017** | `[ALTA]` Internacionalização Semântica (i18n): Aplicar tradução profunda mapeando os textos e strings internas geradas pelo motor de UI, não limitando a tradução apenas aos cabeçalhos da casca visual.
+- [x] **O.S. #018** | `[MÉDIA]` Feature: Limpeza Visual e Dynamic State Binding. Ocultar o seletor de idiomas duplicado na Sidebar e tornar a badge da norma e do método dinâmicos conforme o módulo ativo (Curto-Circuito vs Cabos).
+- [x] **O.S. #019** | `[BAIXA]` Reservado conforme BDD (UX Clean State).
+- [x] **O.S. #020** | `[MÉDIA]` Bug #05: Inconsistência de Estado do Idioma. Garantir persistência do estado do idioma ao alternar para o módulo de dimensionamento de cabos. Incluir idioma Espanhol (ES).
+- [x] **O.S. #021** | `[BAIXA]` Bug #06: Layout de Impressão (Print Media). Aplicar `@media print` para ocultar o Header Global e a Sidebar de navegação.
+- [x] **O.S. #022** | `[ALTA]` Bug #07: Interatividade do Botão do Memorial de MT. Conectar o botão ao Event Delegation global ou reavaliar o workflow do Lucide Icons.
+- [x] **O.S. #023** | `[MÉDIA]` Bug #08: Re-renderização do MT no setLanguage e Badge Dinâmico Internacionalizado.
+- [x] **O.S. #024** | `[MÉDIA]` Bug #09: Refinamento de Impressão e Subtextos BT. Limpeza da quebra de página de painéis sem classe e i18n de template literals no memorial.
+- [x] **O.S. #025** | `[ALTA]` Bug #10: Layout de Impressão Espremido (Grid Columns). Ocultar as colunas vazias de 320px no `@media print` para que o memorial utilize a largura total da folha A4 em Retrato.
+- [x] **O.S. #026** | `[BAIXA]` Melhoria UX: Botão de Exportar PDF no MT. Adicionar o botão de impressão nativa ao final do memorial de Média Tensão, igualando a interface da Baixa Tensão.
+- [x] **O.S. #027** | `[BAIXA]` Bug #11: Botão do Memorial BT com Idioma Fixo. O botão de exportar o memorial BT está com o texto "Imprimir Memorial Técnico" hardcoded em PT, vazando ao alternar para EN ou ES.
+
+---
+### Epic: UI/UX Premium Polish
+- [ ] **O.S. #028** | `[MÉDIA]` UX Polish: Redesign dos Cards de KPI (Soft Shadows, Sem Bordas Duras e Destaque Visual no Resultado Principal).
+- [ ] **O.S. #029** | `[MÉDIA]` UX Polish: Estilização Premium de Inputs (Gap, Border Radius, Focus Rings e Segmented Controls).
+- [ ] **O.S. #030** | `[BAIXA]` UX Polish: Correção do Badge Dinâmico no Header e Estilos de Tabela.
