@@ -53,4 +53,4 @@ status: em-andamento
 
 ---
 ### Epic: Performance Optimization (Perf)
-- [ ] **O.S. #035** | `[ALTA]` Perf: Melhoria de FCP/LCP e Thread Principal. Adicionar o atributo `defer` aos scripts externos (`chart.js` e `lucide@latest`) e envolver as chamadas de inicialização como `lucide.createIcons()` em `requestAnimationFrame` para desobstruir a renderização inicial do navegador.
+- [x] **O.S. #035** | `[ALTA]` Perf: Melhoria de FCP/LCP e Thread Principal. Adicionar o atributo `defer` aos scripts externos (`chart.js` e `lucide@latest`) e envolver as chamadas de inicialização como `lucide.createIcons()` em `requestAnimationFrame` para desobstruir a renderização inicial do navegador.
