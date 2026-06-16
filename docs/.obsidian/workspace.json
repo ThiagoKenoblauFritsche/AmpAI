@@ -186,6 +186,8 @@
   },
   "active": "3fb088b6de14dff1",
   "lastOpenFiles": [
+    "features/OS037_Spacing_System.feature",
+    "features/OS036_Estetica_Fina.feature",
     "features/OS035_Performance.feature",
     "features/OS034_A11y_Contrast_Texts.feature",
     "features/OS033_A11y_Contrast_Residue.feature",
@@ -194,8 +196,6 @@
     "features/OS030_Table_Styles_And_Badge.feature",
     "features/OS029_Premium_Inputs.feature",
     "features/OS028_Premium_Cards.feature",
-    "features/OS027_i18n_BT_Export_Button.feature",
-    "features/OS026_Botao_PDF_MT.feature",
-    "features/OS025_Print_Grid_Fix.feature"
+    "features/OS027_i18n_BT_Export_Button.feature"
   ]
 }
