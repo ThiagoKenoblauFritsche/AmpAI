@@ -66,7 +66,7 @@ const _btI18n = {
         'mt.result.title': 'Resultado Final',
         'mt.allOk':    'TODAS AS CONDIÇÕES ATENDIDAS',
         'mt.checkFails': 'VERIFICAR FALHAS ACIMA',
-        'memorial.exportPDF': 'Exportar PDF',
+        'memorial.exportPDF': 'Imprimir Anexo',
         // BT KPI cards
         'bt.kpi.section':   'Seção Adotada (S_Final)',
         'bt.kpi.dominant':  'Fator Dominante',
@@ -125,7 +125,7 @@ const _btI18n = {
         'mt.result.title': 'Final Result',
         'mt.allOk':    'ALL CONDITIONS MET',
         'mt.checkFails': 'CHECK FAILURES ABOVE',
-        'memorial.exportPDF': 'Export PDF',
+        'memorial.exportPDF': 'Print Attachment',
         // BT KPI cards
         'bt.kpi.section':   'Adopted Section (S_Final)',
         'bt.kpi.dominant':  'Dominant Factor',
@@ -184,7 +184,7 @@ const _btI18n = {
         'mt.result.title': 'Resultado Final',
         'mt.allOk':    'TODAS LAS CONDICIONES CUMPLIDAS',
         'mt.checkFails': 'VERIFICAR FALLOS ARRIBA',
-        'memorial.exportPDF': 'Exportar PDF',
+        'memorial.exportPDF': 'Imprimir Anexo',
         // BT KPI cards
         'bt.kpi.section':   'Sección Adoptada (S_Final)',
         'bt.kpi.dominant':  'Factor Dominante',
