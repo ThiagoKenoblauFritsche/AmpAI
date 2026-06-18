@@ -1,0 +1,26 @@
+language: "pt-BR"
+early_access: false
+reviews:
+  profile: "Senior QA and Security Engineer"
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  path_filters:
+    exclude:
+      - "node_modules/**"
+      - "scripts/**"
+      - "package-lock.json"
+  path_instructions:
+    - path: "js/core_**/*.js"
+      instructions: |
+        Você é o Guardião do Core Domain. Verifique rigorosamente se o framework ZOMBIES (Zero, One, Many, Boundaries, Interfaces, Exceptions) está sendo aplicado. Exija extrema precisão matemática. Rejeite se não houver testes validando o código.
+    - path: "js/ui_**/*.js"
+      instructions: |
+        Teste Pragmático Baseado em Risco: Foque APENAS no Caminho Feliz (Happy Path) e rejeite a métrica cega de 100% coverage genérica. Garanta apenas que a manipulação de DOM possui guarda lógica (ex: `if (el) { ... }`).
+    - path: "docs/**"
+      instructions: |
+        Garanta que a filosofia Docs as Code está sendo respeitada. Verifique a adoção de BDD (Gherkin) em `docs/features/` e SDD (OpenAPI) em `docs/api/`.
+chat:
+  auto_reply: true
