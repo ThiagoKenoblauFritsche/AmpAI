@@ -576,11 +576,13 @@ function injectWithRetry(id, renderFunction, payload, retries = 5) {
     container.style.display = 'block';
     container.style.visibility = 'visible';
 
-    const rect = container.getBoundingClientRect();
-    console.log('[AmpAI] DOM rect para', id, ':', { width: rect.width, height: rect.height });
-    if (rect.width === 0 || rect.height === 0) {
-        console.warn('[AmpAI] AVISO: Container', id, 'tem dimensões zeradas! Verifique CSS do container pai.');
-    }
+    requestAnimationFrame(() => {
+        const rect = container.getBoundingClientRect();
+        console.log('[AmpAI] DOM rect para', id, ':', { width: rect.width, height: rect.height });
+        if (rect.width === 0 || rect.height === 0) {
+            console.warn('[AmpAI] AVISO: Container', id, 'tem dimensões zeradas! Verifique CSS do container pai.');
+        }
+    });
 
     setTimeout(() => { window.isRendering = false; }, 100);
 }
@@ -614,7 +616,6 @@ window.renderCardBT = function(r) {
                 <div class="result-card primary">
                     <div class="result-title">
                         <span>${_tbt('bt.kpi.section')}</span>
-                        <i data-lucide="shield" style="color: var(--accent); width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${p.sFinal} <span class="result-unit">mm²</span></div>
                     <div class="result-desc">${_tbt('bt.kpi.dominant')}: ${p.dominant}</div>
@@ -623,7 +624,6 @@ window.renderCardBT = function(r) {
                 <div class="result-card ${p.IzFinal >= p.Ib ? 'success' : 'danger'}">
                     <div class="result-title">
                         <span>${_tbt('bt.kpi.ampacity')}</span>
-                        <i data-lucide="zap" style="color: ${p.IzFinal >= p.Ib ? 'var(--success)' : 'var(--danger)'}; width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${_fmt(p.IzFinal, 2)} <span class="result-unit">A</span></div>
                     <div class="result-desc">I_b = ${p.Ib} A ≤ Iz</div>
@@ -632,7 +632,6 @@ window.renderCardBT = function(r) {
                 <div class="result-card ${!duOver ? 'success' : 'danger'}">
                     <div class="result-title">
                         <span>${_tbt('bt.kpi.voltdrop')}</span>
-                        <i data-lucide="zap-off" style="color: ${!duOver ? 'var(--success)' : 'var(--danger)'}; width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${_fmt(p.duPct_final, 2)} <span class="result-unit">%</span></div>
                     <div class="result-desc">Limite: ${p.duMax}% | ΔU = ${_fmt(p.duV_final, 2)} V</div>
@@ -641,7 +640,6 @@ window.renderCardBT = function(r) {
                 <div class="result-card ${p.sFinal >= p.S3 ? 'success' : 'danger'}">
                     <div class="result-title">
                         <span>${_tbt('bt.kpi.shortcirc')}</span>
-                        <i data-lucide="alert-triangle" style="color: ${p.sFinal >= p.S3 ? 'var(--success)' : 'var(--danger)'}; width: 14px; height: 14px;"></i>
                     </div>
                     <div class="result-value">${_fmt(p.S3_cont, 2)} <span class="result-unit">mm²</span></div>
                     <div class="result-desc">Icc = ${(p.Icc||0)/1000} kA | t = ${_fmt(p.tProt, 2)} s</div>

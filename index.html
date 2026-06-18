@@ -8,37 +8,30 @@
     <!-- Google Fonts: Inter and JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
-        rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <!-- Lucide Icons via CDN -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <style>
         :root {
-            --bg-primary: #f8fafc;
-            /* Slate 50 (Ultra-light industrial gray background) */
-            --bg-secondary: #ffffff;
-            /* Pure white cards */
-            --bg-tertiary: #f1f5f9;
-            /* Slate 100 (Sleek inputs) */
-            --accent: #b45309;
-            /* Professional Electric Amber */
-            --accent-hover: #d97706;
-            --accent-light: rgba(245, 158, 11, 0.08);
-            --text-primary: #0f172a;
-            /* Slate 900 (High contrast technical text) */
-            --text-secondary: #475569;
-            /* Slate 600 */
-            --text-muted: #64748b;
-            /* Slate 500 */
-            --border: #e2e8f0;
-            /* Slate 200 (Extremely thin borders) */
+            --bg-primary: #0D0F12;
+            --bg-secondary: #161A20;
+            --bg-tertiary: #1E232A;
+            --accent: #FF6B00;
+            --accent-hover: #FF8C00;
+            --accent-light: rgba(255, 107, 0, 0.15);
+            --accent-glow: rgba(255, 107, 0, 0.4);
+            --text-primary: #FFFFFF;
+            --text-secondary: #D1D5DB;
+            --text-muted: #9CA3AF;
+            --border: #2A313C;
             --success: #10b981;
             --danger: #ef4444;
             --info: #3b82f6;
-            --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            --neon-glow: 0 0 12px var(--accent-glow), 0 0 24px rgba(255, 107, 0, 0.2);
             --transition: all 0.2s ease;
             --spacing-xs: 4px;
             --spacing-sm: 8px;
@@ -46,6 +39,33 @@
             --spacing-lg: 24px;
             --spacing-xl: 32px;
             --container-padding: 32px;
+        }
+
+        :root[data-theme="light"] {
+            --bg-primary: #F3F4F6;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #E5E7EB;
+            --text-primary: #111827;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border: #D1D5DB;
+        }
+
+        .theme-toggle-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            padding: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+        .theme-toggle-btn:hover {
+            color: var(--accent);
+            border-color: var(--accent);
         }
 
         * {
@@ -139,13 +159,14 @@
         }
 
         .norm-badge {
-            background: #92400e;
-            color: #fef3c7;
-            border: 1px solid rgba(146, 64, 14, 0.3);
+            background: #A84000;
+            color: #FFFFFF;
+            border: none;
             padding: 0.15rem 0.4rem;
             border-radius: 4px;
-            font-weight: 750;
+            font-weight: 800;
             font-size: 0.7rem;
+            box-shadow: 0 0 6px rgba(255, 107, 0, 0.2);
         }
 
         /* Main Grid Layout */
@@ -458,19 +479,22 @@
         }
 
         .result-card.primary {
-            background: var(--text-primary);
-            color: white;
+            background: #A84000;
+            color: #FFFFFF;
             border: none;
+            box-shadow: 0 0 12px rgba(255, 107, 0, 0.2);
         }
 
         .result-card.primary .result-title,
         .result-card.primary .result-value {
-            color: white !important;
+            color: #FFFFFF !important;
+            font-weight: 700;
         }
 
         .result-card.primary .result-desc,
         .result-card.primary .result-unit {
-            color: #cbd5e1 !important;
+            color: rgba(255, 255, 255, 0.85) !important;
+            font-weight: 600;
         }
 
         .result-title {
@@ -763,9 +787,9 @@
         }
 
         .btn-accent:hover {
-            background: #92400e;
+            background: var(--accent-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.4);
+            box-shadow: var(--neon-glow);
         }
 
         .btn-secondary {
@@ -1039,6 +1063,9 @@
                     <span class="lang-divider">|</span>
                     <button type="button" class="lang-btn" id="header-lang-es" data-lang="es" onclick="setLanguage('es')" title="Español">ES</button>
                 </div>
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Alternar Tema" title="Alternar Tema (Modo Claro/Escuro)">
+                    <i data-lucide="sun" id="theme-icon" style="width: 18px; height: 18px;"></i>
+                </button>
             </div>
         </header>
 
@@ -1300,7 +1327,6 @@
                     <div class="result-card primary">
                         <div class="result-title">
                             <span data-i18n="kpi.nomCurrentTitle">Corrente Nominal (In)</span>
-                            <i data-lucide="shield" style="color: var(--accent); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-int">-- <span class="result-unit">A</span></div>
                         <div class="result-desc" data-i18n="kpi.nomCurrentDesc">Corrente nominal em plena carga
@@ -1310,7 +1336,6 @@
                     <div class="result-card danger">
                         <div class="result-title">
                             <span data-i18n="kpi.ik3Title">Curto Trifásico (I''k3)</span>
-                            <i data-lucide="zap" style="color: var(--danger); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-ik3">-- <span class="result-unit">kA</span></div>
                         <div class="result-desc" data-i18n="kpi.ik3Desc">Falha trifásica simétrica inicial máxima.</div>
@@ -1319,7 +1344,6 @@
                     <div class="result-card success">
                         <div class="result-title">
                             <span data-i18n="kpi.ik2Title">Curto Bifásico (I''k2)</span>
-                            <i data-lucide="zap-off" style="color: var(--success); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-ik2">-- <span class="result-unit">kA</span></div>
                         <div class="result-desc" data-i18n="kpi.ik2Desc">Curto bifásico livre de terra.</div>
@@ -1328,7 +1352,6 @@
                     <div class="result-card info">
                         <div class="result-title">
                             <span data-i18n="kpi.ik1Title">Curto Monofásico (I''k1)</span>
-                            <i data-lucide="alert-triangle" style="color: var(--info); width: 14px; height: 14px;"></i>
                         </div>
                         <div class="result-value" id="val-ik1">-- <span class="result-unit">kA</span></div>
                         <div class="result-desc" data-i18n="kpi.ik1Desc">Fase-terra. Altamente dependente do neutro.
@@ -1647,7 +1670,7 @@
                 <!-- ═══════════════════════════════════════════════
                      CARD BT — Baixa Tensão (IEC 60364-5-52)
                      ═══════════════════════════════════════════════ -->
-                <div id="wrapper-bt" style="display:block;">
+                <div id="wrapper-bt" style="display:block; min-height: 500px;">
                     <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
                         <!-- Sidebar BT -->
                         <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
@@ -1730,7 +1753,7 @@
                 <!-- ═══════════════════════════════════════════════
                      CARD MT — Média Tensão (IEC 60502-2)
                      ═══════════════════════════════════════════════ -->
-                <div id="wrapper-mt" style="display:none;">
+                <div id="wrapper-mt" style="display:none; min-height: 500px;">
                     <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
                         <!-- Sidebar MT -->
                         <aside id="mt-params" style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
@@ -2682,6 +2705,39 @@
                 }
             });
         }
+
+        // Theme Toggle Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const root = document.getElementById('html-root');
+            
+            // Check saved theme or default to dark
+            const savedTheme = localStorage.getItem('ampai-theme') || 'dark';
+            
+            const applyTheme = (theme) => {
+                if (theme === 'light') {
+                    root.setAttribute('data-theme', 'light');
+                    themeIcon.setAttribute('data-lucide', 'moon');
+                } else {
+                    root.removeAttribute('data-theme');
+                    themeIcon.setAttribute('data-lucide', 'sun');
+                }
+                if (window.lucide) {
+                    lucide.createIcons();
+                }
+            };
+
+            // Initial apply
+            applyTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const isLight = root.hasAttribute('data-theme');
+                const newTheme = isLight ? 'dark' : 'light';
+                localStorage.setItem('ampai-theme', newTheme);
+                applyTheme(newTheme);
+            });
+        });
 
     </script>
     <script src="js/core_cabos_bt.js" defer></script>
