@@ -53,6 +53,12 @@
             --border: #D1D5DB;
         }
 
+        :root[data-theme="light"] .header-logo {
+            mix-blend-mode: normal;
+            background: #000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+
         .theme-toggle-btn {
             background: var(--bg-tertiary);
             border: 1px solid var(--border);
@@ -158,6 +164,15 @@
             align-items: center;
             gap: 0.5rem;
             box-shadow: var(--card-shadow);
+        }
+
+        .header-logo {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            mix-blend-mode: screen;
+            border-radius: 12px;
+            transition: var(--transition);
         }
 
         .norm-badge {
@@ -1046,7 +1061,7 @@
         <!-- Header -->
         <header>
             <div class="header-title" style="display: flex; align-items: center; gap: 1rem;">
-                <img src="img/logo_symbol.png" alt="AmpAI Logo" style="width: 72px; height: 72px; object-fit: contain;">
+                <img src="img/logo_symbol.png" alt="AmpAI Logo" class="header-logo">
                 <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text-primary); margin: 0;">
                     Amp<span style="color: var(--accent);">AI</span>
                     <span style="font-size: 1.6rem; font-weight: 500; color: var(--text-muted); margin-left: 0.25rem;"> - <span data-i18n="header.subtitle">Soluções em Engenharia Elétrica</span></span>
