@@ -1,63 +1,9 @@
+# Short Circuits in Power Systems — A Practical Guide to IEC 60909
 
+> **Ismail Kasikci.** Wiley-VCH Verlag GmbH, Weinheim, Germany, 2002. ISBN 3-527-30482-7.
+> Secondary reference (textbook) aligned with IEC 60909. This cleaned text removes the per-page "Página" extraction markers, running headers/footers (chapter title + page number), publisher front-matter boilerplate, the Portuguese cover-image description and the blank-page descriptions. Spurious `## ` prefixes that had been attached to equation delimiters ($$), \tag macros, table rows and blockquotes were stripped so that mathematics and tables render correctly. Technical wording is preserved verbatim.
 
-## Documento Processado
-## --- Página 1 ---
-## Ismail Kasikci
-# Short Circuits in Power Systems
-A practical Guide to IEC 60909
-> **[Imagem de capa]:** Composição fotográfica técnica com quatro imagens representando
-sistemas elétricos de potência:
-> - **Superior esquerda:** Poste de transmissão de alta tensão com isoladores e condutores
-aéreos ao céu aberto, representando infraestrutura de distribuição de energia elétrica em
-média/alta tensão.
-> - **Superior direita:** Cabos elétricos multicoloridos (vermelho, verde, cinza) organizados em
-bandeja, com destaque para um cabo vermelho em formato de bobina/laço circular, típico de
-instalações em painéis de controle ou salas de equipamentos.
-> - **Inferior esquerda:** Documento ou relatório técnico com tabelas de dados, possivelmente
-um relatório de cálculo de curto-circuito ou folha de especificações técnicas de um sistema
-elétrico.
-> - **Inferior direita:** Interior de painel elétrico ou quadro de distribuição com múltiplos
-condutores multicoloriais conectados a bornes/terminais de conexão, representando fiação de
-controle e proteção em instalações industriais.
-## ---
-## **WILEY-VCH**
-## --- Página 2 ---
-*Ismail Kasikci*
-**Short Circuits in Power Systems**
-## --- Página 3 ---
-# Short Circuits in Power Systems
-A Practical Guide to IEC 60 909
-*Ismail Kasikci*
-## **W WILEY-VCH**
-## --- Página 4 ---
-***Dr. Ismail Kasikci***
-## Ahornstrasse 55
-## 69469 Weinheim
-## Germany
-
-This book was carefully produced. Nevertheless, authors, and publisher do not warrant the
-information contained therein to be free of errors. Readers are advised to keep in mind that
-statements, data, illustrations, procedural details or other items may inadvertently be inaccurate.
-**Library of Congress Card No.: applied for**
-**British Library Cataloguing-in-Publication Data:**
-A catalogue record for this book is available from the British Library.
-**Die Deutsche Bibliothek - CIP Cataloguing-in-Publication Data:**
-A catalogue record for this publication is available from Die Deutsche Bibliothek.
-© Wiley-VCH Verlag-GmbH, Weinheim, Germany, 2002
-All rights reserved (including those of translation in other languages). No part of this book may be
-reproduced in any form - by photoprinting, microfilm, or any other means - nor transmitted or
-translated into a machine language without written permission from the publisher. Registered
-names, trademarks, etc. used in this book, even when not specifically marked as such, are not to be
-considered unprotected by law.
-printed in the Federal Republic of Germany
-printed on acid-free paper.
-**Composition** Kühn & Weyh, Freiburg
-**Printing** Strauss Offsetdruck GmbH, Mörlenbach
-**Bookbinding** Litges & Dopf Buchbinderei GmbH, Heppenheim
-## **ISBN** 3-527-30482-7
-cover image: upper right image courtesy Siemens PTD.
-## --- Página 5 ---
-## ## Foreword
+## Foreword
 This book is the result of many years of professional activity in the area of power supply, teaching
 at the VDE, as well as at the Technical academy in Esslingen and at the Master Trade School in
 Heidelberg. Every planner of electrical systems is obligated today to calculate the single-pole or
@@ -78,8 +24,6 @@ calculation is a prerequisite for the correct dimensioning of operational electr
 controlling protective measures and stability against short circuits in the selection of equipment.
 Solutions to the problems of selectivity, back-up protection, protective equipment and voltage
 drops in electrical systems will not be dealt with in this book. The reduction
-## --- Página 6 ---
-**VI** | *Foreword*
 Part 5 gives an overview of the network types for low and medium voltage.
 Part 6 describes the systems (network types) in the low voltage network IEC 60 354 Part 30 with
 the cut-off conditions.
@@ -115,8 +59,6 @@ I also wish to thank Siemens AG for their friendly support in the compilation of
 for switchgear, as well as for permission to include the program KUBS plus, developed by Siemens
 as an aid in the calculation of short circuit currents and in the selection of circuit breakers, and
 Elektra Soft for the calculation tools for electrical engineering, with this book.
-## --- Página 7 ---
-*Foreword* **VII**
 At this point I would also like to express my gratitude to all those colleagues who supported me
 with their ideas, criticism, suggestions and corrections. My heartiest appreciation is due to Eva E.
 Wille, Anette Eckerle, Maike Petersen, Hans-Jochen Schnitt and Michael Baer for their excellent
@@ -125,15 +67,11 @@ suggestion, criticism and idea regarding the use of this book from those who rea
 Finally, without the support of my wife this book could never have been written. In recognition of
 all the weekends and evenings I sat at the computer, I dedicate this book to my family.
 *Ismail Kasikci*
-## --- Página 8 ---
-The image appears to be a blank white page with no visible text, diagrams, or other content to
-transcribe.
-## --- Página 9 ---
-## # Contents
+# Contents
 **Foreword** *V*
 **Symbols and Indices** *XIII*
 | **1** | **Terms and Definitions** *1* |
-## |---|---|
+|---|---|
 | 1.1 | Time behavior of the short circuit current *3* |
 | 1.2 | Short circuit path in the positive-sequence system *4* |
 | 1.3 | Classification of short circuit types *5* |
@@ -144,26 +82,25 @@ transcribe.
 | 1.5 | Calculating with reference variables *10* |
 
 | **2** | **General Information About IEC 60 909** *11* |
-## |---|---|
+|---|---|
 | **3** | **The Significance of IEC 60 909** *13* |
-## |---|---|
+|---|---|
 | **4** | **Supply Networks** *17* |
-## |---|---|
+|---|---|
 | 4.1 | Calculation variables for supply networks *17* |
 | 4.2 | Lines supplied from a single source *17* |
 | 4.3 | Radial networks *18* |
 | 4.4 | Ring networks *18* |
 | 4.5 | Meshed networks *19* |
 | **5** | **Network Types for the Calculation of Short Circuit Currents** *21* |
-## |---|---|
+|---|---|
 | 5.1 | Low voltage network types *21* |
 | 5.2 | Medium voltage network types *23* |
 | **6** | **Systems up to 1 kV** *29* |
-## |---|---|
+|---|---|
 | 6.1 | TN systems *29* |
 | 6.2 | Calculation of fault currents *31* |
 | 6.3 | TT systems *34* |
-## --- Página 10 ---
 x | *Contents*
 6.4 IT systems *35*
 6.5 Transformation of the network types described to equivalent circuit diagrams *36*
@@ -202,8 +139,6 @@ x | *Contents*
 12.1 Short circuits at the terminals of asynchronous motors *105*
 12.2 Motor groups supplied from transformers with two windings *107*
 12.3: Motor groups supplied from transformers with different nominal voltages *107*
-## --- Página 11 ---
-*Contents* **XI**
 **13** **Mechanical and Thermal Short Circuit Strength** *111*
 13.1 Mechanical short circuit current strength *111*
 13.2 Thermal short circuit current strength *112*
@@ -233,23 +168,20 @@ x | *Contents*
 18.10 Example 10: Supply to a factory *171*
 18.11 Example 11: Calculation with impedance corrections *172*
 18.12 Example 12: Connection of a transformer through an external network and a generator
-## *176*
+*176*
 18.13 Example 13: Motors in parallel and their contributions to the short circuit current *177*
 18.14 Example 14: Proof of the stability of low voltage systems *180*
 18.15 Example 15: Proof of the stability of medium and high voltage systems *182*
 18.16 Example 16: Calculation for short circuit currents with impedance corrections *193*
 18.17 Example 17: Calculation with per-unit magnitudes *195*
-## --- Página 12 ---
-**XII** | *Contents*
 **Appendices**
 **Calculation Tools for Electrical Engineering** *197*
 **1** The Elaplan program *199*
 **2** The KUBS plus Program *251*
 **Index** *261*
-## --- Página 13 ---
 # Symbols and Indices
-## | Symbol | Definition |
-## |---|---|
+| Symbol | Definition |
+|---|---|
 | $A$ | Initial value of DC aperiodic component |
 | $A$ | Cross-section of conductor |
 | $a$ | Center-to-center distance between conductors |
@@ -261,7 +193,7 @@ x | *Contents*
 | $E_B$ | No-load voltage of battery |
 | $E''$ | Subtransient voltage of synchronous machine |
 
-## | $f$ | Frequency |
+| $f$ | Frequency |
 | $h$ | Height of conductor |
 | $L'$ | Distributed inductance |
 | $I_a$ | Cut-off current |
@@ -284,10 +216,8 @@ x | *Contents*
 | $I_{cu}$ | Rated short circuit breaking current |
 | $I_{th}$ | Rated short-time current |
 | $K$ | Correction factor |
-## --- Página 14 ---
-**XIV** | *Symbols and Indices*
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $L_B$ | Inductance of battery |
 | $L_{BBr}$ | Total inductance of battery |
 | $L_{BL}$ | Inductance of a battery conductor |
@@ -328,13 +258,12 @@ x | *Contents*
 | $R_{MY}$ | Resistance of DC motor coupling branch |
 | $S$ | Apparent power, cross-section |
 | $S_k''$ | Initial symmetrical short circuit power |
-## | $t$ | Time |
+| $t$ | Time |
 | $T_k$ | Duration of short circuit |
 | $t_p$ | Time until onset of peak short circuit current |
 | $U_{NB}$ | Nominal voltage of battery |
 | $U_{rM}$ | Rated voltage of DC motor |
 | $u_{Rr}$ | Rated value for resistive voltage drop in % |
-## --- Página 15 ---
 *Symbols and Indices* **| XV**
 $u_{kr}$ - Rated value for short circuit voltage in %
 $\underline{Z}_k$ - Short circuit impedance of network
@@ -355,9 +284,8 @@ $\eta$ - Efficiency of AC motor
 $\rho$ - Specific resistance
 $\delta$ - Decay coefficient, ground fault factor
 **Ψ** - Angular velocity
-## ---
 **Indices**
-## $a$ - Cut-off
+$a$ - Cut-off
 $A, B, C$ - Description of position, e.g. bus bar
 $B$ - Battery
 $B_r$ - Battery branch
@@ -372,7 +300,7 @@ $F$ - Short circuit position
 
 $G$ - Generator
 $HV$ - High voltage
-## $i$ - Internal
+$i$ - Internal
 $K$ - Cable
 $k$ - Short circuit
 $k1$ - Single-pole short circuit current
@@ -380,17 +308,15 @@ $k2$ - Two-pole short circuit current
 $k2E$ - Two-pole short circuit with contact to ground
 $k3$ - Three-pole short circuit current
 $kEE$ - Double ground fault
-## --- Página 16 ---
-**XVI** | *Symbols and Indices*
-## | Symbol | Description |
-## |---|---|
-## | $l$ | Length |
+| Symbol | Description |
+|---|---|
+| $l$ | Length |
 | $L$ | Conductor |
 | $L_1, L_2, L_3$ | External conductor |
 | $LV$ | Low voltage |
 | $M$ | Motor |
-## | *max* | Maximum |
-## | *min* | Minimum |
+| *max* | Maximum |
+| *min* | Minimum |
 | $MV$ | Medium voltage |
 | $n$ | Nominal value |
 | $N$ | Neutral conductor, network |
@@ -409,26 +335,24 @@ $kEE$ - Double ground fault
 | *2* | Component of negative-phase system |
 
 | *0* | Component of zero-phase system |
-## ---
 **Secondary symbols, upper right, left**
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $''$ | Subtransient value |
 | $'$ | Transient value |
 | $'$ | Resistance or reactance per unit length |
 | $*$ | Relative magnitude |
-## --- Página 17 ---
-## # 1
+# 1
 # Terms and Definitions
 The following terms and definitions correspond largely to those defined in IEC 60 909. Refer to this
 standard for all terms not used in this book.
 The terms short circuit and ground fault describe faults in the isolation of operational equipment
 which occur when live parts are shunted out as a result.
-## - Causes:
+- Causes:
 - Overtemperatures due to excessively high overcurrents.
 - Disruptive discharges due to overvoltages.
 - Arcing due to moisture together with impure air, especially on insulators.
-## - Effects:
+- Effects:
 - Interruption of power supply.
 - Destruction of system components.
 - Development of unacceptable mechanical and thermal stresses in electrical operational
@@ -448,8 +372,6 @@ circuit arises, when the short circuit impedance has its value from the time zer
 The short circuit power represents a fictitious parameter. During the planning of networks, the
 short circuit power is a suitable characteristic number.
 
-## --- Página 18 ---
-**2** | *1 Terms and Definitions*
 - Peak short circuit current:
 The largest possible momentary value of the short circuit occurring.
 - Steady state short circuit current:
@@ -469,7 +391,7 @@ The superposition method considers the previous load of the network before the o
 short circuit. It is necessary to know the load flow and the setting of the transformer step switch.
 - Voltage factor:
 Ratio between the equivalent voltage source and the network voltage $U_n$, divided by
-## $\sqrt{3}$.
+$\sqrt{3}$.
 - Equivalent electrical circuit:
 Model for the description of the network by an equivalent circuit.
 - Far-from-generator short circuit:
@@ -484,17 +406,16 @@ The impedance of the positive-sequence system as seen from the position of the s
 The impedance of the negative-sequence system as seen from the position of the short circuit.
 - Zero-sequence short circuit impedance:
 The impedance of the
-## --- Página 19 ---
-## **1.1**
+**1.1**
 **Time behavior of the short circuit current**
 Figure 1.1 shows the time behavior of the short circuit current for the occurrence of
 far-from-generator and near-to-generator short circuits.
 
 > **Fig. 1.1 - Time behavior of the short circuit current [1], [35]**
-## >
+>
 > Two waveform plots (a and b) illustrating the short circuit current as a function of time, each
 displaying a damped oscillatory waveform with the following features:
-## >
+>
 > **Plot a) - Far-from-generator short circuit:**
 > - The vertical axis is labeled "Current" and the horizontal axis is labeled "Time (t)".
 > - The waveform starts with a large initial peak amplitude of $2\sqrt{2}\, I_k''$ and oscillates
@@ -509,7 +430,7 @@ oscillations and the upper envelope.
 > - The initial value of the DC aperiodic component is labeled $A$.
 > - Since this is a far-from-generator fault, the envelope amplitude remains essentially constant
 throughout, meaning the AC component does not decay.
-## >
+>
 > **Plot b) - Near-to-generator short circuit:**
 > - The vertical axis is labeled "Current" and the horizontal axis is labeled "Time (t)".
 > - The waveform also starts with a large initial peak amplitude of $2\sqrt{2}\, I_k''$.
@@ -532,9 +453,7 @@ The DC aperiodic component depends on the point in time at which the short circu
 near-to-generator short circuit, the subtransient and the transient behavior of the synchronous
 machines is important. Following the decay of all transient phenomena, the steady state sets in.
 
-## --- Página 20 ---
-**4** | *1 Terms and Definitions*
-## ## 1.2
+## 1.2
 **Short circuit path in the positive-sequence system**
 For the same external conductor voltages, a three-pole short circuit allows three currents of the
 same magnitude to develop between the three conductors. It is therefore only necessary to
@@ -565,14 +484,13 @@ can be solved by determining the homogeneous solution $i_k$ and a particular sol
 $$i_k = i''_{k\sim} + i_{k-} \tag{1.2}$$
 The homogeneous solution, with the time constant $\tau_g$ = L/R, solution yields:
 $$i_k = \frac{-\hat{u}}{\sqrt{(R^2 + X^2)}}\, e^{\frac{t}{\tau_g}} \sin(\psi - \varphi_k). \tag{1.3}$$
-## --- Página 21 ---
 1.3 Classification of short circuit types **5**
 For the particular solution, we obtain:
 
 $$i_k'' = \frac{-\hat{u}}{\sqrt{(R^2 + X^2)}} \sin(\omega t + \psi - \varphi_k). \tag{1.4}$$
 The total short circuit current is composed of both components:
 $$i_k = \frac{-\hat{u}}{\sqrt{(R^2 + X^2)}} \left[ \sin(\omega t + \psi - \varphi_k) - e^{\frac{t}{T_g}}
-## \sin(\psi - \varphi_k) \right]. \tag{1.5}$$
+\sin(\psi - \varphi_k) \right]. \tag{1.5}$$
 The phase angle of the short circuit current (short circuit angle) is then, in accordance with the
 above equation,
 $$\varphi_k = \psi - \nu = \arctan \frac{X}{R}. \tag{1.6}$$
@@ -585,7 +503,7 @@ stationary AC periodic component.
 reaches a maximum at $\gamma = 90°$ (purely inductive load). This case serves as the basis for
 further calculations.
 - The short circuit current is always inductive.
-## ## 1.3
+## 1.3
 **Classification of short circuit types**
 For a three-pole short circuit, three voltages at the position of the short circuit are zero. The
 conductors are loaded symmetrically. It is therefore sufficient to calculate only in the
@@ -601,8 +519,6 @@ short circuit.
 $$I_k'' < 2 \cdot I_{rG} \tag{1.7}$$
 or also when
 $$I_k'' = I_a = I_k. \tag{1.8}$$
-## --- Página 22 ---
-**6** | *1 Terms and Definitions*
 
 - Near-to-generator short circuit
 When the value of the initial symmetrical short circuit current $I''_k$ exceeds double the rated
@@ -614,10 +530,10 @@ $$I''_k > I_a > I_k. \tag{1.10}$$
 Figure 1.3 schematically illustrates the most important types of short circuits in three-phase
 networks.
 > **[FIGURE DESCRIPTION - Fig. 1.3: Types of faults]**
-## >
+>
 > The figure contains two diagrams illustrating various types of short-circuit faults in three-phase
 networks:
-## >
+>
 > **Upper diagram (cases a, b, c, d):**
 > A three-phase system is shown with a MV/LV transformer on the left (medium voltage to low
 voltage), connected to five conductors: L1, L2, L3, N, and PE. A ground resistance $R_B$ is shown at
@@ -630,7 +546,7 @@ together without contact to ground.
 connected to the neutral conductor N.
 > - **d) Single-pole short circuit between L1-PE ($I''_{k1min}$, $I_F$, $I_a$):** One phase
 conductor is connected to the protective earth conductor PE.
-## >
+>
 > **Lower diagram (cases e, f, g):**
 > Three additional fault scenarios involving ground connections are shown across conductors L1,
 L2, L3, with a notation "Distance > 0" indicating faults at different physical locations:
@@ -640,7 +556,7 @@ A two-pole fault where both faulted phases also have contact to ground at differ
 occurring simultaneously at different locations on two different phases.
 > - **g) Single-pole short circuit to ground ($I''_{k1}$, $I''_{kEE}$):** A single conductor faulted to
 ground.
-## >
+>
 > All fault currents are labeled with their respective symbols at the fault points, with arrows
 indicating the direction of fault current flow toward ground or between conductors.
 **Fig. 1.3:** Types of faults
@@ -648,8 +564,6 @@ a) three-pole short circuit, b) two-pole short circuit without contact to ground
 
 circuit between conductors L2-N, d) single-pole short circuit between L1-PE, e) two-pole short
 circuit with contact to ground, f) double ground connection, g) single-pole short circuit to ground
-## --- Página 23 ---
-*1.4 Methods of short circuit calculation* **| 7**
 - Three-pole short circuits:
 - Connection of all conductors with or without simultaneous contact to ground
 - Symmetrical loading of the three external conductors
@@ -667,8 +581,7 @@ I''_{k2E}$
 - The leakage current flowing to ground is a capacitive ground fault current and is called $I_C$
 - With a ground fault neutralizer grounded system a residual ground fault current $I_{Rest}$ occurs
 - $I_C$ and $I_{Rest}$ are special cases of $I''_{k1}$.
-## ---
-## **1.4**
+**1.4**
 **Methods of short circuit calculation**
 The short circuit currents in three-phase systems can be determined by three different
 calculational procedures:
@@ -685,8 +598,6 @@ position) the value ( is used as the only effective voltage (Figure 1.4).
 - The different voltage values, depending on time and position
 
 - The step changes of the transformer switch
-## --- Página 24 ---
-**8** | *1 Terms and Definitions*
 - That the loads and capacitances in the calculation of the equivalent voltage source can be
 neglected
 - The subtransient behavior of generators and motors
@@ -698,9 +609,9 @@ This method assumes the following conditions:
 have to be considered
 > **Fig. 1.4:** Network circuit with equivalent voltage source - a) three-phase network, b)
 equivalent circuit in positive-sequence system
-## >
+>
 > **Diagram description:**
-## >
+>
 > **a) Three-phase network (top diagram):**
 > A single-line diagram showing a power network from left to right. On the far left is a hatched box
 (representing an infinite busbar or grid supply), connected via a busbar labeled **Q** (with
@@ -708,7 +619,7 @@ parameters $S''_{kQ}$ and $U_{nQ}$ annotated below). A transformer **T** (with t
 : 1$) connects the medium voltage (MV) side to the low voltage (LV) side. To the right of the
 transformer is a line section **L** (represented by three diagonal slashes indicating a line). At the
 far right end is indicated a **Fault position** (shown with an arrow and a ground fault symbol).
-## >
+>
 > **b) Equivalent circuit in positive-sequence system (bottom diagram):**
 > A series circuit from node **01** (ground reference) through the following impedance elements,
 left to right:
@@ -719,16 +630,15 @@ left to right:
 > - $X_L$ (line reactance, inductor symbol)
 > - $R_L$ (line resistance, resistor symbol)
 > - Fault point **F**
-## >
+>
 > At the fault point **F**, an equivalent voltage source is connected between **F** and the
 reference node **01**, with voltage $\dfrac{c \, U_n}{\sqrt{3}}$. The short-circuit current $I''_k$
 flows downward into the fault node.
-## ---
 
 **Table 1.1:** Voltage factor c according to E DIN IEC 73/89/CDV (VDE 0102, Part 100):1997-08
 | Network voltage $U_n$ | Voltage factor c for calculation of - the largest short circuit current$^1$
 $c_{max}$ | the smallest short circuit current $c_{min}$ |
-## |---|---|---|
+|---|---|---|
 | Low voltage 100 V to 1000 V | $1.05^2$ | 0.95 |
 | (IEC 38, Table 1) | $1.10^3$ | |
 | Medium voltage > 1 kV to 35 kV | 1.10 | 1.00 |
@@ -737,7 +647,6 @@ $c_{max}$ | the smallest short circuit current $c_{min}$ |
 the network
 2) for low voltage networks with a tolerance of +6 %
 3) for low voltage networks with a tolerance of +10 %
-## --- Página 25 ---
 ## 1.4.2
 **Superposition method**
 The superposition method is an exact method for the calculation of the short circuit currents. The
@@ -756,7 +665,7 @@ transformers) are often difficult to determine. The question also arises, which 
 to the greatest short circuit current. Figure 1.5 illustrates the procedure for the superposition
 method.
 > **Fig. 1.5 - Principle of the superposition method (three-part circuit diagram):**
-## >
+>
 > **a) Undisturbed (pre-fault) operation:** The circuit shows two synchronous generators (or
 voltage sources) with internal subtransient reactances $\underline{X}''_{d1}$ and
 $\underline{X}''_{d2}$ (represented as inductors in series with AC voltage sources
@@ -764,13 +673,13 @@ $\underline{E}'_1$ and $\underline{E}'_2$) connected to a "Power network" block.
 feeds a line that runs to a fault location F (indicated by a switch/fault symbol), through which a
 short-circuit current $\underline{I}''_k$ flows. The overall circuit is labeled as equal to the
 superposition of cases b) and c).
-## >
+>
 > **b) Pre-fault steady-state load flow (first step):** Two power injections $P_1 + jQ_1$ and $P_2
 
 + jQ_2$ are fed into the "Power network" block. At the fault location F (open-circuited, no fault
 yet), the pre-fault operating voltage $\underline{U}^b_F$ appears between the fault node and
 ground. This sub-circuit contributes the "+ $\underline{U}^b_F$" term.
-## >
+>
 > **c) Superposition correction circuit (second step):** The two generators are represented again
 with their subtransient reactances $\underline{X}''_d$ (two inductors), with their internal EMFs
 short-circuited (replaced by short circuits). At the fault location F, a voltage source equal to
@@ -779,9 +688,7 @@ current back into the network. The combination of b) and c) yields zero net volt
 the total short-circuit current $\underline{I}''_k$.
 **Fig. 1.5:** Principle of the superposition method
 a) undisturbed operation, b) operating voltage at the fault location, c) superposition of a) and b)
-## --- Página 26 ---
-**10** | *1 Terms and Definitions*
-## ## 1.4.3
+## 1.4.3
 **Transient calculation**
 With the transient method the individual operating equipment and, as a result, the entire network
 are represented by a system of differential equations. The calculation is very tedious. The method
@@ -789,8 +696,7 @@ with the equivalent voltage source is a simplification relative to the other met
 has been standardized internationally in IEC 60 909. The calculation is independent of a current
 operational state. In this book, we will therefore deal with and discuss the method with the
 equivalent voltage source.
-## ---
-## ## 1.5
+## 1.5
 **Calculating with reference variables**
 There are several methods for performing short circuit calculations with absolute and reference
 impedance values. A few are summarized here and examples are calculated for comparison. To
@@ -812,8 +718,7 @@ Example: The reactances of a synchronous machine $X_d$, $X'_d$, $X''_d$ are give
 - The %/MVA system:
 This system is especially well suited for the fast determination of short circuit impedances. As
 formal unit only the % symbol is added.
-## --- Página 27 ---
-## # 2
+# 2
 # General Information About IEC 60 909
 IEC 60 909 includes a standard procedure for the calculation of short circuit currents in low and
 high voltage networks up to 380 kV at 50 Hz or 60 Hz [1]. The purpose of this procedure is to define
@@ -843,8 +748,6 @@ IEC 60 909 describes the basis for calculation, which consists of three parts:
 - Main part II: Networks with short circuit currents with decaying AC periodic component
 (near-to-generator short circuits).
 
-## --- Página 28 ---
-**12** | *2 General Information About IEC 60 909*
 - Main part III: Double ground connection, Transferred short circuit currents via ground.
 Summary of IEC 60 909
 - Restructuring of calculations.
@@ -871,8 +774,7 @@ satisfied for calculation with the equivalent voltage source method.
 power plant blocks.
 - Main part 4: describes the calculation of the individual short circuit currents for
 far-from-generator and near-to-generator short circuits.
-## --- Página 29 ---
-## # 3
+# 3
 # The Significance of IEC 60 909
 The short circuit is an undesired network operating state. This state can cause overloading of the
 operational equipment (transformers, transmission lines, cables, generators) as well as damage to
@@ -903,8 +805,6 @@ power systems have taken place and various software has appeared on the market. 
 meet the requirements and developments, in 1985 both parts, Calculation of Three-phase
 Networks in accordance with DIN VDE 0102, were extended to include the newly summarized
 information about operational equipment.
-## --- Página 30 ---
-**14** | *3 The Significance of IEC 60 909*
 In 1988, on the basis of this draft version the IEC publication "Short Circuit Current Calculation in
 three-Phase ac Systems" appeared. In 1990, the present standard IEC 60 909 "Calculation of Short
 Circuit Currents in Three-phase Networks" was released.
@@ -929,9 +829,7 @@ calculations and additional calculations relating to other regulations.
 In medium voltage networks, the type of the smallest fault current which must be considered
 depends on the type of neutral point design. This is decisive for the type of network protection
 required.
-## --- Página 31 ---
 > **Fig. 3.1:** Range of applicability of short circuit calculations [1, 16, 17, 35]
-## ---
 **Description of Figure 3.1:**
 The figure is a hierarchical flowchart illustrating the range of applicability of short circuit
 calculations. The central quantity is the **initial symmetrical short-circuit current** $I''_k$, from
@@ -940,7 +838,7 @@ which all other quantities and applications branch out. The structure is describ
 - $\mathbf{I''_k}$ (bold, central box)
 **Branches from $I''_k$:**
 - **Peak short-circuit current** (left-center branch):
-## - $i_p = \kappa \sqrt{2}\, I''_k$
+- $i_p = \kappa \sqrt{2}\, I''_k$
 - Leads to:
 - **Dynamic stress of operational equipment**: $F \sim i_p^2$
 - $I_{cm}$ → **Rated short circuit making capacity**
@@ -970,13 +868,10 @@ which all other quantities and applications branch out. The structure is describ
 - Selection of arrester
 - Inductive coupling
 - Transient and power-frequency overvoltage
-## --- Página 32 ---
-The image appears to be completely blank/white with no visible text or content to transcribe.
-## --- Página 33 ---
-## # 4
-## # Supply Networks
+# 4
+# Supply Networks
 Electrical supply networks such as can be found in practice will be briefly explained here.
-## ## 4.1
+## 4.1
 **Calculation variables for supply networks**
 - Short circuit currents in accordance with IEC 60 909
 - Ground loop impedance
@@ -984,12 +879,12 @@ Electrical supply networks such as can be found in practice will be briefly expl
 - Initial symmetrical short circuit power
 - Load flow
 - Load distribution for the network
-## ## 4.2
+## 4.2
 **Lines supplied from a single source**
 A feed-in supplies any number of distributed loads along the line (Example: bus distributor), Figure
 ## 4.1.
 > **[Fig. 4.1 - Diagram: Line supplied from a single source]**
-## >
+>
 > The diagram shows a single-line schematic of a radial electrical supply network fed from a single
 source. From left to right, the components are:
 > - **Power feeding (Q):** Represented by a hatched/cross-hatched square symbol, indicating the
@@ -1004,25 +899,23 @@ neutral point grounded (earth symbol below).
 representing the main distribution bus bar.
 > - **Outgoing circuits:** Three downward-pointing arrows connected to the bus bar, representing
 multiple load branches or outgoing feeder circuits distributed along the bus bar.
-## >
+>
 > The overall topology illustrates a simple radial (single-source) distribution network where power
 flows from the feeding point through the transformer to the bus bar, and then distributes to
 several outgoing circuits (loads).
 **Fig. 4.1:** Line supplied from a single source
-## --- Página 34 ---
-## **18** | *4 Supply Networks*
+**18** | *4 Supply Networks*
 Characteristics of this input:
 - No security of supply
 - High network losses
-## ---
-## **4.3**
+**4.3**
 **Radial networks**
 A feed-in supplies a large number of branched lines (Example: industrial network), Figure 4.2.
 > **[Fig. 4.2 - Radial Network Diagram]**
 > The diagram illustrates a radial network topology. On the left side, there is a grid supply
 connection represented by a hatched/cross-hatched box (utility infeed), labeled **Q** (circuit
 breaker/disconnector). This connects via a busbar to a transformer **T**, which is depicted with
-delta ( ) and star (Y) winding symbols and a grounded neutral on the secondary side. The
+delta ( ) and star (Y) winding symbols and a grounded neutral on the secondary side. The
 transformer secondary feeds a main horizontal busbar. From this busbar, a vertical distribution line
 branches upward and downward: the upper branch connects to a three-phase motor **M1**
 (symbol: circle with "M" and "3~"), and the lower branch connects to another three-phase motor
@@ -1031,77 +924,47 @@ branches upward and downward: the upper branch connects to a three-phase motor *
 **Fig. 4.2:** Radial network
 Characteristics of this input:
 
-## - Advantages
+- Advantages
 - Very clearly arranged
 - Simple network protection
 - Easily calculated
-## - Disadvantages
+- Disadvantages
 - Single source supply
 - Low security of supply
 - Poor voltage stabilization
-## ---
-## **4.4**
+**4.4**
 **Ring networks**
 The ring network is usually fed from two sources (Example: industrial network), Figure 4.3.
-## --- Página 35 ---
-*4.5 Meshed networks* **19**
-> [Diagrama - Fig. 4.3: Ring network]
-> O diagrama representa um esquema unifilar de uma rede em anel (ring network). À esquerda, há
-uma fonte de alimentação identificada como Q1 (representada por um símbolo de disjuntor com
-X), conectada em série com um transformador T1 (símbolo de dois círculos sobrepostos). A saída
-do transformador T1 conecta-se a um barramento central (ponto de nó sólido). Deste barramento
-central, partem duas conexões superiores (com setas apontando para cima, indicando cargas ou
-saídas) e duas conexões inferiores (com setas apontando para baixo, indicando cargas ou saídas),
-formando um conjunto de quatro derivações em formato de anel através de um barramento duplo
-com seccionadora. O barramento central também se conecta horizontalmente a um segundo
-ponto de nó sólido à direita, que por sua vez alimenta o transformador T2 em série com Q2
-(disjuntor com X) à direita. As setas bidirecionais no barramento central indicam o fluxo de
-potência circulante característico de uma topologia em anel fechado.
 **Fig. 4.3:** Ring network
 Characteristics of this input
-## - Advantages
+- Advantages
 - Increased voltage security
 - Better load balancing
 - Better voltage stability
-## - Disadvantages
+- Disadvantages
 - Network protection difficult
-## ---
-## ## 4.5
+## 4.5
 ## Meshed networks
 
 The supply of each load is ensured by the linking of several supply lines and in part by several
 feed-ins. The failure of one line or one feed-in can normally be compensated by the remaining part
 of the network (Example: computer centers, chemical industry), Figure 4.4.
-> [Diagrama - Fig. 4.4: Meshed network]
-> O diagrama representa um esquema unifilar de uma rede malhada (meshed network). À
-esquerda, há uma fonte de alimentação Q1 (símbolo de disjuntor com X) conectada em série com o
-transformador T1 (símbolo de dois círculos sobrepostos). A saída de T1 conecta-se a um nó (ponto
-sólido) que alimenta um barramento duplo central através de uma seccionadora. Do barramento
-central partem duas derivações inferiores (indicando cargas). Uma seta horizontal apontando para
-a direita indica o fluxo de corrente saindo do nó esquerdo em direção ao barramento central, e
-uma seta horizontal apontando para a esquerda indica o fluxo de corrente entrando no
-barramento central a partir do nó direito. O nó direito (ponto sólido) conecta-se ao transformador
-T2 e ao disjuntor Q2 (símbolo com X) à direita. A topologia malhada é caracterizada pela existência
-de múltiplos caminhos de alimentação entre os nós, garantindo redundância e continuidade de
-suprimento mesmo em caso de falha de um dos alimentadores.
 **Fig. 4.4:** Meshed network
 Characteristics of this input:
-## - Advantages
+- Advantages
 - High security of supply
 - Good voltage stability
-## --- Página 36 ---
-## **20** | *4 Supply Networks*
+**20** | *4 Supply Networks*
 - Good load balancing
 - Low network losses
-## - Disadvantages
+- Disadvantages
 ## 1. Selectivity
 - Impedance protection
 - High short circuit currents
 - Extensive short circuit and load flow calculations
-## --- Página 37 ---
-## # 5
+# 5
 # Network Types for the Calculation of Short Circuit Currents
-## ## 5.1
+## 5.1
 ### Low voltage network types
 In this section other types of networks are shown which are sometimes encountered in practice
 and in which the short circuit currents are fed from different sources. The most frequently found
@@ -1114,18 +977,18 @@ configured arbitrarily, according to the requirements for supplying power (Figur
 distribution. At the top, a "Power feeding" label indicates the supply origin, connected to a busbar
 via a switch Q (represented by a crossed-box symbol). From the busbar, three separate radial
 feeders branch out:
-## >
+>
 > - **Left feeder:** A high-voltage busbar feeds a transformer T (represented by a circle with a
 cross), which steps down to a low-voltage busbar. From the low-voltage busbar, multiple outgoing
 circuits are distributed through "Cable or line" segments going downward.
-## >
+>
 > - **Center feeder:** Similarly structured - a high-voltage busbar connected to a transformer T,
 stepping down to a low-voltage busbar, with outgoing circuits distributed through "Cable or line"
 segments.
-## >
+>
 > - **Right feeder:** A simplified configuration showing only a transformer T connected directly,
 feeding outgoing circuits without explicitly labeled cable/line segments.
-## >
+>
 > At the bottom, the label "Outgoing circuits" indicates the load side of all three feeders. The
 diagram illustrates typical radial distribution topologies where each transformer independently
 supplies its load group.
@@ -1133,8 +996,6 @@ In industrial networks, power supply to the systems must not fail. In the event 
 switchover can take place from another transformer (Figure 5.2).
 Radial networks with redundant inputs have a higher security of supply and a high voltage quality
 (Figure 5.3). The transformers can be loaded uniformly.
-## --- Página 38 ---
-**22** | *5 Network Types for the Calculation of Short Circuit Currents*
 The meshed network with different inputs is the most widely used network type for electrical
 distribution in industry (Figure 5.4). The disadvantages of such networks are high costs of
 investment and an arrangement which is difficult to oversee.
@@ -1154,7 +1015,6 @@ sectionalizing but normally operated as separate radial feeders.
 > Labels present: "Power feeding" (top bus), "High voltage" (above transformers), "Low voltage"
 (below transformers), "Low voltage distribution panels" (at panel level), "Load circuits" (at bottom).
 **Fig. 5.2:** Simple radial networks with individual load circuits
-## ---
 > **[Fig. 5.3 - Circuit Diagram: Simple radial networks with redundant inputs]**
 > The diagram shows a more complex radial network topology with redundant (backup) supply
 inputs. Key features include:
@@ -1177,7 +1037,6 @@ lower bus, further illustrating the redundant input concept.
 improved fault tolerance, where tie switches are normally open and can be closed upon loss of a
 primary feed.
 **Fig. 5.3:** Simple radial networks with redundant inputs
-## --- Página 39 ---
 > **[DIAGRAM - Fig. 5.4]**
 > A schematic diagram of a meshed medium-voltage network with different power feeding inputs
 and network nodes protected by fuses. The diagram shows a grid-like (meshed) topology with
@@ -1194,8 +1053,7 @@ with arrowheads on the mesh segments indicate the direction of power flow throug
 network. The overall structure illustrates a meshed distribution network where multiple paths exist
 between nodes, providing redundancy and supply security.
 **Fig. 5.4:** Meshed network with different inputs, network nodes with fuses
-## ---
-## ## 5.2
+## 5.2
 ## Medium voltage network types
 For optimum design of medium voltage systems the following points, which are not explained in
 further detail, are of great importance:
@@ -1215,10 +1073,8 @@ remote station (Figure 5.5b and 5.5c) with network supporting structure is conne
 several input cables to the bus bar of the transformer substation. An industrial area can also be
 supplied from several transformer stations (Figure 5.8). The short circuit current can also be fed
 from different sources, as Figures 5.9 and 5.10 show.
-## --- Página 40 ---
-**24** | *5 Network Types for the Calculation of Short Circuit Currents*
 > **[DIAGRAM - Fig. 5.5: Industrial load center network]**
-## >
+>
 > Single-line diagram of an industrial load center network. At the top, a high-voltage busbar labeled
 "High voltage distribution fields" connects multiple incoming feeders (represented by
 disconnectors and circuit breakers with current transformers). On the left side, several power plant
@@ -1231,9 +1087,8 @@ The topology represents a radial (load center) configuration where the high-volt
 transformer stations directly, without ring interconnection at the low-voltage level.
 
 **Fig. 5.5:** Industrial load center network
-## ---
 > **[DIAGRAM - Fig. 5.6: Industrial ring network]**
-## >
+>
 > Single-line diagram of an industrial ring network. Similar to Fig. 5.5, the top section shows a
 high-voltage busbar ("High voltage distribution fields") with multiple incoming feeders
 (disconnectors, circuit breakers, and current transformers) and power plant inputs feeding into the
@@ -1247,24 +1102,22 @@ interconnection at the secondary (low-voltage) side provides redundancy and allo
 restoration in case of a cable or transformer fault, characteristic of an industrial ring network
 configuration.
 **Fig. 5.6:** Industrial ring network
-## --- Página 41 ---
-*5.2 Medium voltage network types* **25**
 > **[DIAGRAM - Fig. 5.7: Three single-line electrical network topology diagrams illustrating medium
 voltage distribution configurations:]**
-## >
+>
 > **a) Ring network:** A single high-voltage busbar (shown at top with transformer symbol) feeds
 a vertical main bus. From this bus, two horizontal feeders extend to the left and two to the right,
 each feeder containing a transformer (represented by two interlocked circles) and
 disconnect/switching symbols (line breaks and arrows indicating bidirectional power flow). The
 arrangement forms a closed-loop (ring) topology, allowing power to be fed from two directions to
 each load point.
-## >
+>
 > **b) Network with remote station:** Similar to (a), a busbar fed from a transformer at top
 supplies feeders to the left and right. The right-side feeders connect to a remote substation busbar
 (shown with a vertical line and a break/disconnector symbol at the bottom), indicating an
 open-point or tie-point with a remote station. Arrows on feeders indicate the direction of power
 flow in normal operation.
-## >
+>
 > **c) Network supporting structure:** A transformer at the top feeds a main bus. On the left side,
 two transformers supply feeders; in the center, a coupling point labeled **A** (with a circle and
 cross symbol, indicating a bus-coupler or normally-open switching point) connects the left and right
@@ -1274,11 +1127,10 @@ disconnector/load-break switch symbol (depicted as parallel diagonal lines with 
 
 fused coupling switch between the two bus sections.
 **Fig. 5.7:** a) ring network, b) network with remote station, c) network supporting structure
-## ---
 > **[DIAGRAM - Fig. 5.8: A comprehensive set of single-line diagrams illustrating various network
 configurations for medium voltage systems, arranged in a grid of approximately 12 sub-diagrams
 across three rows:]**
-## >
+>
 > **Top row (4 sub-diagrams):** The leftmost diagram shows a 110 kV / 20 or 10 kV
 high-voltage/medium-voltage transformer substation. The HV side has a disconnector and a circuit
 breaker; the MV side has a busbar with multiple outgoing feeders equipped with circuit breakers,
@@ -1286,7 +1138,7 @@ disconnectors, and three-phase load indicators ($\phi 3$). The remaining three s
 top row show progressively simpler secondary substations (ring main units or compact substations)
 each connected to the MV feeder, with two incoming cable connections, a transformer outgoing
 feeder, and a three-phase LV outgoing indication ($\phi 3$).
-## >
+>
 > **Middle row (two groups):** The left group shows a secondary feeding substation with a
 transformer (two windings symbol) supplying a local MV busbar, which in turn feeds further
 downstream substations-each with incoming/outgoing switching devices and $\phi 3$ LV feeders.
@@ -1294,46 +1146,44 @@ The right group shows a similar arrangement but with a different topology, featu
 interconnected bus structures with bus couplers, demonstrating how the MV network can be
 sectionalized and re-fed from two sources, each sub-station having ring main switches and a
 transformer feeder.
-## >
+>
 > **Bottom row (two groups):** The left group illustrates a radial or open-ring MV network fed
 from a transformer substation at bottom-left; multiple intermediate switching substations are
 chained in series along the MV cable, with each node having incoming/outgoing feeders and $\phi
 3$ load outlets, terminating in a normally-open point (open ring). The right group shows a simpler
 two-node configuration with two substations (each containing a disconnector and a transformer
 feeder) connected by a cable section, representing a basic interconnected or tie-line arrangement.
-## >
+>
 > All sub-diagrams use standard IEC single-line notation: double circles for power transformers,
 T-shaped symbols for circuit breakers, diagonal slash symbols for disconnectors/isolators, and
 $\phi 3$ to denote three-phase LV outgoing connections.
 **Fig. 5.8:** Network configuration for medium voltage systems
-## --- Página 42 ---
-**26** | *5 Network Types for the Calculation of Short Circuit Currents*
 > **Diagram Description - Fig. 5.9: Short circuit with simple inputs**
-## >
+>
 > The figure shows three separate single-line diagram configurations illustrating short circuit
 scenarios with simple (single) inputs feeding a common low-voltage bus through transformers.
 Each configuration is described below:
 
-## >
+>
 > **Top configuration (Parallel network infeed via two transformers from a high-voltage grid):**
 > Two network infeeds (both labeled **Q**, represented by crossed-box symbols indicating an
 external network/grid connection) are connected on the high-voltage side. Each feeds into its own
 transformer:
 > - Upper branch: Transformer **T1** (high voltage → low voltage)
 > - Lower branch: Transformer **T2** (high voltage → low voltage)
-## >
+>
 > Both transformer low-voltage outputs connect to a common busbar. A **fault location** symbol
 (zigzag/lightning arrow) is indicated to the right of the common low-voltage bus, representing the
 point of short circuit.
-## >
+>
 > **Middle configuration (Mixed infeed: network and generator via two transformers):**
 > - Upper branch: Network infeed **Q** (crossed-box symbol) feeding through transformer
 **T1** (high voltage → low voltage).
 > - Lower branch: A three-phase synchronous generator **G** (labeled **3~**, circle symbol)
 feeding through transformer **T2** into the low-voltage bus.
-## >
+>
 > Both outputs connect to a common busbar with a **fault location** indicated to the right.
-## >
+>
 > **Bottom configuration (Passive network: two transformers from high-voltage side, no active
 infeed symbol):**
 > Two transformers, **T1** (upper) and **T2** (lower), are connected on the high-voltage side to
@@ -1342,15 +1192,13 @@ bus). Their low-voltage outputs feed into a common low-voltage busbar. The **fau
 symbol is connected to the right side of the low-voltage bus via a horizontal line, indicating a
 remote or downstream fault point.
 **Fig. 5.9:** Short circuit with simple inputs
-## --- Página 43 ---
-*5.2 Medium voltage network types* **27**
 > **[DIAGRAM DESCRIPTION - Fig. 5.10: Short circuit with several simple inputs]**
-## >
+>
 > The figure presents three separate single-line (single-phase representation) electrical network
 diagrams, each illustrating different configurations of power sources feeding a common busbar,
 with fault locations indicated on the low-voltage side. The diagrams are stacked vertically and
 described as follows:
-## >
+>
 > **Top diagram (two high-voltage network infeed sources via transformers):**
 > - Two high-voltage network infeeds, each represented by a crossed-box symbol (Q), connected
 through circuit breakers/disconnectors.
@@ -1361,14 +1209,14 @@ through circuit breakers/disconnectors.
 > - Two fault locations are indicated on the low-voltage bus, shown by diagonal arrow symbols
 (representing fault/short-circuit points) on two separate feeder branches emanating from the
 low-voltage busbar.
-## >
+>
 > **Middle diagram (one high-voltage network infeed + one local generator):**
 > - One high-voltage network infeed (crossed-box symbol, Q) connected through a disconnector to
 transformer T1 (High voltage to Low voltage).
 > - One local three-phase generator (G, 3~) connected to transformer T2.
 > - Both T1 and T2 feed a common low-voltage busbar.
 > - A single fault location is indicated on the low-voltage bus by a diagonal arrow symbol.
-## >
+>
 > **Bottom diagram (multiple high-voltage network infeeds via three transformers, no switching
 symbols shown):**
 > - Three transformers T1, T2, and T3, each connected from a high-voltage bus (labeled "High
@@ -1376,23 +1224,19 @@ voltage") to a common low-voltage bus (labeled "Low voltage").
 > - No explicit switching/breaker symbols on the high-voltage side (simple line connections).
 > - Two fault locations are indicated on the low-voltage bus between T1-T2 and T2-T3 feeder
 branches, shown by diagonal arrow symbols.
-## >
+>
 > All fault locations are depicted using the standard IEC symbol for a short-circuit fault (a diagonal
 line with an arrowhead), indicating points where short-circuit current analysis is to be performed.
 The diagrams collectively illustrate how multiple simple infeed sources (network infeeds and/or
 generators) contribute to the short-circuit current at a fault point on a medium/low voltage
 network.
 **Fig. 5.10:** Short circuit with several simple inputs
-## --- Página 44 ---
-The image appears to be a blank white page with no visible text, diagrams, or other content to
-transcribe.
-## --- Página 45 ---
-## # 6
+# 6
 # Systems up to 1 kV
 Systems are classified according to the type of ground connection of the power source (input type)
 and the type of exposed conductive parts of the electrical system (IEC 60 364 part 41). In this
 chapter, the three different types of systems and protective measures are briefly described.
-## ## 6.1
+## 6.1
 ## TN systems
 According to IEC 364 the TN system is preferred in the area of public low voltage networks and also
 in the industrial sector. In TN systems, the grounding of the operational equipment is implemented
@@ -1400,7 +1244,7 @@ by connection to the PEN conductor or for small cross-sections to the protective
 (PE) (Figure 6.1).
 
 > **[DIAGRAM - Fig. 6.1: Circuitry of the TN-C-S system]**
-## >
+>
 > The diagram illustrates the wiring topology of a TN-C-S low-voltage distribution system. On the
 left side, a **Service panel** is shown containing a three-phase energy meter (kWh meter)
 connected to three live conductors (L1, L2, L3), a neutral conductor (N), and a combined protective
@@ -1408,7 +1252,7 @@ earth/neutral conductor (PEN). The PEN conductor is bonded to a **Main grounding
 which is connected to earth via ground electrodes (earth rods/plates). From the main grounding
 terminal, equipotential bonding connections run to **metal pipes** and other structural metallic
 elements.
-## >
+>
 > From the service panel, the system transitions from TN-C (using PEN) to TN-S (separate N and PE
 conductors), distributing power through the installation. The distribution section includes:
 > - **Fuses** on the L1, L2, L3 and N conductors at an intermediate distribution point.
@@ -1418,13 +1262,11 @@ conductors), distributing power through the installation. The distribution secti
 > - **LS** - Circuit breaker (Leitungsschutzschalter), labeled as such in the legend.
 > - **Miniature circuit breaker** at the final circuit level (shown at the bottom right), protecting
 individual branch circuits.
-## >
+>
 > The PE conductor runs separately from the point of PEN separation onwards, providing protective
 earthing to the connected equipment. The diagram shows the characteristic split of the PEN
 conductor into separate PE and N conductors, which defines the TN-C-S configuration.
 **Fig. 6.1:** Circuitry of the TN-C-S system, LS = Circuit breaker
-## --- Página 46 ---
-**30** | *6 Systems up to 1 kV*
 Description of the system:
 1st letter: describes the grounding conditions of the power source
 T: direct grounding of a point
@@ -1436,7 +1278,7 @@ S: neutral conductor (N) and protective ground conductor (PE), as separate and s
 conductors
 C: neutral conductor and protective ground conductor combined in a single conductor (PEN)
 Permissible overcurrent protective equipment:
-## - Fuses
+- Fuses
 - Line-protection circuit breakers
 - Circuit breakers
 - RCDs (Residual Current Protective Devices)
@@ -1450,7 +1292,7 @@ $I_a$ is the breaking current of the overcurrent protective equipment
 The ground loop impedance (loop resistance) of the TN system is required in order to calculate the
 minimum required fault current at the position of the short circuit (Figure 6.2).
 > **Diagram description - Fig. 6.2: Ground loop impedance**
-## >
+>
 > The figure shows a single-line schematic of a TN-C-S electrical distribution system illustrating the
 concept of ground loop impedance. On the left side, a Medium Voltage (MV) transformer with
 three windings feeds into a Low Voltage (LV) distribution board. The transformer's neutral point is
@@ -1468,8 +1310,7 @@ transformer neutral - this closed path constitutes the "Fault loop," as labeled 
 impedance of this loop ($Z_s$) determines whether the overcurrent protective device will operate
 within the required disconnection time.
 **Fig.** 6.2: Ground loop impedance
-## --- Página 47 ---
-## ## 6.2
+## 6.2
 ## Calculation of fault currents
 This section presents and explains simple fundamental considerations for the calculation of the
 fault current.
@@ -1477,7 +1318,7 @@ In TN systems, the fault current is calculated in order to ensure protection in 
 contact and to guarantee that the protective equipment switches off within the specified time.
 Figure 6.3 gives an overwiew of the calculations carried out here.
 > **Fig. 6.3 - Overview of the power supply (single-line diagram)**
-## >
+>
 
 > The diagram shows a power supply chain from a high-voltage network to a low-voltage load
 point. On the left, a three-phase generator (labeled G, 3~) feeds into the high-voltage side. A
@@ -1488,10 +1329,10 @@ along the top conductor:
 source/transformer)
 > - $Z_T$: impedance of the transformer T
 > - $Z_U$: impedance of the cable or line connecting the transformer to the load point
-## >
+>
 > The current $I_a$ flows through the cable or line. At the far right end of the line, the minimum
 single-phase short-circuit current $I''_{k1min}$ is indicated at the fault location.
-## >
+>
 > The return path (PE/neutral conductor) closes through $Z_S$ (the total loop impedance), shown
 as an arrow returning along the bottom of the diagram back to the source. The high-voltage side is
 connected to a grid symbol (busbar with cross-hatching) on the far left.
@@ -1504,8 +1345,6 @@ If exact data are not available for the reactance and resistance, we can then us
 values [11]:
 $$R_Q = 0.100 \cdot X_Q \tag{6.4}$$
 $$X_Q = 0.995 \cdot Z_Q \tag{6.5}$$
-## --- Página 48 ---
-**32** | *6 Systems up to 1 kV*
 Impedance of the transformer:
 $$Z_T = \frac{(U_n)^2}{S_{rT}} \cdot \frac{u_{kr}\%}{100} \tag{6.6}$$
 If exact data are not available for the reactance and resistance, we can then use the following
@@ -1528,8 +1367,6 @@ $$X'_d = 6\% \cdot x_0 \tag{6.14}$$
 Calculation of the fault current $I''_{k1min}$ (external conductor - protective ground conductor):
 In accordance with IEC 60 364, protection for indirect contact is ensured if the following equation is
 satisfied:
-## --- Página 49 ---
-*6.2 Calculation of fault currents* **| 33**
 $$I''_{k1min} = \frac{\sqrt{3} \cdot c_{min} \cdot U_n}{3 \cdot \sqrt{\left(2 \cdot l \cdot R'_L +
 R_v\right)^2 + \left(2 \cdot l \cdot X'_L + X_v\right)^2}} \tag{6.15}$$
 For cables and conductors with reduced PEN or protective ground conductor cross-sections,
@@ -1543,10 +1380,10 @@ Calculation of the resistance at a temperature of 80 °C in accordance with IEC 
 minimum single-pole short circuit current:
 
 $$R_{L80°} = R_{L20°} \cdot \left[1 + 0.004 \frac{1}{°C} \left(\theta_e - 20 \text{ °C}\right)\right]
-## \tag{6.18}$$
+\tag{6.18}$$
 The meanings of the symbols are:
-## | Symbol | Meaning |
-## |---|---|
+| Symbol | Meaning |
+|---|---|
 | $c$ | Voltage factor |
 | $S''_{kQ}$ | Short circuit power of the high voltage network |
 | $X_Q$ | Reactance upstream from power source |
@@ -1565,8 +1402,6 @@ The meanings of the symbols are:
 | $R'_{L1}$ | Resistance per unit length of external conductor |
 | $R'_{L2}$ | Resistance per unit length of PEN or protective ground conductor |
 | $Z_S$ | Sum of impedances of network feed-ins and power source |
-## --- Página 50 ---
-**34** | *6 Systems up to 1 kV*
 ## 6.3 TT systems
 In TT systems the neutral conductor does not serve a protective ground conductor function. The
 connection of the operational equipment take place through the protective ground conductor to a
@@ -1600,20 +1435,17 @@ T: exposed conductive parts, grounded directly and independently of power source
 - RCDs (Residual Current Protective Devices)
 - Line-protection circuit breakers, e.g. with A, B, C and D characteristic
 - Circuit breakers
-## - Fuses
+- Fuses
 The following condition must be satisfied for the ground resistance of the exposed conductive
 parts:
 $$R_A \leq \frac{U_L}{I_{\Delta n}}, \tag{6.19}$$
-## --- Página 51 ---
-*6.4 IT systems* **35**
 $$R_A \leq \frac{U_L}{I_a},\tag{6.20}$$
 where:
 $R_A$ &emsp; is the sum of the resistances of the ground electrode and the protective ground
 conductor
 $U_L$ &emsp; is the touch voltage and
 $I_{\Delta n}$ &emsp; is the rated differential current of the RCD
-## ---
-## **6.4**
+**6.4**
 **IT systems**
 The power source for IT systems is isolated. Its application is primarily in the industrial sector and in
 the operation rooms of hospitals (Figure 6.5).
@@ -1644,9 +1476,7 @@ monitoring, with equipotential bonding or cut-off in addition in the case of a d
 - RCDs (Residual Current Protective Devices)
 - Line-protection circuit breakers
 - Circuit breakers
-## - Fuses.
-## --- Página 52 ---
-**36** | *6 Systems up to 1 kV*
+- Fuses.
 The ground resistance of the exposed conductive parts must be sufficiently low to allow the
 following condition to be satisfied:
 $$R_E \leq \frac{U_L}{I_d}\,. \tag{6.21}$$
@@ -1655,8 +1485,7 @@ $R_E$ &emsp; is the grounding resistance
 $U_L$ &emsp; is the touch voltage and
 
 $I_d$ &emsp; is the leakage current
-## ---
-## **6.5**
+**6.5**
 **Transformation of the network types described to equivalent circuit diagrams**
 There are many possible arrangements of networks. In order to calculate the total impedance at
 the position of the short circuit, the network topologies in multiple and meshed networks are
@@ -1676,8 +1505,6 @@ $$\underline{Z}_G = \frac{\underline{Z}_1 \cdot \underline{Z}_2}{\underline{Z}_1
 Delta-star transformation (Figure 6.6c):
 $$\underline{Z}_1 = \frac{\underline{Z}_a \cdot \underline{Z}_c}{\underline{Z}_a + \underline{Z}_b
 + \underline{Z}_c}\,, \tag{6.26}$$
-## --- Página 53 ---
-6.5 *Transformation of the network types described to equivalent circuit diagrams* **| 37**
 $$\underline{Z}_2 = \frac{\underline{Z}_a \cdot \underline{Z}_b}{\underline{Z}_a +
 \underline{Z}_b + \underline{Z}_c},$$
 $$\underline{Z}_3 = \frac{\underline{Z}_b \cdot \underline{Z}_c}{\underline{Z}_a + \underline{Z}_b
@@ -1691,31 +1518,29 @@ $$\underline{Z}_b = \frac{\underline{Z}_1 \cdot \underline{Z}_2 + \underline{Z}_
 $$\underline{Z}_c = \frac{\underline{Z}_1 \cdot \underline{Z}_2 + \underline{Z}_1 \cdot
 \underline{Z}_3 + \underline{Z}_2 \cdot \underline{Z}_3}{\underline{Z}_2}.$$
 > **Diagram - Figure 6.6: Network transformations**
-## >
+>
 > **a) Series connection:** Two impedances $Z_1$ and $Z_2$ connected in series between two
 terminals (nodes), represented as two impedance elements placed one after the other along a
 single line.
-## >
+>
 > **b) Parallel connection:** Two impedances $Z_1$ and $Z_2$ connected in parallel between two
 terminals (nodes), represented as two impedance elements placed in two parallel branches within
 a box-like structure.
-## >
+>
 > **c) Delta-to-star (Δ→Y) transformation:** On the left side, a delta (triangle) network with three
 impedances $Z_a$, $Z_b$, and $Z_c$ connected between three external nodes (vertices of the
 triangle). An arrow indicates transformation to the right side, where an equivalent star (Y) network
 is shown with three impedances $Z_1$, $Z_2$, and $Z_3$ connected from a common central node
 to the three external terminals.
-## >
+>
 > **d) Star-to-delta (Y→Δ) transformation:** On the left side, a star (Y) network with three
 impedances $Z_1$, $Z_2$, and $Z_3$ connected from a common central node to three external
 terminals. An arrow indicates transformation to the right side, where an equivalent delta (triangle)
 network is shown with three impedances $Z_a$, $Z_b$, and $Z_c$ connected between the three
 external nodes.
 **Fig. 6.6:** Network transformations
-## --- Página 54 ---
 A página está em branco, sem conteúdo visível para transcrever.
-## --- Página 55 ---
-## # 7
+# 7
 # Neutral Point Treatment in Three-phase Networks
 The main faults are the single-pole short circuit and the short circuit to ground. The short circuit to
 ground is a conductive connection between a point in the network belonging to the operational
@@ -1739,8 +1564,6 @@ affects the following parameters:
 - Voltage stress
 For the construction and operation of electrical systems, a knowledge of the grounding measures is
 indispensable. The most
-## --- Página 56 ---
-**40** | *7 Neutral Point Treatment in Three-phase Networks*
 magnitude of the permissible touch voltage depends on the duration of the fault and is given in
 Table C.3 of HD 637 S1. If the ground potential rise remains below 150 V, the condition is satisfied
 and no further measures are required. Otherwise, additional measures must be undertaken. For a
@@ -1774,11 +1597,10 @@ system parameters, it is necessary to consider all grounding electrodes and othe
 systems. In accordance with HD 637 S1, for step voltages it is not necessary to define permissible
 values. When a system satisfies the requirements with regard to the touch voltages, then no
 dangerous step voltages can occur.
-## --- Página 57 ---
 **Table 7.1:** Decisive currents for the dimensioning of grounding systems
 | Type of high voltage network | | | Decisive for thermal loading | | Decisive for ground potential
 rise and touch voltage |
-## |---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | | | | Ground electrodes | Ground conductor | |
 | Networks with isolated neutral point | | | - | $I''_{\text{kEE}}$ | $I_E = r \cdot I_C$ |
 | Networks with ground-fault-neutralizer-grounded system | In systems with
@@ -1787,7 +1609,7 @@ I_{\text{Res}}^2}$ |
 | | In systems without ground-fault-neutralizer-grounded system | | | | $I_E = r \cdot
 I_{\text{Res}}$ |
 | Networks with low resistance neutral point grounding | | | $I''_{\text{k1}}$ | $I''_{\text{k1}}$ |
-## $I_E$ |
+$I_E$ |
 | Networks with ground-fault-neutralizer-grounded and temporary low resistance neutral point
 grounding | In systems in which temporary grounding takes place | | $I''_{\text{k1}}$ |
 $I''_{\text{k1}}$ | $I_E$ |
@@ -1813,22 +1635,19 @@ relief is described by the reduction factor.
 The reduction factor $r$ for an overhead ground wire in a three-phase current conductor is:
 $$r = \frac{I_E}{3\,I_0} = \frac{3\,I_0 - I_{FW}}{3\,I_0}$$
 The ground potential rise is
-## --- Página 58 ---
-**42** | *7 Neutral Point Treatment in Three-phase Networks*
 $$\underline{U}_E = \underline{Z}_E \cdot \underline{I}_E$$
 In the event of a fault, the ground potential rise is
 $$\underline{I}_E = r \cdot \sum 3 \cdot \underline{I}_0$$
 The meanings of the symbols are:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $I_{EW}$: | Current in the overhead ground ground wire in A |
 | $U_E$ : | Ground potential rise in V |
 | $I_E$ : | Grounding current in A |
 | $3I_0$ : | Sum of the zero-sequence currents in A |
 | $Z_E$ : | Grounding impedance in $\Omega$ |
 We can differentiate between three types of neutral point treatment:
-## ---
-## **7.1**
+**7.1**
 **Networks with isolated free neutral point**
 The short circuit current to ground flows through the capacitances to ground $C_E$ of the
 uninterrupted conductors (Figure 7.1). The short circuit currents to ground are small in this case
@@ -1841,7 +1660,6 @@ operation of this type of network is restricted to smaller networks (up to 30 kV
 of the short circuit current to ground is around 35 A, since otherwise the arcing is no longer
 self-quenching.
 
-## --- Página 59 ---
 7.2 Networks with grounding compensation **43**
 > **Fig. 7.1:** Isolated network
 [DIAGRAM - Fig. 7.1: Single-line schematic of an isolated network. On the left, a generator/source
@@ -1853,8 +1671,7 @@ between each phase and ground (earth, represented by the hatched symbol). At the
 of line L1, a ground fault is indicated (F), with the resulting capacitive earth-fault current I_CE
 flowing from the fault point back through the ground to the distributed capacitances. No
 intentional neutral grounding is present.]
-## ---
-## **7.2**
+**7.2**
 **Networks with grounding compensation**
 > **Fig. 7.2:** Ground fault neutralizer grounded system
 [DIAGRAM - Fig. 7.2: Single-line schematic of a ground fault neutralizer (Petersen coil / resonant
@@ -1873,8 +1690,6 @@ ground fault coils in such a way that their inductance is matched to the capacit
 (Figure 7.2). For the matching condition $I_C = I_L$:
 $$I_C = 3 \cdot w \cdot C_E \frac{c \cdot U_n}{\sqrt{3}}, \text{ und } I_L = \frac{c \cdot
 U_n}{\sqrt{3} \cdot w \cdot L} \tag{7.2}$$
-## --- Página 60 ---
-**44** | *7 Neutral Point Treatment in Three-phase Networks*
 Here, we refer to the ground fault current $I_F$ as the unbalanced residual current. The capacitive
 short circuit to ground $I_C$ is compensated by the inductive coil current $I_L$ of the ground fault
 quenching coils apart from a residual current. If the short circuit current to ground exceeds 35 A,
@@ -1884,8 +1699,7 @@ exceed 60 A for medium voltage networks and 130 A for high voltage networks, in 
 the self-quenching of the arcing and to keep the thermal stress under control. If this is not the case,
 low impedance neutral point grounding must be used. Here too, overvoltages occur as for
 networks with an isolated free neutral point.
-## ---
-## **7.3**
+**7.3**
 **Networks with low impedance neutral point treatment**
 In accordance with HD 63751, a network with low impedance neutral point grounding (Figure 7.3)
 is present only when the neutral point of one or more transformers is directly grounded and the
@@ -1910,19 +1724,17 @@ kA. The ground fault factor $\delta = \frac{U_{LE}}{U/\sqrt{3}}$ will be introdu
 the voltage conditions for the neutral point treatment, where $U_{LE}$ is the conductor-to-ground
 voltage for a fault and U the operating voltage before the fault occurs. For a single-pole short
 circuit current, then:
-## $$
+$$
 I''_{k1} = \frac{\sqrt{3} \cdot c_{min} \cdot U_n}{Z_1 + Z_2 + Z_0}.
-## \tag{7.3}
-## $$
-## --- Página 61 ---
-*7.3 Networks with low impedance neutral point treatment* **45**
+\tag{7.3}
+$$
 
 Table 7.2 gives an overview of neutral point arrangement on fault behavior in three-phase
 high-voltage networks.
 **Table 7.2: Arrangement of neutral point**
 | Arrangement of neutral point (only one-phase shown) | Isolated | With arc suppression coil |
 Current limiting | Low resistance ground |
-## |---|---|---|---|---|
+|---|---|---|---|---|
 | | *[Circuit diagram: Single-phase representation showing a transformer winding connected to
 ground capacitance $C_E$, with dashed ground line - isolated neutral point configuration.]* |
 *[Circuit diagram: Single-phase representation showing a transformer winding connected to a Coil
@@ -1938,11 +1750,11 @@ $C_E$ and dashed ground line.]* |
 | Fault duration | $t > 2\ \text{h}$ | $t < 2\text{-}3\ \text{h}$ | $t \leq 1\text{-}3\ \text{s}$ | $t \leq
 ## 1\text{-}3\ \text{s}$ |
 | Ground fault factor $\delta = U_{LE}/(U_{LL}/\sqrt{3})$ | $\delta \sim \sqrt{3}$ | $\delta \sim
-## \sqrt{3}$ | $\delta \sim 1.4\text{-}1.8$ | $\delta \leq 1.4$ |
-## | Over-voltage | $k \sim 2.5$ | $k \sim 3.0$ | $k < 2.5$ | $k < 2.5$ |
+\sqrt{3}$ | $\delta \sim 1.4\text{-}1.8$ | $\delta \leq 1.4$ |
+| Over-voltage | $k \sim 2.5$ | $k \sim 3.0$ | $k < 2.5$ | $k < 2.5$ |
 | Voltage rise | yes | yes | no | no |
 | Ground fault arc | self-quenching up to several A | self-quenching | usually sustained | sustained
-## |
+|
 | Detection of fault | location by disconnection | location by disconnection | selective
 disconnection | short circuit protection |
 | **Where** | | | | |
@@ -1954,12 +1766,10 @@ fault | | |
 | $I_\text{Rest}$: Residual current | | | | |
 | $C_E\ $: Ground capacitance | | | | |
 Table 7.3 shows an overview of application of neutral point arrangements.
-## --- Página 62 ---
-**46** | *7 Neutral Point Treatment in Three-phase Networks*
 **Table 7.3:** Application of neutral point arrangements
 
 | **Neutral point selection** | **Ground fault factor $\delta$** | **Application** | **Results** |
-## |---|---|---|---|
+|---|---|---|---|
 | Direct grounding | $\leq 1.4$ | in low voltage power systems < 1 kV | short circuit protection
 selective disconnection |
 | | | in high voltage power systems > 110 kV | saving of insulation |
@@ -1969,8 +1779,7 @@ kV | short circuit protection selective disconnection |
 disconnection |
 | Short circuited with suppression coil | first $> 1.4$ after short grounding $< 1.4$ | cable network
 10-110 kV | first location by disconnection then disconnection |
-## --- Página 63 ---
-## # 8
+# 8
 # Impedances of Three-phase Operational Equipment
 For the calculation of short circuit currents it is necessary to know conductor-specific equivalent
 data and impedances of electrical operational equipment, which are usually given by the respective
@@ -1982,18 +1791,18 @@ should take account of the impedance corrections for calculating the short circu
 generators, transformers and choke coils, the impedances and reactances are given in the *p.u.* or
 in the %/*MVA* system. Cables and lines are however assigned Ohm/km values.
 The impedances of operational equipment are described in detail in the following:
-## ## 8.1
+## 8.1
 ## Network feed-ins
 > **[Fig. 8.1 - Network feed-in and equivalent circuit]**
-## >
+>
 > The figure shows two diagrams representing a network feed-in:
-## >
+>
 > **Top diagram (Single-line schematic):** A network source block labeled "Network Q"
 (represented by a crossed-box symbol indicating an external network) is connected via a
 three-phase line (shown with triple slash marks indicating a transformer or line section) to a busbar
 point labeled "Q". The nominal voltage at the connection point is labeled $U_{nQ}$, and the initial
 symmetrical short circuit power at that node is labeled $S''_{kQ}$.
-## >
+>
 > **Bottom diagram (Equivalent circuit):** The equivalent circuit of the network feed-in is shown
 as a series connection of a resistance $R_Q$ and a reactance $X_Q$, connected between two
 network terminals (represented by circle-cross symbols, i.e., ground/network reference symbols).
@@ -2004,49 +1813,47 @@ external network as seen from the point of connection Q.
 The input is from a network, usually designated "Q" for source and not from a generator (Figure
 8.1). The calculation of this network is performed with the initial symmetrical short circuit power
 $S''_{kQ}$ or the initial symmetrical short circuit current $I''_{kQ}$ at the interface S.
-## --- Página 64 ---
-**48** | *8 Impedances of Three-phase Operational Equipment*
 The internal impedance of a high or medium voltage network can then be determined according
 to:
-## $$
+$$
 \underline{Z}_Q = R_Q + j\ X_Q,
-## $$
-## $$
+$$
+$$
 Z_Q = \frac{c \cdot U_{nQ}}{\sqrt{3}\ I''_{kQ}},
-## $$
-## $$
+$$
+$$
 Z_Q = \frac{c \cdot U_{nQ}^2}{S''_{kQ}}.
-## \tag{8.1}
-## $$
+\tag{8.1}
+$$
 If the short circuit is fed through transformers, it is possible to further extend the above
 relationships:
-## $$
+$$
 Z_{Qt} = \frac{c \cdot U_{nQ}}{\sqrt{3} \cdot I''_{kQ}} \cdot \frac{1}{\ddot{u}_r^2},
-## $$
-## $$
+$$
+$$
 Z_{Qt} = \frac{c \cdot U_{nQ}^2}{S''_{kQ}} \cdot \frac{1}{\ddot{u}_r^2},
-## \tag{8.2}
-## $$
-## $$
+\tag{8.2}
+$$
+$$
 I''_{kQ} = \frac{c \cdot U_{nQt}}{\sqrt{3} \cdot Z_{Qt}}.
-## \tag{8.3}
-## $$
+\tag{8.3}
+$$
 It is sufficient to calculate only with reactances in high voltage networks with a voltage of greater
 than 35 kV, i.e. $Z = 0 + jX_Q$. In all other cases, the calculation proceeds as follows:
-## $$
+$$
 X_Q = 0.995 \cdot Z_Q,
-## $$
+$$
 
-## $$
+$$
 R_Q = 0.1 \cdot X_Q,
-## $$
-## $$
+$$
+$$
 S''_{kQ} = \sqrt{3} \cdot U_{nQ} \cdot I''_{kQ}.
-## \tag{8.4}
-## $$
+\tag{8.4}
+$$
 The meanings of the symbols are:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $U_{nQ}$ | Nominal voltage of the network at the interface Q |
 | $S''_{kQ}$ | Initial symmetrical short circuit power |
 | $I''_{kQ}$ | Initial symmetrical short circuit current |
@@ -2057,7 +1864,6 @@ tapping |
 | $Z_{Qt}$ | Positive-sequence impedance relative to low voltage side of transformer |
 | $R_Q$ | Resistance of power supply feeder |
 | $X_Q$ | Reactance of power supply feeder |
-## --- Página 65 ---
 ## 8.2 Synchronous machines
 Figure 8.2 illustrates the equivalent circuit for a synchronous machine. For a three-pole terminal
 short circuit, only the two inductive reactances $X_h$ and $X_s$ occur. The magnitude of the short
@@ -2068,14 +1874,14 @@ changed magnetic fields in different rotors induce voltages which in turn affect
 currents in the damper winding decay very quickly, because the equivalent resistances are very
 large. We refer to these processes as subtransient (transpired quickly).
 > **Fig. 8.2 - Synchronous machine and equivalent circuit**
-## >
+>
 > The figure shows two diagrams:
-## >
+>
 > **Top diagram:** A schematic symbol of a three-phase synchronous machine (SM, labeled with
 "3" and a sine wave inside a circle), connected via a line with three diagonal slash marks (indicating
 a three-phase connection) to an open terminal on the right. This represents the physical machine
 connected to a bus or terminal point.
-## >
+>
 > **Bottom diagram:** The equivalent circuit of the synchronous machine. On the left side, a
 three-phase voltage source (circle with "3" and a sine wave) represents the internal generated
 
@@ -2095,8 +1901,6 @@ as transient (temporary) and determine this from the transient reactance:
 $$I_k'' = \frac{U_{qE}}{X_d'},$$
 ## (8.6)
 Finally, the continuous component resulting from the reactance of the main field is given here:
-## --- Página 66 ---
-**50** | *8 Impedances of Three-phase Operational Equipment*
 $$I_k = \frac{U_{qE}}{X_d''}.$$
 ## (8.7)
 The initial reactance $X_d''$ of a synchronous machine determines the magnitude of the initial
@@ -2114,8 +1918,8 @@ For $S_{rG} < 100 \cdot$ MV A:
 
 $$R_G = 0.7 \cdot j \ X_d''. \quad \text{(8.11)}$$
 The meanings of the symbols are:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $X_d''$ | Initial reactance |
 | $X_d'$ | Transient reactance |
 | $X_d$ | Synchronous reactance |
@@ -2128,26 +1932,25 @@ Table 8.1 below gives various values for the calculation of reactances.
 **Table 8.1:** Relative characteristic values of synchronous generators
 | **Machine type** | **Turbogenerator** | **Salient pole with damper winding** | **Salient
 pole without damper winding** |
-## |---|---|---|---|
+|---|---|---|---|
 | Synchronous reactance ($x_d$) | 110 % to 280 % | 70 % to 170 % | 70 % to 170 % |
 | Transient reactance ($x_d'$) | 14 % to 35 % | 20 % to 45 % | 20 % to 40 % |
 | Initial reactance ($x_d''$) | 9 % to 22 % | 12 % to 30 % | 20 to 40 % |
 | Zero-sequence reactance ($x_0$) | 3 % to 10 % | 5 % to 20 % | 5 % to 25 % |
-## --- Página 67 ---
-## *8.3 Transformers* **51**
-## ## 8.3 Transformers
+*8.3 Transformers* **51**
+## 8.3 Transformers
 At this point, it is useful to explain the transformer and its equivalent circuit for the case of a short
 circuit (Fig. 8.3).
 > **Fig. 8.3: Transformer and equivalent circuit**
-## >
+>
 > The figure shows two representations of a transformer:
-## >
+>
 > **Top diagram (symbolic schematic):** A single-phase transformer labeled **T** is shown with
 its primary side (HV - High Voltage) on the left and secondary side (LV - Low Voltage) on the right.
 The primary winding is connected via terminals (open circles) with slash marks indicating the HV
 connection. The transformer core and two coupled windings are depicted symbolically in the
 center. The secondary side similarly terminates in an open-circuit terminal (LV side).
-## >
+>
 > **Bottom diagram (equivalent circuit):** The transformer is represented by its simplified series
 equivalent circuit, consisting of:
 
@@ -2170,9 +1973,7 @@ $$I_{kd} = \frac{U_{nHV}}{Z}, \tag{8.13}$$
 $$Z = \frac{U_k}{I_{nLV}}, \tag{8.14}$$
 $$U_{nHV} = \frac{U_k \cdot 100\%}{u_k}, \tag{8.15}$$
 $$I_k = \frac{I_{nLV} \cdot 100\%}{u_k}. \tag{8.16}$$
-## --- Página 68 ---
-**52** | *8 Impedances of Three-phase Operational Equipment*
-## ## 8.3.1
+## 8.3.1
 ### Short circuit current on the secondary side
 The equivalent circuit of the positive-sequence, negative-sequence and zero-sequence system is
 given by the number and the circuitry of the windings. The negative-sequence impedance is, due to
@@ -2199,36 +2000,35 @@ Transformers with three windings are employed in auxiliary service for the inter
 of power stations, in the industrial sector or as network transformers. The short circuit impedances
 of transformers with three windings in the positive-sequence system can be calculated as follows,
 in accordance with Figure 8.5:
-## --- Página 69 ---
-## *8.3 Transformers* **53**
+*8.3 Transformers* **53**
 > **[DIAGRAM: Fig. 8.4 - Equivalent resistances and reactances in the zero-sequence and
 positive-sequence system for low voltage transformers]**
-## >
+>
 > The figure contains four sets of transformer diagrams, each corresponding to a different winding
 vector group configuration. Each set shows the physical winding arrangement (left) and the
 equivalent zero-sequence circuit (right).
-## >
-## > **1. Dyn5**
+>
+> **1. Dyn5**
 > - Left: Three-phase transformer with primary windings on phases T, S, R connected in delta (Δ),
 with excitation impedance $Z_E$ and circulating current $I_F$ shown in the delta loop.
 > - Right: Zero-sequence equivalent circuit showing series impedance $Z_{1T}$ on the primary side,
 $Z_{2T}$ on the secondary side, and a shunt branch to ground labeled $Z_0 + 3\,\underline{Z}_E$.
 The secondary (star with neutral) allows zero-sequence current to flow.
-## >
-## > **2. Dzn0**
+>
+> **2. Dzn0**
 > - Left: Three-phase transformer with primary windings on phases T, S, R in a zigzag-delta
 arrangement; arrows indicate current direction through the windings.
 > - Right: Zero-sequence equivalent circuit showing phases T, S, R with interconnected windings
 (zigzag secondary) and fault current $I_F$ flowing to ground through the neutral.
-## >
+>
 
-## > **3. Yzn11**
+> **3. Yzn11**
 > - Left: Three-phase transformer with primary windings on phases T, S, R in star (Y) connection;
 arrows indicate current direction.
 > - Right: Zero-sequence equivalent circuit showing phases T, S, R with zigzag secondary windings
 (zn), fault current $I_F$ flowing to ground through the neutral connection.
-## >
-## > **4. Yyn6**
+>
+> **4. Yyn6**
 > - Left: Three-phase transformer with primary windings on phases T, S, R in star (Y) connection; the
 primary neutral is connected to a closed delta tertiary (shown as an oval with arrow indicating
 circulating current).
@@ -2237,25 +2037,6 @@ star-with-neutral side, with excitation impedance $Z_E$ and fault current $I_F$ 
 loop formed by the delta tertiary winding.
 **Fig. 8.4:** Equivalent resistances and reactances in the zero-sequence and positive-sequence
 system for low voltage transformers
-## --- Página 70 ---
-**54** | *8 Impedances of Three-phase Operational Equipment*
-> [**Figure 8.5a - Circuit diagram for a three-winding transformer:**
-> The diagram shows a three-winding transformer T with three terminals: A (High voltage side, on
-the left), B (Medium voltage side, on the right), and C (Low voltage side, on the top). The
-high-voltage winding (side A) is connected via a double-line (busbar/cable symbol) to terminal A on
-the left. The medium-voltage winding (side B) is connected via a double-line to terminal B on the
-right. The low-voltage winding (side C) is connected via a double-line going upward to terminal C at
-the top. The transformer core is represented by three interlocked circles, with the low-voltage
-winding shown in delta (Δ) connection at the top and the high- and medium-voltage windings
-shown as individual winding symbols on each side.]
-> [**Figure 8.5b - Equivalent circuit of the three-winding transformer:**
-> The equivalent circuit uses a star (T-circuit) topology with a central node. From terminal A on the
-left, the circuit passes through resistance $R_A$ (resistor symbol) and reactance $X_A$ (inductor
-symbol) in series to the central node. From terminal B on the right, the circuit passes through
-resistance $R_B$ and reactance $X_B$ in series to the same central node. From terminal C at the
-top, the circuit passes downward through resistance $R_C$ and reactance $X_C$ in series, also
-connecting to the central node. Each branch thus represents the leakage impedance of the
-respective winding referred to a common voltage base.]
 **Fig. 8.5:** a) Circuit diagram for transformer with three windings and b) equivalent circuit
 with side C open:
 $$Z_{AB} = \frac{u_{krAB}}{100\%} \frac{U_{rTA}^2}{S_{rTAB}},\tag{8.27}$$
@@ -2264,15 +2045,14 @@ with side B open:
 $$Z_{AC} = \frac{u_{krAC}}{100\%} \frac{U_{rTA}^2}{S_{rTAC}},\tag{8.28}$$
 with side A open:
 $$Z_{BC} = \frac{u_{krBC}}{100\%} \frac{U_{rTA}^2}{S_{rTBC}}.\tag{8.29}$$
-## --- Página 71 ---
-## *8.3 Transformers* **55**
+*8.3 Transformers* **55**
 With the positive-sequence short circuit impedances, it follows that:
 $$Z_A = \frac{1}{2} \cdot (Z_{AB} + Z_{AC} - Z_{BC}), \tag{8.30}$$
 $$Z_B = \frac{1}{2} \cdot (Z_{BC} + Z_{AB} - Z_{AC}), \tag{8.31}$$
 $$Z_C = \frac{1}{2} \cdot (Z_{AC} + Z_{BC} - Z_{AB}). \tag{8.32}$$
 The meanings of the symbols are:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $U_{rT}$ | Rated voltage of transformer on higher or lower voltage side |
 | $I_{rT}$ | Rated current of transformer on higher or lower voltage side |
 | $U_{nHV}$ | Nominal voltage on higher voltage side |
@@ -2287,45 +2067,42 @@ The meanings of the symbols are:
 | $X_{0T}$ | Inductive zero-sequence resistance of transformer |
 | $X_T$ | Inductive resistance of transformer. |
 The equivalent resistances and reactances of transformers can also be taken from Figure 8.6.
-## --- Página 72 ---
-**56** | *8 Impedances of Three-phase Operational Equipment*
 > **Fig. 8.6 - Equivalent resistances and reactances of transformers for low and medium voltage
 networks [19]**
-## >
+>
 > **Description:** Log-log graph plotting the equivalent transformer reactance $X_T$ (solid lines)
 and transformer resistance $R_T$ (dashed line) in milliohms (mΩ) on the vertical axis, against the
 rated transformer apparent power $S_{rT}$ in kVA on the horizontal axis.
-## >
+>
 > - **Vertical axis (Y):** Impedance values in mΩ, ranging from 0.35 mΩ to 200 mΩ, with a
 
 logarithmic scale. The left side also shows the ratio $\dfrac{R}{X}$ with an upward arrow indicating
 increasing values.
-## >
+>
 > - **Horizontal axis (X):** Rated transformer power $S_{rT}$ in kVA, with values: 125, 160, 200,
 250, 320, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 3200 kVA (logarithmic scale).
-## >
+>
 > - **Curves for $X_T$ (solid lines):** Multiple parallel diagonal lines, each corresponding to a
 different short-circuit voltage percentage $u_{kr}$, labeled as:
-## > - $u_{kr} = 10\%$
-## > - $8\%$
-## > - $6\%$
-## > - $5\%$
-## > - $4\%$
-## > - $3\%$
-## >
+> - $u_{kr} = 10\%$
+> - $8\%$
+> - $6\%$
+> - $5\%$
+> - $4\%$
+> - $3\%$
+>
 > All lines have a negative slope (reactance decreases as rated power increases), consistent with
 the relation $X_T = \dfrac{u_{kr}}{100} \cdot \dfrac{U_{rT}^2}{S_{rT}}$.
-## >
+>
 > - **Curve for $R_T$ (dashed line):** A single dashed diagonal line representing the transformer
 resistance, also decreasing with increasing $S_{rT}$, and falling well below the $X_T$ curves,
 indicating that transformer reactance dominates over resistance especially at higher power ratings.
-## >
+>
 > - **Legend (top right):**
 > - $X_T$: Transformer reactance (solid line)
 > - $R_T$: Transformer resistance (dashed line)
 **Fig. 8.6:** Equivalent resistances and reactances of transformers for low and medium voltage
 networks [19]
-## --- Página 73 ---
 ## 8.3.2
 **Voltage regulating transformers**
 For the compensation of voltage fluctuations in networks, the windings of transformers are
@@ -2353,39 +2130,36 @@ additional voltage is added to the side on which the voltage is regulated. Phase
 transformers are a combination of quadrature control transformers and in-phase control
 transformers. Stepping regulators are implemented via power electronics components, which are
 fast and require
-## --- Página 74 ---
-**58** | *8 Impedances of Three-phase Operational Equipment*
 **Table 8.2:** Characteristic values of high voltage transformers
 | **Rated voltage $U_r$ (kV)** | **Rated power $S_{rT}$ (MVA)** | **Short circuit voltage
 $u_{kr}$ (%)** | **Impedance losses $P_{krT}$ (%)** | **No-load losses $P_{0rT}$ (%)** |
 **No-load current $i_{0rT}$ (%)** |
-## |---|---|---|---|---|---|
-## | $\leq 30$ | 2-4 | 6 | 0.9-0.8 | 0.17-0.14 | 1.3-1.1 |
-## | | 5-10 | 7 | 0.8-0.7 | 0.13-0.11 | 1.0-0.8 |
-## | | 12.5-40 | 10 | 0.6-0.4 | 0.08-0.06 | 0.8-0.5 |
+|---|---|---|---|---|---|
+| $\leq 30$ | 2-4 | 6 | 0.9-0.8 | 0.17-0.14 | 1.3-1.1 |
+| | 5-10 | 7 | 0.8-0.7 | 0.13-0.11 | 1.0-0.8 |
+| | 12.5-40 | 10 | 0.6-0.4 | 0.08-0.06 | 0.8-0.5 |
 | $30 < U_{\text{rTHV}} \leq 110$ | 6.3-10 | 10 | 0.9-0.8 | 0.18-0.14 | 0.9-0.8 |
-## | | 12.5-40 | 12 | 0.8-0.5 | 0.10-0.07 | 0.8-0.5 |
-## | | 50, 60 | 13 | 0.4 | 0.06 | 0.5-0.05 |
-## | | 80 | 14 | 0.5 | 0.05 | 0.45-0.05 |
-## | 110 | 100-350 | 12-16 | 0.31-0.19 | 0.05-0.03 | 0.45-0.05 |
+| | 12.5-40 | 12 | 0.8-0.5 | 0.10-0.07 | 0.8-0.5 |
+| | 50, 60 | 13 | 0.4 | 0.06 | 0.5-0.05 |
+| | 80 | 14 | 0.5 | 0.05 | 0.45-0.05 |
+| 110 | 100-350 | 12-16 | 0.31-0.19 | 0.05-0.03 | 0.45-0.05 |
 | $110 < U_{\text{rTHV}} \leq 220$ | 100-1000 | 10-20 | 0.32-0.19 | 0.065-0.035 | 0.47-0.04 |
 | $220 < U_{\text{rTHV}} \leq 380$ | 100-1000 | 11-20 | 0.4-0.2 | 0.07-0.04 | 0.48-0.04 |
-## ---
-## **8.4**
+**8.4**
 **Cables and overhead lines**
 The short circuit impedances for low voltage networks can be taken from the tables of IEC 60 909
 that the cross-section is known.
 > **Fig. 8.7 - Cables and lines in the positive-sequence system**
-## >
+>
 > The figure shows three schematic representations of electrical lines between terminals A and B:
-## >
+>
 
 > 1. **Cable** - A single-line diagram showing a cable between nodes A and B, represented by a
 horizontal line with a triple-slash symbol (///) in the middle, indicating a cable element.
-## >
+>
 > 2. **Overhead line or cable** - A single-line diagram similar to the first, between nodes A and B,
 also with a triple-slash symbol (///) but labeled as an overhead line or cable.
-## >
+>
 > 3. **Equivalent circuit** - A single-line diagram between nodes A and B showing the
 lumped-parameter equivalent model of the line, with a series resistance $R_L$ (represented as a
 rectangle/box) followed by a series reactance $X_L$ (represented as a coil/inductor symbol),
@@ -2394,8 +2168,6 @@ For cables and line (Figures 8.7 and 8.8), we can then calculate the determining
 $$\underline{Z}_L = R_L + j X_L, \tag{8.33}$$
 $$R_L = l \cdot R'_L, \tag{8.34}$$
 $$X_L = l \cdot X'_L. \tag{8.35}$$
-## --- Página 75 ---
-*8.4 Cables and overhead lines* **59**
 Length-specific values for overhead lines:
 Resistance in Ω/km:
 $$R_L = \frac{l}{\kappa \cdot S},\tag{8.36}$$
@@ -2430,8 +2202,6 @@ conductors are indicated: $d_{12}$ (between conductors 1 and 2), $d_{23}$ (betwe
 represented by a hatching line at the base.
 **Fig. 8.8:** Basis of calculation for overhead lines a) equivalent circuit of an overhead line, b) 4x
 conductor bundle line, c) 2x conductor bundle line, d) mast diagram
-## --- Página 76 ---
-**60** | *8 Impedances of Three-phase Operational Equipment*
 Inductive load reactance in **Ω**/km:
 $$X_L = \omega \cdot L_b = \frac{\omega \cdot \mu_0}{2 \cdot \pi} \left( \ln \frac{d}{r} + \frac{l}{4
 \cdot n} \right). \tag{8.39}$$
@@ -2450,8 +2220,6 @@ Equivalent capacitive reactance in **Ω**/km:
 
 $$C_b = \frac{2 \cdot \pi \cdot \varepsilon_0}{\ln \frac{d \cdot d'}{r \cdot d''}}, \tag{8.46}$$
 $$X_b = \frac{1}{\omega \cdot C_B} \tag{8.47}$$
-## --- Página 77 ---
-*8.4 Cables and overhead lines* **61**
 The meanings of the symbols are:
 - $a_T$ &nbsp;&nbsp; Distance of conductor elements
 - $C_b$ &nbsp;&nbsp; Load capacitance
@@ -2465,382 +2233,361 @@ between center points of conductor bundles
 - $R_L$ &nbsp;&nbsp; Effective resistance of a conductor
 - $S$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Cross-section
 - $X_L$ &nbsp;&nbsp; Inductive load reactance
-## - $\mu_0$ &nbsp;&nbsp;&nbsp; Permeability.
+- $\mu_0$ &nbsp;&nbsp;&nbsp; Permeability.
 The impedance values for overhead lines, cables and conductors are generally available from the
 respective manufacturers. If no information is available, the following tables 8.2 to 8.18 can be
 used.
-## --- Página 78 ---
-**62** | *8 Impedances of Three-phase Operational Equipment*
 **Table 8.3:** Impedances for PVC-insulated three-phase NYY cables [20]
 | Cross-section of conductor *S* | $3\frac{1}{2}$ and $4\frac{1}{2}$-Conductive cable |
 4/5-Conductive cable | 1-Conductive cable with PE, separated | 1-Conductive cable with PE,
 bundled |
-## |---|---|---|---|---|
+|---|---|---|---|---|
 | | | **Cu conductor** | | |
 | $mm^2$ | $m\Omega/m$ | $m\Omega/m$ | $m\Omega/m$ | $m\Omega/m$ |
-## | 0.5 | - | 107.2 | - | - |
-## | 0.75 | - | 71.5 | - | - |
-## | 1 | - | 53.6 | - | - |
-## | 1.5 | - | 35.7 | - | - |
-## | 2.5 | - | 21.44 | - | - |
-## | 4 | - | 13.4 | - | - |
-## | 6 | - | 8.93 | - | - |
-## | 10 | - | 5.36 | - | - |
-## | 16 | - | 3.35 | - | - |
+| 0.5 | - | 107.2 | - | - |
+| 0.75 | - | 71.5 | - | - |
+| 1 | - | 53.6 | - | - |
+| 1.5 | - | 35.7 | - | - |
+| 2.5 | - | 21.44 | - | - |
+| 4 | - | 13.4 | - | - |
+| 6 | - | 8.93 | - | - |
+| 10 | - | 5.36 | - | - |
+| 16 | - | 3.35 | - | - |
 
-## | 25 | 3.11 | 2.15 | 3.13 | 3.12 |
-## | 35 | 2.23 | 1.54 | 2.25 | 2.24 |
-## | 50 | 1.56 | 1.08 | 1.60 | 1.59 |
-## | 70 | 1.12 | 0.78 | 1.17 | 1.16 |
-## | 95 | 0.84 | 0.59 | 0.89 | 0.88 |
-## | 120 | 0.67 | 0.47 | 0.74 | 0.72 |
-## | 150 | 0.55 | 0.39 | 0.63 | 0.61 |
-## | 185 | 0.45 | 0.33 | 0.56 | 0.53 |
-## | 240 | 0.37 | 0.27 | 0.49 | 0.46 |
-## | 300 | 0.31 | 0.24 | 0.45 | 0.42 |
+| 25 | 3.11 | 2.15 | 3.13 | 3.12 |
+| 35 | 2.23 | 1.54 | 2.25 | 2.24 |
+| 50 | 1.56 | 1.08 | 1.60 | 1.59 |
+| 70 | 1.12 | 0.78 | 1.17 | 1.16 |
+| 95 | 0.84 | 0.59 | 0.89 | 0.88 |
+| 120 | 0.67 | 0.47 | 0.74 | 0.72 |
+| 150 | 0.55 | 0.39 | 0.63 | 0.61 |
+| 185 | 0.45 | 0.33 | 0.56 | 0.53 |
+| 240 | 0.37 | 0.27 | 0.49 | 0.46 |
+| 300 | 0.31 | 0.24 | 0.45 | 0.42 |
 | | | **Al-Leiter = Al conductor** | | |
-## | 16 | - | 5.70 | - | - |
-## | 25 | - | 3.64 | - | - |
-## | 35 | - | 2.60 | - | - |
-## | 50 | - | 1.83 | - | - |
-## | 70 | - | 1.31 | - | - |
-## | 95 | - | 0.97 | - | - |
-## | 120 | - | 0.77 | - | - |
-## | 150 | 0.90 | 0.63 | 0.96 | 0.94 |
-## | 185 | 0.74 | 0.52 | 0.80 | 0.79 |
-## | 240 | 0.58 | - | 0.66 | 0.64 |
-## | 300 | - | - | 0.57 | 0.55 |
-## --- Página 79 ---
-*8.4 Cables and overhead lines* **63**
+| 16 | - | 5.70 | - | - |
+| 25 | - | 3.64 | - | - |
+| 35 | - | 2.60 | - | - |
+| 50 | - | 1.83 | - | - |
+| 70 | - | 1.31 | - | - |
+| 95 | - | 0.97 | - | - |
+| 120 | - | 0.77 | - | - |
+| 150 | 0.90 | 0.63 | 0.96 | 0.94 |
+| 185 | 0.74 | 0.52 | 0.80 | 0.79 |
+| 240 | 0.58 | - | 0.66 | 0.64 |
+| 300 | - | - | 0.57 | 0.55 |
 **Table 8.4:** Resistance values for PVC-insulated four-conductor and five-conductor cables with
 Cu conductor at 55 °C conductor temperature [20]
 | **Cross-section of conductor** $S$ $mm^2$ | **Resistance** $r$ $m\Omega/m$ |
 **Reactance** $x$ $m\Omega/m$ | **Impedance** $z$ $m\Omega/m$ |
-## |---|---|---|---|
-## | $4 \times 0.5$ | 81.90 | 0.23 | 81.90 |
-## | $4 \times 0.75$ | 55.74 | 0.23 | 55.74 |
-## | $4 \times 1$ | 41.18 | 0.23 | 41.18 |
-## | $4 \times 1.5$ | 27.53 | 0.23 | 27.53 |
-## | $4 \times 2.5$ | 16.86 | 0.22 | 16.96 |
-## | $4 \times 4$ | 10.49 | 0.21 | 10.49 |
-## | $4 \times 6$ | 7.01 | 0.20 | 7.01 |
-## | $4 \times 10$ | 4.16 | 0.19 | 4.16 |
-## | $4 \times 16$ | 2.62 | 0.18 | 2.63 |
-## | $4 \times 25$ | 1.654 | 0.176 | 1.663 |
-## | $4 \times 35$ | 1.192 | 0.160 | 1.203 |
-## | $4 \times 50$ | 0.880 | 0.159 | 0.894 |
-## | $4 \times 70$ | 0.610 | 0.155 | 0.629 |
+|---|---|---|---|
+| $4 \times 0.5$ | 81.90 | 0.23 | 81.90 |
+| $4 \times 0.75$ | 55.74 | 0.23 | 55.74 |
+| $4 \times 1$ | 41.18 | 0.23 | 41.18 |
+| $4 \times 1.5$ | 27.53 | 0.23 | 27.53 |
+| $4 \times 2.5$ | 16.86 | 0.22 | 16.96 |
+| $4 \times 4$ | 10.49 | 0.21 | 10.49 |
+| $4 \times 6$ | 7.01 | 0.20 | 7.01 |
+| $4 \times 10$ | 4.16 | 0.19 | 4.16 |
+| $4 \times 16$ | 2.62 | 0.18 | 2.63 |
+| $4 \times 25$ | 1.654 | 0.176 | 1.663 |
+| $4 \times 35$ | 1.192 | 0.160 | 1.203 |
+| $4 \times 50$ | 0.880 | 0.159 | 0.894 |
+| $4 \times 70$ | 0.610 | 0.155 | 0.629 |
 
-## | $4 \times 95$ | 0.440 | 0.154 | 0.466 |
-## | $4 \times 120$ | 0.348 | 0.151 | 0.379 |
-## | $4 \times 150$ | 0.282 | 0.151 | 0.320 |
-## | $4 \times 185$ | 0.226 | 0.151 | 0.272 |
-## | $4 \times 240$ | 0.172 | 0.149 | 0.228 |
-## | $4 \times 300$ | 0.136 | 0.149 | 0.202 |
+| $4 \times 95$ | 0.440 | 0.154 | 0.466 |
+| $4 \times 120$ | 0.348 | 0.151 | 0.379 |
+| $4 \times 150$ | 0.282 | 0.151 | 0.320 |
+| $4 \times 185$ | 0.226 | 0.151 | 0.272 |
+| $4 \times 240$ | 0.172 | 0.149 | 0.228 |
+| $4 \times 300$ | 0.136 | 0.149 | 0.202 |
 For PVC-insulated cables with aluminum conductors,
 multiply the resistance value R′ by the factor 1.7.
 **Table 8.5:** Resistance values for PVC-insulated $3\frac{1}{2}$ and $4\frac{1}{2}$ conductor
 three-phase cables with Cu conductors at 55 °C conductor temperature [20]
 | **Cross-section of conductor** $S$ $mm^2$ | **Resistance** $r$ $m\Omega/m$ |
 **Reactance** $x$ $m\Omega/m$ | **Impedance** $z$ $m\Omega/m$ |
-## |---|---|---|---|
-## | $3 \times 25/16$ | 2.135 | 0.182 | 2.143 |
-## | $3 \times 35/16$ | 1.904 | 0.183 | 1.913 |
-## | $3 \times 50/25$ | 1.267 | 0.179 | 1.279 |
-## | $3 \times 70/35$ | 0.901 | 0.174 | 0.918 |
-## | $3 \times 95/50$ | 0.660 | 0.168 | 0.681 |
-## | $3 \times 120/70$ | 0.479 | 0.160 | 0.505 |
-## | $3 \times 150/70$ | 0.446 | 0.167 | 0.476 |
-## | $3 \times 185/95$ | 0.333 | 0.163 | 0.371 |
-## | $3 \times 240/120$ | 0.260 | 0.164 | 0.307 |
-## | $3 \times 300/150$ | 0.209 | 0.162 | 0.264 |
+|---|---|---|---|
+| $3 \times 25/16$ | 2.135 | 0.182 | 2.143 |
+| $3 \times 35/16$ | 1.904 | 0.183 | 1.913 |
+| $3 \times 50/25$ | 1.267 | 0.179 | 1.279 |
+| $3 \times 70/35$ | 0.901 | 0.174 | 0.918 |
+| $3 \times 95/50$ | 0.660 | 0.168 | 0.681 |
+| $3 \times 120/70$ | 0.479 | 0.160 | 0.505 |
+| $3 \times 150/70$ | 0.446 | 0.167 | 0.476 |
+| $3 \times 185/95$ | 0.333 | 0.163 | 0.371 |
+| $3 \times 240/120$ | 0.260 | 0.164 | 0.307 |
+| $3 \times 300/150$ | 0.209 | 0.162 | 0.264 |
 For PVC-insulated cables with aluminum conductors,
 multiply the resistance value R′ by the factor 1.7.
-## --- Página 80 ---
-**64** | *8 Impedances of Three-phase Operational Equipment*
 **Table 8.6:** Resistance values for PVC-insulated single-conductor three-phase cables with PE or
 PEN, next to each other, with Cu conductors at 55 °C conductor temperature [20]
 | **Cross-section of conductor** $S$ $mm^2$ | **Resistance** $r$ $m\Omega/m$ |
 **Reactance** $x$ $m\Omega/m$ | **Impedance** $z$ $m\Omega/m$ |
-## |---|---|---|---|
-## | $1 \times 25/16$ | 2.1350 | 0.390 | 2.170 |
-## | $1 \times 35/16$ | 1.904 | 0.377 | 1.941 |
-## | $1 \times 50/25$ | 1.267 | 0.373 | 1.321 |
-## | $1 \times 70/35$ | 0.901 | 0.366 | 0.973 |
-## | $1 \times 95/50$ | 0.660 | 0.333 | 0.739 |
-## | $1 \times 120/70$ | 0.479 | 0.330 | 0.582 |
-## | $1 \times 150/70$ | 0.446 | 0.327 | 0.553 |
+|---|---|---|---|
+| $1 \times 25/16$ | 2.1350 | 0.390 | 2.170 |
+| $1 \times 35/16$ | 1.904 | 0.377 | 1.941 |
+| $1 \times 50/25$ | 1.267 | 0.373 | 1.321 |
+| $1 \times 70/35$ | 0.901 | 0.366 | 0.973 |
+| $1 \times 95/50$ | 0.660 | 0.333 | 0.739 |
+| $1 \times 120/70$ | 0.479 | 0.330 | 0.582 |
+| $1 \times 150/70$ | 0.446 | 0.327 | 0.553 |
 
-## | $1 \times 185/95$ | 0.333 | 0.326 | 0.466 |
-## | $1 \times 240/120$ | 0.260 | 0.320 | 0.412 |
-## | $1 \times 300/150$ | 0.209 | 0.328 | 0.381 |
+| $1 \times 185/95$ | 0.333 | 0.326 | 0.466 |
+| $1 \times 240/120$ | 0.260 | 0.320 | 0.412 |
+| $1 \times 300/150$ | 0.209 | 0.328 | 0.381 |
 For PVC-insulated cables with aluminum conductors,
 multiply the resistance value R′ by the factor 1.7.
 **Table 8.7:** Resistance values for PVC-insulated single-conductor three-phase cables with PE or
 PEN, at distance *d* from each other, with Cu conductors at 55 °C conductor temperature [20]
 | **Cross-section of conductor** $S$ $mm^2$ | **Resistance** $r$ $m\Omega/m$ |
 **Reactance** $x$ $m\Omega/m$ | **Impedance** $z$ $m\Omega/m$ |
-## |---|---|---|---|
-## | $1 \times 25/16$ | 2.135 | 0.390 | 2.170 |
-## | $1 \times 35/16$ | 1.904 | 0.377 | 1.941 |
-## | $1 \times 50/25$ | 1.267 | 0.373 | 1.321 |
-## | $1 \times 70/35$ | 0.901 | 0.366 | 0.973 |
-## | $1 \times 95/50$ | 0.660 | 0.362 | 0.753 |
-## | $1 \times 120/70$ | 0.479 | 0.359 | 0.599 |
-## | $1 \times 150/70$ | 0.446 | 0.356 | 0.571 |
-## | $1 \times 185/95$ | 0.333 | 0.354 | 0.486 |
-## | $1 \times 240/120$ | 0.260 | 0.349 | 0.435 |
-## | $1 \times 300/150$ | 0.209 | 0.347 | 0.405 |
+|---|---|---|---|
+| $1 \times 25/16$ | 2.135 | 0.390 | 2.170 |
+| $1 \times 35/16$ | 1.904 | 0.377 | 1.941 |
+| $1 \times 50/25$ | 1.267 | 0.373 | 1.321 |
+| $1 \times 70/35$ | 0.901 | 0.366 | 0.973 |
+| $1 \times 95/50$ | 0.660 | 0.362 | 0.753 |
+| $1 \times 120/70$ | 0.479 | 0.359 | 0.599 |
+| $1 \times 150/70$ | 0.446 | 0.356 | 0.571 |
+| $1 \times 185/95$ | 0.333 | 0.354 | 0.486 |
+| $1 \times 240/120$ | 0.260 | 0.349 | 0.435 |
+| $1 \times 300/150$ | 0.209 | 0.347 | 0.405 |
 For PVC-insulated cables with aluminum conductors,
 multiply the resistance value R′ by the factor 1.7.
-## --- Página 81 ---
-*8.4 Cables and overhead lines* **65**
 **Table 8.8:** Resistance values at 80 °C for Cu cables and conductors [24]
 | **Cross-section of conductor S in mm²** | **Copper Resistance r mΩ/km** | **Copper
 Reactance x mΩ/km** | **Copper Impedance z mΩ/km** | **Aluminum Resistance r mΩ/km** |
 **Aluminum Reactance x mΩ/km** | **Aluminum Impedance z mΩ/km** |
-## |---|---|---|---|---|---|---|
-## | $4 \times 1.5$ | 15 | 0.115 | 15 | - | - | - |
-## | $4 \times 2.5$ | 9.02 | 0.110 | 9.02 | - | - | - |
-## | $4 \times 4$ | 5.654 | 0.106 | 5.654 | - | - | - |
-## | $4 \times 6$ | 3.757 | 0.100 | 3.758 | - | - | - |
-## | $4 \times 10$ | 2.244 | 0.094 | 2.264 | - | - | - |
-## | $4 \times 16$ | 1.413 | 0.090 | 1.415 | - | - | - |
-## | $4 \times 25$ | 0.895 | 0.086 | 0.899 | 1.68 | 0.086 | 1.682 |
-## | $4 \times 35$ | 0.649 | 0.083 | 0.654 | 1.226 | 0.083 | 1.228 |
-## | $4 \times 50$ | 0.479 | 0.083 | 0.486 | 0.794 | 0.083 | 0.798 |
-## | $4 \times 70$ | 0.332 | 0.082 | 0.341 | 0.551 | 0.082 | 0.557 |
+|---|---|---|---|---|---|---|
+| $4 \times 1.5$ | 15 | 0.115 | 15 | - | - | - |
+| $4 \times 2.5$ | 9.02 | 0.110 | 9.02 | - | - | - |
+| $4 \times 4$ | 5.654 | 0.106 | 5.654 | - | - | - |
+| $4 \times 6$ | 3.757 | 0.100 | 3.758 | - | - | - |
+| $4 \times 10$ | 2.244 | 0.094 | 2.264 | - | - | - |
+| $4 \times 16$ | 1.413 | 0.090 | 1.415 | - | - | - |
+| $4 \times 25$ | 0.895 | 0.086 | 0.899 | 1.68 | 0.086 | 1.682 |
+| $4 \times 35$ | 0.649 | 0.083 | 0.654 | 1.226 | 0.083 | 1.228 |
+| $4 \times 50$ | 0.479 | 0.083 | 0.486 | 0.794 | 0.083 | 0.798 |
+| $4 \times 70$ | 0.332 | 0.082 | 0.341 | 0.551 | 0.082 | 0.557 |
 
-## | $4 \times 95$ | 0.239 | 0.082 | 0.252 | 0.396 | 0.082 | 0.404 |
-## | $4 \times 120$ | 0.192 | 0.080 | 0.208 | 0.316 | 0.080 | 0.325 |
-## | $4 \times 150$ | 0.153 | 0.080 | 0.172 | 0.257 | 0.080 | 0.270 |
-## | $4 \times 185$ | 0.122 | 0.080 | 0.146 | 0.203 | 0.080 | 0.221 |
-## | $4 \times 240$ | 0.093 | 0.079 | 0.122 | 0.155 | 0.079 | 0.173 |
-## | $4 \times 300$ | 0.074 | 0.079 | 0.108 | 0.124 | 0.079 | 0.147 |
+| $4 \times 95$ | 0.239 | 0.082 | 0.252 | 0.396 | 0.082 | 0.404 |
+| $4 \times 120$ | 0.192 | 0.080 | 0.208 | 0.316 | 0.080 | 0.325 |
+| $4 \times 150$ | 0.153 | 0.080 | 0.172 | 0.257 | 0.080 | 0.270 |
+| $4 \times 185$ | 0.122 | 0.080 | 0.146 | 0.203 | 0.080 | 0.221 |
+| $4 \times 240$ | 0.093 | 0.079 | 0.122 | 0.155 | 0.079 | 0.173 |
+| $4 \times 300$ | 0.074 | 0.079 | 0.108 | 0.124 | 0.079 | 0.147 |
 **Table 8.9:** Resistance values at 20 °C for Cu cables and conductors [24]
 | **Cross-section of conductor S in mm²** | **Copper Resistance r mΩ/km** | **Copper
 Reactance x mΩ/km** | **Copper Impedance z mΩ/km** | **Aluminum Resistance r mΩ/km** |
 **Aluminum Reactance x mΩ/km** | **Aluminum Impedance z mΩ/km** |
-## |---|---|---|---|---|---|---|
-## | $4 \times 1.5$ | 12.1 | 0.114 | 12.1 | - | - | - |
-## | $4 \times 2.5$ | 7.28 | 0.110 | 7.28 | - | - | - |
-## | $4 \times 4$ | 4.56 | 0.106 | 4.56 | - | - | - |
-## | $4 \times 6$ | 3.03 | 0.100 | 3.03 | - | - | - |
-## | $4 \times 10$ | 1.81 | 0.0945 | 1.812 | - | - | - |
-## | $4 \times 16$ | 1.14 | 0.0895 | 1.143 | - | - | - |
-## | $4 \times 25$ | 0.722 | 0.0879 | 0.729 | 1.20 | 0.088 | 1.203 |
-## | $4 \times 35$ | 0.524 | 0.0851 | 0.530 | 0.876 | 0.086 | 0.880 |
-## | $4 \times 50$ | 0.387 | 0.0848 | 0.396 | 0.641 | 0.084 | 0.646 |
-## | $4 \times 70$ | 0.268 | 0.0819 | 0.280 | 0.443 | 0.082 | 0.450 |
-## | $4 \times 95$ | 0.193 | 0.0819 | 0.209 | 0.320 | 0.082 | 0.330 |
-## | $4 \times 120$ | 0.155 | 0.0804 | 0.174 | 0.253 | 0.080 | 0.265 |
-## | $4 \times 150$ | 0.124 | 0.0804 | 0.147 | 0.206 | 0.080 | 0.220 |
-## | $4 \times 185$ | 0.0991 | 0.0804 | 0.127 | 0.164 | 0.080 | 0.182 |
-## | $4 \times 240$ | 0.0754 | 0.0797 | 0.109 | 0.125 | 0.079 | 0.147 |
-## | $4 \times 300$ | 0.0601 | 0.0797 | 0.998 | 0.100 | 0.079 | 0.127 |
-## --- Página 82 ---
-**66** | *8 Impedances of Three-phase Operational Equipment*
+|---|---|---|---|---|---|---|
+| $4 \times 1.5$ | 12.1 | 0.114 | 12.1 | - | - | - |
+| $4 \times 2.5$ | 7.28 | 0.110 | 7.28 | - | - | - |
+| $4 \times 4$ | 4.56 | 0.106 | 4.56 | - | - | - |
+| $4 \times 6$ | 3.03 | 0.100 | 3.03 | - | - | - |
+| $4 \times 10$ | 1.81 | 0.0945 | 1.812 | - | - | - |
+| $4 \times 16$ | 1.14 | 0.0895 | 1.143 | - | - | - |
+| $4 \times 25$ | 0.722 | 0.0879 | 0.729 | 1.20 | 0.088 | 1.203 |
+| $4 \times 35$ | 0.524 | 0.0851 | 0.530 | 0.876 | 0.086 | 0.880 |
+| $4 \times 50$ | 0.387 | 0.0848 | 0.396 | 0.641 | 0.084 | 0.646 |
+| $4 \times 70$ | 0.268 | 0.0819 | 0.280 | 0.443 | 0.082 | 0.450 |
+| $4 \times 95$ | 0.193 | 0.0819 | 0.209 | 0.320 | 0.082 | 0.330 |
+| $4 \times 120$ | 0.155 | 0.0804 | 0.174 | 0.253 | 0.080 | 0.265 |
+| $4 \times 150$ | 0.124 | 0.0804 | 0.147 | 0.206 | 0.080 | 0.220 |
+| $4 \times 185$ | 0.0991 | 0.0804 | 0.127 | 0.164 | 0.080 | 0.182 |
+| $4 \times 240$ | 0.0754 | 0.0797 | 0.109 | 0.125 | 0.079 | 0.147 |
+| $4 \times 300$ | 0.0601 | 0.0797 | 0.998 | 0.100 | 0.079 | 0.127 |
 **Table 8.10:** Resistances per unit length *r* in positive-sequence system for overland line
 conductors manufactured in accordance with DIN 48 201 and $f = 50\ Hz$ at 20 °C [7]
 | Cross-section of conductor S in mm² | Nominal cross-section S in mm² | Copper r in Ω/km |
 Aluminum r in Ω/km |
-## |---|---|---|---|
-## | 10 | 10 | 1.804 | 2.855 |
-## | 16 | 15.9 | 1.134 | 1.795 |
-## | 25 | 24.2 | 0.745 | 1.18 |
-## | 35 | 34.4 | 0.524 | 0.83 |
-## | 50 | 49.5 | 0.364 | 0.577 |
-## | 70 | 65.8 | 0.276 | 0.436 |
+|---|---|---|---|
+| 10 | 10 | 1.804 | 2.855 |
+| 16 | 15.9 | 1.134 | 1.795 |
+| 25 | 24.2 | 0.745 | 1.18 |
+| 35 | 34.4 | 0.524 | 0.83 |
+| 50 | 49.5 | 0.364 | 0.577 |
+| 70 | 65.8 | 0.276 | 0.436 |
 
-## | 95 | 93.2 | 0.195 | 0.308 |
-## | 120 | 117 | 0.155 | 0.246 |
+| 95 | 93.2 | 0.195 | 0.308 |
+| 120 | 117 | 0.155 | 0.246 |
 **Table 8.11:** Inductive reactances per unit length *x* in $\Omega/km$ in positive-sequence
 system for overland line conductors at $f = 50\ Hz$ [7]
 | Cross-section of conductor S in mm² | Average distance d between conductors in cm | | | | | |
-## |---|---|---|---|---|---|---|
-## | | **50** | **60** | **70** | **80** | **90** | **100** |
-## | 10 | 0.37 | 0.38 | 0.40 | 0.40 | 0.41 | 0.42 |
-## | 16 | 0.36 | 0.37 | 0.38 | 0.38 | 0.40 | 0.40 |
-## | 25 | 0.34 | 0.35 | 0.37 | 0.37 | 0.38 | 0.39 |
-## | 35 | 0.33 | 0.33 | 0.35 | 0.36 | 0.37 | 0.38 |
-## | 50 | 0.32 | 0.32 | 0.34 | 0.35 | 0.36 | 0.37 |
-## | 70 | 0.31 | 0.32 | 0.33 | 0.34 | 0.35 | 0.35 |
-## | 95 | 0.29 | 0.31 | 0.32 | 0.33 | 0.34 | 0.34 |
-## | 120 | 0.29 | 0.30 | 0.31 | 0.32 | 0.33 | 0.34 |
-## --- Página 83 ---
-*8.4 Cables and overhead lines* **67**
+|---|---|---|---|---|---|---|
+| | **50** | **60** | **70** | **80** | **90** | **100** |
+| 10 | 0.37 | 0.38 | 0.40 | 0.40 | 0.41 | 0.42 |
+| 16 | 0.36 | 0.37 | 0.38 | 0.38 | 0.40 | 0.40 |
+| 25 | 0.34 | 0.35 | 0.37 | 0.37 | 0.38 | 0.39 |
+| 35 | 0.33 | 0.33 | 0.35 | 0.36 | 0.37 | 0.38 |
+| 50 | 0.32 | 0.32 | 0.34 | 0.35 | 0.36 | 0.37 |
+| 70 | 0.31 | 0.32 | 0.33 | 0.34 | 0.35 | 0.35 |
+| 95 | 0.29 | 0.31 | 0.32 | 0.33 | 0.34 | 0.34 |
+| 120 | 0.29 | 0.30 | 0.31 | 0.32 | 0.33 | 0.34 |
 **Table 8.12:** Quotients of effective resistances and inductive reactances in the zero-sequence
 and positive-sequence systems for NAYY and NYY cables as a function of the ground return system
 at $f = 50\ Hz$ [7]
 | *S* in mm² | | $\dfrac{R_{OL}}{R_L}$ | | | | $\dfrac{X_{OL}}{X_L}$ | | |
-## |---|---|---|---|---|---|---|---|---|
+|---|---|---|---|---|---|---|---|---|
 | | **Copper** | | **Aluminum** | | **Copper** | | **Aluminum** | |
-## | | *a* | *c* | *a* | *c* | *a* | *c* | *a* | *c* |
-## | $4 \times 1.5$ | 4.0 | 1.03 | - | - | 3.99 | 21.28 | - | - |
-## | $4 \times 2.5$ | 4.0 | 1.05 | - | - | 4.01 | 21.62 | - | - |
-## | $4 \times 4$ | 4.0 | 1.11 | - | - | 3.98 | 21.36 | - | - |
-## | $4 \times 6$ | 4.0 | 1.21 | - | - | 4.03 | 21.62 | - | - |
-## | $4 \times 10$ | 4.0 | 1.47 | - | - | 4.02 | 20.22 | - | - |
-## | $4 \times 16$ | 4.0 | 1.86 | - | - | 3.98 | 17.09 | - | - |
-## | $4 \times 25$ | 4.0 | 1.35 | - | - | 4.13 | 12.97 | - | - |
-## | $4 \times 35$ | 4.0 | 2.71 | 4.0 | 2.12 | 3.78 | 10.02 | 4.13 | 15.47 |
-## | $4 \times 50$ | 4.0 | 2.95 | 4.0 | 2.48 | 3.76 | 7.61 | 3.76 | 11.99 |
-## | $4 \times 70$ | 4.0 | 3.18 | 4.0 | 2.84 | 3.66 | 5.68 | 3.66 | 8.63 |
-## | $4 \times 95$ | 4.0 | 3.29 | 4.0 | 3.07 | 3.65 | 4.63 | 3.65 | 6.51 |
-## | $4 \times 120$ | 4.0 | 3.35 | 4.0 | 3.19 | 3.65 | 4.21 | 3.65 | 5.53 |
-## | $4 \times 150$ | 4.0 | 3.38 | 4.0 | 3.26 | 3.65 | 3.94 | 3.65 | 4.86 |
-## | $4 \times 185$ | 4.0 | 3.41 | 4.0 | 3.32 | 3.65 | 3.74 | 3.65 | 4.35 |
-## | $4 \times 240$ | 4.0 | 3.42 | - | - | 3.67 | 3.62 | - | - |
-## | $4 \times 300$ | 4.0 | 3.44 | - | - | 3.66 | 3.52 | - | - |
+| | *a* | *c* | *a* | *c* | *a* | *c* | *a* | *c* |
+| $4 \times 1.5$ | 4.0 | 1.03 | - | - | 3.99 | 21.28 | - | - |
+| $4 \times 2.5$ | 4.0 | 1.05 | - | - | 4.01 | 21.62 | - | - |
+| $4 \times 4$ | 4.0 | 1.11 | - | - | 3.98 | 21.36 | - | - |
+| $4 \times 6$ | 4.0 | 1.21 | - | - | 4.03 | 21.62 | - | - |
+| $4 \times 10$ | 4.0 | 1.47 | - | - | 4.02 | 20.22 | - | - |
+| $4 \times 16$ | 4.0 | 1.86 | - | - | 3.98 | 17.09 | - | - |
+| $4 \times 25$ | 4.0 | 1.35 | - | - | 4.13 | 12.97 | - | - |
+| $4 \times 35$ | 4.0 | 2.71 | 4.0 | 2.12 | 3.78 | 10.02 | 4.13 | 15.47 |
+| $4 \times 50$ | 4.0 | 2.95 | 4.0 | 2.48 | 3.76 | 7.61 | 3.76 | 11.99 |
+| $4 \times 70$ | 4.0 | 3.18 | 4.0 | 2.84 | 3.66 | 5.68 | 3.66 | 8.63 |
+| $4 \times 95$ | 4.0 | 3.29 | 4.0 | 3.07 | 3.65 | 4.63 | 3.65 | 6.51 |
+| $4 \times 120$ | 4.0 | 3.35 | 4.0 | 3.19 | 3.65 | 4.21 | 3.65 | 5.53 |
+| $4 \times 150$ | 4.0 | 3.38 | 4.0 | 3.26 | 3.65 | 3.94 | 3.65 | 4.86 |
+| $4 \times 185$ | 4.0 | 3.41 | 4.0 | 3.32 | 3.65 | 3.74 | 3.65 | 4.35 |
+| $4 \times 240$ | 4.0 | 3.42 | - | - | 3.67 | 3.62 | - | - |
+| $4 \times 300$ | 4.0 | 3.44 | - | - | 3.66 | 3.52 | - | - |
 
 a Ground return system through fourth conductor
 c Ground return system through fourth conductor and ground
 **Table 8.13:** Resistances $r$ per unit length of conductors for copper conductors
 | *Cross-section of conductor* $S$ in mm² | *20 °C* Ω/km | *30 °C* Ω/km |
-## |---|---|---|
-## | 1.5 | 12.1 | 12.57 |
-## | 2.5 | 7.41 | 7.56 |
-## | 4 | 4.61 | 4.73 |
-## | 6 | 3.08 | 3.15 |
-## | 10 | 1.83 | 1.88 |
-## | 16 | 1.15 | 1.18 |
-## | 25 | 0.727 | 0.75 |
-## | 35 | 0.524 | 0.54 |
-## | 50 | 0.387 | 0.40 |
-## | 70 | 0.268 | 0.28 |
-## | 95 | 0.193 | 0.20 |
-## | 120 | 0.153 | 0.16 |
-## | 150 | 0.124 | 0.13 |
-## | 185 | 0.0991 | 0.10 |
-## --- Página 84 ---
-**68** | *8 Impedances of Three-phase Operational Equipment*
+|---|---|---|
+| 1.5 | 12.1 | 12.57 |
+| 2.5 | 7.41 | 7.56 |
+| 4 | 4.61 | 4.73 |
+| 6 | 3.08 | 3.15 |
+| 10 | 1.83 | 1.88 |
+| 16 | 1.15 | 1.18 |
+| 25 | 0.727 | 0.75 |
+| 35 | 0.524 | 0.54 |
+| 50 | 0.387 | 0.40 |
+| 70 | 0.268 | 0.28 |
+| 95 | 0.193 | 0.20 |
+| 120 | 0.153 | 0.16 |
+| 150 | 0.124 | 0.13 |
+| 185 | 0.0991 | 0.10 |
 **Table 8.14:** Impedance *z* for main outgoing and return lines of power supply companies
 | *Impedance* | |
-## |---|---|
+|---|---|
 | **Cross-section of conductor (NYM or NYY) S in mm²** | **z m Ω/m** |
-## | 1.5 | 0.03001 |
-## | 2.5 | 0.01838 |
-## | 4 | 0.01131 |
-## | 6 | 0.00752 |
-## | 10 | 0.00449 |
-## | 16 | 0.00284 |
-## | 25 | 0.00180 |
-## | 35 | 0.00131 |
-## | 50 | 0.00098 |
-## | 70 | 0.00069 |
-## | 95 | 0.00052 |
+| 1.5 | 0.03001 |
+| 2.5 | 0.01838 |
+| 4 | 0.01131 |
+| 6 | 0.00752 |
+| 10 | 0.00449 |
+| 16 | 0.00284 |
+| 25 | 0.00180 |
+| 35 | 0.00131 |
+| 50 | 0.00098 |
+| 70 | 0.00069 |
+| 95 | 0.00052 |
 **Table 8.15:** Resistances of conductors in XLPE-insulated cables (6 to 30 kV) at 20 °C [26]
 | **Cross-section of conductor S in mm²** | **Copper conductor Ω/km** | **Aluminum
 conductor Ω/km** |
 
-## |---|---|---|
-## | 25 | 0.727 | 1.20 |
-## | 35 | 0.524 | 0.868 |
-## | 50 | 0.387 | 0.641 |
-## | 70 | 0.268 | 0.443 |
-## | 95 | 0.193 | 0.320 |
-## | 120 | 0.153 | 0.253 |
-## | 150 | 0.124 | 0.206 |
-## | 185 | 0.0991 | 0.164 |
-## | 240 | 0.0754 | 0.125 |
-## | 300 | 0.0601 | 0.100 |
-## | 400 | 0.0470 | 0.0778 |
-## | 500 | 0.0366 | 0.0605 |
-## --- Página 85 ---
-*8.4 Cables and overhead lines* **69**
+|---|---|---|
+| 25 | 0.727 | 1.20 |
+| 35 | 0.524 | 0.868 |
+| 50 | 0.387 | 0.641 |
+| 70 | 0.268 | 0.443 |
+| 95 | 0.193 | 0.320 |
+| 120 | 0.153 | 0.253 |
+| 150 | 0.124 | 0.206 |
+| 185 | 0.0991 | 0.164 |
+| 240 | 0.0754 | 0.125 |
+| 300 | 0.0601 | 0.100 |
+| 400 | 0.0470 | 0.0778 |
+| 500 | 0.0366 | 0.0605 |
 **Table 8.16:** Resistances per unit length of XLPE-insulated copper cables (6 to 20 kV) for *f* =
 50 *Hz* [26]
 | *Cross-section of conductor S in mm²* | *6/10 kV* | | *12/20 kV* | |
-## |---|---|---|---|---|
+|---|---|---|---|---|
 | | *single-conductors on top of each other* | *single-conductors next to each other* |
 *single-conductors on top of each other* | *single-conductors next to each other* |
-## | 35 | 0.671 | 0.673 | 0.671 | 0.672 |
-## | 50 | 0.497 | 0.498 | 0.496 | 0.498 |
-## | 70 | 0.345 | 0.346 | 0.345 | 0.346 |
-## | 95 | 0.249 | 0.251 | 0.249 | 0.250 |
-## | 120 | 0.198 | 0.200 | 0.198 | 0.200 |
-## | 150 | 0.163 | 0.165 | 0.163 | 0.165 |
-## | 185 | 0.132 | 0.134 | 0.131 | 0.133 |
-## | 240 | 0.102 | 0.104 | 0.101 | 0.103 |
-## | 300 | 0.082 | 0.085 | 0.082 | 0.084 |
-## | 400 | 0.068 | 0.071 | 0.067 | 0.070 |
-## | 500 | 0.055 | 0.058 | 0.055 | 0.058 |
+| 35 | 0.671 | 0.673 | 0.671 | 0.672 |
+| 50 | 0.497 | 0.498 | 0.496 | 0.498 |
+| 70 | 0.345 | 0.346 | 0.345 | 0.346 |
+| 95 | 0.249 | 0.251 | 0.249 | 0.250 |
+| 120 | 0.198 | 0.200 | 0.198 | 0.200 |
+| 150 | 0.163 | 0.165 | 0.163 | 0.165 |
+| 185 | 0.132 | 0.134 | 0.131 | 0.133 |
+| 240 | 0.102 | 0.104 | 0.101 | 0.103 |
+| 300 | 0.082 | 0.085 | 0.082 | 0.084 |
+| 400 | 0.068 | 0.071 | 0.067 | 0.070 |
+| 500 | 0.055 | 0.058 | 0.055 | 0.058 |
 **Table 8.17:** Inductances of XLPE-insulated copper cables (6 to 30 kV) for *f* = 50 *Hz* [26]
 | *Cross-section of conductor S in mm²* | *6/10 kV* | | *12/20 kV* | | *18/30 kV* | |
-## |---|---|---|---|---|---|---|
-## | | *mh/km* | *mh/km* | *mh/km* | *mh/km* | *mh/km* | *mh/km* |
-## | 35 | 0.45 | 0.76 | 0.48 | 0.76 | - | - |
-## | 50 | 0.42 | 0.73 | 0.45 | 0.74 | 0.48 | 0.75 |
-## | 70 | 0.39 | 0.70 | 0.43 | 0.70 | 0.45 | 0.71 |
-## | 95 | 0.38 | 0.67 | 0.41 | 0.68 | 0.43 | 0.68 |
+|---|---|---|---|---|---|---|
+| | *mh/km* | *mh/km* | *mh/km* | *mh/km* | *mh/km* | *mh/km* |
+| 35 | 0.45 | 0.76 | 0.48 | 0.76 | - | - |
+| 50 | 0.42 | 0.73 | 0.45 | 0.74 | 0.48 | 0.75 |
+| 70 | 0.39 | 0.70 | 0.43 | 0.70 | 0.45 | 0.71 |
+| 95 | 0.38 | 0.67 | 0.41 | 0.68 | 0.43 | 0.68 |
 
-## | 120 | 0.36 | 0.65 | 0.39 | 0.65 | 0.42 | 0.66 |
-## | 150 | 0.35 | 0.63 | 0.38 | 0.63 | 0.41 | 0.64 |
-## | 185 | 0.34 | 0.61 | 0.36 | 0.62 | 0.39 | 0.63 |
-## | 240 | 0.32 | 0.59 | 0.35 | 0.59 | 0.37 | 0.60 |
-## | 300 | 0.31 | 0.57 | 0.33 | 0.58 | 0.36 | 0.59 |
-## | 400 | 0.30 | 0.55 | 0.33 | 0.55 | 0.34 | 0.56 |
-## | 500 | 0.29 | 0.53 | 0.31 | 0.53 | 0.33 | 0.54 |
-## --- Página 86 ---
-**70** | *8 Impedances of Three-phase Operational Equipment*
+| 120 | 0.36 | 0.65 | 0.39 | 0.65 | 0.42 | 0.66 |
+| 150 | 0.35 | 0.63 | 0.38 | 0.63 | 0.41 | 0.64 |
+| 185 | 0.34 | 0.61 | 0.36 | 0.62 | 0.39 | 0.63 |
+| 240 | 0.32 | 0.59 | 0.35 | 0.59 | 0.37 | 0.60 |
+| 300 | 0.31 | 0.57 | 0.33 | 0.58 | 0.36 | 0.59 |
+| 400 | 0.30 | 0.55 | 0.33 | 0.55 | 0.34 | 0.56 |
+| 500 | 0.29 | 0.53 | 0.31 | 0.53 | 0.33 | 0.54 |
 **Table 8.18:** Effective capacitances of XLPE-insulated copper cables [26]
 | **Nominal voltage** | **6/10 kV** | **12/20 kV** | **18/30 kV** |
-## |---|---|---|---|
+|---|---|---|---|
 | **Cross-section of conductor S in mm²** | **μF/km** | **μF/km** | **μF/km** |
-## | 35 | 0.22 | 0.16 | - |
-## | 50 | 0.25 | 0.18 | 0.14 |
-## | 70 | 0.28 | 0.20 | 0.15 |
-## | 95 | 0.31 | 0.22 | 0.17 |
-## | 120 | 0.34 | 0.23 | 0.18 |
-## | 150 | 0.37 | 0.25 | 0.19 |
-## | 185 | 0.40 | 0.27 | 0.20 |
-## | 240 | 0.44 | 0.30 | 0.22 |
-## | 300 | 0.48 | 0.32 | 0.24 |
-## | 400 | 0.55 | 0.36 | 0.27 |
-## | 500 | 0.60 | 0.40 | 0.29 |
+| 35 | 0.22 | 0.16 | - |
+| 50 | 0.25 | 0.18 | 0.14 |
+| 70 | 0.28 | 0.20 | 0.15 |
+| 95 | 0.31 | 0.22 | 0.17 |
+| 120 | 0.34 | 0.23 | 0.18 |
+| 150 | 0.37 | 0.25 | 0.19 |
+| 185 | 0.40 | 0.27 | 0.20 |
+| 240 | 0.44 | 0.30 | 0.22 |
+| 300 | 0.48 | 0.32 | 0.24 |
+| 400 | 0.55 | 0.36 | 0.27 |
+| 500 | 0.60 | 0.40 | 0.29 |
 **Table 8.19:** Ground fault currents of XLPE-insulated copper cables [26]
 | **Nominal voltage** | **6/10 kV** | **12/20 kV** | **18/30 kV** |
-## |---|---|---|---|
+|---|---|---|---|
 | **Cross-section of conductor S in mm²** | **A/km** | **AF/km** | **A/km** |
-## | 35 | 1.2 | 1.7 | - |
-## | 50 | 1.4 | 1.9 | 2.3 |
-## | 70 | 1.5 | 2.1 | 2.5 |
-## | 95 | 1.7 | 2.4 | 2.7 |
-## | 120 | 1.9 | 2.6 | 2.9 |
-## | 150 | 2.0 | 2.7 | 3.1 |
-## | 185 | 2.2 | 3.0 | 3.3 |
-## | 240 | 2.4 | 3.3 | 3.7 |
-## | 300 | 2.6 | 3.5 | 4.0 |
-## | 400 | 3.0 | 4.0 | 4.4 |
-## | 500 | 3.3 | 4.3 | 4.8 |
-## ---
+| 35 | 1.2 | 1.7 | - |
+| 50 | 1.4 | 1.9 | 2.3 |
+| 70 | 1.5 | 2.1 | 2.5 |
+| 95 | 1.7 | 2.4 | 2.7 |
+| 120 | 1.9 | 2.6 | 2.9 |
+| 150 | 2.0 | 2.7 | 3.1 |
+| 185 | 2.2 | 3.0 | 3.3 |
+| 240 | 2.4 | 3.3 | 3.7 |
+| 300 | 2.6 | 3.5 | 4.0 |
+| 400 | 3.0 | 4.0 | 4.4 |
+| 500 | 3.3 | 4.3 | 4.8 |
 
-## **8.5**
+**8.5**
 **Short circuit current limiting**
 The short circuit current limiting choke coils (Figure 8.9) are used to limit the current flowing as a
 result of a fault condition in series systems with insufficient stability against short circuits. They are
 used in order to reduce the breaking capacity of the circuit breakers to a permissible value.
-## --- Página 87 ---
-*8.6 Asynchronous machines* **71**
 The following conditions apply here:
 $$X_R = \frac{u_{kR}}{100\%} \cdot \frac{U_n}{\sqrt{3} \cdot I_{rR}},\tag{8.48}$$
 $$R_R \ll X_R.\tag{8.49}$$
 > **[Figure Description - Fig. 8.9: Short circuit current limiting choke coil and equivalent circuit]**
-## >
+>
 > The figure contains two circuit diagrams stacked vertically:
-## >
+>
 > **Top diagram (Physical representation of choke coil):**
 > A single-line circuit showing two terminal nodes (circles) connected in series. Between the
 terminals, there is a series combination of: a resistive element represented by diagonal hash marks
 (///), followed by an iron-core inductor symbol (a curved coil over a set of parallel lines indicating a
 magnetic core). The component is labeled "Choke coil" below the diagram.
-## >
+>
 > **Bottom diagram (Equivalent circuit of choke coil):**
 > A single-line equivalent circuit showing two terminal nodes (circles) connected in series. Between
 the terminals, there are two series elements:
 > - A resistor labeled $R_R$ (drawn as a rectangular box)
 > - An inductor/reactance labeled $X_R$ (drawn as a coiled/wave symbol)
-## >
+>
 > Together these represent the simplified electrical equivalent model of the choke coil, with $R_R$
 being the resistance and $X_R$ the reactance of the coil.
 **Fig. 8.9:** Short circuit current limiting choke coil and equivalent circuit
@@ -2850,28 +2597,25 @@ $U_n$ - Nominal power line voltage
 $R_R$ - Resistance of choke coil
 $u_{kR}$ - Rated voltage drop of choke coil (given on nameplate)
 $I_{rR}$ - Rated current of choke coil (given on nameplate)
-## ---
 
-## **8.6**
+**8.6**
 **Asynchronous machines**
 Asynchronous motors (Fig. 8.10) have filed conditions similar to those of synchronous motors
 following a short circuit across the terminal.
 The equivalent circuit consists of an internal voltage source and an impedance. The value of this
 impedance can be calculated as follows:
-## --- Página 88 ---
-**72** | *8 Impedances of Three-phase Operational Equipment*
 $$Z_M = \frac{1}{I_{an}/I_{rM}} \cdot \frac{U_{rM}}{\sqrt{3} \cdot I_{rM}} = \frac{1}{I_{an}/I_{rM}}
 \cdot \frac{U_{rM}^2}{S_{rM}},\tag{8.50}$$
 $$S_r M = \frac{P_{rM}}{\eta_r \cdot \cos \varphi_r} \tag{8.51}$$
 > **Fig. 8.10 - Asynchronous machine and its equivalent circuit**
-## >
+>
 > The figure shows two diagrams:
-## >
+>
 > **Top diagram:** A symbolic representation of a three-phase asynchronous machine (ASM). On
 the left, a circle labeled "ASM" with "3~" inside (indicating a three-phase AC machine) is connected
 via a line with three diagonal slashes (representing a three-phase cable or bus) to an open terminal
 on the right.
-## >
+>
 > **Bottom diagram:** The per-phase equivalent circuit of the asynchronous motor. From the left
 terminal, a series branch contains a resistance $R_M$ (represented as a rectangle) followed by a
 reactance $X_M$ (represented as an inductor/coil symbol). This series branch connects to a
@@ -2880,17 +2624,16 @@ downward, representing the equivalent voltage source of the network. The bottom 
 back to the left terminal, completing the single-phase equivalent circuit loop.
 **Fig. 8.10:** Asynchronous machine and equivalent circuit
 The meanings of the symbols are:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $Z_M$ | Impedance of motor |
 | $U_{rM}$ | Rated voltage of motor |
 | $I_{rM}$ | Rated current of motor |
 | $S_{rM}$ | Rated apparent power of motor |
 | $P_{rM}$ | Rated effective power of motor |
 | $I_{an}/I_{rM}$ | Ratio of locked-rotor current to rated current of motor. |
-## ---
 
-## **8.7**
+**8.7**
 **Consideration of capacitors and non-rotating loads**
 The short circuit currents are determined with the aid of the equivalent voltage source. Not
 considered here are the load flow before the occurrence of the short circuit, the capacitances of
@@ -2899,17 +2642,13 @@ the exciter of the generators. Independently of the point in time at which the s
 the discharge current of the parallel capacitors can be neglected for the calculation of $i_p$. The
 influence of the series capacitors can also be neglected if these are provided with voltage limiting
 systems connected in parallel, which respond in the event of a short circuit.
-## --- Página 89 ---
-## ## 8.8
+## 8.8
 **Consideration of static converters**
 For the calculation of short circuit currents static converters are treated similarly to asynchronous
 motors. Reversing mechanisms supplied from a static converter contribute only to the initial
 symmetrical short circuit current and the peak short circuit current.
-## --- Página 90 ---
-The image appears to be completely blank/white with no visible text or content to transcribe.
-## --- Página 91 ---
-## # 9
-## # Impedance Corrections
+# 9
+# Impedance Corrections
 The magnitude of the short circuit currents in a network depends primarily on the design of the
 network, the generators or power station blocks and the motors operating and secondarily on the
 operating state of the network before occurence of the short circuit. It is therefore difficult to find
@@ -2939,21 +2678,19 @@ impedances ($K_{KW}$) in addition to the factor $c_{max}$, especially when the s
 reactances $x''_d$ of the generators are large and the transformation ratio of the block
 transformers differs from the network voltages during operation on both sides of the transformer
 [1]. The calculation of the smallest short circuit current requires special considerations, such as:
-## --- Página 92 ---
-## **76** | *9 Impedance Corrections*
+**76** | *9 Impedance Corrections*
 - the smallest power supplied for thermal power stations
 - the largest reactive power of machine units for pumping power stations
 - special equipment for limiting the load angle
 - Loading state of power station units during low-load periods.
-## ---
-## **9.1**
+**9.1**
 **Correction factor *K*_G for generators**
 The impedance correction factor $K_G$ is applied to the impedance of generators connected
 directly to the network (Figure 9.1).
 > **[Figure 9.1 - Top diagram]:** Single-line schematic showing a three-phase generator (labeled
 "3 G" with a circle symbol) connected directly to the network via a bus. A fault location is indicated
 at the right end of the bus by a diagonal arrow/slash symbol.
-## >
+>
 > **[Figure 9.1 - Bottom diagram (Equivalent Circuit)]:** The equivalent circuit of the generator
 shows:
 > - A series branch consisting of a resistance $K_G R_G$ (rectangle symbol) and a reactance $K_G
@@ -2973,7 +2710,6 @@ $$\underline{Z}_G = R_G + jX''_d, \tag{9.1}$$
 $$\underline{Z}_{(GK)} = K_G \cdot \underline{Z}_G = K_G(R_G + jX''_d), \tag{9.2}$$
 With the correction factor:
 $$K_G = \frac{U_n}{U_{rG}} \cdot \frac{c_{max}}{(1 + x''_d \cdot \sin\varphi_{rG})}. \tag{9.3}$$
-## --- Página 93 ---
 9.2 Correction factor K_KW for power plant block **77**
 In accordance with IEC 60 909, for three-pole short circuit currents with direct connection to the
 network:
@@ -2989,8 +2725,8 @@ $$X_{(2)G} = \frac{1}{2}(X_d'' + X_q''),$$
 $$Z_{(0)G} = K_G(R_{(0)G} + jk\, X_{(0)G}).$$
 ## (9.7)
 The meanings of the symbols are:
-## | Symbol | Meaning |
-## |---|---|
+| Symbol | Meaning |
+|---|---|
 | $c_{max}$ | Voltage factor |
 | $U_n$ | Nominal voltage of network |
 | $U_{rG}$ | Rated voltage of generator |
@@ -2998,9 +2734,8 @@ The meanings of the symbols are:
 | $Z_G$ | Impedance of generator |
 | $x_d''$ | Subtransient reactance of generator |
 | $\varphi_{rG}$ | Phase angle between $U_{rG}/\sqrt{3}$ and $I_{rG}$. |
-## ---
 
-## **9.2**
+**9.2**
 **Correction factor *K*_KW for power plant block**
 For the determination of the impedance correction factor $K_{KW}$ as in Figure 9.2, the following
 considerations are necessary [1].
@@ -3009,8 +2744,7 @@ ratio
 - Whether the rated voltages of the generator and the low voltage side of the block transformer are
 different
 - Whether the rated apparent powers of the generator and transformer are also different.
-## --- Página 94 ---
-## **78** | *9 Impedance Corrections*
+**78** | *9 Impedance Corrections*
 > **Diagram Description:**
 > The figure shows a single-line electrical diagram for impedance correction of a block transformer
 configuration. On the left, the "Network input" feeds into a busbar at node Q, characterized by
@@ -3028,17 +2762,16 @@ inherent voltage regulation of the generator. Here, it is necessary to distingui
 transformer with and without step switching.
 Block transformer with step switch:
 $$\underline{Z}_{KW} = K_{MS} \cdot (t_r^2 \cdot \underline{Z}_G + \underline{Z}_{THV}),
-## \tag{9.8}$$
+\tag{9.8}$$
 $$K_{with} = \frac{U_{nQ}^2}{U_{rG}^2} \cdot \frac{1}{t_r^2} \cdot \frac{c_{max}}{1 + |x_d'' - x_T|
 \cdot \sin\varphi_{rG}}. \tag{9.9}$$
 Block transformer without step switch:
 $$\underline{Z}_{KW} = K_{HV} \cdot (t_r^2 \cdot \underline{Z}_G + \underline{Z}_{THV}),
-## \tag{9.10}$$
+\tag{9.10}$$
 $$K_{without} = \frac{U_{nQ}}{U_{rG}} \cdot \frac{1}{1+p_G} \cdot \frac{1}{t_r} \cdot (1+p_T)
 \cdot \frac{c_{max}}{1 + x_d'' \cdot \sin\varphi_{rG}}. \tag{9.11}$$
 
-## --- Página 95 ---
-## **9.3**
+**9.3**
 **Correction factor *K*_T for transformers with two and three windings**
 The correction factor $K_T$ for transformers with two and three windings in accordance with IEC
 73/89/CDV can be calculated as follows.
@@ -3052,8 +2785,8 @@ $$K_{TAB} = 0.95 \cdot \frac{c_{max}}{1 + 0.6\, x_{TAB}} \tag{9.16}$$
 $$K_{TAC} = 0.95 \cdot \frac{c_{max}}{1 + 0.6\, x_{TAC}} \tag{9.17}$$
 $$K_{TBC} = 0.95 \cdot \frac{c_{max}}{1 + 0.6\, x_{TBC}} \tag{9.18}$$
 The meanings of the symbols are:
-## | Symbol | Meaning |
-## |---|---|
+| Symbol | Meaning |
+|---|---|
 | $Z_{KW}$ | Corrected impedance of power plant block for high voltage side |
 | $Z_G$ | Impedance of generator |
 | $\underline{Z}_{THV}$ | Impedance of block transformer for high voltage side |
@@ -3066,13 +2799,12 @@ continuously. Otherwise $1 + p_T = 1$ |
 | $K_{with}$ | Correction factor with step switch |
 | $K_{without}$ | Correction factor without step switch |
 | $x_T$ | Relative reactance of transformer. |
-## --- Página 96 ---
-## **80** *9 Impedance Corrections*
+**80** *9 Impedance Corrections*
 Table 9.1 shows a summary of impedance corrections.
 **Table 9.1** Impedance corrections
 
 | *Appliances* | *Impedance* | *Corrections* |
-## |---|---|---|
+|---|---|---|
 | Generator | $\underline{Z}_{GK} = \underline{Z}_G \cdot K_G$ | $K_G = \dfrac{U_n}{U_{rG}}
 \cdot \dfrac{c_{\max}}{1 + x_d''\sin\varphi_{rG}}$ |
 | Transformer | $\underline{Z}_{TK} = \underline{Z}_T \cdot K_T$ | $K_T = \dfrac{U_n}{U_{rT}}
@@ -3085,8 +2817,7 @@ Table 9.1 shows a summary of impedance corrections.
 | Power plant without tapping change (*WTC*) | $\underline{Z}_S = K_{SWTC}\!\left(t_r^2
 \underline{Z}_G + \underline{Z}_{THV}\right)$ | $K_{SWTC} = \dfrac{U_{nQ}}{U_{rG}(1+p_G)} \cdot
 \dfrac{U_{rTLV}}{U_{rTHV}} \dfrac{(1\pm p_T)c_{\max}}{1 + x_d''\sin\varphi_{rG}}$ |
-## --- Página 97 ---
-## # 10
+# 10
 # The Method of Symmetrical Components
 The method of symmetrical components is used for the calculation of asymmetrical faults. This
 section discusses the fundamentals of this method. A characteristic rotational operator is a
@@ -3100,14 +2831,14 @@ Figure 10.1 shows a symmetrical system, which consists of three unit phasors sep
 of 120°.
 > **Fig. 10.1 - Phasor diagram for the positive-sequence, negative-sequence and zero-sequence
 systems.**
-## >
+>
 > The diagram shows a unit circle in the complex plane (Re-Im axes). Three unit phasors are drawn
 from the origin, each separated by 120°:
 > - Phasor $\underline{a}$: pointing to the upper-left quadrant, at 120° from the positive real axis.
 > - Phasor $\underline{a}^2$: pointing to the lower-left quadrant, at 240° (or −120°) from the
 positive real axis.
 > - Phasor $\underline{a}^3$: pointing along the positive real axis (Re), at 0° (equivalent to 1).
-## >
+>
 > Each consecutive phasor is separated by 120°, as indicated by the angle labels $120^0$ between
 each pair of adjacent phasors. The imaginary axis (Im) is vertical and the real axis (Re) is horizontal.
 **Fig. 10.1:** Phasor diagram for the positive-sequence, negative-sequence and zero-sequence
@@ -3117,11 +2848,9 @@ The rotational operator for $\varphi = 120°$ is designated $\underline{a}$ and 
 240° is designated $\underline{a}^2$, so that:
 $$\underline{a} = e^{j120} = e^{j\frac{2\pi}{3}} = \frac{1}{2}(1 - j\sqrt{3}) \tag{10.1}$$
 $$\underline{a}^2 = e^{j240} = e^{j\frac{4\pi}{3}} = \frac{1}{2}(1 - j\sqrt{3}) \tag{10.2}$$
-## $$\underline{a}^3 = 1 \tag{10.3}$$
-## --- Página 98 ---
-**82** | *10 The Method of Symmetrical Components*
+$$\underline{a}^3 = 1 \tag{10.3}$$
 As can be seen easily from the above equations, their sum is equal to zero:
-## $$1 + \underline{a} + \underline{a}^2 = 0 \tag{10.4}$$
+$$1 + \underline{a} + \underline{a}^2 = 0 \tag{10.4}$$
 With the rotational operators $\underline{a}$ and $\underline{a}^2$ the symmetrical three-phase
 system belongs to the set of complex numbers.
 $$\underline{U}_R = U_R, \tag{10.5}$$
@@ -3129,13 +2858,12 @@ $$\underline{U}_S = a^2 \cdot U_R, \tag{10.6}$$
 $$\underline{U}_T = \underline{a} \cdot U_R. \tag{10.7}$$
 For the voltages in the external conductors:
 $$\underline{U}_{RS} = \underline{U}_R - \underline{U}_S = \sqrt{3} \cdot U_R \cdot e^{j30}
-## \tag{10.8}$$
+\tag{10.8}$$
 $$\underline{U}_{ST} = \underline{U}_S - \underline{U}_T = \sqrt{3} \cdot U_R \cdot e^{j270}
-## \tag{10.9}$$
+\tag{10.9}$$
 $$\underline{U}_{TR} = \underline{U}_T - \underline{U}_R = \sqrt{3} \cdot U_R \cdot e^{j150}
-## \tag{10.10}$$
-## ---
-## **10.1**
+\tag{10.10}$$
+**10.1**
 **Symmetrical components**
 Symmetrical faults are calculated from the equivalent circuit in the positive-sequence system. The
 network is thereby reduced to a single conductor and drawn as a single-phase system. Three-pole
@@ -3150,8 +2878,6 @@ The voltages and currents at the position of the short circuit are determined by
 addition of the symmetrical component currents and voltages.
 With this method, the three-phase network is resolved into three independent single-phase
 systems, namely the positive-sequence, negative-sequence and zero-sequence systems.
-## --- Página 99 ---
-*10.1 Symmetrical components* **83**
 The impedances of these three systems can then be given for individual operational systems at a
 fault position.
 According to the position of the fault, unequal currents can arise in the conductors. The equivalent
@@ -3180,9 +2906,9 @@ negative-sequence + zero-sequence.
 > A detailed phasor diagram is shown with all component phasors drawn from a common origin.
 The diagram illustrates how the phase currents $I_R$, $I_S$, and $I_T$ in RST space are each
 obtained by the vector addition of their respective symmetrical components:
-## > - $I_R = I_{1R} + I_{2R} + I_{0R}$
-## > - $I_S = I_{1S} + I_{2S} + I_{0S}$
-## > - $I_T = I_{1T} + I_{2T} + I_{0T}$
+> - $I_R = I_{1R} + I_{2R} + I_{0R}$
+> - $I_S = I_{1S} + I_{2S} + I_{0S}$
+> - $I_T = I_{1T} + I_{2T} + I_{0T}$
 > Each resultant phasor ($I_R$, $I_S$, $I_T$) and all individual component phasors ($I_{1R}$,
 $I_{2R}$, $I_{0R}$, $I_{1S}$, $I_{2S}$, $I_{0S}$, $I_{1T}$, $I_{2T}$, $I_{0T}$) are depicted with
 arrows radiating from the common center point, clearly showing the vector summation
@@ -3196,8 +2922,6 @@ Steps in calculation:
 - Draw the equivalent single-phase circuit in 120° space.
 - Calculate the currents and voltages in image space.
 - Calculate the asymmetrical fault currents in the original space.
-## --- Página 100 ---
-**84** | *10 The Method of Symmetrical Components*
 $$\underline{I}_R = \underline{I}_{1R} + \underline{I}_{2R} + \underline{I}_{0R}, \tag{10.11}$$
 $$\underline{I}_S = \underline{I}_{1S} + \underline{I}_{2S} + \underline{I}_{0S},$$
 $$\underline{I}_T = \underline{I}_{1T} + \underline{I}_{2T} + \underline{I}_{0T},$$
@@ -3224,36 +2948,34 @@ Inverse transformation from the image space to the original space:
 $$I_{RST} = T \cdot I_{120} \tag{10.17}$$
 With this transformation we can transform the unknown current components with the matrix T to
 the actual currents in the components:
-## --- Página 101 ---
-*10.2 Impedances of symmetrical components* **| 85**
-## $$
+$$
 \underline{I}_{1R} = \frac{1}{3} \cdot (\underline{I}_R + \underline{I}_S \cdot \underline{a} +
 \underline{I}_T + \cdot \underline{a}^2), \tag{10.18}
-## $$
-## $$
+$$
+$$
 \underline{I}_{2R} = \frac{1}{3} \cdot (\underline{I}_R + \underline{I}_S \cdot \underline{a}^2 +
 \underline{I}_T + \cdot \underline{a}),
-## $$
-## $$
+$$
+$$
 \underline{I}_{0R} = \frac{1}{3} \cdot (\underline{I}_R + \underline{I}_S + \underline{I}_T).
-## \tag{10.19}
-## $$
+\tag{10.19}
+$$
 In matrix notation, this yields:
-## $$
+$$
 \begin{bmatrix} I_{1R} \\ I_{2R} \\ I_{0R} \end{bmatrix} = \frac{1}{3} \cdot \begin{bmatrix}
 \underline{1} & \underline{a} & \underline{a}^2 \\ \underline{1} & \underline{a}^2 & \underline{a}
 \\ 1 & 1 & 1 \end{bmatrix} \cdot \begin{bmatrix} I_R \\ I_S \\ I_T \end{bmatrix}.
-## $$
+$$
 ## (10.20)
-## $$
+$$
 I_{120} = S \cdot I_{RST} \tag{10.21}
-## $$
+$$
 We are now in a position to calculate the asymmetrical currents and voltages, where:
 
-## $$
+$$
 ## S = T^{-1}.\tag{10.22}
-## $$
-## **10.2 Impedances of symmetrical components**
+$$
+**10.2 Impedances of symmetrical components**
 Only three-phase short circuits load the network symmetrically. Here it is sufficient to calculate
 with the "positive-sequence system". In all other cases it is necessary to use the method of
 symmetrical components in order to consider the negative-sequence and zero-sequence systems
@@ -3262,22 +2984,20 @@ The method of symmetrical components is based on the principle of superposition.
 determination of the voltage and current components requires equivalent single-phase circuits,
 which during symmetrical operation of the network are fully decoupled from each other.
 The three impedances of the component systems are summarized here briefly (Figure 10.3).
-## --- Página 102 ---
-**86** | *10 The Method of Symmetrical Components*
 > **Fig. 10.3 - Equivalent circuits for positive-sequence, negative-sequence, and zero-sequence
 systems**
-## >
+>
 > The figure shows three separate single-phase equivalent circuits side by side, each representing
 one sequence network:
-## >
+>
 > - **Left circuit (Positive-sequence):** A three-phase voltage source (labeled 3~) drives current
 $I_1$ through series impedance $Z_1$. The terminal voltage across the load port is $U_1$. The
 source symbol indicates a symmetrical positive-sequence (direct-sequence) three-phase generator.
-## >
+>
 > - **Middle circuit (Negative-sequence):** A three-phase voltage source (labeled 3~) drives
 current $I_2$ through series impedance $Z_2$. The terminal voltage is $U_2$. This network
 represents the negative-sequence (inverse-sequence) system.
-## >
+>
 > - **Right circuit (Zero-sequence):** A single-phase voltage source (labeled 1~) drives a current
 labeled $3I_0$ through series impedance $Z_0$. The terminal voltage is $U_0$. The factor of 3 on
 the current reflects the fact that all three zero-sequence currents are equal and in phase, summing
@@ -3306,8 +3026,6 @@ values, then they must be related through general physical laws. It must then be
 an impedance to each of the three component systems according to Ohm's law.
 Positive-sequence impedance:
 $$\underline{Z}_{(1)} = \frac{\underline{U}_{(1)}}{\underline{I}_{(1)}}, \tag{10.23}$$
-## --- Página 103 ---
-*10.2 Impedances of symmetrical components* **87**
 Negative-sequence impedance:
 $$\underline{Z}_{(2)} = \frac{\underline{U}_{(2)}}{\underline{I}_{(2)}}\,, \tag{10.24}$$
 Zero-sequence impedance:
@@ -3335,14 +3053,12 @@ sections. Linking requires knowledge of the source voltage. In three-phase netwo
 voltage is generated symmetrically with synchronous generators. For this reason, the source
 voltage appears only in the positive-sequence system and is set to the value $\dfrac{c \cdot
 U_n}{\sqrt{3}}$ for the calculations.
-## --- Página 104 ---
-**88** | *10 The Method of Symmetrical Components*
 > **Figure Description - Fig. 10.4: Measuring circuits for determining the positive-sequence,
 negative-sequence and zero-sequence impedances**
-## >
+>
 > The figure shows three separate measuring circuit diagrams, each used to determine one of the
 three sequence impedances of a power system component:
-## >
+>
 > **Top circuit - Positive-sequence impedance:**
 > A three-phase generator (G, 3~) is connected via three lines L₁, L₂, and L₃ to a block labeled
 "Operational equipment." The positive-sequence current $I_1$ flows through the lines, and the
@@ -3350,13 +3066,13 @@ positive-sequence voltage $U_1$ is indicated at the generator terminals. The out
 operational equipment connects to a two-terminal port representing the **positive-sequence
 impedance** (shown with an open-circuit symbol and a filled dot indicating the measurement
 terminal).
-## >
+>
 > **Middle circuit - Negative-sequence impedance:**
 > An identical configuration is shown with a three-phase generator (G, 3~) connected via L₁, L₂, L₃ to
 "Operational equipment." Here, the negative-sequence current $I_2$ flows and the
 negative-sequence voltage $U_2$ is applied. The output port represents the **negative-sequence
 impedance**.
-## >
+>
 > **Bottom circuit - Zero-sequence impedance:**
 > In this circuit, the same current $I_0$ flows in all three lines L₁, L₂, and L₃ simultaneously
 (zero-sequence condition), with the generator (G, 3~) connected at the bottom and the
@@ -3368,56 +3084,18 @@ represents the **zero-sequence impedance** (labeled "Zero-sequence equipment").
 zero-sequence impedances
 All three equivalent circuit components are connected to the fault position and for each type of
 fault there is a different connection (Figure 10.5).
-## --- Página 105 ---
-*10.2 Impedances of symmetrical components* **89**
-> **[FIGURA: Fig. 10.5 - Diagrama esquemático dos componentes de circuito equivalente para um
-sistema elétrico de potência trifásico, decomposto em sequências simétricas.]**
-## >
-> O diagrama é dividido em duas partes principais:
-## >
-> **Parte Superior - Diagrama unifilar do sistema físico:**
-> Representa um sistema de potência composto por:
-> - Um gerador trifásico (símbolo G com 3 enrolamentos) conectado a um transformador
-delta-estrela (símbolo  /Y), seguido de uma linha de transmissão com abertura (símbolo de
-chave/disjuntor).
-> - Abaixo, o circuito monofásico equivalente mostra os reatâncias em série: $X_G$ (reatância do
-gerador), $X_T$ (reatância do transformador) e $X_L$ (reatância da linha de transmissão), com
-terminais de saída rotulados como R (L1), S (L2) e T (L3). O neutro do transformador é aterrado
-(símbolo de terra).
-## >
-> **Parte Inferior - Circuitos de sequência simétrica (três sistemas desacoplados):**
-## >
-> 1. **Sistema de Sequência Positiva (Positive-sequence system):**
-> - Circuito série com fonte de tensão $E''$ (tensão subtransitória), em série com as reatâncias
-$X''_d$ (reatância subtransitória do gerador), $X_{1T}$ (reatância de sequência positiva do
-transformador) e $X_{1L}$ (reatância de sequência positiva da linha). Dois terminais de saída
-(circuito fechado pelo barramento de retorno).
-## >
-> 2. **Sistema de Sequência Negativa (Negative-sequence system):**
-> - Circuito série sem fonte de tensão, composto pelas reatâncias $X_{2G}$ (reatância de sequência
-negativa do gerador), $X_{2T}$ (reatância de sequência negativa do transformador) e $X_{2L}$
-(reatância de sequência negativa da linha). Dois terminais de saída.
-## >
-> 3. **Sistema de Sequência Zero (Zero-sequence system):**
-> - Circuito série sem fonte de tensão, composto pelas reatâncias $X_{0T}$ (reatância de sequência
-zero do transformador) e $X_{0L}$ (reatância de sequência zero da linha). No lado esquerdo, há
-uma impedância de aterramento $3X_0$ (três vezes a reatância de sequência zero, representando
-o caminho de retorno pelo neutro aterrado). Dois terminais de saída.
 **Fig. 10.5:** Schematic of the equivalent circuit components
 
-## --- Página 106 ---
-The image appears to be completely blank/white with no visible text or content to transcribe.
-## --- Página 107 ---
-## # 11
+# 11
 # Calculation of Short Circuit Currents
 In IEC 60 909 the different types of short circuits are clearly defined. This chapter deals with the
 short circuit currents and sets up the equations required to determine these currents. For the
 calculation RST components are used instead of L1-L2-L3, for reasons of simplification.
-## ## 11.1
+## 11.1
 **Three-pole short circuits**
 > **[Fig. 11.1 - Equivalent circuit diagram for a three-pole short circuit with equivalent voltage
 source at the position of fault]**
-## >
+>
 > The diagram shows a single-line equivalent circuit consisting of the following elements from left
 to right:
 > - **Q**: A network feeder (represented by a hatched/crossed box symbol), connected to the
@@ -3429,7 +3107,7 @@ connected to ground (earth symbol via zigzag/ground symbol).
 > - A fault point labeled **01** where a three-pole short circuit occurs, indicated by the fault
 current $I''_{k3}$ flowing downward at the transformer secondary bus.
 > - To the right of the fault point, an impedance $Z_1$ is shown in series with the line current
-## $I_1$.
+$I_1$.
 > - At the far right, an equivalent voltage source is shown as $\dfrac{cU_n}{\sqrt{3}}$, representing
 the equivalent voltage source (per IEC 60 909) at the fault location, where $c$ is the voltage factor
 and $U_n$ is the nominal system voltage.
@@ -3446,8 +3124,6 @@ breaking capabilities of the overcurrent protection equipment.
 
 The three-pole short circuit is a symmetrical fault. The following fault conditions apply for the
 equivalent circuit shown in Figure 11.1:
-## --- Página 108 ---
-**92** | *11 Calculation of Short Circuit Currents*
 $$U_R = U_S = U_T = 0, \tag{11.1}$$
 $$I_R + I_S + I_T = 0, \tag{11.2}$$
 It then follows that:
@@ -3466,11 +3142,9 @@ whereby for $\underline{Z}_1$:
 $$Z_1 = \sqrt{(R_{1Q} + R_{1T} + R_{1L})^2 + (X_{1Q} + X_{1T} + X_{1L})^2}, \tag{11.7}$$
 Or with the impedances of the individual operational equipment:
 $$\underline{Z}_1 = \underline{Z}_{1Q} + \underline{Z}_{1T} + \underline{Z}_{1L}. \tag{11.8}$$
-## --- Página 109 ---
-*11.3 Two-pole short circuit without contact to ground* **| 93**
 ## 11.2 Two-pole short circuits with contact to ground
 > **Fig. 11.2** - Equivalent circuit of a two-pole short circuit with contact to ground.
-## >
+>
 > The diagram shows a power system schematic with two sections: a left-hand single-line diagram
 and a right-hand sequence network. On the left, a busbar Q feeds through a transformer T into
 three-phase lines L1, L2, L3 at node 01, with two fault currents indicated: $I''_{k2E}$ (flowing
@@ -3488,10 +3162,9 @@ the two-pole short circuit the following boundary conditions apply:
 $$\underline{I}_R = 0, \quad \underline{I}_S = \underline{I}_T, \quad \underline{I}_{kE2E} =
 \underline{I}_S + \underline{I}_T, \quad \underline{U}_S = \underline{U}_T = 0.$$
 $$I''_{kE2E} = \frac{\sqrt{3} \cdot c \cdot U_n}{|\underline{Z}_1 + 2\underline{Z}_0|} \tag{11.9}$$
-## ---
 ## 11.3 Two-pole short circuit without contact to ground
 > **Fig. 11.3** - Equivalent circuit of a two-pole short circuit without contact to ground.
-## >
+>
 > The diagram shows a power system schematic with two sections: a left-hand single-line diagram
 and a right-hand sequence network. On the left, a busbar Q feeds through a transformer T into
 three-phase lines L1, L2, L3 at node 01, with a fault current $I'_{k2}$ indicated flowing through the
@@ -3502,14 +3175,12 @@ $\frac{cU_n}{\sqrt{3}}$; and negative-sequence (02) with impedance $Z_2$, curren
 voltage $\underline{U}_2$. The constraint $I_1 = -I_2$ is indicated, and the two sequence
 networks are connected in series. There is no zero-sequence network, reflecting the absence of
 ground contact.
-## --- Página 110 ---
-**94** | *11 Calculation of Short Circuit Currents*
 According to Figure 11.3, a two-pole fault without contact to ground should occur between the two
 conductors.
 For the equations giving the currents:
 $$\underline{I}_S = -\underline{I}_T, \quad I_R = 0$$
 The zero-sequence system current is zero, because no current flows through ground, i.e. $I_0 = 0$,
-## $U_0 = 0$.
+$U_0 = 0$.
 For a two-pole short circuit current, this results in:
 $$I''_{k2} = \frac{c \cdot U_n}{|\underline{Z}_1 + \underline{Z}_2|} \tag{11.10}$$
 
@@ -3518,18 +3189,17 @@ The voltage system for a two-pole short circuit shifts in such a way that the vo
 fault-free conductor, in this case $U_R$, remains unchanged.
 Two-pole short circuit currents without contact to ground can be larger with powerful
 asynchronous motors than for three-pole short circuits.
-## ---
-## **11.4**
+**11.4**
 **Single-pole short circuits to ground**
 > **Fig. 11.4** - Equivalent circuit of single-pole short circuit to ground.
-## >
+>
 > The figure shows two parts:
-## >
+>
 > **Left side (physical diagram):** A three-phase network with a busbar source block (Q)
 connected through a transformer (T) with a neutral point grounded (N). Three-phase conductors
 L1, L2, L3 are shown leaving the transformer. A fault current $I''_{k1}$ flows through the neutral
 grounding path into the earth (represented by ground symbols beneath the transformer neutral).
-## >
+>
 > **Right side (sequence network equivalent circuit):** Three sequence networks are connected in
 series between nodes:
 > - **Positive-sequence network (1):** Impedance $\underline{Z}_1$ in series with current $I_1$,
@@ -3539,15 +3209,13 @@ voltage source $\dfrac{cU_n}{\sqrt{3}}$ is present on the right side.
 voltage $\underline{U}_2$ across the network. Connected between nodes 01 and 02.
 > - **Zero-sequence network (0):** Impedance $\underline{Z}_0$ in series with current $I_0$,
 voltage $\underline{U}_0$ across the network. Connected between nodes 02 and 00.
-## >
+>
 > The three networks are connected in series, with the relationship on the right side indicating:
-## > $$\frac{1}{3} I''_{k1} = I_0 = I_1 =$$
-## >
+> $$\frac{1}{3} I''_{k1} = I_0 = I_1 =$$
+>
 > This series connection of positive-, negative-, and zero-sequence networks is the standard
 symmetrical components representation used to analyze a single-line-to-ground fault.
 **Fig. 11.4:** Equivalent circuit of single-pole short circuit to ground
-## --- Página 111 ---
-*11.4 Single-pole short circuits to ground* **95**
 The single-pole short circuit current occurs frequently in electrical networks. Its calculation is
 necessary in order to ensure
 
@@ -3570,23 +3238,21 @@ $$\underline{I}_R = \underline{I}_{1R} + \underline{I}_{2R} + \underline{I}_{0R}
 \underline{I}_{1R} \tag{11.14}$$
 $$\underline{I}_{1R} = \frac{E''}{\underline{Z}_1 + \underline{Z}_2 + \underline{Z}_0} \tag{11.15}$$
 $$\underline{I}_R = \frac{3 \cdot E''}{\underline{Z}_1 + \underline{Z}_2 + \underline{Z}_0}
-## \tag{11.16}$$
+\tag{11.16}$$
 Using the relationship
 $$E'' = \frac{3 \cdot U_n}{\sqrt{3}} \tag{11.17}$$
 it follows for a single-pole short circuit under the condition $Z_1 = Z_2$ that
 $$I''_{k1min} = \frac{\sqrt{3} \cdot c_{min} \cdot U_n}{|2\underline{Z}_1 + \underline{Z}_0|}
-## \tag{11.18}$$
+\tag{11.18}$$
 For the loop impedance of the short circuit:
 $$I''_{k1min} = \frac{c_{min} \cdot U_n}{\sqrt{3} \cdot Z_s} \tag{11.19}$$
-## --- Página 112 ---
-**96** | *11 Calculation of Short Circuit Currents*
 Equating the right sides of equations 11.18 and 11.19 yields:
 $$Z_s = \frac{2Z_1 + Z_0}{3} \tag{11.20}$$
 According to IEC 60 909,
 
 $$I''_{k1min} = \frac{\sqrt{3} \cdot c_{min} \cdot U_n}{\sqrt{\left(2R_{1Q} + 2R_{1T} + 2R_{1L} +
 R_{0T} + R_{0L}\right)^2 + \left(2X_{1Q} + 2X_{1T} + 2X_{1L} + X_{0T} + X_{0L}\right)^2}}
-## \tag{11.20}$$
+\tag{11.20}$$
 Equations 11.18, 11.19 and 11.21 are identical and give the same result for the calculation of
 $I''_{k1min}$.
 For asymmetrical short circuits, the largest short circuit current can be determined with the aid of
@@ -3603,8 +3269,6 @@ The symbols in Figure 11.5 have the meanings:
 - *δ* &nbsp; Ground fault factor
 - $a = \dfrac{\text{Short circuit current for asymmetrical short circuit}}{\text{Short circuit current
 for three-pole short circuit}}$
-## --- Página 113 ---
-*11.5 Peak short circuit current $i_p$* **| 97**
 > **[Graph/Diagram Description]:**
 > Figure 11.5 is a nomogram used to determine the largest short circuit currents for asymmetrical
 short circuits. The horizontal axis represents the ratio $Z_2/Z_1$ (ranging from 0 to 1.0), and the
@@ -3620,25 +3284,22 @@ double-phase-to-earth, double-phase, three-phase).
 > - Bottom annotations: "Steady state short circuit current", "Terminal short circuit of generator",
 "Network short circuit far from generator", "Initial symmetrical short circuit current"
 **Fig. 11.5:** Largest short circuit currents for asymmetrical short circuits [1, 6]
-## ---
 
-## ## 11.5
+## 11.5
 ## Peak short circuit current $i_p$
 The initial short circuit current $I_k''$ and the withstand ratio $\kappa$ determine the peak short
 circuit current $i_p$. The factor $\kappa$ depends on the ratio $R/X$ of the short circuit path and
 takes account of the decay of the DC aperiodic component in the short circuit. the peak value $i_p$
 occurs during the period immediately following the occurrence of the short circuit (transient
 period). If the ratio $R/X$ is known, the factor $\kappa$ can be read from the curves in Figure 11.6.
-## --- Página 114 ---
-**98** | *11 Calculation of Short Circuit Currents*
 > **Fig. 11.6** - Two graphs showing the factor $\kappa$ for calculating the peak short circuit
 current $i_p$.
-## >
+>
 > **Top graph:** Plots $\kappa$ (y-axis, ranging from 1.0 to 2.0) versus $R/X$ (x-axis, ranging from
 0 to 1.2). The curve is monotonically decreasing: as $R/X$ increases from 0 to 1.2, $\kappa$
 decreases from approximately 2.0 down to about 1.0. The curve has a smooth hyperbolic-like
 decay shape.
-## >
+>
 > **Bottom graph:** Plots $\kappa$ (y-axis) versus $X/R$ (x-axis, logarithmic scale ranging from 0
 to 200, with markings at 0, 1, 2, 5, 10, 20, 50, 100, 200). The curve is monotonically increasing: as
 $X/R$ increases, $\kappa$ rises from approximately 1.0 (at low $X/R$) toward approximately 2.0
@@ -3646,7 +3307,7 @@ $X/R$ increases, $\kappa$ rises from approximately 1.0 (at low $X/R$) toward app
 **Fig. 11.6:** Factor $\kappa$ for calculating the peak short circuit current $i_p$ [1]
 The peak short circuit current calculated determines the dynamic loading of electrical systems.
 The peak short circuit current can be calculated in unmeshed networks from the equation:
-## $$i_p = \kappa \cdot \sqrt{2} I_k''. \tag{11.22}$$
+$$i_p = \kappa \cdot \sqrt{2} I_k''. \tag{11.22}$$
 Standard values:
 $\kappa < 1.4$: in public networks
 $\kappa \leq 1.8 \cdots 2.04$: immediately downstream from transformer feeder
@@ -3655,19 +3316,18 @@ $$\kappa = 1.02 + 0.98 \cdot e^{-3\frac{R}{X}}. \tag{11.23}$$
 The peak short circuit current $i_p$ can be calculated in all networks using the basic equation $i_p
 = \kappa\sqrt{2}I_k''$. With the three following procedures it is possible to determine the factor
 $\kappa$ in meshed networks [4].
-## - Procedure A ($\kappa = \kappa_a$):
+- Procedure A ($\kappa = \kappa_a$):
 $\kappa$ is determined from the smallest $R/X$ ratio of all branches in the network. In low voltage
 networks, $\kappa \leq 1.8$.
 
-## --- Página 115 ---
 11.6 *Symmetrical breaking current $I_a$* **99**
-## - Procedure B ($\kappa = 1.15\kappa_b$):
+- Procedure B ($\kappa = 1.15\kappa_b$):
 $\kappa$ is determined from the *R/X* ratio of the short circuit impedance at the position F of the
 short circuit and multiplied by a safety factor of 1.15 in order to take account of different *R/X*
 ratios in parallel branches.
 - For low voltage networks: $\kappa \leq 1.8$.
 - For medium and high voltage networks: $\kappa \leq 2.0$.
-## - Procedure C ($\kappa = \kappa_c$):
+- Procedure C ($\kappa = \kappa_c$):
 With procedure C, $\kappa$ is determined with an equivalent frequency, as below:
 - Calculation of reactances for all network branches *i* for the equivalent frequency $f_c$ in the
 positive-sequence system:
@@ -3679,8 +3339,7 @@ $R_i$ and the reactances $X_i$ of the network branches in the positive-sequence 
 $$\underline{Z}_c = R_c + j\ X_c.$$
 - Determination of the factor $\kappa_c$ from the ratio:
 $$\frac{R}{X} = \frac{f_c}{f} \frac{R_c}{X_c}.$$
-## ---
-## ## 11.6
+## 11.6
 ## Symmetrical breaking current $I_a$
 The symmetrical breaking current is the effective value of the short circuit current $I_k''(t)$, which
 flows through the switch at the time of the first contact separation and is used for
@@ -3693,8 +3352,6 @@ $$I_a = \mu I_{kG}'' \tag{11.25}$$
 $I_a$ depends on the duration of the short circuit and the installation position of the switchgear at
 the position of the short circuit. $\mu$ characterizes the decay behavior of the short circuit current
 and is a function of the variables $I_{kG}''/I_{rG}''$ and $t_{min}$ (Figure 11.7).
-## --- Página 116 ---
-**100** | *11 Calculation of Short Circuit Currents*
 > **Figure description:** Graph of factor $\mu$ versus $I''_{kG}/I_{kG}$ or $I''_{kM}/I_{kM}$,
 used for calculating the symmetrical breaking current $I_a$. The vertical axis represents $\mu$
 ranging from 0.6 to 1.0. The horizontal axis ranges from 0 to 9, representing the ratio
@@ -3711,7 +3368,7 @@ $$\mu = 0.84 + 0.26\ e^{-0.26\ I''_{kG}/I_{rG}} \quad for \quad t_{\min} = 0.02\
 $$\mu = 0.71 + 0.51\ e^{-0.30\ I''_{kG}/I_{rG}} \quad for \quad t_{\min} = 0.05\ s$$
 $$\mu = 0.62 + 0.72\ e^{-0.32\ I''_{kG}/I_{rG}} \quad for \quad t_{\min} = 0.10\ s$$
 $$\mu = 0.56 + 0.94\ e^{-0.38\ I''_{kG}/I_{rG}} \quad for \quad t_{\min} = 0.25\ s$$
-## $$\mu_{\max} = 1$$
+$$\mu_{\max} = 1$$
 When $I_a = I''_k$, then $\mu = 1$, i.e. a far-from-generator short circuit is present, if for each
 synchronous machine the following condition is satisfied:
 $$\frac{I''_{k3}}{I_{rG}} \leq 2. \tag{11.26}$$
@@ -3719,7 +3376,6 @@ For $I_a < I''_k$, i.e. a near-to-generator short circuit:
 $$\frac{I''_{k3}}{I_{rG}} \geq 2. \tag{11.27}$$
 In practice:
 The minimum switching delay is 0.1 s.
-## --- Página 117 ---
 11.6 Symmetrical breaking current $I_a$ **101**
 **Asynchronous machines**
 
@@ -3731,7 +3387,7 @@ $$I_{aQ} = I''_{kQ}. \tag{11.29}$$
 $$\underline{I}_a = \underline{I}''_k - \sum_i \frac{\Delta \underline{U}''_{Gi}}{\dfrac{c \cdot
 U_n}{\sqrt{3}}} (1 - \mu_i) \cdot \underline{I}''_{kGi} - \sum_i \frac{\Delta
 \underline{U}''_{Mj}}{\dfrac{c \cdot U_n}{\sqrt{3}}} (1 - \mu_j \cdot q_j) \cdot \underline{I}''_{kMj}
-## \tag{11.30}$$
+\tag{11.30}$$
 ## With:
 $$\Delta \underline{U}''_{Gi} = j X''_{di} \cdot \underline{I}''_{kGi} \tag{11.31}$$
 $$\Delta \underline{U}''_{Mj} = j X''_{Mj} \cdot \underline{I}''_{kMj} \tag{11.32}$$
@@ -3743,17 +3399,15 @@ scale from 0 to 1.0) against the **effective power per pole pair of the motor** 
 logarithmic scale from 0.01 MW to 10 MW, labeled *m*). Four curves are shown, each
 corresponding to a different **minimum switching delay $t_{min}$**:
 > - $t_{min} = 0.02\ \text{s}$ (uppermost curve, highest q values)
-## > - $t_{min} = 0.05\ \text{s}$
-## > - $t_{min} = 0.1\ \text{s}$
+> - $t_{min} = 0.05\ \text{s}$
+> - $t_{min} = 0.1\ \text{s}$
 > - $t_{min} \geq 0.25\ \text{s}$ (lowermost curve, lowest q values)
-## >
+>
 > All curves are monotonically increasing with power per pole pair. At low power per pole pair (0.01
 MW), q values start near 0.1-0.6 depending on the delay, and approach values near 0.6-1.0 at 10
 MW. The vertical axis is labeled **q** with an upward arrow.
 **Fig. 11.8:** Factor q for calculation of the symmetrical breaking current for asynchronous
 machines [1]
-## --- Página 118 ---
-**102** | *11 Calculation of Short Circuit Currents*
 The factor q applies to induction motors and takes account of the rapid decay of the motor short
 circuit owing to the absence of an excitation field. It can be taken from Fig. 11.8 or from the
 following equations.
@@ -3762,12 +3416,12 @@ $q = 1.03 + 0.12 \ \ln \ m \quad for \ \ t_{\min} = 0.02 \ s$
 $q = 0.79 + 0.12 \ \ln \ m \quad for \ \ t_{\min} = 0.05 \ s$
 $q = 0.57 + 0.12 \ \ln \ m \quad for \ \ t_{\min} = 0.10 \ s$
 $q = 0.26 + 0.12 \ \ln \ m \quad for \ \ t_{\min} = 0.25 \ s$
-## $q_{max} = 1$
+$q_{max} = 1$
 The meanings of the symbols are:
-## | Symbol | Description |
-## |---|---|
-## | $i$ | Generator |
-## | $j$ | Motor |
+| Symbol | Description |
+|---|---|
+| $i$ | Generator |
+| $j$ | Motor |
 | $\Delta U''_{Gi}$ | Initial voltage difference at connection to synchronous machine $i$ |
 | $\Delta U''_{Mj}$ | Initial voltage difference at connection to asynchronous machine $j$ |
 | $\dfrac{c \ U_n}{\sqrt{3}}$ | Equivalent voltage source at position of short circuit |
@@ -3778,8 +3432,7 @@ all network inputs, synchronous machines and asynchronous machines |
 | $\mu_j$ | Factor $j$ for asynchronous machines |
 | $\mu_i$ | Factor $i$ for synchronous machines |
 | $q_i$ | Factor $j$ for asynchronous machines |
-## ---
-## **11.7**
+**11.7**
 **Steady state short circuit current $I_k$**
 The steady state short circuit current is the effective value of the short circuit current $I''_k$
 remaining after the decay of all transient processes. It depends strongly on the excitation current,
@@ -3790,7 +3443,6 @@ The following relationships show a dependence on the fault position:
 $$I_k = \lambda I_{rG}, \tag{11.33}$$
 $$I_k = I''_{k2},$$
 $$I_k = \lambda \cdot \sqrt{3} \cdot I_{rG}. \tag{11.34}$$
-## --- Página 119 ---
 *11.7 Steady state short circuit current $I_k$* | **103**
 
 The factor $\lambda$ depends on $I''_{kG}/I_{rG}$, the excitation and the type of synchronous
@@ -3813,11 +3465,11 @@ salient pole generators.
 labeled **Series 1** and **Series 2**), showing the factors $\lambda_{min}$ and
 $\lambda_{max}$ used for calculating the steady-state short circuit current $I_k$ of synchronous
 generators.
-## >
+>
 > - **Horizontal axis (all graphs):** $I''_{kG}/I_{rG}$ - ratio of subtransient short circuit current to
 rated generator current, ranging from 0 to 9.
 > - **Vertical axis (all graphs):** $\lambda$ - the steady-state short circuit factor.
-## >
+>
 > **Row a) - Turbo-generators (salient-pole, $x_d$ saturated):**
 > - Left graph (Series 1, $U_{fmax}/U_{fr} = 1.3$): $\lambda$ ranges approximately 0 to 2.8.
 Multiple $\lambda_{max}$ curves are shown labeled 1.2, 1.4, 1.6, 1.8, 2.0, 2.2 (corresponding to
@@ -3825,7 +3477,7 @@ different $x_d$ saturation levels). A single $\lambda_{min}$ curve is shown at l
 > - Right graph (Series 2, $U_{fmax}/U_{fr} = 1.6$): $\lambda$ ranges approximately 0 to a similar
 upper bound. $\lambda_{max}$ curves labeled 1.2, 1.4, 1.6, 1.8, 2.0, 2.2. A $\lambda_{min}$ curve
 shown.
-## >
+>
 > **Row b) - Salient pole generators ($x_d$ saturated):**
 > - Left graph (Series 1, $U_{fmax}/U_{fr} = 1.6$): $\lambda$ ranges approximately 0 to 5.5.
 $\lambda_{max}$ curves labeled 0.6, 0.8, 1.0, 1.2, 1.7, 2.0. A $\lambda_{min}$ curve at lower
@@ -3834,17 +3486,13 @@ values.
 upper bound. $\lambda_{max}$ curves labeled 0.6, 0.8, 1.0, 1.2, 1.7, 2.0. A $\lambda_{min}$ curve
 shown.
 
-## >
+>
 > All curves are monotonically increasing with $I''_{kG}/I_{rG}$, with $\lambda_{max}$ curves
 fanning out above $\lambda_{min}$. The parameter labeling the $\lambda_{max}$ curves
 corresponds to the saturated synchronous reactance $x_d$ (in per unit).
 **Fig. 11.9:** Factors $\lambda_{min}$ and $\lambda_{max}$ for calculating the steady state
 short circuit current $I_k$ [1]
-## --- Página 120 ---
-The image appears to be a blank white page with no visible text, formulas, tables, or diagrams to
-transcribe.
-## --- Página 121 ---
-## # 12
+# 12
 # Motors in DS Networks
 Asynchronous motors are used mostly in industry and for the internal consumption of power
 stations. For a short circuit, these deliver a part of the initial short circuit current, peak short circuit
@@ -3863,8 +3511,7 @@ cables to an equivalent motor with $\dfrac{I_{an}}{I_{rM}} = 5$ and $\dfrac{R_M}
 - Asynchronous motors can be neglected for single-pole short circuits.
 Various connection variants for asynchronous motors in industrial networks will be discussed in the
 following.
-## ---
-## **12.1**
+**12.1**
 **Short circuits at the terminals of asynchronous motors**
 The contribution of an asynchronous machine (Figure 12.1) can, in accordance with IEC 60 909, be
 neglected provided that:
@@ -3872,16 +3519,14 @@ $$I''_{kM} \leq 0.05 \cdot I''_{kQ}, \tag{12.1}$$
 
 $$I''_{kM} = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_M} = \frac{I_{an}}{I_{rM}} \frac{c \cdot
 U_n}{U^2_{rM}} \cdot I_{rM}. \tag{12.2}$$
-## --- Página 122 ---
-**106** | *12 Motors in DS Networks*
 The impedance $Z_M$ of an asynchronous machine in the positive-sequence and
 negative-sequence systems is calculated from the relationships:
 $$Z_M = \frac{1}{\dfrac{I_{an}}{I_{rM}}} \cdot \frac{U_{rM}}{\sqrt{3} \cdot I_{rM}} =
 \frac{1}{\dfrac{I_{an}}{I_{rM}}} \frac{U_{rM}^2}{S_{rM}}, \tag{12.3}$$
 $$Z_M = \frac{\eta_{rM} \cdot \cos\varphi_{rM}}{\dfrac{I_{an}}{I_{rM}}} \frac{U_{rM}}{P_{rM}}.
-## \tag{12.4}$$
+\tag{12.4}$$
 > **Fig. 12.1 - Short circuit at the terminals of an asynchronous motor**
-## >
+>
 > The diagram shows a three-phase electrical circuit representing a short-circuit fault at the
 terminals of an asynchronous motor (labeled M, 3~). The circuit includes:
 > - Three-phase bus bars (L1, L2, L3) connected to a busbar node Q on the right side.
@@ -3909,13 +3554,12 @@ $$\frac{R_M}{X_m} = 0.15 \text{ mit } X_M = 0.989 \cdot Z_M \tag{12.7}$$
 
 For low voltage motors, including motor connection cable:
 $$\frac{R_M}{X_m} = 0.42 \text{ mit } X_M = 0.922 \cdot Z_M \tag{12.8}$$
-## --- Página 123 ---
-## ## 12.2
+## 12.2
 ### Motor groups supplied from transformers with two windings
 High voltage and low voltage motors which supply short circuit currents to the short-circuit
 location Q (Figure 12.2) can be neglected provided that:
 > **Fig. 12.2 - Circuit diagram: Motor groups supplied from transformers with two windings**
-## >
+>
 > The diagram shows a medium-voltage/low-voltage distribution system with a short-circuit point
 Q at the top busbar. From the top busbar, a current $I''_{kQ}$ flows into the fault. Below the
 busbar, a two-winding transformer is depicted with parameters: rated apparent power $S_{rT}$,
@@ -3933,34 +3577,31 @@ When this condition is satisfied, asynchronous motors contribute less than 5 % t
 current without motors.
 For equation 12.9: $I_{an}/I_{rM} = 5$, $\cos\varphi \cdot \eta_{\sigma} = 0.8$ and $u_{kr} =
 ## 6\,\%$.
-## ---
-## ## 12.3:
+## 12.3:
 ### Motor groups supplied from transformers with different nominal voltages
 High voltage and low voltage motors supplied from transformers with different nominal voltages
 must be considered (Figure 12.3).
 $$\sum I''_{kM} = I''_{kM1} + I''_{kM2} + I''_{kMn},$$
 ## (12.10)
 
-## --- Página 124 ---
-**108** | *12 Motors in DS Networks*
 > **Fig. 12.3: Motor groups supplied from transformers with different nominal voltages**
-## >
+>
 > The diagram illustrates a multi-voltage industrial power distribution system feeding several
 groups of three-phase motors. At the top, a 10 kV busbar (three-phase, L1/L2/L3) is fed through a
 circuit breaker Q with an associated short-circuit current $I''_{kQ}$. From the 10 kV bus, two
 step-down transformers are shown:
-## >
+>
 > - **First transformer** (rated power $S_{rT}$, short-circuit voltage $u_k\%$): steps down from
 10 kV to **690 V**. The 690 V busbar feeds a group of three-phase motors ($M_{3\sim}$, rated
 power $P_{rM}$) through fuses, contactors, and overload relays, connected via terminals U, V, W,
 and PE.
-## >
+>
 > - **Second transformer** (rated power $S_{rT}$): steps down from 10 kV to **400 V**. The 400
 V busbar (L1/L2/L3) feeds multiple groups of three-phase motors: motors with rated powers
 $P_{rM1}$, $P_{rM2}$, ..., $P_{rMn}$ at the 690 V level, and motors with rated powers $P_{rM3}$,
 ..., $P_{rMn}$ at the 400 V level. Each motor branch includes protective devices (fuses, circuit
 breakers, contactors, overload relays) and is connected through terminals U, V, W, and PE.
-## >
+>
 > Lightning surge arresters are shown connected to the busbars at various voltage levels. The
 system represents a typical industrial distribution network with motor loads supplied at different
 voltage levels from a common medium-voltage (10 kV) source.
@@ -3968,12 +3609,11 @@ $$\sum S_{rT} = S_{rT1} + S_{rT2} + \cdots S_{rTn}, \tag{12.11}$$
 $$\sum P_{rM} = P_{rM1} + P_{rM2} + \cdots P_{rMn}, \tag{12.12}$$
 $$\frac{\sum R_{rM}}{\sum S_{rT}} \leq \frac{\cos\varphi_r \cdot
 \eta_r}{\left|\frac{I_{an}}{I_{rM}}\left(\frac{c \cdot \sum S_{rT}}{0.05 \cdot S''_{kQ}} -
-## \frac{u_{kr}}{100\%}\right)\right|}. \tag{12.13}$$
+\frac{u_{kr}}{100\%}\right)\right|}. \tag{12.13}$$
 Equation 12.13 is true only when the conditions of Section 12.2 no longer apply.
-## --- Página 125 ---
 The meanings of the symbols are:
-## | Symbol | Description |
-## |--------|-------------|
+| Symbol | Description |
+|--------|-------------|
 | $I_{an}$ | Locked-rotor current of motor |
 | $I_k''$ | Initial symmetrical short circuit current without influence of motors |
 | $S_{kQ}''$ | Initial symmetrical short circuit power without influence of motors |
@@ -3989,7 +3629,7 @@ The meanings of the symbols are:
 Table 12.1 shows a summary of short circuits at the terminals of induction motors.
 **Table 12.1** Calculation of short circuits at the terminals of motors
 | *Short circuit type* | *Three-phase short circuit* | *Two-phase short circuit* |
-## |---|---|---|
+|---|---|---|
 | Initial symmetrical short circuit | $I''_{k3M} = \dfrac{c \, U_n}{\sqrt{3} Z_M}$ | $I''_{k2M} =
 \dfrac{\sqrt{3}}{2} I''_{k3M}$ |
 | Maximum asymmetrical short circuit current | $i_{p3M} = \kappa_M \sqrt{2} I''_{k3M}$ |
@@ -3998,11 +3638,7 @@ $i_{p2M} = \dfrac{\sqrt{3}}{2} \, i_{p3M}$ |
 \dfrac{\sqrt{3}}{2} I''_{k3M}$ |
 | Steady-state short circuit current | $I_{k3M} \approx 0$ | $I_{k2M} \approx \dfrac{1}{2}
 I''_{k3M}$ |
-## --- Página 126 ---
-The image appears to be a blank white page with no visible text, diagrams, or other content to
-transcribe.
-## --- Página 127 ---
-## # 13
+# 13
 # Mechanical and Thermal Short Circuit Strength
 The dimensioning of electrical power installations with respect to stability against mechanical and
 thermal stresses is described exactly in EN 60 865-1 [8]. The present chapter gives a brief account
@@ -4020,7 +3656,7 @@ Joule heating which results.
 
 The amount of heat generated over the duration of the short circuit must not exceed the
 permissible values for cables, conductors and operational equipment.
-## ## 13.1
+## 13.1
 ### Mechanical short circuit current strength
 Collecting bars, parallel conductors, switchgear and fuses must be able to withstand the short
 circuit and the resulting peak short circuit current occurring.
@@ -4029,8 +3665,6 @@ each other when their currents flow in the same direction and repel each other w
 flow in opposite directions, whereby these forces are distributed uniformly over the length of the
 conductors l.
 The manufacturers of operational equipment test their products for normal load
-## --- Página 128 ---
-**112** | *13 Mechanical and Thermal Short Circuit Strength*
 - Circuit breakers
 The rated short circuit making and breaking capacities are normally given by the manufacturer for
 the better assessment of short circuit strength. These specified numerical values must be larger
@@ -4039,7 +3673,7 @@ The contacts and mechanical parts must be able to withstand the short circuit cu
 breakers are provided for breaking overload and short circuit currents, for which numerical values
 can be set accordingly. EN 60 947 (IEC 947) describes the characteristics of low voltage switches
 and IEC 282-1, IEC 17A the characteristics of high voltage switches.
-## - Fuses
+- Fuses
 Fusible links are the oldest forms of protective equipment and are of great importance in certain
 cases. The principle of these protective devices is based on a rupture joint, e.g. a piece of wire,
 which melts with the application of a certain amount of heat given by $\int i^2 \, dt$. The type of
@@ -4052,9 +3686,8 @@ circuits which break only operating currents, that is currents under normal load
 power factor of 0.7. These switches are not able to break short circuit currents and are therefore
 used together with fuses. By contrast with load interrupter switches load-break switches, which
 produce a visible isolating distance, are used in the medium voltage range.
-## ---
 
-## **13.2**
+**13.2**
 **Thermal short circuit current strength**
 The operational equipment (busbars, insulators, wires or cables) must be protected against the
 effects of short circuit currents), i.e. the systems must be short circuit proof. The effect of forces
@@ -4062,21 +3695,20 @@ acting on conductors with current flowing is of great interest here. Figure 13.1
 of forces acting on busbars and parallel conductors.
 > **[Fig. 13.1 - Diagram Description]:** The figure shows two diagrams illustrating the mechanical
 forces acting on current-carrying conductors during short circuit conditions.
-## >
+>
 > **Left diagram:** Three parallel busbars labeled L1, L2, and L3 are arranged horizontally with
 spacing $a$ between them. The busbars have a span length $l$ indicated by arrows. A downward
 force $F$ is shown acting on the lowest busbar (L3), indicating the net electromagnetic force
 resulting from the interaction of currents in adjacent conductors during a short circuit event.
-## >
+>
 > **Right diagram:** Two parallel conductors carry currents $i_1$ and $i_2$ respectively,
 separated by a distance $d$. Each conductor has a length $l$. The magnetic flux densities produced
 by each conductor are labeled $B_1$ and $B_2$. The forces $F$ acting on each conductor are
 shown with arrows pointing in opposite directions (repulsion when currents flow in opposite
 directions, or attraction when in the same direction). One conductor is shown in cross-section (with
-an   symbol indicating current going into the page) and the other with a dot (current coming out of
+an   symbol indicating current going into the page) and the other with a dot (current coming out of
 the page), illustrating the repulsive force scenario between anti-parallel currents.
 **Fig. 13.1:** Effects of forces acting on busbars and parallel conductors
-## --- Página 129 ---
 13.2 Thermal short circuit current strength **113**
 In the magnetic field a force acts on the conductors while current is flowing. This force depends on
 the flux density *B*, the current intensity *I* and the length *l* of the conductor. Two parallel
@@ -4109,10 +3741,8 @@ The forces between the conductor elements in which a short circuit current flows
 geometrical arrangement and the profile of the conductors. This is why effective spacings have
 been introduced in the equation (EN 61660-1).
 The effective spacing am is determined from:
-## $$a_m = \frac{a}{k_{12}}$$
+$$a_m = \frac{a}{k_{12}}$$
 The correction factor $\text{k}_{12}$ is given in the Figure 13.2.
-## --- Página 130 ---
-**114** | *13 Mechanical and Thermal Short Circuit Strength*
 > **[Figure Description - Fig. 13.2]**
 > The graph shows the correction factor $k_{1s}$ (vertical axis, ranging from approximately 0.2 to
 1.4) as a function of the ratio $a_{1s}/d$ (horizontal axis, ranging from 1 to 300, plotted on a
@@ -4141,12 +3771,10 @@ The meanings of the symbols are:
 $F_M$ &nbsp;&nbsp; Force due to the short circuit current in N
 $M$ &nbsp;&nbsp; Bending moment in Ncm
 $l$ &nbsp;&nbsp; Support spacing in cm
-## --- Página 131 ---
-*13.2 Thermal short circuit current strength* **115**
 The bending stress can then be determined using the moment of resistance, i.e.
 $$\sigma_H = \frac{\nu_a \cdot \beta \cdot M}{W}$$
 The bending stress $\sigma$ must always be less than the permissible bending stress
-## $\sigma_{per}$.
+$\sigma_{per}$.
 $$\sigma_H \leq \sigma_{per}$$
 The bending stress for several conductor elements can be calculated from
 $$\sigma_M = \frac{\nu_a \cdot \beta \cdot M}{W_T}$$
@@ -4171,11 +3799,10 @@ The meanings of the symbols are:
 - $W$ &emsp; Moment of resistance in cm⁴
 The moments of resistance and moments of inertia of different tubular profiles can be taken from
 ## Table 13.1.
-## --- Página 132 ---
 # 116 | *13 Mechanical and Thermal Short Circuit Strength*
 **Table 13.1:** Moments of resistance and moments of inertia
 | **Representation** | **Moment of resistance in cm$^4$** | **Moment of inertia in m$^3$** |
-## |---|---|---|
+|---|---|---|
 | *Rectangular cross-section: a rectangle of width b and height h, with b indicated on top and h on
 the side* | $I = \dfrac{b \cdot h^3}{12}$ | $W = \dfrac{b \cdot h^2}{6}$ |
 | *Solid circular cross-section: a filled circle of diameter d* | $I = \dfrac{\pi \cdot d^4}{64}$ | $W =
@@ -4183,14 +3810,13 @@ the side* | $I = \dfrac{b \cdot h^3}{12}$ | $W = \dfrac{b \cdot h^2}{6}$ |
 | *Hollow circular cross-section (tube): an annular section with inner diameter d and outer
 diameter D* | $I = \dfrac{\pi}{64}\left(D^4 - d^4\right)$ | $W = \dfrac{\pi}{32}\dfrac{\left(D^4 -
 d^4\right)}{D}$ |
-## ---
 **Table 13.2:** Factors $\alpha$ and $\beta$ for different support point arrangements
 | **Type of support** | **Type of attachment** | **Diagram** | **Factor $\alpha$** | **Factor
 $\beta$** | **Factor $\nu$** |
-## |---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | Single-field support | A and B supported | *Simply supported beam: pin supports at both ends A
 and B, with reaction forces $F_A$ (upward at left) and $F_B$ (upward at right)* | A: 0.5 B: 0.5 | 1.0
-## | 1.57 |
+| 1.57 |
 | | A clamped B supported | *Propped cantilever beam: fixed (clamped) support at end A (left), pin
 support at end B (right), with reaction forces $F_A$ (upward at left) and $F_B$ (upward at right)* |
 ## A: 0.625 B: 0.375 | 0.73 | 2.45 |
@@ -4203,7 +3829,6 @@ $F_A$, $F_B$, $F_A$ (upward)* | A: 0.375 B: 1.25 | 0.73 | 2.45 |
 | | 3 or more fields | *Multi-span continuous beam: pin supports at outer ends A and intermediate
 supports B, with reaction forces $F_A$, $F_B$, $F_B$, $F_A$ (upward) shown at four support
 points* | A: 0.4 B: 1.1 | 0.73 | 3.56 |
-## --- Página 133 ---
 13.2 Thermal short circuit current strength **117**
 The busbar arrangement must be checked for mechanical resonance. The natural mechanical
 oscillating frequency must not be close to the simple, double or triple network frequency, since this
@@ -4233,19 +3858,17 @@ The factor *m* takes account of the thermal effect of the DC aperiodic component
 and polyphase currents and the factor *n* the thermal effect of the AC periodic component for a
 three-pole short circuit. Electrical operational equipment is dimensioned according to either the
 permissible short-time withstand current $I_{th}$ or the permissible duration of the short circuit
-## $T_K$.
+$T_K$.
 
-## --- Página 134 ---
-**118** | *13 Mechanical and Thermal Short Circuit Strength*
 > **Fig. 13.3** - Two-panel chart showing the factors $m$ and $n$ used in thermal short circuit
 strength calculations, as a function of short circuit duration $T_k$ (horizontal axis, ranging from
 0.01 s to 10 s on a logarithmic scale).
-## >
+>
 > **Panel a)** shows factor $m$ (vertical axis, 0 to 2.0) with a family of curves parameterized by
 the peak factor $\kappa$, taking values: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, and 1.95. Each
 curve decreases as $T_k$ increases. Higher values of $\kappa$ correspond to higher values of $m$
 for a given $T_k$.
-## >
+>
 > **Panel b)** shows factor $n$ (vertical axis, 0 to 1.0) with a family of curves parameterized by
 the ratio $I_k''/I_k$, taking values: 1, 1.25, 1.5, 2, 2.5, 3.3, 4, 5, and 6. Each curve decreases as
 $T_k$ increases. Lower values of $I_k''/I_k$ correspond to higher values of $n$ for a given $T_k$.
@@ -4261,7 +3884,6 @@ For short circuit durations:
 $$T_K \geq 0.1s, \tag{13.5}$$
 the following relationship holds true:
 $$I_a = I_k''. \tag{13.6}$$
-## --- Página 135 ---
 13.2 Thermal short circuit current strength **119**
 If the peak short circuit current $i_p$ is not known and the initial symmetrical short circuit current
 $I_k''$ is given, we can then calculate using the withstand ratio $\kappa = 1.8$.
@@ -4299,9 +3921,7 @@ absolute values of $S_{thr}$ are lower than those for copper and steel in graph 
 aluminium's lower thermal and electrical conductivity.
 **Fig. 13.4:** Rated short time current density $S_{thr}$ for $T_{kr} = 1$ s
 a) for copper and steel (solid-line curves), b) for Aluminium (broken-line curves) Aldrey and Al/St.
-## --- Página 136 ---
-**120** | *13 Mechanical and Thermal Short Circuit Strength*
-## ## 13.3
+## 13.3
 ### Limitation of short circuit currents
 It is necessary to control both the minimum and the maximum short circuit currents in low voltage
 systems without impairing the selectivity. Investigations have shown that the three-pole short
@@ -4315,14 +3935,13 @@ prescribe line-protection circuit breakers in house installations. The short cir
 in high and medium voltage networks can be achieved through economical (e.g. the choice of
 nominal network voltage or division of the network into individual groups) and technical (e.g. the
 use of $i_p$ limiters and fuses).
-## ---
 > **Figure Description - Fig. 13.5: Current limitation through circuit breaker**
-## >
+>
 > Two side-by-side time-domain waveform diagrams (a and b) illustrating voltage and current
 behavior during a short circuit event, with the horizontal axis representing time $t$ in milliseconds
 (marked at 10 ms and 20 ms) and the vertical axis representing magnitude ($U$ for voltage,
 dimensionless for current).
-## >
+>
 > **a) High power current limitation through circuit breaker:**
 > The voltage waveform shows a half-sinusoidal rise to a peak value $U_B$ (the breaking voltage,
 shown as a dotted curve), which exceeds the nominal voltage $U_N$ (shown as a solid reference
@@ -4330,7 +3949,7 @@ line). Below the time axis, the current waveform shows a large peak correspondin
 prospective short circuit current, dotted), with $I''_k$ (the initial symmetrical short circuit current)
 also indicated. The circuit breaker interrupts the current early (within the first half-cycle, before 10
 ms), significantly limiting the peak current - demonstrating high current-limiting capability.
-## >
+>
 > **b) Line-protection circuit breaker with neutral point quencher, without definite current
 limitation:**
 > The voltage waveform again shows $U_N$ as a reference, with $U_B$ now being a lower peak
@@ -4342,111 +3961,55 @@ limitation. The breaking occurs later, closer to a natural current zero crossing
 a) high power current limitation through circuit breaker,
 b) line-protection circuit breaker with neutral point quencher,
 without definite current limitation
-## ---
 Figures 13.6, 13.7, 13.8, 13.9, 13.10 and 13.11 illustrate the short circuit carrying capacity of
 different cables as a function of the break time.
-## --- Página 137 ---
-*13.3 Limitation of short circuit currents* **121**
-> **[GRÁFICO - Fig. 13.6: Diagrama log-log de corrente de curto-circuito termicamente admissível
-em cabos isolados a papel de 1-10 kV]**
-## >
-
-> **Descrição técnica:**
-> O gráfico é um diagrama bilogarítmico (log-log) que apresenta a corrente de curto-circuito
-termicamente permissível $I_k$ (em kA, eixo vertical) em função do tempo de duração do
-curto-circuito $t$ (em segundos, eixo horizontal).
-## >
-> **Eixo vertical (ordenada):** $I_k$ [kA], variando de 1 kA a 100 kA (escala logarítmica), com
-marcações em: 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100.
-## >
-> **Eixo horizontal (abscissa):** $t$ [sec], variando de 0,1 s a 5 s (escala logarítmica), com
-marcações em: 0,1; 0,2; 0,3; 0,4; 0,5; 0,6; 0,7; 0,8; 0,9; 1; 1,5; 2; 3; 4; 5.
-## >
-> **Curvas:** O diagrama apresenta duas famílias de curvas paralelas com inclinação negativa (de
-canto superior esquerdo para canto inferior direito), correspondendo a diferentes seções
-transversais nominais dos cabos em $\text{mm}^2$:
-## >
-> - **Linhas contínuas** - cabos com condutor de **Cobre (Cu)**
-> - **Linhas tracejadas** - cabos com condutor de **Alumínio (Al)**
-## >
-> As seções transversais indicadas no lado direito do gráfico, em $\text{mm}^2$, são (de cima para
-baixo):
-## >
-> | Seção transversal Cu [mm²] | Seção transversal Al [mm²] |
-## > |:--------------------------:|:--------------------------:|
-## > | 300 | - |
-## > | 240 | 300 |
-## > | 185 | 240 |
-## > | 150 | - |
-## > | 120 | 185 |
-## > | - | 150 |
-## > | 95 | - |
-## > | 70 | 120 |
-## > | 50 | 95 |
-## > | 35 | 70 |
-## > | 25 | 50 |
-## > | 16 | 35 |
-## > | - | 25 |
-## >
-> Cada curva representa o limite térmico que o cabo suporta sem dano ao isolamento,
-determinado pela relação:
-## >
-> $$I_k = \frac{A \cdot k}{\sqrt{t}}$$
-## >
-> onde $A$ é a seção transversal do condutor, $k$ é uma constante dependente do material
-condutor e do tipo de isolamento, e $t$ é o tempo de duração do curto-circuito. A inclinação
-
-característica de $-1/2$ em escala log-log confirma essa relação inversa com a raiz quadrada do
-tempo.
 **Fig. 13.6:** Thermally permissible short circuit current from paper-insulated cables at 1-10 kV
 ## [26]
-## --- Página 138 ---
-**122** | *13 Mechanical and Thermal Short Circuit Strength*
 > **Graph Description - Fig. 13.7:**
-## >
+>
 > A log-log chart showing the **thermally permissible short circuit current** ($I_k$ in kA, vertical
 axis) as a function of **short circuit duration** ($t$ in seconds, horizontal axis) for paper-insulated
 cables rated at 12/20 kV [26].
-## >
+>
 > **Axes:**
 > - Vertical axis ($I_k$ [kA]): ranges from 1 kA to 100 kA on a logarithmic scale, with gridlines at
 values: 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40, 50, 60, 70, 80, 90, 100.
 > - Horizontal axis ($t$ [sec]): ranges from 0.1 s to 5 s on a logarithmic scale, with gridlines at: 0.1,
 ## 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2, 3, 4, 5.
-## >
+>
 > **Curves:**
 > Two families of diagonal curves (each with negative slope, consistent with the inverse
 relationship $I_k \propto 1/\sqrt{t}$) are plotted:
 > - **Solid lines**: Copper (Cu) conductors
 > - **Dashed lines**: Aluminium (Al) conductors
-## >
+>
 > Each pair of curves (one Cu solid, one Al dashed) corresponds to a specific conductor
 cross-sectional area in mm², labeled on the right-hand side of the chart. The conductor
 cross-sections listed (in mm²) are, from top to bottom:
-## >
-## > | Cu [mm²] | Al [mm²] |
-## > |----------|----------|
-## > | 300 | 240 |
-## > | 185 | - |
-## > | 240 | - |
-## > | 150 | - |
-## > | 185 | - |
-## > | 120 | - |
-## > | 95 | - |
-## > | 70 | - |
-## > | 120 | - |
-## > | 95 | - |
-## > | 50 | - |
-## > | 70 | - |
-## > | 35 | - |
+>
+> | Cu [mm²] | Al [mm²] |
+> |----------|----------|
+> | 300 | 240 |
+> | 185 | - |
+> | 240 | - |
+> | 150 | - |
+> | 185 | - |
+> | 120 | - |
+> | 95 | - |
+> | 70 | - |
+> | 120 | - |
+> | 95 | - |
+> | 50 | - |
+> | 70 | - |
+> | 35 | - |
 
-## > | 50 | - |
-## > | 25 | - |
-## > | 35 | - |
-## >
+> | 50 | - |
+> | 25 | - |
+> | 35 | - |
+>
 > The right-hand axis shows paired values for Cu (solid) and Al (dashed) cross-sections: 240,
 300/185, 240/150, 185/120, 150/95, 120/70, 95, 50/70, 35/50, 25/35 mm².
-## >
+>
 > **Physical interpretation:** As short circuit duration $t$ increases, the permissible short circuit
 current $I_k$ decreases, following the thermal limit relationship:
 > $$I_k = A \cdot \frac{k}{\sqrt{t}}$$
@@ -4455,7 +4018,6 @@ Copper conductors (solid lines) allow higher permissible currents than aluminium
 the same cross-section due to copper's superior thermal and electrical conductivity.
 **Fig. 13.7:** Thermally permissible short circuit current from paper-insulated cables at 12/20 kV
 ## [26]
-## --- Página 139 ---
 *13.3 Limitation of short circuit currents* | **123**
 > **Fig. 13.8** - Log-log chart: Thermally permissible short-circuit current $I_1$ [kA] vs. fault
 duration $t$ [sec] for paper-insulated cables at 18/30 kV, for both Copper (Cu, solid lines) and
@@ -4484,18 +4046,17 @@ currents for the same duration. Copper conductors (for a given cross-section) pe
 short-circuit currents than Aluminium conductors, as copper has better thermal and electrical
 properties.
 - **Legend (inset in the chart):**
-## - $\text{--}$ Cu
-## - $\text{- -}$ Al
+- $\text{--}$ Cu
+- $\text{- -}$ Al
 **Fig. 13.8:** Thermally permissible short circuit current from paper-insulated cables at 18/30 kV
 ## [26]
-## --- Página 140 ---
 **124** | 13 Mechanical and Thermal Short Circuit Strength
 > **Graph Description:**
-## >
+>
 > **Fig. 13.9** is a log-log chart showing the **thermally permissible short circuit current**
 ($I_{th}$ in kA, vertical axis) as a function of **short circuit duration** ($t$ in seconds, horizontal
 axis) for PVC-insulated cables rated at 1-10 kV [26].
-## >
+>
 > **Axes:**
 > - **Vertical axis (left):** Short circuit current $I_{th}$ [kA], ranging from 1 kA to 100 kA on a
 logarithmic scale.
@@ -4504,19 +4065,19 @@ logarithmic scale, with major gridlines at 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.
 seconds.
 > - **Right axis:** Conductor cross-sectional area $A$ [mm²], with labeled values ranging from 25
 mm² (bottom) to 500 mm² (top).
-## >
+>
 > **Curves:**
 > The chart contains a family of parallel diagonal lines (running from upper-left to lower-right),
 each corresponding to a specific conductor cross-sectional area. Two sets of curves are shown for
 each cross-section:
 > - **Solid lines (--):** Copper (Cu) conductors
 > - **Dashed lines (- - -):** Aluminium (Al) conductors
-## >
+>
 > The conductor cross-sections labeled on the right axis are (from bottom to top):
 > 25, 25/35, 35/50, 50/70, 70, 95/120, 95, 120/150, 120, 150/185, 150, 185/240, 185, 240/300,
 240, 300/400, 300/185, 400/500, 500 mm²
 > (paired values indicate Cu/Al correspondence at the same current-time curve)
-## >
+>
 
 > **Physical Interpretation:**
 > Each curve represents the relationship $I_{th} = k \cdot A / \sqrt{t}$, where $k$ is a
@@ -4526,70 +4087,14 @@ conductor can withstand without exceeding its thermal limit (PVC insulation maxi
 temperature). The parallel, straight lines on the log-log plot confirm the inverse square-root
 relationship between current and time.
 **Fig. 13.9:** Thermally permissible short circuit current from PVC-insulated cables at 1-10 kV [26]
-## --- Página 141 ---
-*13.3 Limitation of short circuit currents* **125**
-> **Gráfico técnico - Fig. 13.10: Thermally permissible short circuit current from XLPE-insulated
-cables [26]**
-## >
-> **Descrição técnica do gráfico:**
-## >
-> O gráfico é um diagrama log-log que relaciona a corrente de curto-circuito termicamente
-admissível $I_k$ (em kA, eixo vertical, escala de 1 a 100 kA) com o tempo de duração do
-curto-circuito $t$ (em segundos, eixo horizontal, escala de 0,1 a 5 s), para cabos isolados com XLPE
-(polietileno reticulado).
-## >
-> **Eixos:**
-> - **Eixo Y (vertical):** $I_k\ [\text{kA}]$ - corrente de curto-circuito, escala logarítmica de 1 a
-100 kA, com marcações em: 1; 1,5; 2; 2,5; 3; 4; 5; 6; 7; 8; 9; 10; 15; 20; 25; 30; 40; 50; 60; 70; 80; 90;
-## 100.
-> - **Eixo X (horizontal):** $t\ [\text{sec}]$ - tempo de curto-circuito, escala logarítmica de 0,1 a 5
-s, com marcações em: 0,1; 0,2; 0,3; 0,4; 0,5; 0,6; 0,7; 0,8; 0,9; 1; 1,5; 2; 3; 4; 5.
-## >
-> **Curvas:**
-> O gráfico contém duas famílias de curvas diagonais paralelas (decrescentes da esquerda para a
-direita), cada uma correspondendo a uma seção transversal nominal de condutor $A\
-## [\text{mm}^2]$:
-## >
-> - **Linhas contínuas (--):** Condutores de **cobre (Cu)**
-> - **Linhas tracejadas (- - -):** Condutores de **alumínio (Al)**
-## >
-> As seções transversais representadas no lado direito do gráfico (em mm²) são, de cima para
-baixo:
-## >
-## > | Cu (mm²) | Al (mm²) |
-## > |----------|----------|
-## > | 500 | - |
-## > | 400 | 500 |
-
-## > | 300 | 400 |
-## > | - | 300 |
-## > | 240 | - |
-## > | 185 | 240 |
-## > | - | 185 |
-## > | 150 | - |
-## > | 120 | 150 |
-## > | - | 120 |
-## > | 95 | - |
-## > | - | 95 |
-## > | 70 | - |
-## > | 50 | 70 |
-## > | 35 | 50 |
-## > | 25 | 35 |
-## >
-> **Interpretação:** Para um dado tempo de duração do curto-circuito $t$ e uma seção de cabo
-$A$, lê-se no gráfico a máxima corrente de curto-circuito $I_k$ que o cabo pode suportar
-termicamente sem danos ao isolamento XLPE. As curvas seguem a relação $I_k \propto A /
-\sqrt{t}$, típica do critério térmico adiabático para cabos elétricos.
 **Fig. 13.10:** Thermally permissible short circuit current from XLPE-insulated cables [26]
-## --- Página 142 ---
-**126** | *13 Mechanical and Thermal Short Circuit Strength*
 > **[Graph - Fig. 13.11: Thermally permissible short circuit current of Cu screening]**
-## >
+>
 > The graph is a log-log (or semi-log) chart showing the **thermally permissible short circuit
 current** $I_t$ (in kA, on the vertical axis, ranging from 1 to 50 kA) as a function of **short circuit
 duration** $t$ (in seconds, on the horizontal axis, ranging from 0.1 to 5 s), for copper (Cu)
 screening conductors of different cross-sectional areas $A$ (in mm²).
-## >
+>
 > **Axes:**
 > - **Y-axis (left):** $I_t$ [kA] - logarithmic scale with values: 1, 1.5, 2, 2.5, 3, 4, 5, 6, 7, 8, 9, 10, 15,
 ## 20, 25, 30, 40, 50
@@ -4597,7 +4102,7 @@ screening conductors of different cross-sectional areas $A$ (in mm²).
 ## 0.6, 0.7, 0.8, 0.9, 1, 1.5, 2, 2.5, 3, 4, 5
 > - **Y-axis (right):** $A$ [mm²] - indicating the cross-sectional area of the Cu screening, with
 marked values at: 16, 25, and 35 mm²
-## >
+>
 > **Content:**
 > Three diagonal straight lines (with negative slope) are plotted, each corresponding to a specific
 cross-sectional area of the copper screening:
@@ -4605,22 +4110,21 @@ cross-sectional area of the copper screening:
 > - **A = 25 mm²** - middle line
 
 > - **A = 16 mm²** - lowest line
-## >
+>
 > Each line represents the inverse relationship between permissible short circuit current and fault
 duration: as fault duration increases, the thermally permissible current decreases. The lines follow
 the general relationship $I_t \propto A / \sqrt{t}$, consistent with the thermal short circuit
 withstand capability formula for conductors.
-## >
+>
 > **Source:** [26]
 **Fig. 13.11:** Thermally permissible short circuit current of Cu screening [26]
-## --- Página 143 ---
-## # 14
+# 14
 # Calculations for Short Circuit Strength
 To determine the short circuit strength for switchgear and control gear, the magnitude of the
 prospective short circuit current is decisive. The choice of switchgear follows from:
 - the short circuit strength and
 - the rated breaking capacity.
-## ## 14.1
+## 14.1
 ### Short circuit strength for medium voltage switchgear
 The following selection criteria are important for the short circuit strength of medium voltage
 switchgear (HD 637 51):
@@ -4638,8 +4142,6 @@ Standardized values for medium voltage systems are:
 - The rated short-time current $I_{th}$: this is the effective value of the short circuit current which
 the switchgear can carry in the closed state during the rated
 
-## --- Página 144 ---
-**128** | *14 Calculations for Short Circuit Strength*
 short circuit duration $t_{th}$ under the specified conditions for use and operation.
 - The thermal short circuit capacity $I_{thz}$:
 $$I_{thz} \geq I_{thm} \tag{14.3}$$
@@ -4654,8 +4156,7 @@ $i_p$ &nbsp;&nbsp; Peak short circuit current
 $I_{th}$ &nbsp;&nbsp; Rated short-time current
 $t_{th}$ &nbsp;&nbsp; Rated short circuit duration (1s and 3s)
 $i_k$ &nbsp;&nbsp; Maximum short circuit duration
-## ---
-## **14.2**
+**14.2**
 **Short circuit strength for low voltage switchgear**
 The following selection criteria must be considered for the short circuit strength of low voltage
 systems (IEC EN 60 947):
@@ -4672,8 +4173,6 @@ $$I_{cm} = nI_{cn} = \kappa\sqrt{2}I_{cn}. \tag{14.6}$$
 According to type, the circuit breakers must be able to interrupt the following short circuit and
 operating currents:
 
-## --- Página 145 ---
-*14.2 Short circuit strength for low voltage switchgear* **129**
 - Circuit breakers with cos$\varphi$ ≥ 0.1: short circuit currents
 - Circuit breakers with cos$\varphi$ ≥ 0.7: load currents
 - Circuit breakers with cos$\varphi$ < 0.1: operating currents
@@ -4693,11 +4192,7 @@ $I_{cu}$ &nbsp;&nbsp; Rated short circuit breaking current
 $I''_k$ &nbsp;&nbsp; Initial symmetrical short circuit current
 $I_{cm}$ &nbsp;&nbsp; Rated short circuit making current
 $i_p$ &nbsp;&nbsp; Peak short circuit current
-## --- Página 146 ---
-The image appears to be a blank white page with no visible text, diagrams, or other content to
-transcribe.
-## --- Página 147 ---
-## # 15
+# 15
 # Equipment for Overcurrent Protection
 The time-current characteristics of limit switch fuses (Figures 15.1 and 15.2) are plotted in
 logarithmic scale as a function of current. At higher short circuit currents, they break faster so that
@@ -4728,8 +4223,6 @@ the warm operational state the release times of the thermal tripping devices are
 principle of current limitation. These devices are used for breaking and protecting motors, cables
 and conductors, as well as other operational equipment with undelayed overcurrent tripping
 devices and current-dependent overload tripping devices.
-## --- Página 148 ---
-**132** | *15 Equipment for Overcurrent Protection*
 The thermal tripping device *a* is set to the rated current of the motor to be protected and the
 magnetic tripping device *n* to twelve times the current.
 For the protection of control transformers, 19 times the current is set. The dependence of the
@@ -4764,13 +4257,12 @@ conjunction with an Emergency Off control station
 - Meshed network circuit breakers in meshed low voltage networks with several high voltage
 inputs
 - Ground fault protection
-## --- Página 149 ---
 **Fig.15.1:** Time-current characteristics of limit switch fuses in accordance with IEC 269-1 [31]
 > **Description of the graph:**
-## >
+>
 > This is a log-log chart showing the **time-current characteristics of limit switch (NH) fuses** in
 accordance with IEC 269-1. The chart is rotated 90° counterclockwise in the original document.
-## >
+>
 > **Axes:**
 > - **Horizontal axis (X):** Virtual pre-arcing time $t_{vs}$ (in seconds), ranging from
 approximately $4 \times 10^{-3}$ s to $10^4$ s, plotted on a logarithmic scale.
@@ -4778,40 +4270,38 @@ approximately $4 \times 10^{-3}$ s to $10^4$ s, plotted on a logarithmic scale.
 approximately $10^1$ A to $10^5$ A, plotted on a logarithmic scale.
 > - **Top axis:** Cut-off time $t_a$ (in seconds), with values indicated at approximately 0.1, 0.2,
 0.4, 1, 2, 5 s.
-## >
+>
 > **Curves:**
 > The chart contains two families of curves:
-## >
+>
 > 1. **Left-side family of curves (melting/pre-arcing characteristics):** Each curve corresponds to a
 specific fuse rated current (in amperes). The fuse ratings labeled include: **2, 4, 6, 9, 10, 16, 25, 35,
 50, 63, 70, 80, 95, 100, 120, 125, 150, 160, 185, 200, 240, 250, 315, 500, 800, 1250** A (reading
 from the labels visible on the curves). These curves rise steeply from left to right, indicating that
 higher currents result in shorter pre-arcing times.
-## >
+>
 
 > 2. **Right-side family of curves (cut-off current characteristics):** These curves show the
 relationship between the prospective short circuit current $I_p$ and the actual cut-off current
 $I_s$, for the same fuse ratings as above.
-## >
+>
 > **Shaded region:**
 > A shaded (hatched) area is indicated on the chart labeled **"Areas of application of critical load
 curve for conductors"**, marking the zone where the fuse characteristics intersect with the
 thermal withstand limits of the protected conductors.
-## >
+>
 > **Purpose:**
 > This chart is used in electrical engineering to select appropriate fuse ratings for short-circuit
 protection of cables and conductors, allowing engineers to determine pre-arcing times, cut-off
 times, and cut-off currents for a given prospective fault current, and to verify coordination with
 conductor thermal limits.
-## --- Página 150 ---
-**134** | *15 Equipment for Overcurrent Protection*
 > **[FIGURE DESCRIPTION - Fig. 15.2]**
-## >
+>
 > **Type:** Log-log time-current characteristic chart for limit switch fuses.
-## >
+>
 > **Title/Caption:** Time-current characteristics of limit switch fuses in accordance with IEC 269-1
 [31] 1) small test current 2) large test current.
-## >
+>
 > **Axes:**
 > - **Horizontal axis (X-axis):** Prospective current $I_p$ (in amperes, A), ranging from $4 \times
 10^{-3}$ A on the right to $10^5$ A on the left (the axis is oriented right-to-left in the original, with
@@ -4822,31 +4312,31 @@ subdivisions at 2 and 5.
 from $10^1$ to $10^5$ A, with subdivisions at 2 and 5.
 > - **Vertical axis (left side):** Time $t_s$ (in seconds), ranging from $10^{-3}$ s to $10^4$ s,
 decreasing upward.
-## >
+>
 > **Content:**
 > The chart displays a family of time-current curves for fuses of various rated current values. Two
 groups of curves are shown, corresponding to:
 > 1. **Small test current** (lower boundary curves, labeled "1")
 > 2. **Large test current** (upper boundary curves, labeled "2")
-## >
+>
 > Each pair of curves (upper and lower tolerance band) is associated with a specific fuse rated
 current. The rated current values visible on the curves include (in mm² cross-section labeling on the
 left set and ampere ratings on the right set):
 
-## >
+>
 > - Left group (conductor cross-sections in mm²): **1, 2, 2.5, 4, 6, 10, 16, 25, 35, 50, 70, 95, 120,
 150, 185, 240 mm²**
 > - Right group (fuse rated currents in amperes): **4, 10, 20, 35, 63, 100, 160, 250, 400, 630, 1000
 ## A**
-## >
+>
 > **Shaded Region:**
 > A shaded (hatched) area in the lower-right portion of the chart is labeled:
 > - "Areas of application of critical load curve"
 > - "for conductors"
-## >
+>
 > This region indicates the zone where the fuse time-current characteristics overlap with the critical
 thermal withstand curves of the conductors they are intended to protect.
-## >
+>
 > **General Description:**
 > The curves follow a typical inverse time-current relationship on a log-log scale, with operating
 time decreasing steeply as prospective current increases. The chart is used to select appropriate
@@ -4854,14 +4344,13 @@ fuses for conductor protection by ensuring the fuse characteristic lies below (f
 the conductor's critical load curve across the relevant current range.
 **Fig. 15.2:** Time-current characteristics of limit switch fuses in accordance with IEC 269-1 [31] 1)
 small test current 2) large test current
-## --- Página 151 ---
 **Fig.15.3:** Cut-off current of limit switch fuses [32]
 > **Description of the graph:**
-## >
+>
 > This is a log-log (double logarithmic) graph used in electrical engineering to determine the
 **cut-off current** ($I_d$) of high-speed (current-limiting) fuse links as a function of the
 **prospective short-circuit current** ($i_P$).
-## >
+>
 > **Axes:**
 > - **Vertical axis (Y-axis):** Cut-off current $I_d$, ranging from $10^1$ to approximately $3
 \times 10^8$ (in Amperes), plotted on a logarithmic scale. The axis is labeled "$I_d$" with an
@@ -4869,28 +4358,28 @@ upward arrow indicating increasing values.
 > - **Horizontal axis (X-axis):** Prospective short-circuit current $i_P$, ranging from $10^1$ to
 $10^5$ (in Amperes), plotted on a logarithmic scale. The axis is labeled "Prospective short circuit
 current $\longrightarrow$ $i_P$".
-## >
+>
 > **Curves:**
 > Multiple diagonal straight lines are drawn across the graph, each corresponding to a different
 **fuse link rating (current rating in Amperes)**. The fuse link ratings are labeled on the right-hand
 side of the graph and include the following values (from top to bottom):
-## >
+>
 
-## > - ① 1000
-## > - ② 630
-## > - 425, 355, 300, 224, 160
-## > - 100
-## > - 63
-## > - 40, 32
-## > - 20
-## > - 10
-## > - 6
-## > - 4
-## > - 2
-## >
+> - ① 1000
+> - ② 630
+> - 425, 355, 300, 224, 160
+> - 100
+> - 63
+> - 40, 32
+> - 20
+> - 10
+> - 6
+> - 4
+> - 2
+>
 > The right side also shows a vertical arrow labeled "Fuse link" with an upward direction, indicating
 increasing fuse link current ratings toward the top curves.
-## >
+>
 > **Interpretation:**
 > Each curve allows the user to determine the **actual peak cut-off current** ($I_d$) that a
 specific fuse will permit to flow, given the **prospective (available) short-circuit current** ($i_P$)
@@ -4898,27 +4387,25 @@ in the circuit. Since these are current-limiting fuses, $I_d$ is always signific
 demonstrating the current-limiting effect. Higher-rated fuse links allow proportionally higher
 cut-off currents. All curves follow an approximately linear relationship on the log-log scale,
 indicating a power-law relationship between $I_d$ and $i_P$.
-## --- Página 152 ---
-**136** | *15 Equipment for Overcurrent Protection*
 > **Graph Description - Fig. 15.4: Time-current characteristics of HH fuses (IEC 282, Part 402)**
-## >
+>
 > The figure is a log-log (double-logarithmic) graph showing the **pre-arcing time** (vertical axis,
 in seconds) versus the **steady-state symmetrical short-circuit current (effective value)**
 (horizontal axis, in amperes) for a family of HH (high-rupturing-capacity, high-voltage) fuses rated
 according to IEC 282, Part 402.
-## >
+>
 > **Axes:**
 > - **Vertical axis (Y):** Pre-arcing time, ranging from $10^{-2}$ s to $10^4$ s, with intermediate
 divisions at $10^{-1}$, $10^0$ (1 s), $10^1$, $10^2$, $10^3$ s. Subdivisions of 2 and 5 are marked
 within each decade.
 > - **Horizontal axis (X):** Steady-state symmetrical short-circuit current (effective value), ranging
 from $10^1$ A to beyond $10^4$ A, with subdivisions at 2 and 5 within each decade.
-## >
+>
 > **Curves:**
 > Multiple characteristic curves are plotted, each corresponding to a specific fuse current rating.
 The rated currents labeled at the top of the graph (along the upper border) are:
 > - **6 A, 10 A, 16 A, 25 A, 40 A, 63 A, 100 A, 160 A, 250 A, 2×160 A, 2×250 A**
-## >
+>
 
 > Each curve is steeply falling (inverse-time characteristic): as the short-circuit current increases,
 the pre-arcing time decreases sharply. The curves are approximately parallel and shift to the right
@@ -4927,7 +4414,6 @@ slightly before dropping steeply, indicating the current-limiting region of the 
 of curves collectively illustrates the selectivity and grading characteristics achievable with this
 series of fuses.
 **Fig.15.4:** Time-current characteristics of HH fuses in accordance with IEC 282, Part 402 [31]
-## --- Página 153 ---
 > **Fig. 15.5** - Time-current characteristics of HH fuses in accordance with IEC 282, Part 402 [31]
 **Description of the graph:**
 This is a **log-log plot** showing the **time-current (pre-arcing) characteristics of HH (High
@@ -4939,12 +4425,12 @@ ranging from $10^{1}$ A to $10^{4}$ A (logarithmic scale), also with subdivision
 **Curves shown:**
 Six sets of paired curves (minimum and maximum pre-arcing time boundaries, forming bands) are
 plotted, each corresponding to a rated fuse current. The fuse ratings labeled on the graph are:
-## - **20 A**
-## - **32 A**
-## - **50 A**
+- **20 A**
+- **32 A**
+- **50 A**
 - **63 A** (labeled as 60 A)
-## - **125 A**
-## - **200 A**
+- **125 A**
+- **200 A**
 Each fuse rating is represented by a **pair of curves** (dashed lines forming a band), indicating
 the tolerance band between the minimum and maximum pre-arcing times for that rating. The
 curves have a steep, nearly vertical descent characteristic typical of HH fuses, showing that as the
@@ -4954,47 +4440,45 @@ short-circuit currents.
 The overall shape of the characteristic is typical of **current-limiting fuse behavior**: very long
 operating times for small overcurrents, transitioning to extremely fast operation (current-limiting
 regime) for large prospective short-circuit currents.
-## --- Página 154 ---
-**138** | *15 Equipment for Overcurrent Protection*
 
 > **[GRAPH DESCRIPTION - Fig. 15.6: Peak Let-Through Current Chart for HH Fuses (IEC 282, Part
 ## 402)]**
-## >
+>
 > This is a log-log chart used to determine the **peak let-through (cut-off) current** of HH (High
 Rupturing Capacity) fuses as a function of the **initial symmetrical short-circuit current**
 (prospective short-circuit current, effective/RMS value).
-## >
+>
 > **Axes:**
 > - **X-axis (horizontal):** Initial symmetrical short circuit current (effective value) $I''_k$, ranging
 from approximately $5 \times 10^1$ A to $10^5$ A (i.e., ~50 A to 100 kA), on a logarithmic scale. A
 reference marker at **40 kA** is indicated near the lower-right area of the graph.
 > - **Y-axis (vertical):** Cut-off current (peak let-through current) in amperes (A), ranging from
 approximately $10^1$ A to $10^5$ A, on a logarithmic scale.
-## >
+>
 > **Reference Line:**
 > A diagonal reference curve labeled **"Uninfluenced peak short circuit current with largest DC
 aperiodic component ($\cos\theta = 0.15$)"** runs across the upper portion of the chart. This
 represents the unmitigated prospective peak current (worst case, with maximum DC offset at
 $\cos\theta = 0.15$), serving as an upper boundary.
-## >
+>
 > **Fuse Link Curves:**
 > Multiple curves are plotted, each corresponding to a specific **fuse link rating** (labeled on the
 right side of the chart under the heading "Fuse link"). The fuse ratings shown are:
-## > - 2×250 A, 2×160 A
-## > - 250 A, 200 A, 160 A
-## > - 125 A
-## > - 100 A, 80 A, 63 A
-## > - 50 A, 40 A
-## > - 32 A
-## > - 25 A
-## > - 20 A, 16 A
-## > - 10 A
-## > - 6 A
-## >
+> - 2×250 A, 2×160 A
+> - 250 A, 200 A, 160 A
+> - 125 A
+> - 100 A, 80 A, 63 A
+> - 50 A, 40 A
+> - 32 A
+> - 25 A
+> - 20 A, 16 A
+> - 10 A
+> - 6 A
+>
 > Each curve rises from lower-left to upper-right. For higher prospective fault currents, the fuse
 cuts off at a peak current significantly lower than the uninfluenced peak, demonstrating the
 **current-limiting effect** of HH fuses.
-## >
+>
 > **Example indicated on the chart:**
 > A dashed horizontal line at **7.5 kA** on the Y-axis intersects the **40 A fuse link curve** at an
 $I''_k$ of **40 kA**, illustrating that a 40 kA prospective short-circuit current is limited to a peak
@@ -5002,10 +4486,9 @@ cut-off current of 7.5 kA by a 40 A fuse link.
 **Fig.15.6:** Peak let-through current chart for HH fuses in accordance with IEC 282, Part 402 [31]
 (Example: 40 kA initial symmetrical short circuit current is limited to 7.5 kA using a fuse link of 40 A)
 
-## --- Página 155 ---
 > **Fig. 15.7** - Two log-log time-current characteristic charts for miniature circuit breakers
 (MCBs) at 30 °C, reproduced from reference [28].
-## >
+>
 > **Left chart - Tripping characteristics B (by 30°C):**
 > - Horizontal axis: $I_\text{eff}$ (effective current) from 4 A to 1000 A, logarithmic scale.
 > - Vertical axis: tripping time $t$ from approximately 4 ms up to 2 h, logarithmic scale with units
@@ -5015,10 +4498,10 @@ top of the chart).
 > - Each curve exhibits the typical MCB shape: a long thermal (overload) region where tripping time
 decreases steeply with increasing current, transitioning to a near-vertical electromagnetic
 (instantaneous) tripping region at higher currents (approximately 3-5 × $I_n$ for type B).
-## >
+>
 > **Right chart - Tripping characteristics C (by 30°C):**
 > - Axes identical to the left chart ($I_\text{eff}$ vs. $t$), with time units explicitly labelled:
-## **min** (minutes), **s** (seconds), **ms** (milliseconds).
+**min** (minutes), **s** (seconds), **ms** (milliseconds).
 > - Same family of rated currents: **6, 10, 13, 16, 20, 25, 32, 40 A**.
 > - The instantaneous tripping threshold is shifted to higher multiples of $I_n$ compared to type B
 (approximately 5-10 × $I_n$ for type C), so the near-vertical portions of the curves appear further
@@ -5031,14 +4514,12 @@ A: $I_a = 1.45 \cdot I_n$ &nbsp;&nbsp;&nbsp; B: $I_a = 1.45 \cdot I_n$ &nbsp;&nb
 For the short-circuit range:
 A: $I_a = 3 \cdot I_n$ &nbsp;&nbsp;&nbsp; B: $I_a = 5 \cdot I_n$ &nbsp;&nbsp; C: $I_a = 10 \cdot
 I_n$ &nbsp;&nbsp;&nbsp;&nbsp; D: $I_a = 20 \cdot I_n$
-## --- Página 156 ---
-**140** | *15 Equipment for Overcurrent Protection*
-## **a)**
+**a)**
 > **[FIGURE DESCRIPTION - Fig. 15.8a]**
-## >
+>
 > Log-log graph showing the **time-current characteristics of circuit breakers for motor protection
 with electronic tripping**, labeled as tripping characteristics **"an"**.
-## >
+>
 > - **X-axis (horizontal):** Current expressed as a multiple of the rated current $I_r$, ranging from
 $1\,\hat{I}_r$ to $150 \times I_r$, with scale markings at: 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40,
 60, 100, 150 × $I_r$.
@@ -5047,7 +4528,7 @@ $1\,\hat{I}_r$ to $150 \times I_r$, with scale markings at: 1, 1.5, 2, 3, 4, 5, 
 > - Left scale: minutes (60 min down to 1 min) and fractions of seconds
 > - Right scale: seconds (s), ranging from 2000 s down to 0.005 s, with major gridlines at: 2000,
 1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005 s.
-## >
+>
 > **Curve features:**
 > - A single continuous time-current curve (labeled **"a"** in the overload region and **"n"** in
 the instantaneous/short-circuit region) that starts at the upper left (long tripping times at currents
@@ -5068,46 +4549,8 @@ time of approximately 0.02-0.05 s, reflecting the fixed mechanical/electronic re
 circuit breaker.
 **Fig. 15.8:** Time-current characteristics of circuit breakers for motor protection with electronic
 tripping [28]
-## --- Página 157 ---
-## **141**
-> **Descrição do Gráfico - Fig. 15.9:**
-## >
-> Gráfico log-log de **características tempo-corrente de disjuntores de até 6300 A** [28],
-representando o tempo de abertura (*Opening times*) em segundos no eixo vertical versus a
-corrente (em múltiplos de $I_r$) no eixo horizontal.
-## >
-> **Eixo X (horizontal):** Corrente em múltiplos de $I_r$, variando de $1 \times I_r$ a $150 \times
-I_r$, com escala logarítmica. Os valores marcados são: 1, 1.5, 2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 40, 60,
-100, 150. O valor $1 \hat{=} I_r$ indica a corrente de ajuste de referência.
-## >
-> **Eixo Y (esquerda):** Tempo de abertura em segundos (escala logarítmica), com marcações
-adicionais em minutos (min) para os valores mais altos. Valores visíveis: 0.005, 0.01, 0.02, 0.05, 0.1,
-0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000 s; e 1, 2, 5, 10, 20, 30 min.
-## >
-> **Curvas representadas:**
-## >
-
-> - **Característica "a"** (*tripping characteristic "a"*): Família de curvas inversas de
-tempo-corrente, parametrizadas pelo múltiplo da corrente de ajuste $I$, com valores de
-$2\times$, $3\times$, $4\times$, $5\times$, $6\times$, $7\times$, $8\times$, $10\times$,
-$12\times$. Estas curvas têm formato hiperbólico típico de relés de sobrecorrente de tempo
-inverso. A legenda "Current setting for I" indica os múltiplos de ajuste de corrente correspondentes
-a cada curva.
-## >
-> - **Característica "z"** (*"z" delayed independently of current*): Família de curvas horizontais
-(tempo de atraso independente da corrente), representando o disparo com retardo definido. Os
-tempos de retardo (*Delay times t*) indicados são: $T_e = 30\,\text{s}$, $17\,\text{s}$,
-$10\,\text{s}$, $6\,\text{s}$, $3.5\,\text{s}$, $2\,\text{s}$ (região de atraso longo/médio), e curvas
-horizontais nas faixas de tempo mais curto correspondentes às correntes de ajuste instantâneas:
-500 (400), 300 (220), 150, 80 (50)(30), 10 A (indicadas no lado direito do gráfico, representando os
-ajustes de corrente de disparo instantâneo em amperes).
-## >
-> O gráfico permite determinar o tempo de operação do disjuntor para qualquer valor de corrente
-de falta, tanto para a característica de tempo inverso ("a") quanto para a característica de tempo
-definido independente da corrente ("z").
+**141**
 **Fig. 15.9:** Time-current characteristics of circuit breakers up to 6300 A [28]
-## --- Página 158 ---
-**142** | *15 Equipment for Overcurrent Protection*
 The meanings of the symbols are:
 - $I_n$ &nbsp;&nbsp; Nominal current
 - $I_r$ &nbsp;&nbsp; Rated current
@@ -5125,8 +4568,7 @@ The meanings of the symbols are:
 - 1 &nbsp;&nbsp; Peak short circuit current without DC aperiodic component
 - 2 &nbsp;&nbsp; Peak short circuit current with largest DC aperiodic component
 - $I_{eff}$ &nbsp;&nbsp; Effective value of uninfluenced short circuit current
-## --- Página 159 ---
-## # 16
+# 16
 
 **Short Circuit Currents in DC Systems**
 The most important power generator is the three-phase synchronous generator. Consequently,
@@ -5154,8 +4596,6 @@ the calculation of the largest short circuit currents we must consider under whi
 operating conditions the largest short circuit current flows:
 - The resistances of the conductors must be considered in relation to a temperature of 20 °C
 - The transition resistances of the bus bars can be neglected
-## --- Página 160 ---
-**144** | *16 Short Circuit Currents in DC Systems*
 - The regulation for limiting the current converter current is not functioning
 - The batteries are fully charged
 Figure 16.1 illustrates typical short circuit currents for different sources. Figure 16.2 shows the
@@ -5163,22 +4603,22 @@ standardized approximation functions for all current paths. Figure 16.3 represen
 with four sources.
 > **[Fig. 16.1 - Four time-domain plots showing typical short circuit current waveforms for
 different DC sources:]**
-## >
+>
 
 > - **Top-left (Current Converter):** Shows current $i_D$ vs. time $t$, with peak current $i_{pD}$
 occurring at time $t_{pD}$. Two curves are shown: one for a current converter *without smoothing
 choke coil* (exhibiting an oscillatory/rippled waveform that settles to a quasi-steady-state level
 $I_{kD}$) and one *with smoothing coil* (a smoother rising curve settling to a lower steady-state
 value $I_{kD}$).
-## >
+>
 > - **Top-right (Battery):** Shows current $i_B$ vs. time $t$, with peak $i_{pB}$ at time $t_{pB}$.
 The waveform rises sharply to the peak and then decays slowly toward the steady-state short
 circuit current $-I_{kB}$, indicating the battery's internal impedance behavior.
-## >
+>
 > - **Bottom-left (Capacitor):** Shows current $i_C$ vs. time $t$, with a very sharp, high peak
 $i_{pC}$ at time $t_{pC}$, followed by a rapid exponential decay toward zero, characteristic of
 capacitor discharge.
-## >
+>
 > - **Bottom-right (Motor):** Shows current $i_M$ vs. time $t$, with peak $i_{pM}$ at time
 $t_{pM}$. Two curves are shown: one *without stray torque* (rises to peak and decays to
 steady-state $I_{kM}$) and one *with stray torque* (rises more gradually to a lower peak and
@@ -5186,65 +4626,60 @@ decays faster, indicating the braking effect of stray torque on the motor's back
 **Fig. 16.1:** Typical paths for short circuit currents [10]
 > **[Fig. 16.2 - A single time-domain plot showing the standardized approximation functions for DC
 short circuit currents:]**
-## >
+>
 > The graph plots current $i$ vs. time $t$ (with origin at $0$), and defines two piecewise
 approximation curves:
-## >
+>
 > - **$i_1(t)$**: The rising portion of the waveform from $t = 0$ to $t = t_p$. It rises with a time
 constant $\tau_1$ (shown as a horizontal bracket near the peak region) toward the peak current
 $i_p$. The dotted horizontal line at $i_p$ represents the peak level.
-## >
+>
 > - **$i_2(t)$**: The decaying portion from $t = t_p$ onward. It decays exponentially with time
 constant $\tau_2$ (shown as a horizontal bracket in the decay region) from the peak $i_p$ down
 toward the steady-state short circuit current $I_k$ (shown as a dashed horizontal line at a lower
 level), which persists until the end of the short circuit duration $T_k$.
-## >
+>
 > Key labeled points on the time axis: $0$, $t_p$ (time to peak), and $T_k$ (total short circuit
 duration).
 **Fig. 16.2:** Standardized approximation functions [10]
-## --- Página 161 ---
-*16.1 Resistances of line sections* **145**
 
 > **[Figure 16.3 - Equivalent Circuit Diagram Description]**
-## >
+>
 > The diagram shows a comprehensive equivalent circuit for the calculation of short circuit currents
 in a DC power system (per IEC 61 660-1). The circuit is organized into several parallel current source
 paths feeding into a common conductor/load section (with components $R_Y$, $L_Y$, and fuses F1
 and F2).
-## >
+>
 > **Top path - Current converter with inductive smoothing, transformer and network:**
 > Starting from a three-phase network (represented by a hatched source with $R_Q$, $X_Q$),
 through a bus bar (Q), a power cable ($R_p$, $X_p$), a transformer ($R_T$, $X_T$), a choke
 ($R_R$, $X_R$), and a three-phase bridge rectifier. The network impedance is expressed as $Z_N =
 R_N + jX_N$. After rectification, a smoothing choke coil section follows with $R_{SB}$, $L_{SB}$,
 diode $S_D$, and conductor elements $R_{DL}$, $L_{DL}$, with current $i_D$.
-## >
+>
 > **Second path - Lead battery:**
 > Contains a battery EMF source $E_B$, internal resistance $R_B$, inductance $L_B$, current
 $i_B$, switch $S_B$, and conductor elements $R_{BL}$, $L_{BL}$.
-## >
+>
 > **Third path - Capacitor:**
 > Contains a capacitor with EMF source $E_C$, resistance $R_C$, current $i_C$, switch $S_C$, and
 conductor elements $R_{CL}$, $L_{CL}$.
-## >
+>
 > **Bottom path - Motor:**
 > Divided into three sub-sections: Excitation (current source $E_F$, current $i_F$, resistance
 $R_F$, inductance $L_F$), Mass inertial (rotational mass $M_M$ with speed $n$, load torque
 $M_L$), and Armature (EMF source $E_M$, resistance $R_M$, inductance $L_M$, current $i_M$,
 switch $S_M$, conductor elements $R_{ML}$, $L_{ML}$).
-## >
+>
 > All paths converge at the right side through the common rail with $R_Y$, $L_Y$, and protective
 fuses F1 and F2.
 **Fig. 16.3:** Equivalent circuit for the calculation of short circuit currents [10]
 The calculation procedure for this circuit (Figure 16.3) will now be briefly explained in the following
 section (see IEC 61 660-1 for more detailed information).
-## ---
-## **16.1**
+**16.1**
 **Resistances of line sections**
 The pure resistance per unit length is:
 $$R' = \frac{2 \cdot \rho}{S}. \tag{16.1}$$
-## --- Página 162 ---
-**146** | *16 Short Circuit Currents in DC Systems*
 
 The touch resistance of screw connections for the smallest short circuit current is:
 $$R = \frac{14 \cdot \rho \cdot d}{S}.$$
@@ -5265,35 +4700,33 @@ where:
 - $a$: Average distance between conductors in m
 - $L'$: Inductance per unit length in H/m.
 > **Fig. 16.4 - Equivalent circuit of a converter arm [10]**
-## >
+>
 > The diagram shows an equivalent circuit divided into two sections: the **AC side** (left) and the
 **DC side** (right).
-## >
+>
 > On the **AC side**, there is an AC voltage source labeled $\frac{c \cdot U_n}{\sqrt{3}}$
 connected in series with a network impedance $Z_N$ (represented as an inductor/impedance
 symbol).
-## >
+>
 > A diode (or thyristor) rectifier bridge symbol is shown at the interface between the AC and DC
 sides.
-## >
+>
 > On the **DC side**, there is a series combination of:
 > - A resistance $R_{\text{DBr}}$
 > - An inductance $L_{\text{DBr}}$
 > - A current $i_D$ flowing toward terminal point $F$
-## >
+>
 
 > The circuit terminates at two output terminals (labeled $F$ and the return path), representing
 the DC output of the converter arm.
 **Fig. 16.4:** Equivalent circuit of a converter arm [10]
-## ---
-## **16.2**
+**16.2**
 **Current converters**
 The network impedances for the determination of the smallest short circuit current can be taken
 from Chapter 8. The resistance and the inductance of the current converter are (Figure 16.4):
 $$R_{DBr} = R_S + R_{DL} + R_Y,$$
 ## (16.5)
-## --- Página 163 ---
-## *16.3 Batteries* **147**
+*16.3 Batteries* **147**
 $$L_{DBr} = L_S + L_{DL} + L_Y, \tag{16.6}$$
 where:
 $R_S, L_S$: Resistance and inductance of saturated choke coil
@@ -5305,8 +4738,7 @@ $$i_{pD} = \kappa \cdot I_{kD} \text{ with } \kappa = f\left[\frac{R_N}{X_N}\lef
 The steady state short circuit current is:
 $$I_{kD} = \lambda_D \cdot \frac{1}{\sqrt{3}} \cdot \frac{\sqrt{2} \cdot c \cdot U_n}{Z_N} \text{
 with } \lambda_D = f\left[\frac{R_N}{X_N}; \frac{R_{DBr}}{R_N}\right]. \tag{16.8}$$
-## ---
-## **16.3**
+**16.3**
 **Batteries**
 The simplified equivalent circuit of a permanently installed lead battery for the short circuit current
 is shown in Figure 16.5.
@@ -5314,7 +4746,7 @@ For the nominal voltage $U_{nb}$ of a battery:
 
 $$U_{nB} = 2.0 \, V/cell. \tag{16.9}$$
 > **Figure 16.5 - Equivalent circuit of a battery:**
-## >
+>
 > The circuit diagram represents a simplified DC equivalent circuit of a lead-acid battery used for
 short circuit current analysis. It consists of:
 > - A DC voltage source $E_B$ (no-load voltage of the battery), represented on the left side with
@@ -5331,8 +4763,6 @@ No-load voltage of the charged battery:
 $$E_B = 1.05 \cdot U_{nB}, \tag{16.10}$$
 No-load voltage of the uncharged battery:
 $$E_B = 0.9 \cdot U_{nB}. \tag{16.11}$$
-## --- Página 164 ---
-**148** | *16 Short Circuit Currents in DC Systems*
 Resistance of the battery:
 $$R_{BBr} = 0.9 \cdot R_B + R_{BL} + R_Y. \tag{16.12}$$
 Inductances of the battery
@@ -5342,8 +4772,8 @@ $$I_{pB} = \frac{E_B}{R_{BBr}}. \tag{16.14}$$
 Steady state short circuit current of the battery:
 $$I_{kB} = 0.95 \cdot \frac{E_B}{R_{BBr} + 0.1 \cdot R_B}. \tag{16.15}$$
 where:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 
 | $E_B$: | No-load voltage of the battery |
 | $L_B$: | Inductance of the battery |
@@ -5355,8 +4785,7 @@ where:
 | $R_B$: | Resistance of the battery |
 | $R_{BBr}$: | Total resistance of the battery |
 | $U_{nB}$: | Nominal voltage of the battery. |
-## ---
-## **16.4**
+**16.4**
 **Capacitors**
 The equivalent circuit and the short circuit parameters of a capacitor are shown in Figure 16.6.
 > **[Figure 16.6 - Equivalent circuit of a capacitor]**
@@ -5369,8 +4798,6 @@ representing the short circuit location. The circuit models the discharge behavi
 during a short circuit event, where $R_{CBr}$ is the total branch resistance and $L_{CBr}$ is the
 total branch inductance of the capacitor circuit.
 **Fig. 16.6:** Equivalent circuit of a capacitor [10]
-## --- Página 165 ---
-*16.5 DC motors* **149**
 ## Here:
 $$R_{CBr} = R_C + R_{CL} + R_Y, \tag{16.16}$$
 $$L_{CBr} = L_C + L_{CL} + L_Y. \tag{16.17}$$
@@ -5388,8 +4815,7 @@ $R_{CY}$: Resistance of coupling branch for capacitor
 $L_{CY}$: Inductance of coupling branch for capacitor
 $R_C$: Resistance of capacitor
 $R_{CBr}$: Total resistance of capacitor.
-## ---
-## **16.5**
+**16.5**
 **DC motors**
 The equivalent circuit of an externally excited DC motor is shown in Figure 16.7.
 > **Figure 16.7 - Equivalent circuit of an externally excited DC motor:**
@@ -5404,8 +4830,6 @@ machine with speed $n$, motor torque $M_M$, and load torque $M_L$.
 For the resistances and inductances, the following hold true:
 $$R_{MBr} = R_M + R_{ML} + R_Y, \tag{16.19}$$
 $$L_{MBr} = L_M + L_{ML} + L_Y, \tag{16.20}$$
-## --- Página 166 ---
-**150** | *16 Short Circuit Currents in DC Systems*
 $$\tau_M = \frac{L_{MBr}}{R_{MBr}}.\tag{16.21}$$
 DC motors can be neglected when:
 $$\sum I_{rM} < 0.01 \cdot I_{kD}.\tag{16.22}$$
@@ -5415,8 +4839,8 @@ Steady state short circuit current of the DC motor:
 
 $$I_{kM} = \frac{L_F}{I_{OF}} \cdot \frac{U_{rM} - I_{rM} \cdot R_M}{R_{MBr}},\tag{16.24}$$
 where:
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | $L_M$: | Inductance of DC motor |
 | $L_{MBr}$: | Total inductance of DC motor |
 | $R_{ML}$: | Resistance of DC motor conductor |
@@ -5426,8 +4850,7 @@ where:
 | $R_M$: | Resistance of DC motor |
 | $U_{rM}$: | Rated voltage of DC motor |
 | $R_{MBr}$: | Total resistance of DC motor. |
-## --- Página 167 ---
-## # 17
+# 17
 # Programs for the Calculation of Short Circuit Currents
 The calculation of short circuit currents in electrical systems is hardly possible without the support
 of computer programs. Furthermore, there are voluminous regulations which must be fulfilled. The
@@ -5451,15 +4874,12 @@ FGH e.V., Mannheim, Telephone: ++49-(0)621-8047-143
 563-600, www.elaplan.com
 - SIMARIS deDESIGN, Siemens Network Calculation, Siemens GmbH,
 Telephone: ++49-(0)7000-746 2747, www.siemens.de/simaris
-## --- Página 168 ---
-The image appears to be blank/white with no visible text or content to transcribe.
-## --- Página 169 ---
-## # 18
+# 18
 # Examples: Calculation of Short Circuit Currents
 This Chapter presents a large number of examples taken from practice, worked by hand through
 the corresponding equations and also an example calculated with KUBS plus. For a low voltage
 network, a TN-C or a TN-S system is assumed.
-## ## 18.1
+## 18.1
 ### Example 1: Radial network
 Given a 400 V network, as shown in Figure 19.1.
 - Calculate the resistances and reactances.
@@ -5469,7 +4889,7 @@ circuit breaker.
 > The diagram shows a radial low-voltage distribution network fed from a 20/0.4 kV, 50 Hz, 630
 kVA transformer (delta-star connection) connected to an upstream network represented by
 $S''_{kQ}$. The network topology is as follows:
-## >
+>
 > - **Transformer**: 20/0.4 kV, 50 Hz, 630 kVA, with delta primary and star secondary winding
 symbol shown.
 > - **Main Distribution Panel**: Connected to the transformer secondary via busbar. Contains
@@ -5495,8 +4915,6 @@ Resistances and reactances of transformer (Fig. 8.6):
 $$R_T \quad = \quad 3.5\, m\Omega \qquad X_T = 13\, m\Omega$$
 Resistances and reactances of cable:
 $$R_{K_{L1}} \quad = \quad 1.24 \cdot \frac{l}{\kappa \cdot S}$$
-## --- Página 170 ---
-**154** | *18 Examples: Calculation of Short Circuit Currents*
 $$R_{K_{L1}} = 1.24 \cdot \frac{85\text{m}}{56\frac{\text{m}}{\Omega\text{mm}^2} \cdot
 120\text{mm}^2} = 15.68m\Omega$$
 $$R_{K_{PEN}} = 1.24 \cdot \frac{85\text{m}}{56\frac{\text{m}}{\Omega\text{mm}^2} \cdot
@@ -5527,8 +4945,6 @@ $$R_k \ = \ \frac{l}{\kappa \cdot S} m\Omega =
 \frac{85\text{m}}{56\frac{\text{m}}{\Omega\text{mm}^2} \cdot 120\text{mm}^2} =
 12.65m\Omega$$
 $$X_k \ = \ x'_i l = 0.08\frac{m\Omega}{m} \cdot 85m = 6.8m\Omega$$
-## --- Página 171 ---
-*18.2 Example 2: Proof of protective measures* **155**
 Resistances and reactances of conductor:
 $R_L \;= 178.6 m\Omega$
 $X_L \;= 2 m\Omega$
@@ -5537,8 +4953,7 @@ $\Sigma X \;= 21.8 m\Omega$
 $$Z_k \;= \sqrt{(R_k^2 + X_k^2)} = \sqrt{(204.25^2 + 21.8^2)}\, m\Omega = 205.4 m\Omega$$
 $$I_{k3}'' = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_k} = \frac{1 \cdot 400V}{\sqrt{3} \cdot 205.4
 m\Omega} = 1.068 kA$$
-## ---
-## **18.2**
+**18.2**
 **Example 2: Proof of protective measures**
 Given a 230/400 V network, as shown in Figure 19.2, with a source impedance of 0.3 Ω the
 protective measures must be proven.
@@ -5546,11 +4961,11 @@ protective measures must be proven.
 - Calculate the single-pole short circuit current.
 - Are the cut-off conditions fulfilled?
 > **Diagram Description - Fig. 18.2: Example 2: Calculation with source impedance**
-## >
+>
 > The diagram shows a low-voltage electrical distribution network at 400/230 V, 50 Hz, fed by a
 
 power feed cable NYCWY 4×120 qmm with a supply impedance of 0.3 Ω.
-## >
+>
 > - **F1**: First fault location, downstream of the NH00 80 A fuse, connected via NYM-J 4×25 qmm
 cable, l = 15 m.
 > - **F2**: Second fault location after fuse F2, leading to the main distribution panel.
@@ -5562,14 +4977,11 @@ feeding a 4×16 qmm cable, l = 22 m.
 kW → **F5**
 > - **Lower path**: B 10A circuit breaker → Cable 3×2.5 qmm, l = 18 m → Receptacle → **F4**
 **Fig. 18.2:** Example 2: Calculation with source impedance
-## ---
 **Calculation of impedances for supply conductors**
 Conductor NYM-J 4 × 25 mm², l = 15 m
 $$R \;= 1.24 \cdot \frac{2 \cdot l}{\kappa \cdot S}$$
 $$R \;= 1.24 \; \frac{2 \cdot 15m}{56\,\dfrac{m}{\Omega mm^2} \cdot 25\,mm^2} =
 0.0265\,\Omega$$
-## --- Página 172 ---
-**156** | *18 Examples: Calculation of Short Circuit Currents*
 $$X \;=\; x' \cdot 2 \cdot l \approx 0.08\,\frac{m\Omega}{m} \cdot 2 \cdot 15m =
 0.0024\,\Omega$$
 $$Z_1 \;=\; \sqrt{R^2 + X^2} = \sqrt{0.0265^2 + 0.00024^2}\,\Omega = 0.0266\,\Omega$$
@@ -5604,8 +5016,6 @@ $$I''_{k1} \;=\; \frac{0.95 \cdot 400V}{\sqrt{3} \cdot 0.3266\,\Omega} = 671.7A$
 **Impedance at fault location F3:**
 $$Z_B \;=\; Z_A + Z_2 = 0.3266\,\Omega + 0.0609\,\Omega = 0.3875\,\Omega$$
 $$I''_{k1} \;=\; \frac{0.95 \cdot 400V}{\sqrt{3} \cdot 0.3875\,\Omega} = 566.17A$$
-## --- Página 173 ---
-*18.2 Example 2: Proof of protective measures* **157**
 **Impedance at outlet F4:**
 $$Z_C = Z_B + Z_3 = 0.3875\Omega + 0.318\Omega = 0.7055\Omega$$
 $$I''_{k1} = \frac{0.95 \cdot 400V}{\sqrt{3} \cdot 0.7055\Omega} = 310.97A$$
@@ -5629,16 +5039,14 @@ The condition $I''_{k1min} > I_a$
 must always hold true.
 **Table 19.1:** Summary of results
 | **Fault location** | $I''_{k1min}$ | $I_a$ |
-## |---|---|---|
-## | F1 | 731.3A | 450A |
-## | F2 | 671.7A | 450A |
-## | F3 | 566.17A | 310A |
+|---|---|---|
+| F1 | 731.3A | 450A |
+| F2 | 671.7A | 450A |
+| F3 | 566.17A | 310A |
 | F4 outlet | 310.97A | 80A |
 | F5 motor | 365.96 | 160A |
 Table 19.1 shows that the cut-off condition is satisfied.
-## --- Página 174 ---
-**158** | *18 Examples: Calculation of Short Circuit Currents*
-## ## 18.3
+## 18.3
 **Example 3: Connection box to service panel**
 A power plant network as in Figure 19.3 supplies an on-site connection box. The single-pole short
 circuit current is 575 A.
@@ -5656,7 +5064,7 @@ subdistribution panel, two branches are shown:
 qmm, l=35 m** to a **Receptacle**.
 > - **Lower branch:** Protected by a **B 10A** circuit breaker, feeding through a **Cable 3×1.5
 qmm, l=15 m** to a **Light**.
-## >
+>
 > The diagram illustrates the topology used to calculate short circuit currents at the subdistribution
 panel, receptacle, and light fixture.
 The impedance of the connection box is:
@@ -5675,8 +5083,6 @@ $$z' \quad = 2 \cdot z \cdot l_2 = 2 \cdot 9.02\,\Omega/km \cdot 0.035\,km + 0.3
 $$I''_{k1} \quad = 213.27A$$
 The cut-off current of a 16 A circuit breaker is 80 A. Since the single-pole short circuit current is
 greater than the cut-off current, the cut-off condition is satisfied.
-## --- Página 175 ---
-*18.4 Example 4: Transformers in parallel* **| 159**
 Short circuit on light:
 $$z' \quad = 2 \cdot z \cdot l_3 = 2 \cdot 15\Omega/km \cdot 0.015km + 0.3973\Omega =
 0.8473\Omega$$
@@ -5684,19 +5090,18 @@ $$z' \quad = 2 \cdot z \cdot l_3 = 2 \cdot 15\Omega/km \cdot 0.015km + 0.3973\Om
 $$I''_{k1} \quad = 258.9A$$
 The cut-off current of a 10 A circuit breaker is 50 A. The cut-off condition is therefore again
 satisfied.
-## ---
-## **18.4**
+**18.4**
 **Example 4: Transformers in parallel**
 Two transformers are connected in parallel, as shown in Figure 19.4.
 - Draw the equivalent circuit.
 - Calculate the resistances and reactances.
 - Calculate the three-pole short circuit current.
 > **Figure Description (Fig. 18.4): Example 4 - Transformers in parallel**
-## >
+>
 > The diagram shows a single-line electrical network with two transformers (T1 and T2) connected
 in parallel on a 20 kV medium-voltage busbar fed from a network input through a
 disconnector/switch Q.
-## >
+>
 > - **T1**: Delta-star (Δ/Y) transformer, rated 630 kVA, connected between the 20 kV busbar and
 a 400 V low-voltage busbar.
 > - **T2**: Delta-star (Δ/Y) transformer, rated 400 kVA, connected in parallel with T1 between the
@@ -5708,69 +5113,63 @@ circuit breaker/fuse **F1** at 400 V.
 > - The circuit is a radial distribution topology with parallel transformer supply for redundancy and
 increased capacity.
 **Fig. 18.4:** Example 4: Transformers in parallel
-## ---
 **Total transformer power:**
 $$\Sigma S_{rT} \quad = \quad 630\,kVA + 400\,kVA = 1030\,kVA$$
 $$u_{R_m} \quad = \quad \frac{u_{R1} + u_{R2}}{2} = 1.125\%$$
-## --- Página 176 ---
-**160** | *18 Examples: Calculation of Short Circuit Currents*
 > **Fig. 18.5 - Equivalent Circuit Diagrams for Parallel Transformers with Cables**
-## >
+>
 
 > The figure shows three equivalent circuit diagrams representing the step-by-step reduction of a
 power system with two parallel transformers and two parallel cable sets feeding a fault point (short
 circuit location $I''_{k3}$).
-## >
+>
 > **Top-left circuit:** Two transformers in parallel, each represented by their series impedance
 branches ($R_{T1}, X_{T1}$ and $R_{T2}, X_{T2}$), followed by two parallel cable branches
 ($R_{K1}, X_{K1}$ and $R_{K2}, X_{K2}$). A voltage source $c \cdot U_n / \sqrt{3}$ drives the
 circuit, with the short circuit current $I''_{k3}$ at the fault node (bus 01).
-## >
+>
 > **Top-right circuit:** Simplified equivalent with the two transformer branches and two cable
 branches each combined into a single equivalent series impedance $\Sigma R$ and $\Sigma X$, still
 driven by $c \cdot U_n / \sqrt{3}$ and terminating at the fault node (bus 01) with current
 $I''_{k3}$.
-## >
+>
 > **Bottom circuit:** Further reduced single equivalent circuit with combined impedances
 $R_{T1+T2}$, $X_{T1+T2}$, $R_{K1+K2}$, $X_{K1+K2}$ in series, driven by $c \cdot U_n / \sqrt{3}$,
 with short circuit current $I''_{k3}$ at bus 01.
 **Fig. 18.5:** Equivalent circuit
-## $$
+$$
 Z_T = \frac{u_{Rm}}{100\%} \frac{U_{nT}^2}{S_{rT}} = \frac{5\%}{100\%}
 \frac{(400\,\text{V})^2}{1030\,\text{kVA}} = 7.77\,m\Omega
-## $$
-## $$
+$$
+$$
 R_T = \frac{u_{Rm}}{100\%} \frac{U_{nT}^2}{S_{rT}} = \frac{1.125}{100\%}
 \frac{(400\,\text{V})^2}{1030\,\text{kVA}} = 1.75\,m\Omega
-## $$
-## $$
+$$
+$$
 X_T = \sqrt{Z_T^2 - R_T^2} = 7.57\,m\Omega
-## $$
+$$
 **Cables:**
-## $$
+$$
 R_L = \frac{l}{\kappa \cdot S \cdot n} = \frac{50\,m}{56\,\frac{m}{\Omega \cdot mm^2} \cdot
 185\,mm^2 \cdot 2} = 2.4\,m\Omega
-## $$
-## $$
+$$
+$$
 X_L = x'_L \cdot \frac{l}{n} = 0.08\,m\Omega \cdot \frac{50\,m}{2} = 2\,m\Omega
-## $$
+$$
 
-## $$
+$$
 Z_k = \sqrt{R_k^2 + X_k^2} = \sqrt{4.15^2 + 9.57^2}\,m\Omega = 10.43\,m\Omega
-## $$
-## $$
+$$
+$$
 I''_{k3} = \frac{c \cdot U_{nT}}{\sqrt{3} \cdot Z_k} = \frac{1.0 \cdot 400\,\text{V}}{\sqrt{3} \cdot
 10.43\,m\Omega} = 22.14\,kA
-## $$
-## ---
-## **18.5**
+$$
+**18.5**
 **Example 5: Connection of a motor**
 A transformer as shown in Figure 19.6 supplies a motor through an overhead line, cables and
 conductors.
 - Calculate the resistances and reactances.
 - Calculate the single-pole short circuit current.
-## --- Página 177 ---
-*18.5 Example 5: Connection of a motor* **161**
 > **[Fig. 18.6 - Single-line electrical distribution diagram showing the connection of a motor
 through multiple stages:]**
 > The diagram represents a low-voltage distribution network starting from a transformer (20/0.4
@@ -5783,7 +5182,6 @@ panel.
 three-phase motor (M, 3~) is connected.
 > Switching/disconnection points (represented by X symbols) are shown between each section.
 **Fig. 18.6:** Example 5: Connection of a motor
-## ---
 **Transformer:**
 $$Z_T = 15.238\, m\Omega$$
 $$R_T = 2.8\, m\Omega$$
@@ -5808,8 +5206,6 @@ $$R_{L3} = 1.24 \cdot \frac{35m}{56\frac{m}{\Omega \cdot mm^2} \cdot 16mm^2} = 4
 m\Omega$$
 $$R_{PEN} = 1.24 \cdot \frac{35m}{56\frac{m}{\Omega \cdot mm^2} \cdot 16mm^2} = 48.4\,
 m\Omega$$
-## --- Página 178 ---
-**162** | *18 Examples: Calculation of Short Circuit Currents*
 $$X_{L3} = x' \cdot l = 0.08 \frac{\Omega}{km} \cdot 35m = 2.8m\Omega$$
 $$X_{PEN} = 2.8m\Omega$$
 $$\Sigma R = 222.7m\Omega$$
@@ -5817,9 +5213,8 @@ $$\Sigma X = 61.6m\Omega$$
 $$Z_k = \sqrt{R_k^2 + X_k^2} = \sqrt{227.7^2 + 61.6^2} \, m\Omega = 231.06m\Omega$$
 $$I''_{k1} = \frac{c \cdot U_{nT}}{\sqrt{3} \cdot Z_k} = \frac{0.95 \cdot 400V}{\sqrt{3} \cdot
 231.06m\Omega} = 949.5kA$$
-## ---
 
-## ## 18.6
+## 18.6
 ### Example 6: Calculation for a load circuit
 A grounding cable is connected to a transformer (Figure 19.7). The data for the cable are: $r' =
 0.482\Omega/\text{km}$, $x' = 0.083\Omega/\text{km}$, $\dfrac{R_{0L}}{R_L} = 4$ and
@@ -5827,7 +5222,7 @@ $\dfrac{X_{0L}}{X_L} = 3.76$.
 - Calculate the resistances and reactances.
 - Calculate the three-pole and single-pole short circuit currents.
 > **Figure 18.7 - Single-line diagram: Example 6 - Calculation for a load circuit**
-## >
+>
 > The diagram shows a radial low-voltage network starting from a busbar Q connected to an
 infinite network source represented by $S''_{kQ} = 250\,\text{MVA}$. From Q, the circuit feeds
 through a transformer T rated **630 kVA, 20/0.4 kV, 50 Hz, Dyn5**. On the low-voltage side (400
@@ -5836,7 +5231,6 @@ panel, a **cable** (4×50 mm², l = 250 m) extends to the right, terminating at 
 (marked with a filled circle). The fault location represents where the short circuit occurs. The bus
 points Q, T, and A are labeled along the single-line path, and the cable section is clearly separated
 from the transformer/busbar section.
-## ---
 **Calculation of $I''_{k3}$:**
 $$Z_{QT} = \frac{c \cdot U_n^2}{S''_{kQ}} = \frac{1.1 \cdot (0.4kV)^2}{250MVA} =
 0.704m\Omega$$
@@ -5846,8 +5240,6 @@ $$R_T = \frac{u_R}{100\%} \cdot \frac{U_n^2}{S_{rT}} = \frac{1.1 \cdot \%}{100\%
 \frac{(400V)^2}{630kVA} = 2.8m\Omega$$
 $$Z_T = \frac{u_k \cdot U_n^2}{100\% \cdot S_{rT}} = \frac{6 \cdot \%}{100\%} \cdot
 \frac{(400V)^2}{630kVA} = 15.2m\Omega$$
-## --- Página 179 ---
-*18.6 Example 6: Calculation for a load circuit* **| 163**
 $$X_T = \sqrt{Z^2 - R_T^2} = \sqrt{15.2^2 - 2.8^2} \, m\Omega = 14.9 m\Omega$$
 $$R_{0T} = R_T = 2.8 m\Omega$$
 $$X_{0T} = 0.995 \cdot X_T = 0.995 \cdot 14.9 m\Omega = 14.83 m\Omega$$
@@ -5862,34 +5254,32 @@ $$Z_k = \sqrt{R_k^2 + X_k^2} = \sqrt{123.4^2 + 36.35^2} \, m\Omega = 128.6 m\Ome
 $$I''_{k3} = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_k} = 1.80 kA$$
 **Calculation of $I''_{k1}$ (Figure 19.8):**
 > **Fig. 18.8 - Equivalent circuit for $I''_{k1}$**
-## >
+>
 > The figure shows two equivalent circuit diagrams used to calculate the initial symmetrical
 short-circuit current $I''_{k1}$ for a single-phase-to-earth fault.
-## >
+>
 > **Top diagram - Positive-sequence system:**
 > A series circuit is shown with two impedance elements in series along the top branch:
 > - First element: $2{,}8 + j14{,}9$ (representing the transformer positive-sequence impedance in
 mΩ)
 > - Second element: $120 + j20{,}75$ (representing the line positive-sequence impedance in mΩ)
-## >
+>
 > A shunt element on the left side of value $0{,}07 + j0{,}7$ is connected to ground node **01**.
 On the right side, a shunt impedance $Z_1 = 123{,}4 + j36{,}35$ is connected to ground,
 representing the total positive-sequence impedance at the fault point.
-## >
+>
 > **Bottom diagram - Zero-sequence system:**
 > A series circuit is shown with two impedance elements along the top branch:
 > - First element: $2{,}8 + j14{,}83$ (transformer zero-sequence impedance in mΩ)
 > - Second element: $482 + j78{,}02$ (line zero-sequence impedance in mΩ)
-## >
+>
 > The left side connects to ground node **00**. On the right side, a shunt impedance $Z_0 =
 484{,}8 + j92{,}85$ is connected to ground, representing the total zero-sequence impedance at the
 fault point.
-## >
+>
 > Both circuits together (positive-sequence and zero-sequence) are used in the symmetrical
 component method to determine the single-phase short-circuit current $I''_{k1}$.
 **Fig. 18.8:** Equivalent circuit for $I''_{k1}$
-## --- Página 180 ---
-**164** | *18 Examples: Calculation of Short Circuit Currents*
 
 $$2\underline{Z}_1 + \underline{Z}_0 = 2 \cdot (123.4 + j36.35)m\Omega + (484.8 +
 j92.85)m\Omega$$
@@ -5908,17 +5298,14 @@ Single-pole short circuit current:
 $$I''_{k1} \ = \ \frac{c \cdot U_n}{\sqrt{3} \cdot Z_{tof}} = \frac{0.95 \cdot 400V}{\sqrt{3} \cdot
 0.258\Omega} = 850.36A$$
 The result is nearly the same by both methods.
-## ---
-## **18.7**
+**18.7**
 **Example 7: Calculation for an industrial system**
 A transformer as shown In Figure 19.9 supplies the main distributor of an industrial system.
 - Calculate the resistances and reactances.
 - Calculate the three-pole short current at the main distributor.
 - Calculate the single-pole short circuit current at the outlet and at the light switch.
-## --- Página 181 ---
-*18.7 Example 7: Calculation for an industrial system* **165**
 > **Fig. 18.9:** Example 7: Network diagram
-## >
+>
 > *Diagram description:* Single-line network diagram of an industrial low-voltage power system.
 On the left, a grid connection point labeled $S''_{kQ}$ = 250 MVA feeds through a disconnector (Q)
 
@@ -5947,22 +5334,19 @@ $I''_{k1}$ at outlet:
 $$Z_{out} \quad = \quad Z_{Qt} + Z_T + Z_{l1} + Z_{l2} = 890.344\,m\Omega$$
 $$I''_{k1} \quad = \quad \frac{c \cdot U_n}{\sqrt{3} \cdot Z_{out}} = \frac{0.95 \cdot
 400\,V}{\sqrt{3} \cdot 890.344\,m\Omega} = 246.4\,A$$
-## --- Página 182 ---
-**166** | *18 Examples: Calculation of Short Circuit Currents*
 $I''_{k1}$ at light switch:
 $$Z_{li} = Z_{Qt} + Z_T + Z_{l1} + Z_{l2} = 708.944 m\Omega$$
 
 $$I''_{k1} = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_{Li}} = \frac{0.95 \cdot 400V}{\sqrt{3} \cdot 708.944
 m\Omega} = 309.46A$$
-## ---
-## **18.8**
+**18.8**
 **Example 8: Calculation of three-pole short circuit current and peak short circuit current**
 Given the network of Figure 19.10
 - Calculate the resistances and reactances.
 - Calculate the three-pole short circuit currents and the peak short circuit currents at the fault
 locations.
 > **Diagram Description - Fig. 18.10: Example 8: Network diagram**
-## >
+>
 > The diagram shows a low-voltage power distribution network. On the far left is a medium-voltage
 source labeled $S''_{kQ}$ = 500 MVA (represented by a grid/network symbol). This feeds into a
 Transformer (630 kVA, Dyn5, 20/0.4 kV, 50 Hz) through bus points Q, T, and A. From point A, a
@@ -5981,9 +5365,8 @@ $$R_Q = 0.1 \cdot X_Q = 0.1 \cdot 0.35 = 0.0352 m\Omega$$
 $$u_x = \sqrt{u_k^2 - u_R^2} = 5.9\%$$
 $$R_T = \frac{u_{Rr} \cdot U_{nT}^2}{100\% \cdot S_{rT}} = 2.8 m\Omega$$
 $$X_T = \frac{u_{xr} \cdot U_{nT}^2}{100\% \cdot S_{rT}} = 15 m\Omega$$
-## --- Página 183 ---
 18.8 Example 8: Calculation of three-pole short circuit current and peak short circuit current
-## **167**
+**167**
 **Supply cables:**
 
 $R'_1 \ = 0.101\Omega/km$
@@ -6009,8 +5392,6 @@ $$Z_k \ = (20.34 + 36.6)m\Omega = 57\, m\Omega$$
 $$I''_{k3} \ = \frac{c \cdot U_{nT}}{\sqrt{3} \cdot Z_k}$$
 $$I''_{k3} \ = \frac{400V}{\sqrt{3} \cdot 57\, m\Omega} = 4.05\, kA$$
 $$i_p \ = \kappa \cdot \sqrt{2} \cdot I''_{k3} = 5.88\, kA$$
-## --- Página 184 ---
-**168** | *18 Examples: Calculation of Short Circuit Currents*
 **Sub-distribution II (three-pole short circuit):**
 $$R_{l3} = \frac{l}{\kappa \cdot S}$$
 
@@ -6022,8 +5403,7 @@ $$Z_k = \sqrt{R^2 + X^2} = 31.15 m\Omega$$
 $$I''_{k3} = \frac{c \cdot U_{nT}}{\sqrt{3} \cdot Z_k}$$
 $$I''_{k3} = \frac{1.0 \cdot 400V}{\sqrt{3} \cdot 31.15 m\Omega} = 7.4 kA$$
 $$i_p = \kappa \cdot \sqrt{2} \cdot I''_{k3} = 11.1 kA$$
-## ---
-## **18.9**
+**18.9**
 **Example 9: Meshed network**
 Given a meshed network as shown in Figure 19.11
 - Calculate the impedances.
@@ -6031,9 +5411,9 @@ Given a meshed network as shown in Figure 19.11
 - Calculate the three-pole short circuit currents and the peak short circuit currents at the fault
 location F.
 > **[Fig. 18.11 - Meshed Network Diagram]**
-## >
+>
 > The figure shows a meshed high-voltage network with the following topology and components:
-## >
+>
 > - **Busbar/Node F** (top): The fault location, labeled $\dot{I}_\gamma F$, connected via a 220
 kV overhead line.
 > - **Busbar/Node E** (left): Connected to node A via a 10 km line, and to node F via a 20 km
@@ -6053,7 +5433,6 @@ segment), and to node E (45 km) and via a 13 km line.
 > - All overhead line distances are labeled in km. The network operates at **220 kV** on the
 high-voltage side and **50 kV** on the transformed side.
 **Fig. 18.11:** Example 9: Meshed network
-## --- Página 185 ---
 18.9 Example 9: Meshed network **169**
 The following data are given:
 with $S_{rT} = 160$ MVA, $u_k = 12\%$, $U_n = 50$ kV and $Z = 0.5\Omega$/km for all lines
@@ -6086,8 +5465,6 @@ $$Z_{BH} = \frac{Z_{AB} \cdot Z_{GDB}}{Z_{AB}+Z_{AG}+Z_{GDB}} = \frac{9 \cdot
 24.82}{9+1.07+29.82} = 6.397\Omega$$
 $$Z_{GH} \quad = \ \frac{Z_{AG} \cdot Z_{GDB}}{Z_{AB}+Z_{AG}+Z_{GDB}} = \frac{1.07 \cdot
 29.8}{9+1.07+24.82} = 0.76\Omega$$
-## --- Página 186 ---
-**170** | *18 Examples: Calculation of Short Circuit Currents*
 > **Fig. 18.12:** Delta star transformations - A series of seven circuit diagrams (a) through (g)
 illustrating successive delta-to-star (Δ→Y) network transformations applied to a multi-node
 impedance network. Each sub-figure shows intermediate steps of simplification:
@@ -6102,7 +5479,6 @@ at the bottom.
 and F explicitly.
 > - **(g)** Final reduced network: a single series chain from $Z_T$ (top) through $Z_G$ to node F
 with ground symbol, representing the total equivalent impedance seen from the fault point.
-## ---
 **Addition of series impedances (Figure 17.17e):**
 $$Z_{GH} + Z_{GEF} = Z_{HGF} = 0.76\Omega + 13.21\Omega = 13.97\Omega$$
 $$Z_{BH} + Z_{BF} = Z_{HBF} = 6.7\Omega + 10\Omega = 16.4\Omega$$
@@ -6115,7 +5491,6 @@ $$I''_{k3} = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_k} = \frac{1.1 \cdot 50kV}{\sqr
 
 $$S''_{k3} = \frac{c \cdot U_n^2}{Z_k} = \frac{1.1 \cdot (50kV)^2}{9.69\Omega} = 282.5MVA$$
 $$i_p = 1.8 \cdot \sqrt{2} \cdot I''_{k3} = 1.8 \cdot \sqrt{2} \cdot 3.26kA = 8.29kA$$
-## --- Página 187 ---
 ## 18.10
 **Example 10: Supply to a factory**
 A factory is supplied from an overhead line and cables with two transformers, as shown in Figure
@@ -6123,7 +5498,7 @@ A factory is supplied from an overhead line and cables with two transformers, as
 - Calculate the impedances at the fault locations.
 - Calculate $I''_{k3}$ at the fault locations.
 > **Figure 18.13 - Supply to a factory**
-## >
+>
 > The diagram shows a medium-voltage/low-voltage electrical supply network for a factory. On the
 left, a network input of **500 MVA** feeds a busbar at **20 kV** through a network connection
 point Q (represented by a cross/grid symbol). From the 20 kV busbar, transformer **T1** (2000
@@ -6151,8 +5526,6 @@ Overhead line:
 $$R_F = r' \cdot l = 0.299\Omega/km \cdot 0.350km = 104.7m\Omega$$
 $$X_F = x' \cdot l = 0.075\Omega/km \cdot 0.350km = 26.3m\Omega$$
 $$Z_F = \sqrt{R^2 + X^2} = \sqrt{104.7^2 + 26.3^2}\, m\Omega = 107.95m\Omega$$
-## --- Página 188 ---
-**172** | *18 Examples: Calculation of Short Circuit Currents*
 ## Cables:
 $$R_k = r' \cdot \frac{l}{n} = 0.101\,\Omega/km \cdot \frac{0.750\,km}{4} = 18.94\,m\Omega$$
 $$X_k = x' \cdot \frac{l}{n} = 0.080\,\Omega/km \cdot \frac{0.750\,km}{4} = 15\,m\Omega$$
@@ -6168,8 +5541,7 @@ $$I''_{k3} = \frac{1.0 \cdot 400\,V}{\sqrt{3} \cdot 110.7\,m\Omega} = 2.09\,kA$$
 Short circuit at position C:
 $$Z_{kC} = Z_{kB} + Z_K = 110.7\,m\Omega + 24.16\,m\Omega = 134.86\,m\Omega$$
 $$I''_{k3} = \frac{1.0 \cdot 400\,V}{\sqrt{3} \cdot 134.86\,m\Omega} = 1.71\,kA$$
-## ---
-## **18.11**
+**18.11**
 **Example 11: Calculation with impedance corrections**
 Given the network diagram shown in Figure 19.14
 - Calculate the impedances at the fault locations.
@@ -6177,8 +5549,6 @@ Given the network diagram shown in Figure 19.14
 - Calculate the transferred short circuit currents.
 - Calculate $I''_{k3}$, $i_{p3}$ and $I_a$.
 
-## --- Página 189 ---
-*18.11 Example 11: Calculation with impedance corrections* **173**
 > **Fig. 18.14** - Single-line electrical network diagram showing:
 > - A generator **G** connected at 20 kV busbar via a medium-voltage cable **K1** (NYCWY
 3×185 qmm, l = 8.5 km)
@@ -6213,8 +5583,6 @@ $$\underline{Z}_{K1} = l \cdot (r' + jx') = 8.5\,km(0.105 + j0.072)\,\Omega/km =
 j0.612)\,\Omega$$
 $$\underline{Z}_{G1} = \underline{Z}_Q + \underline{Z}_K = (0.98 + j1.4876)\,\Omega$$
 
-## --- Página 190 ---
-**174** | *18 Examples: Calculation of Short Circuit Currents*
 $$\underline{Z} \quad = \underline{Z}_{G1}\left(\frac{U_{rTLV}}{U_{rTHV}}\right)^2 = (0.98 +
 j1.4876)\left(\frac{0.4\text{kV}}{20\text{kV}}\right)^2$$
 $$= (0.000392 + j0.000595)\Omega$$
@@ -6244,8 +5612,6 @@ $$I_3'' \quad = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_{Gen}} = \frac{1.0 \cdot 0.4
 Sum of transferred short circuit currents:
 
 $$\sum I_{k3}'' = I_{k3Net}'' + I_{k3Gen}'' = 27.4\text{kA}$$
-## --- Página 191 ---
-*18.11 Example 11: Calculation with impedance corrections* **175**
 **Calculation of peak short circuit currents:**
 Contribution of network feed-in:
 $$i_{p3Net} = \kappa \cdot \sqrt{2} \cdot I''_{k3}$$
@@ -6273,8 +5639,6 @@ $$= \frac{-0.000206 + j0.000507}{0.0466 + j0.0398}\,\Omega$$
 
 $$= 0.00282 + j0.00847\Omega$$
 $$Z_G = \sqrt{0.00282^2 + 0.00847^2}\,\Omega = 0.00893\Omega$$
-## --- Página 192 ---
-**176** | *18 Examples: Calculation of Short Circuit Currents*
 **Impedances of cable K2:**
 $$\underline{Z}_{k2} = l(r' + jx') = 0.085km \cdot (0.066 + j0.079)\Omega/km$$
 $$= (0.00561 + j0.006715)\Omega$$
@@ -6285,8 +5649,7 @@ $$\underline{Z}_k = \sqrt{(0.00843 + 0.0152)^2}\,\Omega = 0.0174\Omega$$
 The initial symmetrical short circuit current is then:
 $$I''_{k3} = \frac{c \cdot U_n}{\sqrt{3} \cdot \underline{Z}_k} = \frac{0.4kV}{\sqrt{3} \cdot
 0.0174\Omega} = 13.3kA$$
-## ---
-## **18.12**
+**18.12**
 **Example 12: Connection of a transformer through an external network and a generator**
 A transformer is connected through an external network and a generator as shown in Figure 19.15.
 - Calculate the impedances at the fault location
@@ -6307,7 +5670,6 @@ generator
 
 $$X''_d = x''_d \cdot \frac{(1.05 \cdot U_n)^2}{S_{rG}} = 0.12 \cdot \frac{(1.05 \cdot
 110kV)^2}{500MVA} = 12.8\Omega$$
-## --- Página 193 ---
 18.13 Example 13: Motors in parallel and their contributions to the short circuit current **177**
 ## Network:
 $$Z_{Qt} = \frac{1.1 \cdot U_n^2}{S_{kQ}''} = \frac{1.1 \cdot (110kV)^2}{125\,MVA} =
@@ -6337,14 +5699,11 @@ $$I_{k2}'' = \frac{c \cdot U_n}{Z_1 + Z_2} = \frac{c \cdot U_n}{2 \cdot Z_1} = \
 I_{k3}'' = 3.67kA$$
 The two-pole short circuit current with contact to ground is the largest.
 
-## ---
-## **18.13**
+**18.13**
 **Example 13: Motors in parallel and their contributions to the short circuit current**
 In a 20/6 kV network as in Figure 19.16 there are four motors connected, with the following data:
 ## Transformer:
 $S_{rT} = 25$ MVA, $u_{krT} = 13\%$, 20/6.3 kV.
-## --- Página 194 ---
-**178** | *18 Examples: Calculation of Short Circuit Currents*
 Motors 1 and 2:
 $2\text{x}P_{rm} = 2.3 \text{ MW}, U_{rG} = 6 \text{ kV}, \cos\varphi_{rG} = 0.86,$
 $\text{p} = 2, I_a/I_{rm} = 5, \eta = 0.97.$
@@ -6382,8 +5741,6 @@ $$Z_{m1} = \frac{1}{2} \cdot \frac{\eta \cdot \cos\varphi}{I_{an}/I_{rm}} \cdot
 $$Z_{m2} = \frac{1}{2} \cdot \frac{\eta \cdot \cos\varphi}{I_{an}/I_{rm}} \cdot
 \frac{U_{rm}^2}{P_{rm}} = \frac{1}{2} \cdot \frac{0.87 \cdot 0.98}{5.5} \cdot
 \frac{(6kV)^2}{0.36\,MVA} = 7.75\,\Omega$$
-## --- Página 195 ---
-*18.13 Example 13: Motors in parallel and their contributions to the short circuit current* **179**
 Transferred currents:
 $$I''_{km1} = \frac{c \cdot U_n}{\sqrt{3} \cdot Z_{m1}} = \frac{1.1 \cdot 6kV}{\sqrt{3} \cdot
 1.305\Omega} = 2.92kA$$
@@ -6412,9 +5769,7 @@ $$I_{am1} \quad = \quad \mu \cdot q \cdot I''_{km1} = 0.64 \ \cdot \ 0.587 \ \cd
 $$I_{am2} \quad = \quad \mu \cdot q \cdot I''_{km2} = 0.634 \ \cdot \ 0.447 \ \cdot \ 0.492kA =
 0.139kA$$
 $$\sum I_a \quad = \quad 16.4kA$$
-## --- Página 196 ---
-**180** | *18 Examples: Calculation of Short Circuit Currents*
-## ## 18.14
+## 18.14
 ### Example 14: Proof of the stability of low voltage systems
 For the selection and project management of electrical systems it is necessary to check the short
 current strength of the operational equipment against the mechanical and thermal stresses
@@ -6426,44 +5781,42 @@ Tables 19.2 to 19.5 summarize the calculated short circuit currents for Example 
 **Table 19.2:** Summary of results for $I''_{k1min}$ at sub-distributor
 | *Operational equipment* | *R* in mΩ (120 mm²) | $R_{PE}$ in mΩ (70 mm²) | *X* in mΩ |
 $X_{PE}$ in mΩ |
-## |---|---|---|---|---|
+|---|---|---|---|---|
 | Primary network | - | - | - | - |
-## | Transformer | 3.5 | | 13 | |
-## | Cable | 15.68 | 26.88 | 6.8 | 6.8 |
+| Transformer | 3.5 | | 13 | |
+| Cable | 15.68 | 26.88 | 6.8 | 6.8 |
 | | Total resistance = 46.06mΩ | | Total reactance = 26.6 mΩ | |
 Short circuit impedance is 53.18 mΩ
 Short circuit current $I''_{k1min}$ = 4.12kA
-## ---
 **Table 19.3:** Summary of results for $I''_{k1min}$ at load
 
 | *Operational equipment* | *R* in mΩ (120 mm²) | $R_{PE}$ in mΩ (70 mm²) | *X* in mΩ |
 $X_{PE}$ in mΩ |
-## |---|---|---|---|---|
+|---|---|---|---|---|
 | Primary network | - | | - | - |
-## | Transformer | 3.5 | | 13 | |
-## | Cable | 15.68 | 26.88 | 6.8 | 6.8 |
-## | Conductor | 221.4 | 221.4 | 2 | 2 |
+| Transformer | 3.5 | | 13 | |
+| Cable | 15.68 | 26.88 | 6.8 | 6.8 |
+| Conductor | 221.4 | 221.4 | 2 | 2 |
 | Sum of resistances | 239.78 | 248.28 | 23.8 | 8.8 |
 | | Total resistance = 488.86mΩ | | Total reactance = 30.6 mΩ | |
 Short circuit impedance is 489.8 mΩ
 Short circuit current $I''_{k1min}$ = 448A
-## --- Página 197 ---
 18.14 Example 14: Proof of the stability of low voltage systems **181**
 **Table 19.4:** Summary of results for $I''_{k3min}$ at distributor
 | *Operational equipment* | *R in mΩ* | *X in mΩ* |
-## |---|---|---|
+|---|---|---|
 | Primary network | - | |
-## | Transformer | 3.5 | 13 |
-## | Cable | 12.65 | 6.8 |
+| Transformer | 3.5 | 13 |
+| Cable | 12.65 | 6.8 |
 | Total | 16.15mΩ | 19.8mΩ |
 Short circuit impedance is 25.55mΩ
 Short circuit current $I''_{k3} = 9.14\text{kA}$
 **Table 19.5:** Summary of results for $I''_{k3min}$ at load
 | *Operational equipment* | *R in mΩ* | *X in mΩ* |
-## |---|---|---|
+|---|---|---|
 | Primary network | - | |
-## | Transformer | 3.5 | 13 |
-## | Cable | 12.65 | 6.8 |
+| Transformer | 3.5 | 13 |
+| Cable | 12.65 | 6.8 |
 | Total | 178.6mΩ | 2 |
 Short circuit impedance is 204.25mΩ
 Short circuit current $I''_{k3} = 1.068\text{kA}$
@@ -6481,8 +5834,6 @@ $$m \quad = \frac{1}{2 \cdot 50Hz \cdot 0.9s \cdot ln(1.138 - 1)} \left[ e^{4 \c
 \cdot ln(1.138 - 1)} - 1 \right] = 0.005$$
 so that the thermal equivalent short circuit current is then:
 $$I_{thm} = 9.14kA \cdot \sqrt{0.005 + 1} = 9.16kA$$
-## --- Página 198 ---
-**182** | *18 Examples: Calculation of Short Circuit Currents*
 Thermal short circuit strength of sub-distributor:
 $$I_{thz} = 12.5kA \cdot \sqrt{\frac{s}{0.9s}} = 17.17kA$$
 Thermal short circuit strength of main distributor:
@@ -6492,14 +5843,13 @@ The stability of the main and sub distributors against short circuits is ensured
 following stress parameters (Table 19.6):
 **Table 19.6:** Checking the short circuit strength
 | *400 V side* | *Short circuit current calculation* | | | *Required short circuit current strength* |
-## | | |
-## |---|---|---|---|---|---|---|---|
+| | |
+|---|---|---|---|---|---|---|---|
 | | $I''_{k3}$ | $i_p$ | $I_{thm}$ | $I_{sc}$ | $I_{ma}$ | $I_{th}$ | $I_{thz}$ |
 | Main distribution | 17.15kA | 33.95kA | | 20kA | 40kA | | 21.08kA |
 | Sub-distribution | 8.58kA | 13.8kA | | 12.5kA | 20kA | 8.6kA | 17.17kA |
 | Load | 1kA | | | 6kA | 6kA | | |
-## ---
-## **18.15**
+**18.15**
 **Example 15: Proof of the stability of medium and high voltage systems**
 
 The basic network design is shown in single-phase representation with fault locations and with a
@@ -6513,45 +5863,12 @@ The impedance is converted using the square of the transformation ratio $t^2_{ma
 value relative to the 20 kV side:
 $$Z_{Qt} = 2.662\Omega \cdot \frac{1}{t^2_{max}} = 72.1m\Omega$$
 $$X_{Qt} = 72.1m\Omega$$
-## --- Página 199 ---
-*18.15 Example 15: Proof of the stability of medium and high voltage systems* **183**
-> [Diagram - Fig. 18.17: Network design - single-phase representation with network input and
-transformers]
-## >
-> **Description:** Single-phase schematic representation of a medium/high voltage network. The
-network input point **Q** is shown on the left side with a short circuit power of **5 GVA**. Two
-overhead lines of type **Al/St 537/53 qmm** connect the network input to two transformers
-**T1** (top branch) and **T2** (bottom branch), each rated **31.5/40 MVA, YNyn0(d), 12.6,
-110/21 kV**. Fault points **F1** (at the overhead line/transformer junction) and **F2** (on the
-20 kV bus after the transformers) are indicated. From the 20 kV bus (fault point **F2**), three
-parallel cables of type **N2XS(F)2Y, 1×300RM/25, 12/20 kV, l = 30 m** run to fault point **F3**
-on the right side of the diagram, for both the upper (T1) and lower (T2) transformer branches. The
-system operates at **20 kV** on the secondary (medium voltage) side.
 **Fig. 18.17:** Network design - single-phase representation with network input and transformers
-## ---
-> [Diagram - Fig. 18.18: Imaging of operational equipment with equivalent circuit]
-## >
-> **Description:** Equivalent circuit diagram representing the full network topology for
-short-circuit calculation. On the far left, a voltage source $c \cdot U_{nQY}$ (with ground
-reference) feeds through the network impedance components:
-> - **Network input Q:** series resistance $R_Q$ and reactance $X_Q$
-> - **Upper branch (through T1):** series resistance $R_{F1}$ and reactance $X_{F1}$ (overhead
-line F1), followed by $R_{T1}$ and $X_{T1}$ (transformer T1), then connecting to three parallel
-cable branches each with $R_{K1}/X_{K1}$, $R_{K2}/X_{K2}$, and $R_{K3}/X_{K3}$
-> - **Lower branch (through T2):** series resistance $R_{F2}$ and reactance $X_{F2}$ (overhead
-
-line F2), followed by $R_{T2}$ and $X_{T2}$ (transformer T2), then connecting to three parallel
-cable branches each with $R_{K4}/X_{K4}$, $R_{K5}/X_{K5}$, and $R_{K5}/X_{K5}$ (K6 implied)
-## >
-> The upper and lower branches share a common bus on the right side, which is grounded. All
-impedance elements are shown as series R-X pairs in their respective branches.
 **Fig. 18.18:** Imaging of operational equipment with equivalent circuit
 Checking for far from generator short circuits:
 In accordance with IEC 60909:
 $$X_{TSV} \geq 2X_{Qt} = 1.265\,\Omega \geq 2 \cdot 71.74\,m\Omega$$
 The requirement is therefore satisfied.
-## --- Página 200 ---
-**184** | *18 Examples: Calculation of Short Circuit Currents*
 **Calculation of positive-sequence short circuit impedances for the transformer:**
 The following data cab be taken from the nameplate of the transformer:
 11,000 V ± 16 % in 13 steps (27 settings), 21 kV, 31.5/110 kV.
@@ -6586,14 +5903,12 @@ $X' = 2\pi \cdot 50Hz \cdot 0.347mH/km = 109m\Omega/km \cdot 30m = 3.27m\Omega$.
 Overland lines:
 The overland lines are of type Al/St 537/53 mm². Due to the large cross-section, the resistances
 expected cab be neglected.
-## --- Página 201 ---
-*18.15 Example 15: Proof of the stability of medium and high voltage systems* **| 185**
 **Calculation of short circuit currents for different fault locations:**
 For the dimensioning of operational equipment the short circuit currents are calculated according
 to Figure 19.19. First, a three-pole short circuit with simple input through parallel current paths is
 calculated.
 > **Fig. 18.19** - Equivalent circuit in the positive-sequence system at fault location F1
-## >
+>
 > The diagram shows an equivalent circuit in the positive-sequence system. From left to right, a
 series path contains a resistor $R_Q$ followed by an inductor $X_Q$. This series branch connects
 to a parallel branch on the right side, which contains an AC voltage source (generator symbol) with
@@ -6612,14 +5927,12 @@ $$I''_k \;=\; I_k = I_a = 26.24\,kA$$
 
 $$\frac{R_k}{X_k} \;=\; \frac{R_Q}{X_Q} = \frac{0}{2.662} = 0$$
 $\kappa$ is obtained from the relationship:
-## $$\kappa \;=\; 1.02 + 0.98e^{0} = 2$$
+$$\kappa \;=\; 1.02 + 0.98e^{0} = 2$$
 We can then determine the peak short circuit current with.
 $$i_p \;=\; 2 \cdot \sqrt{2} \cdot 26.24\,kA = 74.23\,kA$$
-## --- Página 202 ---
-**186** | *18 Examples: Calculation of Short Circuit Currents*
 **Three-pole short circuit on transformer bus bar**
 > **Fig. 18.20:** Equivalent circuit diagram description:
-## >
+>
 > The figure shows an equivalent circuit in the positive-sequence system at fault location F2. The
 circuit consists of:
 > - A network feed-in branch (left side) with series impedance elements $R_Q$ and $X_Q$.
@@ -6635,7 +5948,7 @@ short circuit currents, which can be calculated as in the following.
 The data for the operational equipment in the short circuit current path are (the same values are
 used for transformers and cables):
 | Network feed-in | | Transformer | | Cable | |
-## |---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | $Z_Q$ | $2.662\,\Omega$ | $Z_T$ | $1265\,m\Omega$ | $X_K/3$ | $1.09\,m\Omega$ |
 | $X_Q$ | $2.662\,\Omega$ | $X_T$ | $1265\,m\Omega$ | $R_K/3$ | $0.601\,m\Omega$ |
 | $R_Q$ | $0$ | $R_T$ | $27.87\,m\Omega$ | $X_K/3$ | |
@@ -6653,7 +5966,6 @@ we use the reactances.
 Short circuit reactance:
 $$X_k = X_{Qt} + \frac{X_{T1}\left(X_{T2} + \frac{X_{k1}}{3} + \frac{X_{k2}}{3}\right)}{X_{T1} +
 \left(X_{T2} + \frac{X_{k1}}{3} + \frac{X_{k2}}{3}\right)}$$
-## --- Página 203 ---
 18.15 Example 15: Proof of the stability of medium and high voltage systems **187**
 $$X_k = 72.1m\Omega + \frac{1265m\Omega \cdot (1265m\Omega + 1.09m\Omega +
 1.09m\Omega)}{1265m\Omega + (1265m\Omega + 1.09m\Omega + 1.09m\Omega)}$$
@@ -6684,8 +5996,6 @@ $$I''_{k-branch2} = I_k'' - I''_{k-branch1} = 18.014kA - 9.015kA = 8.999kA$$
 $$\kappa 1 = 1.02 + 0.98 \cdot e^{-3\frac{R}{X}} = 1.02 + 0.98 \cdot e^{-3 \cdot 0.02203} = 1.937$$
 $$i_{p-branch1} = 1.937 \cdot \sqrt{2} \cdot I''_{k-branch1} = 1.937 \cdot \sqrt{2} \cdot 9.015kA =
 24.7kA$$
-## --- Página 204 ---
-**188** | *18 Examples: Calculation of Short Circuit Currents*
 **Determination of the peak short circuit current for branch 2:**
 $$\kappa2 = 1.02 + 0.98 \cdot e^{-3\frac{R}{X}} = 1.02 + 0.98 \cdot e^{-3 \cdot 0.02294} = 1.935$$
 $$i_{p-branch1} = 1.935 \cdot \sqrt{2} \cdot I''_{k-branch1} = 1.937 \cdot \sqrt{2} \cdot 8.999kA =
@@ -6718,11 +6028,9 @@ $$I''_k \;=\; \frac{cU_{nTLV}}{\sqrt{3}\,Z_k} = \frac{1.1 \cdot 20kV}{\sqrt{3} \
 $$I''_k \;=\; I_k = I_a = 18.014kA$$
 The fictitious magnitude of the initial symmetrical short circuit current is:
 $$S''_k \;=\; \sqrt{3} \cdot 20kA \cdot 18.014kA = 624MVA$$
-## --- Página 205 ---
-*18.15 Example 15: Proof of the stability of medium and high voltage systems* **| 189**
 For the peak short circuit current:
 $$\frac{R_k}{X_k} = \frac{14.24 m\Omega}{705.1 m\Omega} = 0.02019$$
-## $$\kappa = 1.02 + 0.98e^{-3 \cdot 0.02019} = 1.94$$
+$$\kappa = 1.02 + 0.98e^{-3 \cdot 0.02019} = 1.94$$
 $$I_p = 1.94 \cdot \sqrt{2} \cdot 18.04 kA = 49.5 kA$$
 **Stability of operational equipment against short circuits:**
 For the short circuit strength of operational equipment we must calculate the dynamic ($i_p$) and
@@ -6749,8 +6057,6 @@ with this. The dimensioning of the circuit breaker is taken from IEC 282 (Table 
 short circuit making current of the circuit breaker must be 2.5 times as large as the effective value
 of the rated short circuit breaking current. If the peak short circuit current above 2.5 times this
 value, the rated making current must have at least the value of the peak short circuit current.
-## --- Página 206 ---
-**190** | *18 Examples: Calculation of Short Circuit Currents*
 Table 19.10 gives the rated currents of load interrupter switches. The rated steady state current of
 the load interrupter switch is dimensioned according to the steady state operating current.
 The dimensioning of the disconnect switch and the grounding switch follows from IEC 282 (Table
@@ -6758,24 +6064,24 @@ The dimensioning of the disconnect switch and the grounding switch follows from 
 **Table 19.7:** Current carrying capacities for the 110/20 kV level
 | *Rated voltage* | *Rated steady state current* | *Initial symmetrical short circuit current* |
 *Steady state short circuit current* | *Peak short circuit current* | *Thermal short-time current* |
-## |---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | $U_r$ | $I_r$ | $I_k''$ | $I_k$ | $i_p$ | $I_{th}$ |
 | **kV** | **A** | **kA** | **kA** | **kA** | **kA** |
-## | 123 | 420 | 27 | 27 | 75 | 30 |
-## | 24 | 2200 | 18 | 18 | 50 | 20 |
+| 123 | 420 | 27 | 27 | 75 | 30 |
+| 24 | 2200 | 18 | 18 | 50 | 20 |
 **Table 19.8:** Rated voltages for the 110 kV/20 kV level
 | *Highest voltage for operational equipment* | *Rated short duration AC voltage* | *Rated
 lightning impulse voltage* |
-## |---|---|---|
+|---|---|---|
 | $U_m$ | $U_{rW}$ | $U_{rB}$ |
 | **kV** | **kV** | **kV** |
-## | 24 | 50 | 95 |
-## | 123 | 230 | 550 |
+| 24 | 50 | 95 |
+| 123 | 230 | 550 |
 **Table 19.9:** Selection values and rated values for load interrupter switches in accordance with
 ## IEC 282
 
 | *Rated voltage* | *Rated short circuit breaking current* | *Rated operating current A* | | | |
-## |---|---|---|---|---|---|
+|---|---|---|---|---|---|
 | **kV** | **kA** | **800** | **1250** | **1600** | **2000** |
 | 123 | 12.5 | x | x | | |
 | | 20 | | x | x | x |
@@ -6784,17 +6090,15 @@ lightning impulse voltage* |
 **Table 19.10:** Selection values and rated values for load interrupter switches in accordance
 with IEC 282
 | *Rated steady state current* | *Rated short-time current* | *Rated peak current* |
-## |---|---|---|
+|---|---|---|
 | **A** | **kA** | **kA** |
-## | 630 | 31.5 | 78.75 |
-## --- Página 207 ---
-*18.15 Example 15: Proof of the stability of medium and high voltage systems* **191**
+| 630 | 31.5 | 78.75 |
 **Table 19.11:** Selection values and rated values for disconnect switches and grounding switches
 in accordance with IEC 282
 | **Rated voltage kV** | **Rated initial symmetrical short circuit current kA** | **Rated peak
 short circuit current** | **Rated steady state current A** | | | |
-## |---|---|---|---|---|---|---|
-## | | | | **800** | **1250** | **1600** | **2000** |
+|---|---|---|---|---|---|---|
+| | | | **800** | **1250** | **1600** | **2000** |
 | 123 | 12.5 | 32 | x | x | | |
 | | 20 | 50 | | x | x | x |
 | | 25 | 63 | | x | x | x |
@@ -6824,8 +6128,6 @@ The standard values are given in IEC 44-2. The information applies to inductive 
 transformers. The rated network voltage is the essential parameter for dimensioning. For
 conductor-conductor voltage transformers, 110 kV and a conductor-ground voltage transformer
 $\dfrac{110kV}{\sqrt{3}}$ must be selected. The rated voltage factors are taken from IEC 44-2.
-## --- Página 208 ---
-**192** | *18 Examples: Calculation of Short Circuit Currents*
 Dimensioning the 20 kV switchgear:
 - Dimensioning the supply line:
 - For the dimensioning of the conductors the three-pole short circuit is used as the basis.
@@ -6837,7 +6139,7 @@ The electrical data for the circuit breakers from the manufacturers' catalogs ar
 data measured (Table 19.12).
 **Table 19.12:** Dimensioning the circuit breakers
 | | **Values from data sheet kA** | **Measured values kA** |
-## |---|---|---|
+|---|---|---|
 | Rated short-duration power frequency withstand voltage | 50 | 50 |
 | Rated lightning impulse withstand voltage | 125 | 125 |
 | Rated short circuit breaking voltage | 25 | 18 |
@@ -6851,11 +6153,9 @@ data measured (Table 19.12).
 At this point an example will be given for the dimensioning of the circuit breakers (Table 19.13) at
 different connection points to the bus bar (Figure 19.22).
 
-## --- Página 209 ---
-*18.16 Example 16: Calculation for short circuit currents with impedance corrections* **193**
 **Table 19.13:** Dimensioning the circuit breakers
 | | **Input field kA** | **Coupling field kA** | **Load field kA** |
-## |---|---|---|---|
+|---|---|---|---|
 | Rated current of transformer is 1000 A | | | |
 | Rated current of vacuum circuit breaker 1250 A | | | |
 | Rated short-duration power frequency withstand voltage | 50 | 50 | 50 |
@@ -6870,28 +6170,11 @@ The dimensioning parameters are the:
 - short circuit current determined by measurement
 > **Fig. 18.22:** Dimensioning the circuit breakers
 > 1) input field 2) load field 3) coupling field
-**[Diagram Description - Fig. 18.22: Single-line schematic of a medium-voltage switchgear
-arrangement showing three circuit breaker fields connected to two bus bars (Bus bar 1 and Bus bar
-2). The layout consists of:**
-- **Left section (Field 1 - Input field):** Connected to Bus bar 1 (top) and Bus bar 2 (bottom) via a
-bus coupler/disconnector (×). Below Bus bar 2, a vacuum circuit breaker (×) feeds a transformer
-symbol (circle with internal symbol), connected to an incoming supply (arrow pointing right at the
-bottom).**
-- **Center section (Field 3 - Coupling field):** A bus section coupler connecting Bus bar 1 and Bus
-bar 2 via two disconnectors (×) and a circuit breaker (×) in series between the two bus bars, with a
-ground/earthing connection pointing downward (arrow down).**
-- **Right section (Field 1 - Load field):** Symmetric to the input field on the left; connected to Bus
-bar 1 and Bus bar 2 via disconnector (×), a vacuum circuit breaker (×) below, a transformer symbol,
-and a load connection at the bottom (arrow pointing left).**
-- **All fields are labeled: 1 = input field, 2 = load field, 3 = coupling field.**]**
-## ---
-## ## 18.16
+## 18.16
 **Example 16: Calculation for short circuit currents with impedance corrections**
 Given a 220 $kV$ network with the data for the operational equipment as in Figure 19.23
 
 Calculate the short circuit currents and the impedance corrections.
-## --- Página 210 ---
-**194** | *18 Examples: Calculation of Short Circuit Currents*
 > **Diagram description:** Single-line electrical network diagram showing a 220 kV busbar at
 point Q connected to a network input with short circuit power of 8000 GVA. From the 220 kV bus, a
 step-down block transformer rated 250 GVA, 240/21 kV (labeled T) feeds a 21 kV bus. A fault
@@ -6922,8 +6205,6 @@ $$I_k'' \ = \ I_{kQ}'' + I_{kKW}''$$
 
 $$I_{kQ}'' \ = \ \frac{c \cdot U_{nQ}}{\sqrt{3} \cdot Z_Q} = \frac{1.1 \cdot 220\,kV}{\sqrt{3} \cdot
 6.65\,\Omega} = 21\,kA$$
-## --- Página 211 ---
-*18.17 Example 17: Calculation with per-unit magnitudes* **195**
 $$Z_{KW} = K_{KW} \cdot (t_r^2 \cdot Z_G + Z_{THV})$$
 $$K_{KW} = \left(\frac{t_f}{t_r}\right)^2 \cdot \frac{c}{1 + (x_d'' - x_T) \cdot \sin\varphi_{rG}}$$
 $$K_{KW} = \left(\frac{220kV}{21kV}\right)^2 \left(\frac{21kV}{240kV}\right)^2 \cdot \frac{1.1}{1 +
@@ -6940,8 +6221,7 @@ $$I''_{kT} = \frac{c \cdot U_{rG}}{\sqrt{3} \cdot (Z_{T,KW} + \frac{1}{t_f^2} \c
 $$I''_{kT} = \frac{1.1 \cdot 21kV}{\sqrt{3} \cdot \left(0.286\Omega +
 \left(\frac{21kV}{220kV}\right)^2 \cdot 6.65\Omega\right)} = 38.48kA$$
 $$I''_k = 44.75kA + 38.48kA = 83.23kA$$
-## ---
-## **18.17**
+**18.17**
 **Example 17: Calculation with per-unit magnitudes**
 Given $U_B = 6kV$, $U_B = 20kV$, $S_B = 100MVA$
 Calculate Example 13 using per-unit magnitudes.
@@ -6953,8 +6233,6 @@ $$^*S = \frac{S}{S_B}$$
 Transformation ratio of transformer as per-unit magnitude:
 $$^*t_r = \frac{U_{rTHV}}{U_{rTLV}} \cdot \frac{U_{B,6kV}}{U_{B,20kV}} = \frac{20kV}{6.3kV} \cdot
 \frac{6kV}{20kV} = 0.9524$$
-## --- Página 212 ---
-**196** | *18 Examples: Calculation of Short Circuit Currents*
 Network feed-in:
 $${}^{*}Z_{Qt} = \frac{c \cdot {}^{*}U_{nQ}^{2}}{{}^{*}S_{kQ}''} \cdot \frac{1}{{}^{*}\dot{u}_{r}^{2}}
 = \frac{1.1 \cdot (1 \cdot pu)^{2}}{10\,pu} \cdot \frac{1}{0.9524^{2}} = 0.1212\,pu$$
@@ -6985,15 +6263,10 @@ $$I_{km1}'' = 292\,kA$$
 $${}^{*}I_{km1}'' = 0.0295\,pu$$
 $$I_{km1}'' = 0.492\,kA$$
 The results are identical with both methods.
-## --- Página 213 ---
 **Appendices**
 **Calculation Tools for Electrical Engineering**
-## --- Página 214 ---
-The image appears to be completely blank/white with no visible text or content to transcribe.
-## --- Página 215 ---
-*Appendices* **199**
-## # 1 The Elaplan Program
-## **Power Networks**
+# 1 The Elaplan Program
+**Power Networks**
 With this *Elaplan*-Modul you are able to calculate electrical power networks according DIN VDE
 0102 and report them graphically. After doing the corresponding short-circuit calculation the
 recorded Network Graphic allows you to show the results of any symmetrical and unsymmetrical
@@ -7009,17 +6282,6 @@ Please note, that there is a difference in use of capitals and small letters at 
 After selection of the user name you have to change into the input area 'Password' by pressing TAB
 or by using the mouse. You log on by pressing OK or Enter. The window 'Module Selection' will be
 shown.
-> [Screenshot of the **Module Selection** window of the Elaplan software. The window displays a
-grid of module icons organized in three rows:
-> - **Row 1:** Elaplan-1 (System Configuration), Elaplan-2 (Lighting), Elaplan-3 (Circuits), Elaplan-4
-(Power Networks), Elaplan-5 (Grounding, Lightning Protection)
-
-> - **Row 2:** Elaplan-6 (Costs, Economy), Elaplan-7 (Quantities), Elaplan-8 (Building and Systems
-Model), Elaplan-9 (Communication), Elaplan-10 (Building Automation - shown greyed out/inactive)
-> - **Row 3:** Elaplan-A (Offers, Orders), Elaplan-B (Users, Projects), Elaplan-D (Data Interfaces),
-Elaplan-S (Basic Data), and one additional icon without a label
-## >
-> At the bottom of the window: *Copyright ALSTOM Anlagen- und Automatisierungstechnik GmbH
 ## Frankfurt*]
 ### *Elaplan-B Users, Projects*
 #### **Add a Project**
@@ -7036,10 +6298,9 @@ Do you wish to make changes of the user name described before (user-ID), you hav
 the program 'User Administration'. Here you can add and change users with the corresponding
 access rights.
 Names and access rights of **standard users** are defined as follows:
-## --- Página 216 ---
 **200** *Appendices*
 | Name | Password | Access right |
-## |---|---|---|
+|---|---|---|
 | *Elaplan* | PASS | user |
 | Daten | PASS | basic data administrator + user |
 | System | PASS | basic data administrator + user + user administrator |
@@ -7048,23 +6309,11 @@ With this software several sample-projects of the module are delivered. You can 
 them as an example for your first steps with the program module *Elaplan-4: Power Networks*
 and create some listings, typical for output.
 
-## ## Program Selection Power Networks
+## Program Selection Power Networks
 In the Module Selection (shown above) double click on the *Elaplan-4* icon. You open the
 *Elaplan-4* Program Selection, where you can choose the desired program by double click. Now
 the project you have create in the module 'Users, projects' will be shown for selection.
-> [DIAGRAM: Screenshot of the "Power Networks" program selection window for Elaplan-4. The
-window displays a grid of selectable program icons arranged in rows, each with a label below:
-> - Row 1: "Network Graphic", "Report Acquisition Data"
-> - Row 2: "Calculate Short Circuit", "Report Short Circuit at all Nodes", "Report Short Circuit at a
-fixed Node"
-> - Row 3: "Calculate Load Flow", "Report Load Flow"
-> - Row 4: "Input Selectivity", "Calculate Selectivity", "Report Selectivity"
-> Each icon appears to represent a schematic/electrical network symbol. The window has a
-standard Windows title bar labeled "Power Networks" with minimize, maximize, and close
-buttons.]
-*Program Selection Elaplan-4*
-The following chapters will describe the working with each of the tasks.
-## ## Network Graphic
+## Network Graphic
 With the program '**Network Graphic**' all elements of the network will be recorded. The chosen
 arrangement of the elements and their connections will be provided for the output on screen,
 printer or plotter. By means of the available element symbols this method makes the design of the
@@ -7087,7 +6336,6 @@ switch-disconnector and D/D0-fuse. For connecting the single element you can use
 ́Multiple Connecting ́.
 
 With these elements you can design and output your network graphic.
-## --- Página 217 ---
 ## Appendices **201**
 > **[Screenshot of Elaplan - Power Networks - MUSTER4 software interface]**
 > The image shows the Elaplan power network simulation software with a graphical network
@@ -7133,60 +6381,11 @@ With the menu item  ́**Connecting** ́ you have the possibility to connect or t
 connection of elements at busbars.
 By clicking the right mouse button the object will be rotated. Every mouse click rotates the object
 on 90°
-## --- Página 218 ---
 **202** *Appendices*
-## *Edit*
+*Edit*
 In the menu item '**Edit**' you can copy, move, delete, mark/switch und rotate the elements
 contained in the network graphics.
 Besides you can show the element data and input the designation of the elements.
-> [Screenshot of the Eluplan - [Power Networks - MUSTER4] application window showing the Edit
-menu expanded. The Edit menu displays the following options with their keyboard shortcuts: Copy
-(Ctrl+C), Move (Ctrl+F), Delete (Ctrl+Y), Delete All, Move All, Rotate (Ctrl+D), Mark/Switch (Ctrl+A),
-Remove Marking (Ctrl+K), Show Connections, Busbar stretching, Partner switching, Designate
-Elements, Element Data, Technical Cable Data (Ctrl+L), AutoText, Basic Drawing Label (Ctrl+G).
-Behind the menu, the network graphic canvas is visible showing a single-line electrical network
-diagram with multiple generator symbols, busbar connections, load elements, transformer
-symbols, and various network components interconnected by lines.]
-*Edit*
-## | Icon | Description |
-## |------|-------------|
-| ![Copy icon] | The function  ́**Copy** ́ ist available for elements with one connecting point only
-(net feeder, synchronous generator, asynchronouos generator, synchronous motor, asynchronous
-motor, directcurrent drive, load, capacity battery, shunt impedance and earth busbar). With
-copying the elements the relevant element data will copied also. But the element data will be
-shown not before they were exported to the input of the network. The copied element needs a
-new designation; therefore a new input window opens automatically, which asks for the new
-designation. You must input a designation, which is not yet used. Otherwise the program interrupts
-the copy procedure without inserting the new object. |
-| ![Move icon] | With the function  ́**Move** ́ in the network graphic single elements with their
-
-connections and busbars including their connected elements can be arranged in a new way. After
-moving the connection lines must be drawn in a new way also, if necessary. |
-| ![Busbar stretching icon] | With the function  ́**Busbar stretching** ́ you can change the length
-of a busbar. Please note, that only the second point (end point) of a busbar can be stretched or
-reduced. This symbol corresponds with the menu item 'Busbar stretching'. |
-| ![Delete icon] | With '**Delete**' you can delete elements in the network graphic. Double
-clicking the symbol removes the element from the network graphic. |
-With the menu item '**Delete All**' you have the possibility to replace the content of the network
-graphic with a new empty graphic window. For security you will be asked once more whether you
-are sure to delete all. Now you can design a new network graphic.
-## | | |
-## |---|---|
-| ![Warning triangle icon with exclamation mark] | After selecting the menu item '**Delete All**'
-and confirming the security check your network graphic cannot be restored. |
-## --- Página 219 ---
-*Appendices* **203**
-With the menu item '**Move All ...**' the whole network graphic can be moved on the worksheet.
-> **[Dialog Box: Move All]**
-> A Windows-style dialog box titled "Move All" with a help/close button (? X). It contains:
-> - Instructional text: "Please enter the grid values for the moving vector."
-> - A group box labeled "Grid values" containing:
-> - X-direction: input field with value "0"
-> - Y-direction: input field with value "0"
-> - Three buttons at the bottom: OK, Cancel, Help
-*Move All*
-The input of the moving vector has to be in **grid values**, only integer values are allowed. In
-order to move the network graphic to the top and/or to the left the desired value must be
 negative.
 After confirming with the  ́OK ́-button the network graphic will be moved according the input
 values (in grid units).
@@ -7209,7 +6408,6 @@ networks. This symbol corresponds with the menu item 'Partnet switching'.
 After inserting new elements in the network graphics you must designate them. Therefore you
 have to select the menu item '**Designate Elements** ́. Click on the relevant element and input
 the element designation. Maximum length
-## --- Página 220 ---
 **204** *Appendices*
 With the menu item  ́**Element Data** ́ the related technical data of the elements can be shown
 on the screen and recorded. Please find more information in the chapter  ́**Aquisition of Technical
@@ -7219,7 +6417,7 @@ the network graphic, now the technical data for the new added element will be sh
 example:
 > **[Image/Screenshot: Dialog box titled "Load (Consumer)" - A technical data entry form with the
 following sections and fields:**
-## >
+>
 > - **Element section:** Designation field showing "Last06.1" (dropdown), Consideration field
 showing "not considered" (dropdown)
 > - **Node section:** Designation: U_n; Input: LEI06; Value: 0.4 kV
@@ -7237,7 +6435,7 @@ will be shown in the drawing label.
 
 > **[Image/Screenshot: Dialog box titled "Basic drawing label (DIN 6771)" - A form layout
 consistent with DIN 6771 drawing label standard, containing the following sections:**
-## >
+>
 > - **Field of application** (left panel, empty)
 > - **Allow deviation / Surface** section with: Measures, Weight, Material fields
 > - **Modification remark** table with columns: Ind., Changes, Date, Name (multiple empty rows)
@@ -7251,24 +6449,7 @@ The menu item '**AutoText**' offeres you the possibility to designate your eleme
 *Elaplan*. As default values *Elaplan* uses the standard values for the elements defined in
 '/Options'. *Elaplan* assigns the designations to the single elements in the modes 'Total
 automatically' or 'Half automatically' according to users intention.
-## --- Página 221 ---
-*Appendices* **| 205**
-> [Screenshot of the "Autotext" dialog box in Elaplan software. The dialog contains:
-> - A "Text" section with two radio button options: "Total automatically" (selected) and "Half
-automatically"
-> - A "Designation" section with a field labeled "Element designation" and a text input box
-> - A note: "All elements without designation are to be texted"
-> - Four buttons at the bottom: "Start", "Cancel", "Apply" (grayed out), and "Help"]
-*Autotext*
-If you choose '**Total automatically**' all elements which actually have no designation get
-denominated with standard values defined in 'Extras/Options' without any further request.
-In the mode '**Half automatically**' all elements which actually have no designation are shown in
-the dialog mask 'Automatic Text' one after another. At 'Designation/Element designation' you can
-input your favourite denomination for the element.
-The next element will be shown after clicking the button 'Start'. If all elements have their
-designation, the button 'Start' gets deactivated and you can leave the dialog mask with the button
-'Cancel' only.
-## *Draw*
+*Draw*
 Under the menu item '**Draw'** you are able to position free drawing objects in your network
 graphic. They are not in relation to the elements and can be put at the worksheet in order to
 denominate e.g. orientation points (buildings, streets etc.). *Elaplan* always fits them in the
@@ -7276,65 +6457,12 @@ network drawing gridded according the so-called units. It is not possible to sho
 
 Therefore 'Text', 'Line', 'Bend', 'Circle', 'Ellipse' and 'Rectangle' are available. After positioning these
 free drawing objects in the network graphic they cannot be moved on the worksheet.
-> [Screenshot of the Elaplan - [Power Networks - MUSTER4] main application window showing the
-network graphic editor. The window displays:
-> - A menu bar with: Project, Edit, Element, Draw, View, Extras, Window options
-> - The "Draw" menu is open, showing submenu items: Text, Line, Bend, Circle, Ellipse, Rectangle,
 ## Mark
 > - A toolbar at the top with various drawing and editing tool icons
 > - The main workspace showing a power network diagram with multiple electrical elements
 (transformers, generators, buses, lines) interconnected in a schematic layout
 > - A status bar at the bottom showing "Mouse-position: 128, 32 [Units]"]
 *Menu item 'Draw'*
-> [Icon image showing the letter "A" representing the Text tool button]
-With the menu item '**Text**' a free text can be placed in the network graphic. Now move the
-mouse indicator to that place where the free text should be inserted. After click with the left
-mouse button the free text will be inserted.
-> [Icon image showing a diagonal line representing the Line tool button]
-The menu item '**Line**' inserts a straight line in your network graphic. Click with the left mouse
-button to that point where the line should start. Now move the mouse to that point where the line
-should end and click the left mouse button once more. you ́ve got a straight line in the network
-graphic.
-## --- Página 222 ---
-**206** *Appendices*
-With the menu item '**Bend**' a bent line can be placed in your network graphic. Select the
-position where the bend should be inserted.
-With the first mouse click the position, where the bend should be placed, will be set. Now you can
-choose the size of the bend. The circle shown on the screen is a little help for the size of the bend.
-The second click with the left mouse button will confirm the size of the bend. Subsequently you can
-determine the start point of the bend by moving the mouse. After the third click with the left
-mouse button you can determine the end point of the bend by moving the mouse. By clicking the
-left mouse button the bend will be inserted in the network graphics.
-The menu item '**Circle**' inserts a circle in your network graphic. The circle is defined by input of
-the centre and the radius.
-Choose the position where the circle should be set. The first click with the left mouse button sets
-the centre. Now you can determine the radius by moving the mouse. The second click with the left
-mouse button inserts the circle into the network graphic.
-
-With the menu item '**Ellipse**' you can place an ellipse into your network graphic. The ellipse
-shown on the screen is a little help for the size of the ellipse.
-Select the start point where you want to place the ellipse by means of the left mouse button. Now
-you can determine the size of the ellipsed by moving the mouse. The second
-## --- Página 223 ---
-*Appendices* **207**
-> **[SCREENSHOT: Elaplan - [Power Networks - MUSTER4] application window showing a
-single-line electrical network diagram. The View menu is open, displaying options including:
-Normal (F2), Redraw (F5), Zoom Out (F7), Zoom In (F6), Zoom (Ctrl+F8), Last View
-(Ctrl+Umschalt+F9), Grid (F3), Result-/Acquisition Data... (Ctrl+E), with checkmarks on Standard
-Tool Bar, Status Bar, Action Bar, Element Bar, Protective Dev./Switch Bar, Draw Bar, and options to
-Disable all Toolbars / Enable all Toolbars. The network graphic shows various electrical elements
-including generators, transformers, busbars, and loads connected in a power network layout.]**
-*View*
-With the submenu item '**Redraw**' you can build up your network graphic once more because
-sometimes parts of elements remain on the screen after deleting. The background with the new
-Windows default color will be built up at first. Then the grid points will be drawn if the function
-'Extras/Raster' is active. Subsequently all active elements of the network graphic will be redrawn.
-This function actualizes the content of the active window only. This function is valid for the display
-on the screen only. Afterwards you can keep on working with your network graphic as usual.
-> You always should use the menu item 'Redraw' when you have inserted several elements into
-your network graphic or you deleted some.
-With the menu items '**Zoom In'** or '**Zoom out'** the section of the network graphic on the
-screen can be enlarged or reduced.
 With the menu item '**Zoom**' you can zoom a window in order to display a detail of the network
 graphic enlarged.
 If you gave the elements their technical data previously or you did short-circuit or load flow
@@ -7346,70 +6474,23 @@ the graphic by pressing the function key 'F5'.
 With the menu item '**Result-/Acquisition Data ...**' of 'View' you can select what kind of data
 should be shown.
 | **Result-/Acquisition data** | **?** **×** |
-## |---|---|
-## | Data | Short-cicuit |
+|---|---|
+| Data | Short-cicuit |
 
 | ○ of Data Acquis. | ○ Short-circuit at a fixed node |
 | ○ of Load flow calculation | ○ Short-circuit at all nodes ... |
-|   No data displayed | |
+|   No data displayed | |
 | OK Cancel Apply Help | |
 *Selection of report modus*
-## --- Página 224 ---
 **208** *Appendices*
 You can select of following data: acquisition data, results of short-circuit calculation at all nodes
 (according **Takahashi**) or at a fixed node (according **Gauß**) or results of load flow
 calculation. Selection is only possible for items data were calculated for.
 A further selection of individual types of short-circuits is possible. Only already calculated types of
 short-circuits can be seleceted.
-> [Screenshot of a dialog box titled "Selection of report of result- and acquis. data". The dialog
-contains the following sections and options:
-## >
-> **Data** (radio group):
-> - C of Data Acquis.
-> - C of Load flow calculation
-> - Checkbox: No data displayed
-## >
-> **Short-cicuit** (radio group):
-> - C Short-circuit at a fixed node ...
-> - C Short-circuit at all nodes ...
-## >
-> **Short-cicuit type** (radio group):
-## > - C 1-pole
-## > - C 2-pole
-## > - C 3-pole
-## >
-> **Short-cicuit current** (radio group):
-## > - C Mnim
-## > - C Mxim
-## >
-> Buttons at the bottom: OK | Cancel | Apply | Help]
-After finishing your selection data are viewed in the network graphic and can be printed or plotted.
-For a better reading of data you can reduce the section on the screen by means of the function
-'Zoom In' in order to enlarge the elements in the section on the screen.
-
-In the menu item 'View' you can activate or deactivate the symbol bars also. The arrangement of
-the symbol bar can be set by the user individually. It will be saved when you exit the program.
-**Standard Tool Bar**:
-> [Image of the Standard Tool Bar - a horizontal toolbar containing icons for: New, Save, Open,
-Print, Zoom In, Zoom Out, Zoom Reset, Zoom All, Pan, and additional utility/help buttons.]
-**Action Bar**:
-> [Image of the Action Bar - a horizontal toolbar with icons including: ESC button, selection/pointer
-tools, table view, move/drag, various calculation and simulation action icons, and a grid/table
-icon.]
-**Element Bar**:
-> [Image of the Element Bar - a horizontal toolbar containing icons representing various electrical
-network elements such as: generators, motors, transformers, lines, busbars, switches, loads,
-capacitors, and other power system components.]
-**Draw Bar**:
-> [Image of the Draw Bar - a horizontal toolbar with basic drawing tools including: pointer/select,
-text (A), line, polyline, circle, arc, and rectangle tools.]
-In the same way the '**Status Bar**' (with display of the mouse position) can be activated or
-deactivated.
 #### *Extras*
 In the menu item 'Extras' all settings can be done necessary for displaying and printing the network
 graphics.
-## --- Página 225 ---
-*Appendices* **| 209**
 > **[Screenshot: Elaplan - Power Networks - MUSTER4 application window showing the "Extras"
 menu expanded. The menu displays the following items: Export (with submenu arrow),
 Network-Conditions..., Load Flow-Conditions..., a separator, Advise (checked), Options... Ctrl+O. In
@@ -7436,8 +6517,6 @@ software, which can read a Windows-Meta-File. WMF-export is optimized for the so
 AutoCAD 14, AutoCAD LT 97 and CorelDRAW 7. This option uses the default settings in the item
 'Extras/Options' register card 'WMF-Output' for generating the Windows-Meta-File. The Windows
 dialog 'Save As' opens now.
-## --- Página 226 ---
-**210** | *Appendices*
 > **[Screenshot: Windows "Speichern unter" (Save As) dialog box]**
 > The dialog shows a file save window with:
 > - "Speichern in:" (Save in) field showing "User4"
@@ -7456,30 +6535,30 @@ calculation method for the short-circuit peak current i_p is selected by means o
 buttons.
 > **[Screenshot: "Network-conditions" dialog box]**
 > The dialog contains the following input areas:
-## >
+>
 > - **Network frequency:** `50` (50 Hz) | Standard values button
 
 > - **Minimum switching time lag:** `0.05` (0.05) | Standard values button
-## >
+>
 > **I*k section:**
-## >
+>
 > | Parameter | max. | (default) | min. | (default) |
-## > |---|---|---|---|---|
+> |---|---|---|---|---|
 > | Factor c [ U_n > 1kV ] | 1.1 | (1.1) | 1 | (1.0) |
 > | Factor c [ U_n < 1kV ] | 1.05 | (1.05) | 1 | (1.0) |
 > | Factor c [ U_n = 0.4 kV ] | 1 | (1.0) | 0.95 | (0.95) |
 > | Conductor temperature | 20 | (20 °C) | 80 | (80 °C) |
-## >
+>
 > **I_p section:**
 > - Calculation method (radio buttons):
 > - ● Spare frequency method
 > - ○ Methode of R/X relation at fault location
-## >
+>
 > | Parameter | U_n > 1kV | | U_n < 1kV | |
-## > |---|---|---|---|---|
+> |---|---|---|---|---|
 > | max. max. (SF * Kappa): | 2 | (2.0) | 2 | (1.8 intermeshed / 2.0 not) |
 > | Safety-factor (SF): | 1.15 | (1.15 intermeshed / 1.0 not) | 1.15 | (1.15 intermeshed / 1.0 not) |
-## >
+>
 > Bottom buttons: **OK** | **Cancel** | **Apply** | **Help**
 *Network conditions*
 The input areas are previously occupied with the standard values according VDE. On the right side
@@ -7503,8 +6582,6 @@ VDE will be determined.
 Input of 1 in the area 'I_p calculation type' the program selects calculation type C acc. VDE 0102
 ## (default).
 Type C: Equivalent frequency calculation type factor Kappa = Kappa C
-## --- Página 227 ---
-*Appendices* **| 211**
 Kappa C = value from the diagram acc. VDE 0102 for the ratio R/X
 $R/X = (R_c / X_c)^* (f_c / f)$
 This calculation type C is permitted for calculation of a short-circuit in intermeshed networks.
@@ -7560,32 +6637,31 @@ The register cards 'Views', 'Print' and 'WMF-Output' modify the various kinds of
 'Views' controls the display on the screen, 'Print' controls the print output including print preview,
 'WMF-Output' controls the generation of WMF-files.
 ## Identical
-## --- Página 228 ---
 **212** *Appendices*
 > **[Screenshot: Option Dialog Box - "Views" Register Card]**
-## >
+>
 > A Windows-style dialog box titled **"Option"** with tabs: View | Print | WMF | Autotext |
 ## General Options.
-## >
+>
 > The **View** tab is active, displaying the following sections:
-## >
+>
 > **General**
 > - Text size of:
 > - Element: 7 | Results: 6 | Height to width: 0.5
 
 > - Grid distance: 32 [units]
-## >
+>
 > **Busbar**
 > - Distance to designation: 2 [units]
 > - Lengthen of ends: 5 [units]
 > - Max. allowed numbers: 800 Node
-## >
+>
 > **Linewidth**
-## > - Busbar: 4
+> - Busbar: 4
 > - Wire/Cable: 2
-## > - Connection: 1
-## > - Others: 1
-## >
+> - Connection: 1
+> - Others: 1
+>
 > Buttons at bottom: OK | Cancel | Help
 *Register card 'Views'*
 In the register card '**Views**' the area 'General' / 'Text size of' shows you the text size of element
@@ -7602,14 +6678,12 @@ are allowed. With this function you can change the image of the busbar on the sc
 lengthening of the ends of a busbar of 8 units means a lengthening of ¼ grid distance.
 In addition the number of busbars / nodes you can place into the network graphic is displayed. This
 is a default value from the program and cannot be changed.
-> **  ** If you are interested in the number of nodes you have placed in your network graphic
+> **  ** If you are interested in the number of nodes you have placed in your network graphic
 open the menu 'Project/Project...'; here you can see the number of nodes and elements in the
 network graphic.
 In the area 'Linewidth' you can set the line width of different elements in the network graphic.
 On the register card '**Print**' you have the possibilty to influence the image of the output on a
 printer or plotter and the print
-## --- Página 229 ---
-*Appendices* **| 213**
 
 > **[Screenshot: Option dialog box - Print tab]**
 > A dialog window titled "Option" with tabs: View, Print, WMF, Autotext, General Options. The
@@ -7640,23 +6714,20 @@ font for the generation of a WMF-file is '**Arial**' set by the program and cann
 > - Others: 1, color swatch (black)
 > - **Adjusted characters** section: Lettering - Arial
 > - Buttons at the bottom: OK, Cancel, Help
-## *WMF*
+*WMF*
 In the area 'Linewidth' the input of positive numbers between 1 and 100 is allowed only. Clicking on
 one of the color symbols opens the dialog window 'Color'. You can select the color and confirm
 with the button 'OK'. Subsequently the element symbol will be displayed in the chosen color.
-## --- Página 230 ---
 # 214 | *Appendices*
 By means of the register card '**Autotext**' you can determine your favourite designation for
 single elements the program will use if the menu item 'Edit/AutoText...' is set.
 
-## > [!IMAGE DESCRIPTION]
-> Screenshot of the "Option" dialog box with tabs: View | Print | WMF | Autotext | General
 ## Options.
 > The active tab is "Autotext". A section labeled "Details for automatic designation" contains a grid
 with two groups of fields, each with columns "Prefix" and "Start":
-## >
-## > | Label | Prefix | Start | Label | Prefix | Start |
-## > |---|---|---|---|---|---|
+>
+> | Label | Prefix | Start | Label | Prefix | Start |
+> |---|---|---|---|---|---|
 > | Net feeder: | NT | 1 | Busbar: | SS | 1 |
 > | Generator: | GN | 1 | Wire/Cable: | LT | 1 |
 > | Motor: | MO | 1 | Cable with Load: | LL | 1 |
@@ -7665,7 +6736,7 @@ with two groups of fields, each with columns "Prefix" and "Start":
 > | Earthbusbar.: | ER | 1 | Condensator.: | KO | 1 |
 > | Load: | LA | 1 | Protect. Device: | SO | 1 |
 > | Impedance Coil: | DR | 1 | Switch: | SA | 1 |
-## >
+>
 > At the bottom: OK | Cancel | Help buttons.
 *Autotex*
 The setting consists of two parts:
@@ -7679,27 +6750,23 @@ the network graphic if the menu item 'Edit/AutoText...' is active, e.g. 'NT0001'
 feeder.
 In the register card '**General Options'** you can set the type of view of the mouse position in the
 'Status bar': Select between millimeters, grid and units.
-## > [!IMAGE DESCRIPTION]
-> Screenshot of the "Option" dialog box with tabs: View | Print | WMF | Autotext | General
 ## Options.
 > The active tab is "General Options". The dialog contains the following sections:
-## >
+>
 > **Mouse position** - "View in:" with radio buttons: Millimeter, Grid, Units (Units selected)
 > Checkbox: "View of mouse-click area"
-## >
+>
 > **Support - output** - Radio buttons: Off (selected), File Net.TRC
-## >
+>
 
 > **Zoom** - Steps minim.: 0 / Steps maxim.: 10
-## >
+>
 > **Dialog language** - Radio buttons: German, French, English (selected), Spain
-## >
+>
 > **Toolbar-size** - Radio buttons: small [16x15], middle [24x22] (selected), big [32x31]
-## >
+>
 > At the bottom: Ok | Cancel | Help buttons.
 *General Options*
-## --- Página 231 ---
-*Appendices* **| 215**
 In addition you have the possibility to view the **mouseclick area**; this is the area the element
 can be activated with the mouse. Every element is surrounded with a blue quadrangle symbolizing
 the mouseclick area.
@@ -7714,7 +6781,6 @@ In the area 'Toolbar-size' the size of the toolbars is displayed in a dimmed mod
 cannot be changed.
 In the area 'Support - output' you can select to create the file 'Net.TRC'. It can help the support in
 any case of program errors.
-## ---
 ***Window***
 In the sub menu item '**New Window**' you can open your network graphic as a copy in a further
 window. You can insert new elements in all windows.
@@ -7726,70 +6792,18 @@ Window" (F4), "Cascade" (Shift+F4), "Tile Horizontally" (Shift+F5), "Tile Vertic
 interconnecting lines arranged in a single-line diagram format. The status bar at the bottom shows
 "Mouse-position: 256, 0 [Units]".]**
 *Window*
-## ---
 
-> **  ** The use of more windows is usefull when results of load flow calculation, short-circuit
+> **  ** The use of more windows is usefull when results of load flow calculation, short-circuit
 calculation and/or acquisition data should be shown on the screen simultaneously. You can set the
 selection what kind of report should be shown with the menu item 'View / Result-/Acquisition Data
 ...' for each active window.
-## ---
 Additionally you can arrange your windows in the manner 'Cascade', 'Tile Horizontally' or 'Tile
 Vertically'. With the command 'Arrange Icons' you can rearrange the minimized windows on the
 screen.
-## ---
 ***Project***
 In the sub menu item '**Project...**' you can see the path where your project is saved. Besides the
 number of elements and nodes used in your network graphic is viewed.
-## --- Página 232 ---
 **216** *Appendices*
-> [Screenshot of the Elaplan - [Power Networks - P40] software interface showing the 'Project'
-menu opened. The menu displays options including: Project (F9), Save... (Ctrl+S), Print Preview...,
-Page Setup..., Worksheet Setup..., Print... (Ctrl+P), Printer Setup..., and Exit. The background shows
-a power network graphic with various electrical elements such as transformers, generators,
-busbars, and transmission lines interconnected in a single-line diagram layout. The status bar at the
-bottom displays "Mouse-position: 736, 352 [Units]" and "NUM".]
-*Menu item 'Project'*
-With the sub menu item '**Save...**' the network graphic can be saved and exported for further
-working with the element data without leaving the module '**Network Graphic**'. After saving
-you can continue working in your network graphic as usual.
-With the sub menu item '**Print Preview ...**' you have the possibilty of a preview of the printed
-output on the screen.
-In the sub menu item '**Page setup ...**' you can prepare the image of your network graphic for
-printing basically.
-> [Screenshot of the 'Page Setup' dialog box. It contains the following sections and controls:
-> - **Page areas** row with four checkboxes:   Graphic,   Frame,   Legend,   Label
-> - **Scaling** section divided into three subsections:
-> - *Network graphic*: checkbox □ M, input field showing 100, unit: %
-> - *Legend*: input field showing 250, unit: %
-> - *Basic drawing label*: radio buttons with   normal and ○ small
-> - **Framing** section divided into two subsections:
-> - *Side*: Top: 15 mm, Bottom: 15 mm, Left: 15 mm, Right: 15 mm
-
-> - *Graphic*: Top: 0 mm, Bottom: 0 mm, Left: 0 mm, Right: 0 mm
-> - Buttons at the bottom: OK | Cancel | Help]
-*Page Setup*
-The size of the paper to print is optionally. It will be divided in four areas (network graphic, frame,
-legend and drawing label), which have different information. These areas you can switch on or off
-for the print individually.
-The extension of the frame is defined by the margins. The printing area for the drawing label is
-spread from the lower right corner of the margin (point 'X' in the graphic) to the left and to the top.
-You have the possibility to display the size of the drawing label as '**normal**' (according DIN
-6771) or '**small**' (i.e. the drawing label is smaller by the factor $\sqrt{2}$).
-At the lower left corner of the frame (point 'Y' in the graphic) the area starts which is available for
-the print of the legend. It will be drawn centered with respect to the available space. The legend is
-scaleable in the menu item 'Extras/Options...', register card 'Print'.
-The area of the network graphic can overlap with the area for the drawing label and the legend as
-shown in the example.
-## --- Página 233 ---
-*Appendices* **217**
-> **Diagram: Worksheet layout diagram showing the coordinate system and areas of a network
-graphic worksheet. The diagram displays a rectangular workspace with a point labeled 'Z' at the
-top-left corner and point 'X' at the bottom-right corner. The Y-axis label is on the left side. Inside
-the main area, a large region labeled 'Graphic' occupies the upper portion. At the bottom of the
-workspace, two side-by-side sections are shown: one labeled 'Legend' on the left and one labeled
-'Label' on the right. The Z point represents the upper-left origin from which printing always
-begins.**
-*Work Sheet*
 Here all objects (elements and free drawing objects) are shown recorded within the graphic area. If
 it is not possible to display all recorded elements in the printing area, you are able to scale the
 content of the network graphic area. The part of the network graphic to print will always be built
@@ -7822,69 +6836,21 @@ With the sub menu item '**Exit**' you leave the module 'Network Graphic'. You wi
 whether the network graphic should be saved, data of the network graphic should be exported or
 the topology should be checked. These items can be selected by a click onto the relevant control
 element
-## --- Página 234 ---
 **218** *Appendices*
-> [Dialog box image: A Windows-style dialog box titled "Power Networks" with a question mark and
-close button in the title bar. It contains three checkboxes, all checked ( ):
-> - 3)   Check topology
-> - 2)   Export data
-## > - 1)   Save
-## >
-> At the bottom are two buttons: "OK" and "Cancel".]
-*Save, Export data and Check topology*
-Now the program closes your network graphic automatically and finishes the module 'Network
 ## Graphic'
 ## Acquisition of Technical Data
 Display and input of technical element data as well as of protective devices occurs in the program
 module 'Network Graphic' by means of the icon in the symbol bar or the menu item 'Edit / Element
 Data'. The dialog windows will be described afterwards.
 
-> [Icon image: A small toolbar icon depicting a grid/table symbol with an "ok" label, representing
-the Acquisition and view of Element Data function.]
-Acquisition and view of Element Data.
-With the menu item 'Extras' you can select whether the acquisition of data for short-circuit and
-load flow should happen combined or separated.
-Following dialog windows and descriptions refer to the acquisition of data in the mode
-'short-circuit and load flow'.
-The functions for the single elements will be described very detailed in the following chapters.
-If you have finished the definition of the elements please close the acquisition mode. At the end of
-the data acquisition *Elaplan* checks that in the acquired data for short-circuit both element and
-node voltage correspond and the relation of the earth busbars is correct. At the acquisition of load
-flow data *Elaplan* checks that real power and reactive power per node is 100 %.
-If there is any error a protocol will be given out on the screen. This makes possible a systematic
-debugging when coming back to the data acquisition.
-Example for an error protocol:
-## --- Página 235 ---
-*Appendices* **| 219**
-> [Screenshot of a "Power Networks" dialog window displaying an error protocol titled "Check of
-the technical data". The window contains two sections:
-## >
-> **Warning section** - "No consideration for short circuit/load flow determination at node:" with
-a table listing:
-> - Element: Load (Consumer), Element name: Last06.1, Node: LEI06
-> - Element: Load (Consumer), Element name: Last06.2, Node: LEI06
-> - Element: Cables / Wires, Element name: L05, Node: SS5
-## >
-> **Error section** - "Sum of residual apperant power in network at node not 100%:" with a table
-listing:
-> - Element: Synchronous Machine, Element name: G01, Node: LEI04, App. pow./node[%]: 0.00
-## >
-> The window has two buttons at the bottom: "OK" and "Copy".]
-All elements recorded in the network graphic must have technical data assigned. Otherwise no
-calculation can be done.
-The protective devices recorded in the network graphic get assigned their technical data by means
-of the item 'Input Selectivity'.
-## ---
-
 #### *Net Feeder*
 Select the menu item 'Element Data' or the corresponding icon and click to the net feeder placed
 and designated in your network graphic before.
-## --- Página 236 ---
 **220** *Appendices*
 > **Image/Dialog Description:** Screenshot of a software dialog box titled **"Net Feeder"** used
 for short-circuit and load flow calculation in electrical network simulation (Elaplan). The dialog
 contains the following sections:
-## >
+>
 > - **Element:** Designation field showing "N01" (dropdown), Consideration: "general
 considered" (dropdown)
 > - **Node:** Designation: U_n, Output: SS1, value: 110 kV
@@ -7894,9 +6860,9 @@ considered" (dropdown)
 > - Impedance: R_(1): maximal = 1.3243, minimal = 1.3243 Ohm; X_(1): maximal = 13.243, minimal
 ## = 13.243 Ohm
 > - **Only in case of deviation from VDE standard values:**
-## > - R_(1)/X_(1): 10 / 10 %
-## > - R_(0)/X_(0): 10 / 10 %
-## > - X_(0)/X_(1): 999999 / 999999 %
+> - R_(1)/X_(1): 10 / 10 %
+> - R_(0)/X_(0): 10 / 10 %
+> - X_(0)/X_(1): 999999 / 999999 %
 > - **Load flow:** Record checkbox checked; Residual part of power for:
 > - Real power in netw.: 100 / 100 %; U_KL: 110 kV
 > - Reactive power p. node: 100 / 100 %; P_n: 5 MW
@@ -7928,23 +6894,21 @@ the zero sequence system. As default setting *Elaplan* assumes a network with no
 If the network has impedance earthing the ratio of the reactances X in zero to X in positive
 sequence system must be acquired.
 At net feeders always P
-## --- Página 237 ---
-## # Synchronous Machine
+# Synchronous Machine
 Select the menu item 'Element Data' or the corresponding icon and click to the synchronous
 machine placed and designated in your network graphic before.
-## ---
 > **[Screenshot: Synchronous Machine Dialog Window]**
-## >
+>
 > A dialog box titled **"Synchronous Machine"** with the following sections and fields:
-## >
+>
 > **Element:**
 > - Designation: `G01` (dropdown)
 > - Consideration: `general considered` (dropdown)
-## >
+>
 > **Node:**
 > - Designation: `U_n`
 > - Output: `SS0001` | `0.1` kV
-## >
+>
 > **Technical Data:**
 > - Archive: `SIEMENS - Lieferprogramm 1992` (dropdown)
 > - Group: `Bemessungsspannung 450/260 V | Frequenz 60 H` (dropdown)
@@ -7953,24 +6917,23 @@ machine placed and designated in your network graphic before.
 > - $S_r$: `0.24` MVA
 > - Neg. sequence $x_{(2)}$: Running as a generator
 > - Engine type: Turbin-driven
-## >
+>
 > **Impedances / Reactances:**
 
 > - Synch. reac. saturated $x_d$: `430` %
 > - $R_G / X''d$: `0` %
 > - Subtr. longitud. reac. $x''_d$: `9.4` %
-## > - Counter-reactance $x_{(2)}$: `27.1` %
+> - Counter-reactance $x_{(2)}$: `27.1` %
 > - Zero sequence imp. $x_{(0)}$: `3.9` %
-## >
+>
 > **Load flow:**
-> -   Record | Residual part of power for:
+> -   Record | Residual part of power for:
 > - Total | $U_{KL}$: `1` kV
 > - ○ PV | Real power in netw.: `100` % | $P_r$: `0.2` MW
 > - ● PQ | Reactive power p. node: `0` % | Cos Phi: `0.9`
-## >
+>
 > Buttons: **OK | Cancel | Apply | Help**
 *Synchronous machine for short-circuit and load flow calculation*
-## ---
 With the function '?' for 'Direct help' you get detailed information to every input- or
 selection-/display area. For detailed information to the area 'Element designation' and
 'Consideration' please refer to explanations in Section **net feeder.**
@@ -8005,8 +6968,6 @@ voltage $\varphi$ will be calculated. Parallel PV-generators (and net feeders) m
 terminal voltage. Since *Elaplan* in its calaculation comprehends parallel generators to a
 equivalent generator the total feeding reactive power of the node will be split to single generators
 and net feeders after finishing calculation.
-## --- Página 238 ---
-**222** | *Appendices*
 This happens with the input area 'Reactive power per node'. The sum of the single reactive power
 must be 100 % for every input net feeder.
 ## Example:
@@ -8050,8 +7011,6 @@ selection-/display area. For detailed information to the area 'Element designati
 'Consideration' please refer to explanations in Section ***net feeder.***
 For load flow calculations only the values for the maximum case of operation are considered. Other
 selections have the same meaning just like 'not considered' and 'general considered'.
-## --- Página 239 ---
-*Appendices* **| 223**
 Input and output voltage of the node will be taken for the calculation of the short-circuit current
 and therefore they must be recorded. Are there any definitions of voltages for those nodes made
 before they will be shown as default values. A change of them has influence to all elements
@@ -8069,44 +7028,44 @@ With the register card 'Earth' you can input data for earthing..
 The kind of earthing is given with the recorded data. This determines the flow of the input in the
 shown dialog.
 > **[Screenshot: Two winding Transformer dialog box (p. 2/2)]**
-## >
+>
 > The dialog box is titled "Two winding Transformer" and contains the following sections:
-## >
+>
 > **Element:**
 > - Designation: TD02 (dropdown)
 > - Consideration: general considered (dropdown)
-## >
+>
 > **Node:**
-## > - Designation: U_n
+> - Designation: U_n
 > - Input: SS3 | 12 kV
 > - Output: SS4 | 0.4 kV
-## >
+>
 > **Technical Data:**
 > - Archive: AEG Transformatoren (dropdown) | Group: Geti-Gießharztransformatoren | 200 bis
 2500 kVA (dropdown)
 > - Designation: TG 5341 M (dropdown) | Geti-Gießharztrafo, Ausführung M
-## >
+>
 > **General data tab / Earth tab selected:**
 > - Earthing type: Only Output | Calculation values button
-## >
+>
 > **Input at earthbusbar:**
 > - R_L(0) Idling: [blank] Ohm
 > - X_L(0) Idling: [blank] Ohm
 > - R_E Earth-imp.: [blank] Ohm
 > - X_E Earth-imp.: [blank] Ohm
 > - I_E Earth. nom.: [blank] kA
-## >
+>
 > **Output at earthbusbar:**
 > - R_L(0) Idling: 0.0104 Ohm
 > - X_L(0) Idling: 0.04452 Ohm
 > - R_E Earth-imp.: 0 Ohm
 > - X_E Earth-imp.: 1e-005 Ohm
 > - I_E Earth. nom.: 0 kA
-## >
+>
 > **Only by earthing of in- and output:**
-## > - R_k12: [blank] Ohm
-## > - X_k12: [blank] Ohm
-## >
+> - R_k12: [blank] Ohm
+> - X_k12: [blank] Ohm
+>
 > Buttons at bottom: Ok | Cancel | Apply | Help
 *Two winding transformer p. 2/2 for short-circuit and load flow calculation*
 
@@ -8125,13 +7084,12 @@ With input of the staging range $\Delta$U on the input side and the phase angle 
 voltage referring to the input voltage every voltage ration can be adjusted.
 The voltage ratio is defined by:
 $$X = U_{\text{rt\_output}} / U_{\text{rt\_input}} * (1 + \Delta U * \cos \varphi + j \left(\Delta U *
-## \sin \varphi\right))$$
+\sin \varphi\right))$$
 *Elaplan* will use this formula if no number of steps is acquired. If there is recorded a value for the
 maximum adjustable number of steps m Elaplan interprets $\Delta$U as staging range +/-
 $\Delta$U (in both directions). $\Delta$U must be given in % of input voltage. If positive and
 negative staging ranges are different referring to the main tap position the larger value must be
 given.
-## --- Página 240 ---
 **224** *Appendices*
 The maximum number of steps m will be counted from the main step position. From the adjusted
 tap position +/- n the actual voltage ratio will be calculated
@@ -8152,7 +7110,7 @@ Select the menu item 'Element Data' or the corresponding icon and click to the t
 transformer placed and designated in your network graphic before.
 > **[Diagram: Screenshot of a software dialog box titled "Three winding Transformer - new -" with
 a question mark/help icon in the top right corner. The dialog is organized into several sections:**
-## >
+>
 > - **Element section:** Contains a "Designation" field showing "TD_9268" with a dropdown
 arrow.
 > - **Consideration section:** Dropdown set to "general considered".
@@ -8185,32 +7143,30 @@ Transformators are elements, which can compensate voltage deviations in the netw
 load variations. This is the reason why a variable voltage ratio of the transformer is realized,
 typically on its high voltage side. The voltage can be varied in small steps by means of on-load or
 off-load tap changers.
-## --- Página 241 ---
-*Appendices* **225**
 Three windings transformers can be built with in-phase regulation in every winding. This occurs
 with input of the additional voltage or the maximum number of steps m and the adjusted staging
 +/- n.
 > **[Screenshot: Three Winding Transformer dialog box - new entry]**
-## >
+>
 > A software dialog window titled "Three winding Transformer - new -" is shown. It contains the
 following sections:
-## >
+>
 > **Element:**
 > - Designation: TD__9268 (dropdown)
-## >
+>
 > **Consideration:**
 > - general considered (dropdown)
-## >
+>
 > **Node:**
-## > - Designation: U_n:
+> - Designation: U_n:
 > - Input 1: SS2 - 12 kV
 > - Output 2: SS3 - 12 kV
 > - Output 3: SS__2963 - 0 kV
-## >
+>
 > **Technical Data tabs:** General data | Earth
-## >
+>
 > - Earthing type: Input 1 earthed (dropdown) | [Calculation values button]
-## >
+>
 > **Transf.-side columns: Input 1 | Output 2 | Output 3**
 > - at earthbusbar: (dropdowns) - A-Z
 > - R_L(0) Idling: 0 | 0 | 0 - Ohm
@@ -8218,65 +7174,63 @@ following sections:
 > - R_E Earth-imp.: 0 | 0 | 0 - Ohm
 > - X_E Earth-imp.: 0 | 0 | 0 - Ohm
 > - I_E Earth. nom.: 0 | 0 | 0 - kA
-## >
+>
 > *only if earthed from two sides:*
-## >
+>
 > **Transf.-side: 1-2 | 2-3 | 3-1**
-## > - R_k(0): 0 | 0 | 0 - Ohm
-## > - X_k(0): 0 | 0 | 0 - Ohm
+> - R_k(0): 0 | 0 | 0 - Ohm
+> - X_k(0): 0 | 0 | 0 - Ohm
 
-## >
+>
 > Buttons: OK | Cancel | Apply | Help
 *Three winding transformer p. 2/2 for short-circuit calculation*
 If the transformer is earthed, you are able to set the kind of earthing by means of the register card
 'Earth'. The flow of input is determined by the kind of earthing.
 With the button 'Calculation values' required data for earthing are calculated for the short-circuit
 computation.
-## *Cables / Wires and Cables / Wires with Load*
+*Cables / Wires and Cables / Wires with Load*
 Select the menu item 'Element Data' or the corresponding icon and click to cables / wires placed
 and designated in your network graphic before.
 > **[Screenshot: Cables / Wires with load dialog box]**
-## >
+>
 > A software dialog window titled "Cables / Wires with load" is shown. It contains the following
 sections:
-## >
+>
 > **Element:**
-## > - Designation: L05 (dropdown)
-## >
+> - Designation: L05 (dropdown)
+>
 > **Consideration:**
 > - not considered (dropdown)
-## >
+>
 > **Node:**
-## > - Designation: U_n:
+> - Designation: U_n:
 > - Input: SS5 - 0.4 kV
 > - Output: LEI05 - 0.4 kV
-## >
+>
 > **Technical Data:**
 > - U_B: 0.4 kV
-## >
+>
 > | | Length [km] | Type | Cross-section | U_r [kV] | remove |
-## > |---|---|---|---|---|---|
-> | Distance 1: | 0.019 | NYY | 4x120 | 1 |   |
-## > | Distance 2: | 0 | | | |   |
-## > | Distance 3: | 0 | | | |   |
-## > | Distance 4: | 0 | | | |   |
-## >
+> |---|---|---|---|---|---|
+> | Distance 1: | 0.019 | NYY | 4x120 | 1 |   |
+> | Distance 2: | 0 | | | |   |
+> | Distance 3: | 0 | | | |   |
+> | Distance 4: | 0 | | | |   |
+>
 > | | Load at [km] | U_r [kV] | S_r [MVA] | Cos Phi: | Earth: |
-## > |---|---|---|---|---|---|
-## > | 1: | 0.005 | 0.4 | 0.1 | 0.9 |   |
-## > | 2: | 0 | 0 | 0 | 0 |   |
+> |---|---|---|---|---|---|
+> | 1: | 0.005 | 0.4 | 0.1 | 0.9 |   |
+> | 2: | 0 | 0 | 0 | 0 |   |
 
-## > | 3: | 0 | 0 | 0 | 0 |   |
-## > | 4: | 0 | 0 | 0 | 0 |   |
-## > | 5: | 0 | 0 | 0 | 0 |   |
-## > | 6: | 0 | 0 | 0 | 0 |   |
-## > | 7: | 0 | 0 | 0 | 0 |   |
-## > | 8: | 0 | 0 | 0 | 0 |   |
-## >
+> | 3: | 0 | 0 | 0 | 0 |   |
+> | 4: | 0 | 0 | 0 | 0 |   |
+> | 5: | 0 | 0 | 0 | 0 |   |
+> | 6: | 0 | 0 | 0 | 0 |   |
+> | 7: | 0 | 0 | 0 | 0 |   |
+> | 8: | 0 | 0 | 0 | 0 |   |
+>
 > Buttons: OK | Cancel | Apply | Help
 *Cables / Wires with load for short-circuit and load flow calculation*
-## --- Página 242 ---
-**226** | *Appendices*
 With the function '?' for 'Direct help' you get detailed information to every input- or
 selection-/display area. For detailed information to the area 'Element designation' and
 'Consideration' please refer to explanations in Section **net feeder.**
@@ -8300,13 +7254,11 @@ transformation reduces the number of nodes in the network and accelerates the lo
 calculation especially in medium and low voltage networks.
 Maximum eight loads can be connected to a cable, which can consist of four partial distances. The
 definition of a load covers
-## --- Página 243 ---
-*Appendices* **227**
 
 > **[Screenshot: Asynchronous Machine dialog box]**
-## >
+>
 > A software dialog window titled "Asynchronous Machine" with the following sections and fields:
-## >
+>
 > - **Element** section: Designation field showing "ASM1" (dropdown)
 > - **Consideration** section: dropdown set to "general considered"
 > - **Node** section: Designation: (blank), Input: SS3; U_n: 12 kV
@@ -8318,12 +7270,12 @@ definition of a load covers
 > - U_r: 12 kV
 > - Pair of poles: 1
 > - P_r (Output power): 5 MW
-## > - Cos Phi: 0.8
+> - Cos Phi: 0.8
 > - ETA (efficiency): 0.9
-## > - Ia / I_r: 6
+> - Ia / I_r: 6
 > - **Impedance-relation** section:
-## > - R_{(1)} / X_{(1)}: 10 %
-## > - X_{(2)} / X_{(1)}: 0 %
+> - R_{(1)} / X_{(1)}: 10 %
+> - X_{(2)} / X_{(1)}: 0 %
 > - Buttons: OK, Cancel, Apply, Help
 *Asynchronous machine for short-cicuit calculation*
 With the function '?' for 'Direct help' you get detailed information to every input- or
@@ -8350,11 +7302,8 @@ sequence system to X in the positive sequence system the program calculates with
 **RLC-Element**
 Select the menu item 'Element Data' or the corresponding icon and click to the RLC-element placed
 and designated in your network graphic before.
-## --- Página 244 ---
-**228** | *Appendices*
-## ---
 > **RLC-Element - new -** dialog window screenshot description:
-## >
+>
 > A software dialog box titled "RLC-Element - new -" with the following sections and fields:
 > - **Element** section: Designation field showing "RC_3955" with a dropdown.
 > - **Consideration** section: dropdown set to "general considered".
@@ -8384,13 +7333,11 @@ RLC-element in laod flow calculations.
 RLC-elements are always used when elements in the network cannot be defined by means of
 standard elements, e.g. capacitors, switches or arbitrary complex impedances.
 The RLC-element is realized as equivalent 'π'-network.
-## ---
 ### **Impedance Coil**
 Select the menu item 'Element Data' or the corresponding icon and click to the impedance coil
 placed and designated in your network graphic before.
-## ---
 > **Impedance Coil - new -** dialog window screenshot description:
-## >
+>
 > A software dialog box titled "Impedance Coil - new -" with the following sections and fields:
 > - **Element** section: Designation field showing "DR_3939" with a dropdown.
 > - **Consideration** section: dropdown set to "general considered".
@@ -8402,8 +7349,6 @@ kV.
 With the function '?' for 'Direct help' you get detailed information to every input- or
 selection-/display area. For detailed information to the area 'Element designation' and
 'Consideration' please refer to explanations in Section **net feeder.**
-## --- Página 245 ---
-*Appendices* **229**
 Input and output voltage of the node will be taken for the calculation of the short-circuit current
 and therefore they must be recorded. Are there any definitions of voltages for those nodes made
 before they will be shown as default values. A change of them has influence to all elements
@@ -8413,99 +7358,40 @@ the relevant numbers at the area 'Archive' and 'Group'.
 
 When selected a type of impedance coil all relevant data of the impedance coil will be shown and
 are not subject to change.
-## **Earth Busbar**
+**Earth Busbar**
 Select the menu item 'Element Data' or the corresponding icon and click to the earth busbar placed
 and designated in your network graphic before.
-> [Screenshot of a dialog box titled "Earthbusbar - new -" with the following fields and sections:
-> - **Element** section: Designation field showing "ER 6521" with a dropdown arrow
-> - **Consideration** section: dropdown showing "general considered"
-> - **Ebb** section: Indication field with "A-Z" button; Existing field (empty)
-> - **Technical Data** section:
-> - **Input-impedance** subsection:
-> - Ri - value: 0 Ohm
-> - X - value: 1e-005 Ohm
-> - Buttons at bottom: OK, Cancel, Apply, Help]
-*Earth busbar for short-circuit calculation*
-With the function '?' for 'Direct help' you get detailed information to every input- or
-selection-/display area. For detailed information to the area 'Element designation' and
-'Consideration' please refer to explanations in Section **net feeder.**
-Input of resistance and reactance will be considered at the calculation of single-phase and
-double-phase short-circuits.
-Earth busbars have no influence to load flow calculations.
-## **Load (Consumer)**
+**Load (Consumer)**
 Select the menu item 'Element Data' or the corresponding icon and click to the load (consumer)
 placed and designated in your network graphic before. Loads are non-motive consumers and will
 be considered for load flow calculations only because they have no influence on the magnitude of
 the short-circuit current.
-> [Screenshot of a dialog box titled "Load (Consumer)" with the following fields and sections:
-> - **Element** section:
-> - Designation: "Last06.1" (dropdown)
-> - Consideration: "not considered" (dropdown)
-> - **Node** section:
-## > - Designation: U_n:
-> - Input: LEI06 | 0.4 kV
-> - **Technical Data** section:
-> - Archive: "Heizung, Klima, Lüftung" (dropdown)
-> - Group: "AEG Heizgeräte und Wärmespeicher | 400 V / 50" (dropdown)
-> - Designation: WSP757 (dropdown)
-
-> - Description: Wärmespeicher, 8h Aufheizung, 7.5kW
-> - U_r: 0.4 kV
-> - S_t: 0.0075 MVA
-## > - Cos Phi: 1
-> - **Voltage-related** subsection:
-> - Real part: 100 %
-> - Apparent part: 100 %
-> - Earth at neutral point: ○ yes ● no
-> - Buttons at bottom: OK, Cancel, Apply, Help]
-*Load for load flow calculation*
-## --- Página 246 ---
-**230** | *Appendices*
-With the function '?' for 'Direct help' you get detailed information to every input- or
-selection-/display area. For detailed information to the area 'Element designation' and
-'Consideration' please refer to explanations in Section **net feeder.**
-The selections for minimum and maximum short-circuit are not applied and are equal to 'not
-considered' or 'general considered'.
-With the selection of a consumer from the root database all input area will be fed with the relevant
-technical data except the values for earthing.
-Power factor cos φ is required in order to determine real and reactive power of the given apparent
-power.
-The load of a consumer can be divided in a part, which is independent of the voltage (constant
-load) and a part with quadratic dependence of the voltage. The part with the quadratic
-dependence of the voltage will be recorded in % in order to consider the influence of the variation
-of the voltage in the calculation.
-| **Kind of Load** | **Real Part Ap [%]** | **Reactive Part Aq [%]** |
-## |---|---|---|
-| Constant power | 0 | 0 |
-| Constant current | 55,55 | 55,55 |
-| Constant impedance | 100 | 100 |
-## ---
 ### **Shunt Impedance**
 Select the menu item 'Element Data' or the corresponding icon and click to the shunt impedance
 placed and designated in your network graphic before.
 
 > **[Dialog Box: Shunt Impedance - new -]**
-## >
+>
 > A software dialog window titled "Shunt Impedance - new -" with a help (?) and close (X) button.
 The dialog is divided into the following sections:
-## >
+>
 > - **Element section:** Designation field showing "QI 3711" with a dropdown selector.
 > - **Consideration section:** Dropdown set to "general considered".
 > - **Node section:**
-## > - Designation: U_n
+> - Designation: U_n
 > - Input: SS5 | value field: 0.4 | unit: kV
 > - **Technical Data section:**
 > - U_r: 0.4 kV
 > - I_r: 0 kA
 > - **Positive sequence system:**
-## > - R_(1) Real.: 0 Ohm
+> - R_(1) Real.: 0 Ohm
 > - X_(1) inductive: 0 Ohm
 > - X_(1) capacitiv: 0 Ohm
 > - **Zero sequence system:**
-## > - R_(0) Real.: 0 Ohm
+> - R_(0) Real.: 0 Ohm
 > - X_(0) inductive: 0 Ohm
 > - X_(0) capacitiv: 0 Ohm
-## >
+>
 > Buttons at the bottom: **OK**, **Cancel**, **Apply**, **Help**
 *Shunt Impedance for short-circuit and load flow calculation*
 With the function '?' for 'Direct help' you get detailed information to every input- or
@@ -8519,13 +7405,10 @@ node made before it will be shown as default value. A change of it has influence
 connected to this node.
 Besides data for rated voltage and rated current for the shunt impedance resistances and
 reactances for positive and zero sequence system must be recorded.
-## ---
 ### **Capacity Battery**
 Select the menu item 'Element Data' or the corresponding icon and click to the capacity battery
 placed and designated in your network graphic before.
 
-## --- Página 247 ---
-*Appendices* **| 231**
 > **[Dialog Box: Capacity battery - new -]**
 > A software dialog box titled "Capacity battery - new -" containing the following fields:
 > - **Element** section: Designation field showing "KO_2299" with a dropdown; Consideration
@@ -8547,7 +7430,7 @@ node made before it will be shown as default value. A change of it has influence
 connected to this node.
 Besides data for rated voltage and rated current for the capacity battery resistances and reactances
 for positive and zero sequence system must be recorded.
-## **Direct Current Drive**
+**Direct Current Drive**
 Select the menu item 'Element Data' or the corresponding icon and click to the direct current drive
 placed and designated in your network graphic before.
 > **[Dialog Box: Directcurrent Drive - new -]**
@@ -8569,8 +7452,6 @@ Input voltage of the node will be taken for the calculation of the short-circuit
 the load flow calulation and therefore it must be recorded. Is there any definition of voltage for this
 node made before it will be shown as default value. A change of it has influence to all elements
 connected to this node.
-## --- Página 248 ---
-**232** | *Appendices*
 In case of a short-circuit direct durrent drives contribute to the delivery of short-circuit energy
 especially they have large rated power.
 U_r is the rated voltage the direct current drive consumes its rated power S_r.
@@ -8578,12 +7459,12 @@ For determination of impedances power factor and ratio of starting current to ra
 important.
 If there is no input at the ratio of R to X in the positive sequence system as well as X in the negative
 sequence system to X in the positive sequence system the program calculates with standard values.
-## *Circuit Breaker*
+*Circuit Breaker*
 Activate the icon 'Show \ Enter Technical Data' and click onto the circuit breaker in the network
 graphic, which was placed and denominated in the network graphic before.
 > **[Image: Screenshot of a "Circuit Breaker" configuration dialog window. The dialog contains the
 following sections and fields:**
-## >
+>
 > - **Element section:** Designation field showing "S01" with a dropdown, a switching condition
 checkbox (checked) with a circuit breaker symbol icon.
 > - **Node section:** Designation: U_n, Input: SS4, value 0.4 kV.
@@ -8597,8 +7478,8 @@ dropdown.
 > - Short-circuit-release: 1200.00 A dropdown
 > - Time-delay: 0 ms
 > - **Selected range:**
-## > - Bimetal-release: 480.00 A --- 800.00 A
-## > - Short-circuit-release: 1200.00 A --- 2400.00 A
+> - Bimetal-release: 480.00 A --- 800.00 A
+> - Short-circuit-release: 1200.00 A --- 2400.00 A
 
 > - **Buttons:** OK, Cancel, Apply, Help]
 *Circuit breaker*
@@ -8614,12 +7495,12 @@ of protective device, which is available, at first. A change of the technical da
 selection from the data base (Archive and Designation). Technical data for circuit breakers are
 required as follows: Rated current, selection of range, bimetal- and short-circuit release and a
 time-delay, if applicable.
-## *Fuse Switch-disconnector*
+*Fuse Switch-disconnector*
 Activate the icon 'Show \ Enter Technical Data' and click onto the fuse switch-disconnector in the
 network graphic, which was placed and denominated in the network graphic before.
 > **[Image: Screenshot of a "Sicherungs-Lasttrenner" (Fuse Switch-Disconnector) configuration
 dialog window in German. The dialog contains the following sections and fields:**
-## >
+>
 > - **Element (Element) section:** Bezeichnung (Designation): SD0001 dropdown; Schaltzustand
 (Switching condition): checkbox checked, with switch symbol icon.
 > - **Knoten (Node) section:** Bezeichnung (Designation): U_n, Eingang (Input): SS5, value 0.4 kV.
@@ -8629,8 +7510,6 @@ dialog window in German. The dialog contains the following sections and fields:*
 > - Bezeichnung (Designation): NH-La-00, AEG dropdown.
 > - **Buttons:** OK, Abbrechen (Cancel), Übergehen (Apply), Hilfe (Help)]
 *Fuse Switch-Disconnector*
-## --- Página 249 ---
-*Appendices* **| 233**
 With the function '?' for 'Direct help' you get detailed information to every input- or
 selection-/display area. Context help with connections to the online-help is not yet available.
 Regarding the area 'Designation' please refer to explanations of section **Net feeder**.
@@ -8646,7 +7525,7 @@ required as follows: For fuse switchdisconnectors, fuses and line-protection swi
 of the rated current is necessary.
 The input dialogue for the technical data of the remaining types of protective devices stated above
 is identical to that of the fuse switch-disconnector.
-## **Independent (Definite) Time Overcurrent Protection**
+**Independent (Definite) Time Overcurrent Protection**
 For the calculation of medium-voltage networks the independent (definite) time overcurrent
 protection was added to the protective device data base and integrated into the computation.
 In the protective device data base the independent (definite) time overcurrent protection is
@@ -8654,7 +7533,6 @@ modelled as circuit breaker. The characteristic of the bimetal release, which is
 computation but does not exist in this case, is acquired in the data base simultaenously to the
 short-circuit release. This requires at the input, that the settings for the bimetal release and the
 short-circuit release are set to the same value in order to ensure a switch-off from
-## --- Página 250 ---
 **234** *Appendices*
 > Every change of these system data has only effect in the current project. At every new project
 you will find the unchanged system data again.
@@ -8678,8 +7556,7 @@ data are needed i.e. capacity of operation and earth capacity. They both can var
 projects.
 For load flow calculations the capacity of operation of the cable must be recorded in the positive
 sequence system.
-## **Report Acquisition
-## --- Página 251 ---
+**Report Acquisition
 # Short-Circuit
 Elements installed in electrical switchgear are designed and selected according the VDE
 regulations. Besides the continuous load all stresses and consequences in any cases of short-circuit
@@ -8695,7 +7572,7 @@ the complete network. The method according **Takahashi (short-circuit location a
 considers the location of the short-circuit at every node of the network one after the other. This
 method calculates the total short-circuit current at all nodes of the network as well as the partial
 short-circuit currents flowing in the direction of the fault location immediately.
-## ## Initial Short-circuit Current I''$_k$
+## Initial Short-circuit Current I''$_k$
 For the three-phase short-circuit only the impedances of the positive sequence network will be
 used. The calculation occurs according the method of the **equivalent voltage source** where the
 one and only voltage source is effective at the fault location.
@@ -8703,8 +7580,6 @@ It is a precondition for using the method of the equivalent voltage source at th
 shunt impedances of lines and transformers as well as loads must not be considered.
 That means:
 - No-load losses and magnetizing
-## --- Página 252 ---
-**236** | *Appendices*
 #### **Breaking current I**<sub>a</sub>
 The breaking current at the fault location consists of the partial breaking currents of synchronous
 generators, net feeders and asynchronous motors. The fading away to the breaking current is
@@ -8728,62 +7603,12 @@ After executed shortcircuit calculation you can output the results on screen or 
 > Besides network data for the short-circuit calculation the data for load flow calculation can be
 acquired also. For description of the relevant dialog windows and input area refer to Section 'Load
 ## Flow'.
-## **Calculate Short Circuit**
+**Calculate Short Circuit**
 When you have related technical data to all elements in the network graphic you can start
 calculation of short-circuit currents.
-> [Screenshot of a software window titled "Calculation of short circuit - Elaplan ®". The window
-contains a menu bar with options: Edit, SC location at all nodes, SC location at one node, Double
-earth fault, F1 Info. Below the menu bar, a list of short-circuit current types is displayed in a panel
-on the left side, organized in two groups:
-> - Group 1 (minimum values): A I"k1min, B I"k2min, C I"kE2min, D I"k3min
-> - Group 2 (maximum values): E I"k1max, F I"k2max, G I"kE2max, H I"k3max
-> The rest of the window is an empty white workspace area representing the network graphic
-canvas.]
-*Calculate Short Circuit*
-You have the possibility to calculate short-circuit currents for different types of faults. There are
-the two methods of calculation available. The selection items of the menu are identically of both
-methods.
-
-With the method according **Takahashi** (menu bar 'SC location at all nodes') the initial
-short-circuit current at all nodes will be calculated. The result of the calculation with this algorithm
-is the total short-circuit current at all nodes of the network as well as the partial short-circuit
-currents flowing in the direction of the fault location immediately.
-With the method according **Gauß** (menu bar 'SC location at one node') the fault currents will
-be calculated only for the selected node. The result of the calculation with this algorithm is the
-total short-circuit current at the selected node as well as the partial short-circuit currents flowing
-through all branches of the network.
-When using the method according **Gauß** (**short-circuit location at one node**) you have to
-determine a **fault location**. Beginning from this node all partial short-circuit currents flowing
-through the branches of the network will be calculated.
-When you put in the chosen fault location the calculation starts. At this method the result data of
-the node calculated at last will be kept for every type of fault.
-## --- Página 253 ---
-*Appendices* **237**
-> [Screenshot of a software dialog window titled "Elaplan" showing a short circuit calculation
-interface. The dialog contains a field labeled "Short circuit location" with a green input box and an
-adjacent colored selector box. At the bottom of the dialog, function key buttons are displayed: F1
-Help, F2 Apply, F3 Quit, and F5 Select.]
-*Calculate Short-Circuit, Short-Circuit location at one node*
-For calculation of double earth fault you have to determine two fault locations at different nodes.
-> [Screenshot of a software dialog window titled "Elaplan" with the header "Short circuit
-locations". The dialog contains a field labeled "short circuit location" with a green input box
-followed by two colored selector boxes (allowing specification of two separate fault node
-locations). At the bottom of the dialog, function key buttons are displayed: F1 Help, F2 Apply, F3
-Quit, and F5 Select.]
-*Registration of Short-Circuit Locations*
-Both short-circuit locations must be part of the same voltage level, e.g. 0,4 kV and 10 kV are not
-permissible. Short-circuit will be assumed between phase L1 and earth at the first fault location
-and between phase L2 and earth at the second fault location.
-As result after executed calculation you receive the short-circuit data at both fault locations.
-If the program detects an error during calculations an error protocol can be given on screen or
-printer.
-Are all necessary results of calculation ready you can put them out on screen or printer.
-
 ## Report Short Circuit at all Nodes
 When calculating the short-circuit currents at all nodes (according **Takahashi**-algorithm) you
 can put them out on screen or printer.
-## --- Página 254 ---
-**238** | *Appendices*
 > **[Screenshot: Report Short Circuit at all Nodes - Elaplan software interface]**
 > *Description: A software window titled "Report short circuit location at all nodes - Elaplan" is
 shown. The interface contains a menu bar with options: Edit, Branch oriented, Node oriented, F1
@@ -8816,12 +7641,9 @@ $I_g = I_1 + I_2$
 $I_1 = (I_1) * (\cos \varphi_1 - j \sin \varphi_1)$
 $I_2 = (I_2) * (\cos \varphi_2 - j \sin \varphi_2)$
 
-## ---
 ## Report Short Circuit at a Fixed Node
 When calculating the short-circuit currents at a fixed node (according **Gauß**-algorithm) you
 can put them out on screen or printer.
-## --- Página 255 ---
-*Appendices* **239**
 > **[Screenshot: Report Short Circuit at all Nodes - Elaplan software window]**
 > The window titled "Report Short Circuit at all Nodes" in the Elaplan application is shown. It
 contains a menu bar with options: Edit, Branch oriented, Node oriented, Double earth fault, F1
@@ -8855,24 +7677,21 @@ $I_{2a}$ &emsp; Current at the beginning of line LEIT.2 (node 1)
 
 $I_{2e}$ &emsp; Current at the end of line LEIT.2 (node 2)
 $I_3$ &emsp; Current at the beginning of line LEIT.3 (node 2)
-## ---
 > **[Diagram: Two phasor diagrams showing the angle θ of short-circuit currents at Node 1 and
 ## Node 2]**
-## >
+>
 > **Node 1 (left diagram):** A complex plane with Im (imaginary) axis pointing upward and Re
 (real) axis pointing right. A phasor labeled $I_{2a}$ is drawn pointing downward and to the left
 (into the third quadrant), with the angle $\vartheta$ shown between the negative imaginary
 direction and the phasor. The angle $\vartheta$ is measured from the Re axis toward the phasor in
 the lower half-plane.
-## >
+>
 > **Node 2 (right diagram):** A complex plane with Im axis pointing upward and Re axis pointing
 right. A phasor labeled $I_{2e}$ is drawn pointing upward and to the left (into the second
 quadrant), with the angle $\vartheta$ shown between the phasor and the positive Re axis in the
 upper half-plane.
 $$\vartheta \ = \ \arctan\left(\frac{I_{\text{Im}}}{I_{\text{Re}}}\right) \qquad\qquad \vartheta' \ = \
 \arctan\left(\frac{I_{\text{Im}}}{I_{\text{Re}}}\right) * \ (-1)$$
-## --- Página 256 ---
-**240** | *Appendices*
 θ clockwise:
 negative value
 → Assumed direction of current flow: out from element into node
@@ -8886,7 +7705,7 @@ $I_1 = I_{2a}$ $I_{2c} = I_3$
 Rule of sign:
 Current, which flows into an element, has an angle with negative value.
 
-## ## Load Flow
+## Load Flow
 The load flow calculation program is used for determination of the voltages at all nodes of the
 network (scalar value and phase angle), the load flows and the losses in the elements of the
 network.
@@ -8908,8 +7727,6 @@ reference arrow system will be used for the output of the results of generators 
 also.
 At an overexcited generator that feeds real power and inductive reactive power (lag) into the
 network the real and reactive component
-## --- Página 257 ---
-*Appendices* **241**
 The slack node can deliver the residual power of the network. But this is not a requirement. It is
 also possible to state the real power P, which is fed at the slack node, and to split the residual
 power to several generators at other nodes. The percentage of the residual power, delivered by
@@ -8917,7 +7734,7 @@ the single generators, can be set for every generator. *Elaplan* determines the 
 according the rule as follows:
 The node of that net feeder, which was put in at first, is selected as the slack node. If there is no net
 feeder the node of that generator, which was put in at first, is choosen.
-## ## Calculate Load Flow
+## Calculate Load Flow
 The load flow program makes possible the calculation of the distribution of real and reactive power
 flows, the losses in the network elements as well as in the whole network and the voltage at all
 nodes.
@@ -8935,8 +7752,6 @@ made. If this calculation converges, the loads, which are too large, probably ar
 nodes with the smallest voltages.
 **3.** Changing of PV- into PQ-nodes
 This change is only possible for generators but not for net feeders. If necessary the net
-## --- Página 258 ---
-**242** | *Appendices*
 The result of a load flow calculation consists of three parts:
 - **Change of voltage per node**
 Output of voltage at all nodes.
@@ -8992,11 +7807,9 @@ admittance $Y_{22}$ is connected between the node and earth (ground). Node volta
 (left) and $U_2$ (right) are indicated with downward arrows to ground. This π-equivalent circuit
 models the transmission line with half of the total shunt capacitance/admittance placed at each
 end, and the series impedance (represented as $Y_{12}$) in the middle branch.
-## --- Página 259 ---
-*Appendices* **| 243**
 $P_{\text{INT}}$ = $P_1 - P_2$ $\qquad Q_{\text{INT}}$ = $Q_1 - Q_2$
 
-## $S$ = $U * I^*$
+$S$ = $U * I^*$
 $S_{\text{SHUNT}}$ = $(U_1)^2 * Y^*_{11} + (U_2)^2 * Y^*_{22}$
 $P_{\text{SHUNT}}$ = $(U_1)^2 [\text{Re}(Y_{11}) + \text{Re}(Y_{22})]$
 $Q_{\text{SHUNT}}$ = $-(U_2)^2 [\text{Im}(Y_{11}) + \text{Im}(Y_{22})]$
@@ -9018,16 +7831,13 @@ stopped, if the deviation in power at every node between the calculation steps n
 than the limit of accuracy. But it doesn't mean, that this is the real solution. It is possible, that the
 calculation step n is far away from the real solution, although the deviation in power from
 calculation step n-1 to n is less than the limit of accuracy.
-## ---
-## ## Selectivity
+## Selectivity
 Protective devices in networks protect electrical elements against undue strain because of
 short-circuit and overload.
 Electrical elements are net feeders, transformers, lines, busbars, switchgear, loads and consumer
 etc.
 If there are any fault conditions failure should be limited to that element it concerns. If this comes
 true
-## --- Página 260 ---
-**244** | *Appendices*
 
 *Elaplan* calculates the relevant short-circuit currents at the location of the protective devices and
 compares their tripping characteristics resp. their heat losses due to current (I²t-values) with each
@@ -9048,33 +7858,15 @@ upstream protective device. This current indicates the limit of selectivity.
 Positive selectivity is obtained if the total clearing time of the downstream protective device is
 shorter than the minimum command time of the upstream protective device. The total clearing
 time of a protective device consists of following times, shown at the example of a circuit-breaker:
-## | | | |
-## |---|---|---|
+| | | |
+|---|---|---|
 | high-set element, | | appr. 5 ms |
 | (minimum command time = time between begin of the fault | | |
 | and the releasing of the spring energy store; | | |
 | breaking process cannot be interrupted after forwarding of the command) | | |
 | + | release of the locked spring energy store | appr. 5 ms |
-## | | -------------------------------------------- | |
-## | =
-## --- Página 261 ---
-*Appendices* **| 245**
-> [Screenshot of the "Calculation of Selectivity" application window in Elaplan®. The window shows
-a menu bar with options: Edit, Data acquisition, F1 Info. Under "Data acquisition", a dropdown
-menu is expanded showing two options: "Short-circuit locations" and "Sequence of nominal
-release".]
-*Calculation of Selectivity*
-## ---
-**Data Acquisition: Short-Circuit Locations**
-
-With this dialogue you determine the short-circuit (SC) location(s) and consequently the switching
-condition of the network for the check of selectivity.
-> [Screenshot of the "Short-circuit location" dialogue window in Elaplan®. The window contains a
-table with the following columns: Ser. No. | SC location Designation | Node-Designation |
-Element-Designation | SC-location considered. The table has 14 rows numbered 1 through 14. Only
-row 1 is filled in with data: SC location Designation = KS-ORT 1, Node-Designation = LEI06,
-Element-Designation = Last06.1, SC-location considered = Y. All other rows (2-14) are empty. At the
-bottom of the window there are function key buttons: F1 Help, F2 Apply, F3 Quit, F5 Select., F6
+| | -------------------------------------------- | |
+| =
 ## Delete.]
 *Short-circuit location*
 Every short-circuit location, where a short-circuit shall be assumed for the check of selectivity, gets
@@ -9084,41 +7876,12 @@ at an element is determined unique by input of the node (busbar) and the designa
 element.
 The location of a short-circuit at a busbar is determined by input of the node.
 ## Example:
-## --- Página 262 ---
 **246** *Appendices*
-> [DIAGRAM: Single-line electrical network diagram showing two motors and one generator
-connected to a busbar. Motor M1 is connected via current $I''_1$ through protective device SO1
-and switch KS2 to busbar SS1. Motor M2 is connected via current $I''_2$ through protective device
-SO2 to the same busbar node. Generator G1 is connected via current $I''_3$ through protective
-device SO3 and switch KS1 to the busbar SS1. KS1 marks a short-circuit fault location at busbar SS1,
-and KS2 marks a short-circuit fault location at element M1. The diagram illustrates partial
-short-circuit current contributions from each source flowing through protective device SO1.]
-KS1 Short-circuit at busbar SS1
-KS2 Short-circuit at element M1
-In case of consideration the short-circuit location KS1 the partial short-circuit current $I''_1$ flows
-through the protective device SO1.
-In case of consideration the short-circuit location KS2, the partial short-circuit current $I''_2 + I''_3$
-flows through the protective device SO1.
-There is the possibility to execute the check of selectivity for several short-circuit locations within
-one calculation. Every short-circuit location, which shall be considered in the calculation, has to be
-designated with a "Y". If individual short-circuit locations should be excluded from the calculation,
-they have to be designated with a "N".
-
-## ---
 ### *Data Acquisition: Sequence of Nominal Release*
 The definition of a desired sequence is meaningful, if only a part of protective devices, e.g. a single
 branch, shall be considered.
 In intermeshed networks the desired sequence of release can be different according to the fault
 location. In this case the definition of a sequence of release is meaningful also.
-> [SCREENSHOT: Software dialog window titled "Sequence of nominal release - Etaplan®". The
-window contains input fields for:
-> - **Check No.**: field showing value "1"
-> - **SC location**: field showing "KS-ORT 1"
-> - **PD-Nom.release 1**: SO5
-> - **PD-Nom.release 2**: SO4
-> - **PD-Nom.release 3** through **PD-Nom.release10**: empty fields
-## >
-> At the bottom of the dialog are function key buttons: F1 Help, F2 Apply, F3 Quit, F5 Select., F6
 ## Delete.]
 *Sequence of nominal release*
 The assumed short-circuit location is assigned to the stated check number. Starting with this
@@ -9127,7 +7890,6 @@ protective device stated in the field 'PD-nominal release 1' shall release at fi
 in field 10 at last.
 In the program you can select, whether you want to check all protective devices or the protective
 devices according sequence.
-## --- Página 263 ---
 # Calculation of Selectivity
 Before starting the calculation of selectivity some conditions can be defined, which influence the
 way of calculation. The choices and their consequences will be described in this section.
@@ -9169,36 +7931,11 @@ The results of every check can be shown on the screen during calculation. Input 
 If you select a stop after the calculation of each branch, the computation will be halted and the
 results keep displayed on the screen. The computation will be continued with the Enter key.
 The program determines the minimum and
-## --- Página 264 ---
 **248** *Appendices*
-> [IMAGE DESCRIPTION: Screenshot of a software window titled "Report calculation of selectivity -
-Elaplan®". The window shows a dropdown menu under "Report" with three options: "Acquisition
-data protectiv device", "Acquisition data short circuit location", and "Result data". The main area of
-the window is empty/grey.]
-*Report calculation of selectivity*
-**Acquisition data protective device**
-Listing of defined protective devices and their technical data.
-
-**Acquisition data short circuit location**
-Listing of defined short circuit locations.
-**Result data**
-For the calculated short-circuit locations the protective devices of all calculated branches with their
-tripping times resp. I²t-values at the calculated short-circuit currents will be listed. The selectivity
-statement (Y, N) and the accompanying code number of the argument are related to the respective
-protective device.
-Typicals for different output listings, e.g. for acquisition data protective elements, the list of
-defined short-circuit locations, the result data for a calculation of selectivity etc., can be made by
-means of sample-projects, which are scope of the software delivery. With the function 'Copy
-Sample-Project' in the module *Elaplan-B* you can select one of the sample-projects and add it as
-an actual project. You can print or display the different kinds of output listings and illustrate
-yourself their differences and uses.
-If the selectivity check could be done by comparsion of the tripping times of the protective devices,
-no I²t-values will be displayed.
-At the last page of the print listings the given code numbers for selectivity will be explained
 ## (legend).
 ## List of Abbrevations and Symbols
-## | Symbol | Description |
-## |---|---|
+| Symbol | Description |
+|---|---|
 | cos φ | Power factor |
 | C_Operat. [μF] | Operating capacity [Microfarad] |
 | C_Earth [mF] | Capacity to earth [Microfarad] |
@@ -9211,8 +7948,6 @@ At the last page of the print listings the given code numbers for selectivity wi
 | $i_p$ [A] | short-circuit peak current [Ampere] |
 | I²t-Wert [A²s] | heat losses due to current (I²t-values) [Ampere² second] |
 | $I_a$ [A] | Breaking current [Ampere] |
-## --- Página 265 ---
-*Appendices* **249**
 $I_{an}$ [A] - Motor starting current [Ampere]
 $I_{bi}$ [A] - Setting rangeof overload release [Ampere]
 $I_e$ [A] - Setting current of overload release [Ampere]
@@ -9274,7 +8009,6 @@ $U_{KL}$ [V] - Terminal voltage [Volt]
 $U_n$ [V] - Nominal voltage [Volt]
 $U_{n\,\text{KnotenAusg.}}$ [V] - Nominal voltage at output node [Volt]
 $U_{n\,\text{KnotenEing.}}$ [V] - Nominal voltage at input node [Volt]
-## --- Página 266 ---
 **250** *Appendices*
 $U_r$ [V] - Rated Voltage [Volt]
 $U_{rG}$ [V] - Rated Voltage of a generator [Volt]
@@ -9297,8 +8031,7 @@ $X_{k12}$ [$\Omega$] - Short-circuit zero sequence reactance at earthing of both
 $X_{k21}$ [$\Omega$] - Short-circuit zero sequence reactance at earthing of both sides [Ohm]
 $X_{L(0)}$ [$\Omega$] - No-load zero sequence reactance at earthing of one side Ohm]
 
-## --- Página 267 ---
-## # 2
+# 2
 # The KUBS plus Program
 The KUBS plus program is suited for the calculation of three-pole, single-pole and peak short circuit
 currents in low voltage radial networks. It can determine the backup protection, the selectivity and
@@ -9325,41 +8058,39 @@ System requirements
 - Minimum 3 MByte available hard disk storage
 - Printer: HP Laserjet or similar type, HP Deskjet or similar type, Kyocera laser printer or compatible
 Note: The program does **not** support mouse control.
-## --- Página 268 ---
-**252** | *2 The KUBS plus Program*
 System software: Windows 95 or higher, Windows NT 4.0
 Installation under Windows
-## - Start Windows
+- Start Windows
 - Insert CD-ROM in drive
 Network power supply
 > **[Diagram Description: Single-line electrical network diagram titled "Network power supply"
 illustrating the design of a power distribution network and its calculation procedure. The diagram
 
 shows the following hierarchy from top to bottom:**
-## >
+>
 > - **High Voltage Level:** Three network infeed points, each represented by a transformer
 symbol (T) fed from a high-voltage grid source labeled $S_{kQ}$ (short-circuit power of the supply
 network), shown as hatched box symbols. Each transformer is characterized by its rated apparent
 power $S_{rT}$ and short-circuit voltage $u_{kr}$. Additionally, on the far right, a three-phase
 generator (labeled $3^G$) with rated voltage $U_{rG}$ is connected at the high-voltage level.
-## >
+>
 > - **Low Voltage Level:** The secondary sides of the transformers step down to the low voltage
 level, separated by a dashed boundary line indicating the HV/LV interface.
-## >
+>
 > - **Main Distribution Panel:** A main busbar connects the outputs of the three transformers and
 the generator. Each connection point is labeled with nominal voltage $U_n$. Circuit breakers
 (indicated by ×) are shown on each feeder.
-## >
+>
 > - **Subdistribution Panel (first level):** Fed from the main distribution panel via circuit breakers,
 a first subdistribution busbar distributes power to further branches.
-## >
+>
 > - **Subdistribution Panel (second level):** A second-level subdistribution panel is fed from the
 first, again through circuit-breaker-protected feeders.
-## >
+>
 > - **Distributions (final level):** Multiple final distribution circuits (six shown) are fed from the
 second subdistribution panel through individual circuit breakers, with arrows indicating
 loads/consumers at the end of each branch.
-## >
+>
 > The diagram represents a radial/meshed low-voltage distribution network topology used for
 short-circuit and load-flow calculations in the KUBS plus software.]
 **Fig. 1:** Design of a network and calculation procedure
@@ -9369,8 +8100,6 @@ short-circuit and load-flow calculations in the KUBS plus software.]
 and
 ## C:\KUBSPLUS\FILES
 are generated. Confirm all following windows with < OK >.
-## --- Página 269 ---
-*Using KUBS plus* **| 253**
 - Important: For installing under Windows 95, after unpacking the files (Decompressing Archive)
 you must close the window in which unpacking takes place
 - The Kubs Setup program is started from the installation program. You can then start KUBS plus.
@@ -9397,45 +8126,43 @@ The check of the contact voltage can be switched on or off.
 To start the program from the MS-DOS level type in *KUBS*. To start from Windows, double click
 on the icon. To start from the Windows file manager, double click on *Kubsplus.pif*.
 The following regulations are included
-## --- Página 270 ---
-**254** | *2 The KUBS plus Program*
 > **[Flowchart - Overview of the Main Menu of the KUBS plus Program]**
-## >
+>
 > The diagram is a hierarchical flowchart depicting the navigation structure of the KUBS plus
 software's Main Menu. The chart has the following structure:
-## >
+>
 > **Top Level:**
 > - Two shaded boxes at the top: **Main menu** (left) and **End** (right), connected
 bidirectionally via the **Setup** branch.
-## >
+>
 > **Second Level (branches from Main menu):**
 > 1. **Start new project**
 > 2. **Read project**
 > 3. **$I_Z$ calculation**
 > 4. **Setup**
 
-## >
+>
 > **Branch 1 - Start new project:**
 > - → **Power feed with transformers**
 > - → **Data for:**
 > - Medium voltage
 > - Low voltage
-## > - Transformers
+> - Transformers
 > - → **1st electric circuit without switches** ← (feedback loop from "2nd electric circuit", labeled
 *via transformer*)
 > - → **2nd electric circuit - switches obligatory** (with loop back to 1st electric circuit via
 transformer)
 > - → **Common power input point**
-## >
+>
 > **Branch 2 - Read project:**
 > - → **Power feed with known short circuit**
 > - → **Data for short circuit current**
 > - → (merges into) **1st electric circuit without switches**
-## >
+>
 > **Branch 3 - $I_Z$ calculation:**
 > - → **Cable cross section**
 > - → **Result - Back to the main menu**
-## >
+>
 > **Branch 4 - Setup:**
 > - → **Dialog language**
 > - → **Printer driver**
@@ -9443,14 +8170,12 @@ transformer)
 > - → **Consideration of touch voltage**
 > - → **Back to main menu** → (returns to **End**)
 **Fig. 2:** Overview of the Main menu
-## --- Página 271 ---
-*Calculating Example 7 with KUBS plus* **| 255**
 > **[Diagram: Hierarchical flowchart titled "Overview of the Project menu" - Fig. 3]**
-## >
+>
 > The diagram is a top-down hierarchical menu structure flowchart for the KUBS plus software. At
 the top level, there are two root nodes: **"Project menu"** (left) and **"Close main menu"**
 (right), connected by a bidirectional vertical arrow on the right side.
-## >
+>
 > From **"Project menu"**, five sub-menu branches descend:
 > - **Further** → leads to: **"Distribution (with and without) breaker, back to the main menu"**
 > - **Branch** (no further sub-items shown)
@@ -9459,10 +8184,10 @@ the top level, there are two root nodes: **"Project menu"** (left) and **"Close 
 
 Back to the main menu"**
 > - **Output** → leads to two sub-items: **"Input data"** and **"Network data"**
-## >
+>
 > From **"Store / Back to the main menu"** (connected to "Close main menu") no further
 branches are shown.
-## >
+>
 > From **"Input data"** and **"Network data"**, a further level branches into:
 > - **Transformer**
 > - **Conductor**
@@ -9471,7 +8196,6 @@ main menu"**
 > - **Insert** (with sub-options: - before / - after)
 > - **Delete**
 **Fig. 3:** Overview of the Project menu
-## ---
 **Calculating Example 7 with KUBS plus**
 Example 7 was worked out with the KUBS plus program (Figure 4) and with a pocket calculator and
 the results compared. The results of the two procedures are in full agreement. The following
@@ -9480,8 +8204,6 @@ remarks are relevant here:
 - The impedances of the circuit (outgoing and return lines) are added under operational conditions
 - The zero-sequence impedances of the cable and the conductor are not considered here
 - The zero-sequence impedance of the transformer is also not considered
-## --- Página 272 ---
-**256** | *2 The KUBS plus Program*
 - Calculation with KUBS plus
 - The impedances are added vectorially
 - The zero-sequence impedances of the cable, conductor and transformer are taken into account
@@ -9500,32 +8222,30 @@ X: 0.070 $m\Omega$
 *Feed-in to low voltage network: Transformer:*
 Power: 630 kVA
 Nominal current: 909 A
-## $u_z$: 6 %
-## $u_r$: 1.10 %
+$u_z$: 6 %
+$u_r$: 1.10 %
 Short circuit losses: 7 kW
-## $u_x$: 5.90 %
+$u_x$: 5.90 %
 Connection symbol: Dy
 R: 2.7937 $m\Omega$
 X: 14.9898 $m\Omega$
 *Transformer 1:*
 Transformer terminals → Protection equipment
 **Branch a: Branch A → (1,1)**
-## | | | | |
-## |---|---|---|---|
+| | | | |
+|---|---|---|---|
 | I | : 100 A | $I_{kmax1p}$ | : 14.54 kA |
 | $I_z$ | : 129 A | $I_{kmin1p}$ | : 12.33 kA |
 | Breaker | : None | $I_{k3p}$ | : 14.24 kA |
 | | : | $i_p$ | : 30.41 kA |
-## | $\cos\varphi$ | : 0.90 | | |
+| $\cos\varphi$ | : 0.90 | | |
 | du | : 0.04% | R: 0.79m$\Omega$ &nbsp;&nbsp; X: 0.12m$\Omega$ | |
 | dutot | : 0.04% | $R_i$: 0.79m$\Omega$ &nbsp;&nbsp; $X_i$: 0.12m$\Omega$ | |
 **Bus bars**
-## | | | | |
-## |---|---|---|---|
+| | | | |
+|---|---|---|---|
 | Material | : Cu | Ambient temperature | : 25 °C |
 | Treatment | : Blank | Temperature of conductor | : 65 °C |
-## --- Página 273 ---
-*Calculating Example 7 with KUBS plus* **257**
 Main conductor : $3 \times 1 \times 12 \times 2 \ mm^2$
 PE : $1 \times 12 \times 2 \ mm^2$
 N cross-section : $1 \times 12 \times 2 \ mm^2$
@@ -9533,13 +8253,13 @@ Length [m] : 1.00 m
 
 *Protection equipment → Starting point of network*
 **Branch 1A: Branch 1A → (1,3)**
-## | | | | |
-## |---|---|---|---|
+| | | | |
+|---|---|---|---|
 | $I$ | : 100 A | $I_{kmax1p}$ | : 2.17 kA |
 | $I_z$ | : 100 A | $I_{kmin1p}$ | : 0.88 kA |
 | *Breaker* | : 3VF32116DS7 | $I_{k3p}$ | : 2.17 kA |
 | | : | $i_p$ | : 3.13 kA |
-## | $cos\ \varphi$ | : 0.90 | | |
+| $cos\ \varphi$ | : 0.90 | | |
 | *du* | : 4.68% | R: 96.50 m$\Omega$ &nbsp; X: 20.75 m$\Omega$ | |
 | *dutot* | : 4.72% | $R_t$: 97.29 m$\Omega$ &nbsp; $X_t$: 20.87 m$\Omega$ | |
 | *Cables* | : | | |
@@ -9560,12 +8280,12 @@ Length [m] : 1.00 m
 *Branch in order*
 *Network data:*
 **Branch2: Branch 2A → (1,5)**
-## | | | | |
-## |---|---|---|---|
+| | | | |
+|---|---|---|---|
 | $I$ | : 16 A | $I_{kmax1p}$ | : 0.33 kA |
 | $I_z$ | : 24 A | | : |
 | *Breaker* | : | $I_{k3p}$ | : 14.24 kA |
-## | $cos\varphi$ | : 0.90 | | : |
+| $cos\varphi$ | : 0.90 | | : |
 | *du* | : 1.83% | R: 255.36 m$\Omega$ &nbsp; X: 3.74 m$\Omega$ | |
 | *dutot* | : 6.54% | $R_t$: 355.44 m$\Omega$ &nbsp; $X_t$: 39.59 m$\Omega$ | |
 | *Cables* | : | | |
@@ -9573,8 +8293,6 @@ Length [m] : 1.00 m
 | *Insulation* | : PV | *Type* | : multi-strand |
 | *Armouring* | : without | *Number of cable systems* | : 1 |
 
-## --- Página 274 ---
-**258** | *2 The KUBS plus Program*
 *Installation* : B $\qquad\qquad$ $I_r$ :
 *Cable type* : NYM
 *Main conductor* : $1 \times 1 \times 2.5 \ mm^2$ $\qquad\qquad$ $I_r$ : *0 A*
@@ -9608,54 +8326,6 @@ $\qquad\qquad\qquad\qquad\qquad$ *Backup* $\qquad$ not required
 $\qquad\qquad\qquad\qquad\qquad$ *Correction factor* $\quad$ 1.00
 **Remarks**
 Branch in order
-## --- Página 275 ---
-*Calculating Example 7 with KUBS plus* **259**
-
-## > [!DIAGRAM]
-> **Fig. 4: Diagram of example and results**
-## >
-> Single-line electrical distribution diagram showing a low-voltage network with hierarchical
-branching structure. The diagram is organized as follows:
-## >
-> **Supply/Source (Top):**
-> - 20.0 kV, 250 MVA, 50 Hz
-> - Transformer: 630 kVA, 909 A
-## >
-> **Branch A (Main Feeder):**
-## > - Ph: 1x12\*2
-> - PEN: 1x12\*2
-> - L: 1 m
-## > - I = 100 A
-> - Ikmax: 14.5 kA
-> - Ikmin: 12.3 kA
-> - Ik3p: 14.2 kA
-> - Circuit breaker: **3VF32116DS7** (represented by a switch symbol at node A)
-## >
-> **Branch 1A (Sub-feeder from A to busbar 1):**
-> - Cable: 1x3x50 mm²
-> - + 1x50 mm²
-> - L: 250.0 m
-## > - I = 100 A
-> - Ikmax: 2.2 kA
-> - Ikmin: 0.9 kA
-> - Ik3p: 2.2 kA
-> - Connects to busbar node **1**
-## >
-> **Branch 2 (from node 1, left branch):**
-> - Cable: 1x3x2.5 mm²
-> - + 1x2.5 mm²
-> - L: 35.00 m
-## > - I = 16 A
-> - Ikmax: 0.3 kA
-> - Ikmin: 0.2 kA
-> - Ik3p: 0.0 kA
-> - Terminates at node **2**
-## >
-> **Branch 3 (from node 1, right branch):**
-> - Cable: 1x3x1.5 mm²
-> - + 1x1.5 mm²
-> - L: 15.0 m
-## > - I = 7 A
 
 > - Ikmax: 0.4 kA
 > - Ikmin: 0.3 kA
@@ -9666,8 +8336,6 @@ branching structure. The diagram is organized as follows:
 - Program (e.g. KUBS plus)
 - Form sheets
 - System forms in low voltage range in accordance with IEC 60 364, Part 30
-## --- Página 276 ---
-**260** | *2 The KUBS plus Program*
 - Purpose of calculating short circuit currents:
 - Breaking conditions
 - Selecting bus bars
@@ -9679,7 +8347,7 @@ branching structure. The diagram is organized as follows:
 - External inputs ($S''_{kQ}$)
 - Special properties of network and operational equipment:
 - Asynchronous motors
-## - Transformers
+- Transformers
 - Types of short circuit currents:
 - Largest short circuit current
 - Smallest short circuit current
@@ -9704,15 +8372,14 @@ branching structure. The diagram is organized as follows:
 - Short circuit in meshed network
 - Method of calculation to be used:
 - Equivalent voltage source
-## --- Página 277 ---
-## # Index
-## ***a***
+# Index
+***a***
 asynchronous machine 71, 101, 105
 impedance 106
-## ***b***
+***b***
 batteries 147
 breaking current 127
-## ***c***
+***c***
 cables and overhead lines 58
 calculation tools 197
 capacitors 148
@@ -9721,25 +8388,25 @@ computer programs 151
 current converters 146
 current limiting 70
 cut-off energy 131
-## ***d***
+***d***
 DC aperiodic component 2, 3, 49
 DC motors 149
 DC systems 143
 disconnectors 112
 
-## ***e***
+***e***
 equivalent circuit diagrams 36
 equivalent electrical circuit 2
 equivalent voltage source 2, 7
-## ***f***
+***f***
 fault currents, calculation 31
 fuses 112
-## ***g***
+***g***
 ground fault tripping 132
 ground loop impedance 30
-## ***h***
+***h***
 HH fuses 131
-## ***i***
+***i***
 ## IEC 60 909 11, 12
 impedance corrections 75, 193
 generators 76
@@ -9754,14 +8421,14 @@ static converters 73
 synchronous machines 49
 transformers 51
 insulation, heat transfer 119
-## ***l***
+***l***
 load-break switches 112
 load interrupter switches 112
-## ***m***
+***m***
 making current 127
 mesh diagram 4
 meshed networks 19
-## ***n***
+***n***
 networks
 grounding compensation 43
 isolated free neutral point 42
@@ -9773,25 +8440,24 @@ medium voltage 23
 neutral conductor 30
 neutral point, arrangement 45
 neutral point treatment 39
-## ***o***
+***o***
 operational equipment 189
-## --- Página 278 ---
 **262** *Index*
 overcurrent protection 131
 overcurrent protective equipment 34
 overloading 131
 overload tripping 132
-## *p*
+*p*
 PEN conductor 29
 power generator 143
 protective functions 132
 protective ground conductor 30
-## *r*
+*r*
 radial networks 18, 153
 ## RCD 34
 reference variables 10
 ring networks 18
-## *s*
+*s*
 short circuit 1, 91
 &nbsp;&nbsp;&nbsp;&nbsp;asynchronous motors 105
 ## &nbsp;&nbsp;&nbsp;&nbsp;calculation 7, 127
@@ -9839,15 +8505,15 @@ systems
 &nbsp;&nbsp;&nbsp;&nbsp;IT 35
 &nbsp;&nbsp;&nbsp;&nbsp;TN 29
 &nbsp;&nbsp;&nbsp;&nbsp;TT 34
-## *t*
+*t*
 three-phase networks 39
 three-phase synchronous generator 143
 touch voltage 39
 transformation ratio 57
 transient method 10
-## *u*
+*u*
 
 undelayed release 132
-## *v*
+*v*
 voltage factor 2, 8
 voltage regulating transformers 57

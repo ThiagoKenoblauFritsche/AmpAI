@@ -21,11 +21,11 @@ status: ativo
 ### 🏢 **Diretoria de Agentes (Topologia Híbrida SaaS)**
 - **@CEO:** `Gemini 3.1 Pro (High)` (Gatekeeper comercial e aprovação final).
 - **@CTO:** `Claude Sonnet 4.6 (Thinking)` (Arquiteto de Software SDD).
-- **@Engenheiro_Eletricista:** `Claude Opus 4.6 (Thinking)` (Rigor Científico BDD/Gherkin).
+- **@Engenheiro_Eletricista:** `Claude Opus 4.8 (Thinking)` (Rigor Científico BDD/Gherkin).
 - **@Hermes_Executive_Dev:** `Claude Sonnet 4.6 (Thinking)` (Gateway Móvel. Não escreve código).
 - **@Senior_Backend_Dev:** `Claude Sonnet 4.6 (Thinking)` (DDD puro e Result Pattern).
 - **@Senior_Frontend_Dev:** `Claude Sonnet 4.6 (Thinking)` (Reatividade segura e arquitetura visual).
-- **@Senior_QA_Security:** `Claude Opus 4.6 (Thinking)` (Muralha TDD Física ZOMBIES).
+- **@Senior_QA_Security:** `Claude Opus 4.8 (Thinking)` (Muralha TDD Física ZOMBIES).
 
 ---
 

@@ -1,73 +1,11 @@
-﻿*Collection Technique*
+# Cahier Technique no. 158 — Calculation of short-circuit currents
 
-# Cahier technique no. 158
+> **Schneider Electric — Collection Technique (ECT 158), updated September 2005.**
+> Authors: Benoît de Metz-Noblat, Frédéric Dumas, Christophe Poulain (Schneider Electric, Electrical Networks competency group).
+>
+> Secondary reference aligned with **IEC 60909**. This cleaned text removes repetitive page footers, page-break markers and broken image placeholders, and trims publisher front-matter (marketing/disclaimer). Technical wording is preserved verbatim.
 
-**Calculation of short-circuit currents**
-
-![cover image](img-0.jpeg)
-
-B. de Metz-Noblat
-F. Dumas
-C. Poulain
-
-**Merlin Gerin**
-**Square D**
-**Telemecanique**
-
-**Schneider Electric**
-*Building a New Electric World*
-
-<!-- PAGE_BREAK -->
-
-"Cahiers Techniques" is a collection of documents intended for engineers and technicians, people in the industry who are looking for more in-depth information in order to complement that given in product catalogues.
-
-Furthermore, these "Cahiers Techniques" are often considered as helpful "tools" for training courses.
-They provide knowledge on new technical and technological developments in the electrotechnical field and electronics. They also provide better understanding of various phenomena observed in electrical installations, systems and equipment.
-Each "Cahier Technique" provides an in-depth study of a precise subject in the fields of electrical networks, protection devices, monitoring and control and industrial automation systems.
-
-The latest publications can be downloaded from the Schneider Electric internet web site.
-Code: **http://www.schneider-electric.com** &nbsp;&nbsp;&nbsp;&nbsp; **See section**
-Section: **Press**
-
-Please contact your Schneider Electric representative if you want either a "Cahier Technique" or the list of available titles.
-
-The "Cahiers Techniques" collection is part of the Schneider Electric's "Collection technique".
-
-**Foreword**
-The author disclaims all responsibility subsequent to incorrect use of information or diagrams reproduced in this document, and cannot be held responsible for any errors or oversights, or for the consequences of using information and diagrams contained in this document.
-
-Reproduction of all or part of a "Cahier Technique" is authorised with the compulsory mention:
-"Extracted from Schneider Electric "Cahier Technique" no. ......" (please specify).
-
-<!-- PAGE_BREAK -->
-
-# no. 158
-
-# Calculation of short-circuit currents
-
-**Benoît de METZ-NOBLAT**
-
-**Graduate Engineer from ESE (Ecole Supérieure d'Electricité), he worked first for Saint-Gobain, then joined Schneider Electric in 1986. He is now a member of the Electrical Networks competency group that studies electrical phenomena affecting power system operation and their interaction with equipment.**
-
----
-
-**Frédéric DUMAS**
-
-**After completing a PhD in engineering at UTC (Université de Technologie de Compiègne), he joined Schneider Electric in 1993, initially developing software for electrical network calculations in the Research and Development Department. Starting in 1998, he led a research team in the field of industrial and distribution networks. Since 2003, as a project manager, he has been in charge of the technical development of electrical distribution services.**
-
----
-
-**Christophe POULAIN**
-
-**Graduate of the ENI engineering school in Brest, he subsequented followed the special engineering programme at the ENSEEIHT institute in Toulouse and completed a PhD at the Université Pierre et Marie Curie in Paris. He joined Schneider Electric in 1992 as a research engineer and has worked since 2003 in the Electrical Networks competency group of the Projects and Engineering Center.**
-
----
-
-**ECT 158** updated September 2005
-
-<!-- PAGE_BREAK -->
-
-# Lexicon
+## Lexicon
 
 **Abbreviations**
 
@@ -135,10 +73,6 @@ Reproduction of all or part of a "Cahier Technique" is authorised with the compu
 | SO | Generator set without on-load tap changer. |
 | T | Transformer. |
 
-Cahier Technique Schneider Electric n° 158 / p.2
-
-<!-- PAGE_BREAK -->
-
 # Calculation of short-circuit currents
 
 In view of sizing an electrical installation and the required equipment, as well as determining the means required for the protection of life and property, short-circuit currents must be calculated for every point in the network.
@@ -169,10 +103,6 @@ The aim is to provide a further understanding of the calculation methods, essent
 | **4 Conclusion** | | **p. 32** |
 | **Bibliography** | | **p. 32** |
 
-Cahier Technique Schneider Electric n° 158 / p.3
-
-<!-- PAGE_BREAK -->
-
 # 1 Introduction
 
 Electrical installations almost always require protection against short-circuits wherever there is an electrical discontinuity. This most often corresponds to points where there is a change in conductor cross-section. The short-circuit current must be calculated at each level in the installation in view of determining the characteristics of the equipment required to withstand or break the fault current.
@@ -195,10 +125,6 @@ The maximum short-circuit current corresponds to a short-circuit in the immediat
 
 *Fig. 1 : Short-circuit (Isc) calculation procedure when designing a low-voltage electrical installation (ST = short time; Inst. = instantaneous)*
 
-Cahier Technique Schneider Electric n° 158 / p.4
-
-<!-- PAGE_BREAK -->
-
 - Cables are long and/or the source impedance is relatively high (generators, UPSs)
 - Protection of life depends on circuit breaker or fuse operation, essentially the case for TN and IT electrical systems
 
@@ -208,17 +134,11 @@ Note also that whatever the case, for whatever type of short-circuit current (mi
 
 $$\int i^2 \, dt \leqslant k^2 A^2 \text{ (see Fig. 2, 3, and 4)}$$
 
-![img-5.jpeg](img-5.jpeg)
-
 *Fig. 2 : The $I^2t$ characteristics of a conductor depending on the ambient temperature (1 and 2 represent the rms value of the current in the conductor at different temperatures $\theta_1$ and $\theta_2$, with $\theta_1 > \theta_2$; $I_z$ being the limit of the permissible current under steady-state conditions).*
 
 where A is the cross-sectional area of the conductors and k is a constant calculated on the basis of different correction factors for the cable installation method, contiguous circuits, etc. Further practical information may be found in the "Electrical Installation Guide" published by Schneider Electric (see the bibliography).
 
-![img-6.jpeg](img-6.jpeg)
-
 *Fig. 3 : Circuit protection using a circuit breaker.*
-
-![img-7.jpeg](img-7.jpeg)
 
 *Fig. 4 : Circuit protection using an aM fuse.*
 
@@ -235,10 +155,6 @@ The primary characteristics are:
 - Origin
 - Mechanical (break in a conductor, accidental electrical contact between two conductors via a foreign conducting body such as a tool or an animal)
 - Internal or atmospheric overvoltages
-
-Cahier Technique Schneider Electric n° 158 / p.5
-
-<!-- PAGE_BREAK -->
 
 ■ Insulation breakdown due to heat, humidity or a corrosive environment
 ■ Location (inside or outside a machine or an electrical switchboard)
@@ -277,28 +193,16 @@ The consequences are variable depending on the type and the duration of the faul
 
 **a)** Three-phase short-circuit
 
-![Three-phase short-circuit diagram showing L1, L2, L3 with short-circuit current I"k3](img-8.jpeg)
-
 **b)** Phase-to-phase short-circuit clear of earth
-
-![Phase-to-phase short-circuit diagram showing L1, L2, L3 with short-circuit current I"k2](img-9.jpeg)
 
 **c)** Phase-to-phase-to-earth short-circuit
 
-![Phase-to-phase-to-earth short-circuit diagram showing L1, L2, L3 with partial short-circuit currents I"k2EL3, I"k2EL2 and I"kE2E](img-10.jpeg)
-
 **d)** Phase-to-earth short-circuit
-
-![Phase-to-earth short-circuit diagram showing L1, L2, L3 with short-circuit current I"k1](img-11.jpeg)
 
 ← Short-circuit current,
 ←| Partial short-circuit currents in conductors and earth.
 
 *Fig. 5 : Different types of short-circuits and their currents. The direction of current is chosen arbitrarily (See IEC 60909).*
-
-Cahier Technique Schneider Electric n° 158 / p.6
-
-<!-- PAGE_BREAK -->
 
 # 1.2 Development of the short-circuit current
 
@@ -315,8 +219,6 @@ The current Isc develops under transient conditions depending on the reactances 
 $$Zsc = \sqrt{R^{2} + X^{2}}$$
 
 In power distribution networks, reactance $X = L\varphi$ is normally much greater than resistance R and
-
-![img-12.jpeg](img-12.jpeg)
 
 *Fig. 6 : Simplified network diagram.*
 
@@ -356,21 +258,11 @@ $$i = i_{ac} + i_{dc} = 0$$
 
 **Figure 7** shows the graphical composition of i as the algebraic sum of its two components $i_{ac}$ and $i_{dc}$
 
-![img-13.jpeg](img-13.jpeg)
-
 *Fig. 7 : Graphical presentation and decomposition of a short-circuit current occuring far from the generator.*
-
-Cahier Technique Schneider Electric n° 158 / p.7
-
-<!-- PAGE_BREAK -->
 
 **a)** Symmetrical
 
-![img-14.jpeg](img-14.jpeg)
-
 **b)** Asymmetrical
-
-![img-15.jpeg](img-15.jpeg)
 
 *Fig. 8 : Graphical presentation of the two extreme cases (symmetrical and asymmetrical) for a short-circuit current.*
 
@@ -418,13 +310,7 @@ For simplicity, the electromotive force is assumed to be constant and the intern
 
 ■ **Steady-state** (or synchronous reactance)
 
-![img-16.jpeg](img-16.jpeg)
-
 *Fig. 9 : Variation of coefficient κ depending on R / X or R / L (see IEC 60909).*
-
-Cahier Technique Schneider Electric n° 158 / p.8
-
-<!-- PAGE_BREAK -->
 
 Note that in the indicated order, the reactance acquires a higher value at each stage, i.e. the subtransient reactance is less than the transient reactance, itself less than the synchronous reactance. The successive effect of the three reactances leads to a gradual reduction in the short-circuit current which is the sum of four components *(see **Fig. 10** )*:
 
@@ -432,8 +318,6 @@ Note that in the indicated order, the reactance acquires a higher value at each 
 - The aperiodic component resulting from the development of the current in the circuit (inductive)
 
 This short-circuit current i(t) is maximum for a closing angle corresponding to the zero-crossing of the voltage at the instant the fault occurs.
-
-![Fig. 10](img-17.jpeg)
 
 **Fig. 10** : Total short-circuit current *i*<sub>sc</sub> **(e)**, and contribution of its components:
 
@@ -446,10 +330,6 @@ This short-circuit current i(t) is maximum for a closing angle corresponding to 
 **d)** aperiodic component.
 
 *Note that the decrease in the generator reactance is faster than that of the aperiodic component. This is a rare situation that can cause saturation of the magnetic circuits and interruption problems because several periods occur before the current passes through zero.*
-
-Cahier Technique Schneider Electric n° 158 / p.9
-
-<!-- PAGE_BREAK -->
 
 It is therefore given by the following expression:
 
@@ -481,8 +361,6 @@ Practically speaking, information on the development of the short-circuit curren
 
 **Figure 11** presents the various currents of the short-circuits defined above.
 
-![Fig. 11](img-18.jpeg)
-
 *Fig. 11 : short-circuit currents near a generator (schematic diagram).*
 
 ## 1.3 Standardised Isc calculations
@@ -500,13 +378,7 @@ $$
 
 All the characteristics of the various elements in the fault loop must be known (sources and wiring systems).
 
-- The "composition" method, which may be used when the characteristics of the power supply are not known. The upstream impedance of the given circuit is calculated on the basis of an
-
-Cahier Technique Schneider Electric n° 158 / p.10
-
-<!-- PAGE_BREAK -->
-
-estimate of the short-circuit current at its origin. Power factor cos φ ≈ R / X is assumed to be identical at the origin of the circuit and the fault location. In other words, it is assumed that the elementary impedances of two successive sections in the installation are sufficiently similar in their characteristics to justify the replacement of vectorial addition of the impedances by algebraic addition. This approximation may be used to calculate the value of the short-circuit current modulus with sufficient accuracy for the addition of a circuit.
+- The "composition" method, which may be used when the characteristics of the power supply are not known. The upstream impedance of the given circuit is calculated on the basis of an estimate of the short-circuit current at its origin. Power factor cos φ ≈ R / X is assumed to be identical at the origin of the circuit and the fault location. In other words, it is assumed that the elementary impedances of two successive sections in the installation are sufficiently similar in their characteristics to justify the replacement of vectorial addition of the impedances by algebraic addition. This approximation may be used to calculate the value of the short-circuit current modulus with sufficient accuracy for the addition of a circuit.
 
 ❑ The "conventional" method, which can be used when the impedances or the Isc in the installation upstream of the given circuit are not known, to calculate the minimum short-circuit currents and the fault currents at the end of a line. It is based on the assumption that the voltage at the circuit origin is equal to 80% of the rated voltage of the installation during the short-circuit or the fault.
 Conductor reactance is neglected for sizes under 150 mm². It is taken into account for large sizes by increasing the resistance 15% for 150 mm², 20% for 185 mm², 25% for 240 mm² and 30% for 300 mm².
@@ -546,10 +418,6 @@ To simplify the short-circuit calculations, a number of assumptions are required
 
 ■ All zero-sequence impedances are taken into account
 
-Cahier Technique Schneider Electric n° 158 / p.11
-
-<!-- PAGE_BREAK -->
-
 # 2 Calculation of Isc by the impedance method
 
 ## 2.1 Isc depending on the different types of short-circuit
@@ -574,13 +442,7 @@ $\sum X =$ the sum of series reactances.
 
 It is generally considered that three-phase faults provoke the highest fault currents. The fault current in an equivalent diagram of a polyphase system is limited by only the impedance of one phase at the phase-to-neutral voltage of the network. Calculation of Isc₃ is therefore essential for selection of equipment (maximum current and electrodynamic withstand capability).
 
-![Fig. 12: The various short-circuit currents.](img-19.jpeg)
-
 *Fig. 12 : The various short-circuit currents.*
-
-Cahier Technique Schneider Electric n° 158 / p.12
-
-<!-- PAGE_BREAK -->
 
 # Phase-to-phase short-circuit clear of earth
 
@@ -678,10 +540,6 @@ For public distribution MV / LV transformers, the values of usc have been set by
 
 *Fig. 13 : Standardised short-circuit voltage for public distribution transformers.*
 
-Cahier Technique Schneider Electric n° 158 / p.13
-
-<!-- PAGE_BREAK -->
-
 Note that the accuracy of values has a direct influence on the calculation of Isc in that an error of x % for usc produces an equivalent error (x %) for $Z_{\mathrm{T}}$.
 
 ④ In general, $R_{\mathrm{T}} << X_{\mathrm{T}}$, in the order of 0.2 $X_{\mathrm{T}}$, and the internal transformer impedance may be considered comparable to reactance $X_{\mathrm{T}}$. For low power levels, however, calculation of $Z_{\mathrm{T}}$ is required because the ratio $R_{\mathrm{T}} / X_{\mathrm{T}}$ is higher. The resistance is calculated using the joule losses (W) in the windings:
@@ -746,13 +604,7 @@ $$
 X_L = L\ \omega = \left[15.7 + 144.44\ \mathrm{Log}\left(\frac{d}{r}\right)\right]
 $$
 
-![Fig. 14](img-20.jpeg)
-
 *Fig. 14 : Resultant error in the calculation of the short-circuit current when the upstream network impedance Zup is neglected.*
-
-Cahier Technique Schneider Electric n° 158 / p.14
-
-<!-- PAGE_BREAK -->
 
 expressed as mΩ / km for a single-phase or three-phase delta cable system, where (in mm): r = radius of the conducting cores; d = average distance between conductors. NB : Above, Log = decimal logarithm. For overhead lines, the reactance increases slightly in proportion to the distance between conductors (Log $\left(\dfrac{d}{t}\right)$), and therefore in proportion to the operating voltage.
 
@@ -796,10 +648,6 @@ Notes :
 
 *Fig. 16 : Cables reactance values depending on the wiring system.*
 
-Cahier Technique Schneider Electric n° 158 / p.15
-
-<!-- PAGE_BREAK -->
-
 of $1\,\mu\mathrm{F}/\mathrm{km}$, however the capacitive current remains low, in the order of $5\,\mathrm{A}/\mathrm{km}$ at $20\,\mathrm{kV}$.
 
 - The reactance or resistance of the lines may be neglected.
@@ -815,8 +663,6 @@ Examples :
 The given cable impedance is therefore considered, with a margin of error less than 5.1%, comparable to:
 
 - A resistance for cable cross-sectional areas less than $74\,\mathrm{mm}^2$
-
-![Fig. 17](img-21.jpeg)
 
 **Fig. 17** : Impedance $Z_L$ of a three-phase cable, at 20°C, with copper conductors.
 
@@ -862,10 +708,6 @@ When an asynchronous motor is cut from the network, it maintains a voltage acros
 | Salient-pole generators | 15-25 | 25-35 | 70-120 |
 
 **Fig. 18** : Generator reactance values. in per unit.
-
-Cahier Technique Schneider Electric n° 158 / p.16
-
-<!-- PAGE_BREAK -->
 
 20 ms for single-cage motors up to 100 kW
 
@@ -920,10 +762,6 @@ The short-circuit current often flows through an arc at the fault location. The 
 | Compensators | 25 | 40 | 160 |
 
 *Fig. 19 : Synchronous compensator and motor reactance values, in per unit.*
-
-Cahier Technique Schneider Electric n° 158 / p.17
-
-<!-- PAGE_BREAK -->
 
 fault without an arc. This phenomenon should, however, be taken into account for the calculation of the minimum short-circuit current.
 
@@ -1001,13 +839,7 @@ At point A, $Ssc = \dfrac{U_{LV}^2}{Z_T\left(\dfrac{U_{LV}}{U_{HV}}\right)^2 + Z
 
 Hence, $Ssc = \dfrac{1}{\dfrac{Z_T}{U_{HV}^2} + \dfrac{Z_L}{U_{LV}^2}}$
 
-![Fig. 20 : Calculating Ssc at point A.](img-22.jpeg)
-
 *Fig. 20 : Calculating Ssc at point A.*
-
-Cahier Technique Schneider Electric n° 158 / p.18
-
-<!-- PAGE_BREAK -->
 
 # 2.4 Calculation example (with the impedances of the power sources, the upstream network and the power supply transformers as well as those of the electrical lines)
 
@@ -1060,13 +892,7 @@ length = 30 m
 50 kW (efficiency = 0.9 ; cos φ = 0.8)
 x = 25%
 
-![Fig. 21: Diagram for calculation of Isc₃ and i_p at points A, B, C and D.](img-23.jpeg)
-
 *Fig. 21 : Diagram for calculation of Isc₃ and i_p at points A, B, C and D.*
-
-Cahier Technique Schneider Electric n° 158 / p.19
-
-<!-- PAGE_BREAK -->
 
 In this example, reactances X and resistances R are calculated with their respective voltages in the installation (see **Figure 22**). The relative impedance method is not used.
 
@@ -1105,12 +931,6 @@ In this example, reactances X and resistances R are calculated with their respec
 | | $Rm = 0.2 \ Xm$ | | | 121 |
 
 *Fig. 22 : Impedance calculation.*
-
-Cahier Technique Schneider Electric n° 158 / p.20
-
-<!-- PAGE_BREAK -->
-
-Cahier Technique Schneider Electric n° 158 / p.21
 
 # I - Fault at A (HV busbars)
 
@@ -1226,8 +1046,6 @@ $$I_{MC} = 7{,}580 \text{ A}.$$
 
 Instead of making the above calculations, it is possible (see ⑬) to estimate the current injected by all the motors as being equal to $(I_{\text{start}} / I_r)$ times their rated current (98 A), i.e. $(4.8 \times 98) \times 20 = 9{,}400$ A.
 
-<!-- PAGE_BREAK -->
-
 This estimate therefore provides conservative protection with respect to $I_{MC}$ : 7,580 A.
 
 On the basis of R / X = 0.23 ⇒ κ = 1.51 and $i_{pMC} = 1.51 \times \sqrt{2} \times 7{,}580 =$ **16,200 A**
@@ -1332,10 +1150,6 @@ $$
 
 Compared to the figure obtained by the full calculation (18,450 A), the approximate method allows a quick evaluation with an error remaining on the side of safety.
 
-Cahier Technique Schneider Electric n° 158 / p.22
-
-<!-- PAGE_BREAK -->
-
 # 3 Calculation of Isc values in a radial network using symmetrical components
 
 ## 3.1 Advantages of this method
@@ -1387,13 +1201,7 @@ $$
 \overrightarrow{I3} = a\,\overrightarrow{I1_{(1)}} + a^2\,\overrightarrow{I1_{(2)}} + \overrightarrow{I1_{(0)}}.
 $$
 
-![Fig. 23](img-24.jpeg)
-
 *Fig. 23 : Graphical construction of the sum of three balanced three-phase systems (positive-sequence, negative-sequence and zero-sequence).*
-
-Cahier Technique Schneider Electric n° 158 / p.23
-
-<!-- PAGE_BREAK -->
 
 These symmetrical current components are related to the symmetrical voltage components by the corresponding impedances:
 
@@ -1471,10 +1279,6 @@ This is generally the case in LV networks, except when high-power loads are supp
 
 - The short-circuit is near the generator (see fig. 11), the situation in networks where the short-circuit currents do have a damped, alternating component. This generally occurs in HV systems, but may occur in LV systems when, for example, an emergency generator supplies priority outgoers.
 
-Cahier Technique Schneider Electric n° 158 / p.24
-
-<!-- PAGE_BREAK -->
-
 | Type of short-circuit | I''k - General situation | Fault occurring far from rotating machines |
 |---|---|---|
 | Three-phase (any Ze) | $I''_{k3} = \dfrac{c\ Un}{\sqrt{3}\,\|Z_{(1)}\|}$ | $I''_{k3} = \dfrac{c\ Un}{\sqrt{3}\,\|Z_{(1)}\|}$ |
@@ -1523,10 +1327,6 @@ $$R_L = \left[1 + \frac{0.004}{°C}\,(\theta_e - 20\,°C)\right] \times R_{L20}$
 where $R_{L20}$ is the resistance at 20 °C; $\theta_e$ is the permissible temperature (°C) for the conductor at the end of the short-circuit.
 
 The factor 0.004 / °C is valid for copper, aluminium and aluminium alloys.
-
-Cahier Technique Schneider Electric n° 158 / p.25
-
-<!-- PAGE_BREAK -->
 
 # Impedance correction factors
 
@@ -1606,10 +1406,6 @@ $$K_{G,SO} = \frac{1}{1 + p_G} \cdot \frac{c_{\max}}{1 + x_d'' \sin \varphi_{rG}
 
 $$K_{T,SO} = \frac{1}{1 + p_G} \cdot \frac{c_{\max}}{1 - x_T \sin \varphi_{rG}}$$
 
-Cahier Technique Schneider Electric n° 158 / p.26
-
-<!-- PAGE_BREAK -->
-
 # 3.4 Equations for the various currents
 
 **Initial short-circuit current (I"k)**
@@ -1656,18 +1452,10 @@ $\lambda$ is a factor defined by the saturated synchronous reactance $X_\mathrm{
 
 The $\lambda_\mathrm{max}$ and $\lambda_\mathrm{min}$ values are indicated on next the page in **Figure 28** for turbo-generators and in **Figure 29** for machines with salient poles (series 1 in IEC 60909).
 
-![Fig. 27: Factor μ used to calculate the short-circuit breaking current Ib](img-25.jpeg)
-
 *Fig. 27 : Factor μ used to calculate the short-circuit breaking current I_b (see IEC 60909).*
 
-Cahier Technique Schneider Electric n° 158 / p.27
-
-<!-- PAGE_BREAK -->
-
-![img-26.jpeg](img-26.jpeg)
 Fig. 28 : Factors $\lambda_{\max}$ and $\lambda_{\min}$ for turbo-generators (overexcitation = 1.3 as per IEC 60909).
 
-![img-27.jpeg](img-27.jpeg)
 Fig. 29 : Factors $\lambda_{\max}$ and $\lambda_{\min}$ for generators with salient poles (overexcitation = 1.6 as per IEC 60909).
 
 # 3.5 Examples of short-circuit current calculations
@@ -1693,8 +1481,6 @@ $S_{rT} = 400\,\mathrm{kVA}$; $U_{rTHV} = 20\,\mathrm{kV}$; $U_{rTLV} = 410\,\ma
 
 Supply network: $U_{nQ} = 20\,\mathrm{kV}$; $I_{kQ}'' = 10\,\mathrm{kA}$
 
-![img-28.jpeg](img-28.jpeg)
-
 *Fig. 30*
 
 ## Solution:
@@ -1707,10 +1493,6 @@ Z_{Qt} = \frac{c_Q U_{nQ}}{\sqrt{3}\, I_{kQ}''} \times \left(\frac{U_{rTLV}}{U_{
 $$
 
 Failing other information, it is assumed that $\dfrac{R_Q}{X_Q} = 0.1$, hence:
-
-Cahier Technique Schneider Electric n° 158 / p.28
-
-<!-- PAGE_BREAK -->
 
 $$X_{Qt} = 0.995 Z_{Qt} = 0.531 \text{ m}\Omega$$
 
@@ -1786,10 +1568,6 @@ The peak short-circuit current $i_{p1}$ is calculated with the factor $\kappa$ o
 
 $$i_{p1} = \kappa \sqrt{2} \times I_{k1}^{''} = 1.4\sqrt{2} \times 14.35 = \boxed{28.41 \text{ kA}}$$
 
-Cahier Technique Schneider Electric n° 158 / p.29
-
-<!-- PAGE_BREAK -->
-
 # Problem 2. A power station unit
 
 A power station unit S comprises a generator G and a transformer T with an on-load tap-changer (see **Fig. 31**).
@@ -1806,8 +1584,6 @@ The following information is available:
 - The minimum dead time $t_{\min}$ for calculation of $I_b$ is 0.1 s
 - Generator G is a cylindrical rotor generator (smooth poles)
 - All loads connected to the busbars are passive
-
-![img-29.jpeg](img-29.jpeg)
 
 *Fig. 31*
 
@@ -1843,10 +1619,6 @@ $$Z_S = 0.735 + j67.313 \qquad (Z_{Sf} = 2.226 + j67.313 \text{ if we consider }
 $$I''_{kS} = \frac{cU_{nQ}}{\sqrt{3}Z_S} = \frac{1.1 \times 220}{\sqrt{3}(0.735 + j67.313)} = 0.023 - j2.075$$
 
 $$\left|I''_{kS}\right| = 2.08 \ \text{kA}$$
-
-Cahier Technique Schneider Electric n° 158 / p.30
-
-<!-- PAGE_BREAK -->
 
 Based on impedance $Z_{Sf}$, it is possible to calculate $R_{Sf} / X_{Sf} = 0.033$ and $\kappa_{S} = 1.908$
 
@@ -1914,10 +1686,6 @@ $$I_{kG} = \lambda_{max} \, I_{rG} = 1.75 \times 6.873 = \textbf{12.0 kA}$$
 
 Factor $\lambda_{max} = 1.75$ is obtained in figure 28 for the ratio $I_{kG}^{''} / I_{rG} = 6.51$ and $x_{dsat} = 2.0$
 
-Cahier Technique Schneider Electric n° 158 / p.31
-
-<!-- PAGE_BREAK -->
-
 # 4 Conclusion
 
 Various methods for the calculation of short-circuit currents have been developed and subsequently included in standards and in this "Cahier Technique" publication as well.
@@ -1960,10 +1728,6 @@ In English in accordance with IEC 60364: 2005 edition.
 In French in accordance with NF C15-100: 2004 edition.
 Published by Schneider Electric (Schneider Training Institute).
 - Les réseaux d'énergie électrique (Part 2), R. PELISSIER. Published by Dunod.
-
-Cahier Technique Schneider Electric n° 158 / p.32
-
-<!-- PAGE_BREAK -->
 
 **Schneider Electric** &emsp; Direction Scientifique et Technique, &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; DTP: Axess
 &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Service Communication Technique &emsp;&emsp;&emsp;&emsp;&emsp;&emsp; Transl.: Cabinet Harder - Grenoble - France

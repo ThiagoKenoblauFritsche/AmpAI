@@ -29,9 +29,9 @@ As fases abaixo devem ser executadas sequencialmente para garantir a integridade
 ## 💅 Fase 8: Consolidação do Produto e UX Global
 *Elevação do padrão visual e funcional para níveis corporativos "Look & Feel" antes da cobrança.*
 
-*   [ ] **(O.S. 015) Refatoração UI/UX Global:** Padronização estética profunda. Transição para um formato Dashboard, harmonização dos módulos BT/MT/Curto-circuito usando a mesma paleta de cores e tipografia (Tailwind CSS).
-*   [ ] **(O.S. 013) Memorial Exportável de Média Tensão:** Replicar a engine de geração e exportação de PDF corporativo que já existe em curto-circuito.
-*   [ ] **(O.S. 017) Internacionalização Semântica (i18n):** Estruturação do aplicativo em dicionários JSON dinâmicos (EN/PT/ES) para viabilizar as vendas fora do Brasil.
+*   [x] **(O.S. 015) Refatoração UI/UX Global:** Padronização estética profunda. Transição para um formato Dashboard, harmonização dos módulos BT/MT/Curto-circuito usando a mesma paleta de cores e tipografia (Tailwind CSS).
+*   [x] **(O.S. 013) Memorial Exportável de Média Tensão:** Replicar a engine de geração e exportação de PDF corporativo que já existe em curto-circuito.
+*   [x] **(O.S. 017) Internacionalização Semântica (i18n):** Estruturação do aplicativo em dicionários JSON dinâmicos (EN/PT/ES) para viabilizar as vendas fora do Brasil.
 
 ---
 
