@@ -1,8 +1,9 @@
-# AmpAI v7.0: Guia de Deploy na VPS (Cloud Factory & Sandbox)
+# AmpAI ROADMAP (Fase 2): Guia de Deploy na VPS e Telegram
 
-Este documento descreve os passos operacionais para configurar a VPS Hetzner com a nova arquitetura do AmpAI v7.0. A VPS passará a ter duas responsabilidades principais:
-1. **Loop Semântico (Sincronização):** Atualizar o Google Drive do NotebookLM automaticamente sempre que houver mudanças no GitHub.
-2. **Cloud Factory (Fábrica Isolada):** Rodar o `claude-code` de forma autônoma para escrever código, isolado do `Antigravity` via Docker (Air Gap Epistemológico).
+> [!WARNING]
+> **Atenção:** Este documento descreve a **Fase 2 (Expansão)** do AmpAI. Atualmente operamos na **Fase 1 (v7.0)**, onde a Fábrica roda estritamente no terminal local via Claude Code. A implementação descrita abaixo será executada apenas quando as validações matemáticas locais estiverem perfeitas.
+
+Este documento descreve os passos operacionais futuros para configurar a VPS Hetzner como um "Headless Orchestrator". A VPS passará a ter a responsabilidade de ouvir comandos via Telegram e instanciar o Claude Code de forma autônoma (Air Gap via Firecracker).
 
 ---
 ## 0. Credenciais de Acesso Mestre (Root)

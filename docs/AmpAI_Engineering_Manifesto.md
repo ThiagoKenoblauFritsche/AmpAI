@@ -38,41 +38,38 @@ graph TD
 O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque apenas no caminho feliz (*Happy Path*), algo fatal na engenharia elétrica.
 
 ```text
-[ 1. ENTRADA DE NEGÓCIO ]
+[ FASE 1: ARQUITETURA ]
 │
 ▼
+[ FASE 2: CONTEXTO (Docs as Code RAG) ]
+│
+▼
+[ FASE 3: BDD (Comportamento) ]
 ┌────────────────────────────────────────────────────────┐
-│ BDD: Cenários Gherkin (Caminho Feliz + Casos Tristes)  │
+│ Claude CLI escreve os cenários no diretório features/  │
 └───────┬────────────────────────────────────────────────┘
 │
 ▼
-[ 2. CONTRATO DA INTERFACE ]
+[ FASE 4: TDD RED (ZOMBIES Testes) ]
 ┌────────────────────────────────────────────────────────┐
-│ SDD: Especificação Exata (Variáveis, Limites, JSON)    │
+│ Claude CLI escreve testes falhos obrigatórios primeiro │
 └───────┬────────────────────────────────────────────────┘
 │
 ▼
-[ 3. DESIGN DA LOGÍSTICA INTERNA ]
+[ FASE 5: TDD GREEN (Matemática Pura / DDD) ]
 ┌────────────────────────────────────────────────────────┐
-│ DDD: Lógica Pura Isolada (Result Pattern obrigatório)  │
+│ Claude CLI codifica a matemática isolada para passar   │
 └───────┬────────────────────────────────────────────────┘
 │
 ▼
-[ 4. O MOTOR DA IA ]
+[ FASE 6: AUDITORIA EM NUVEM ]
 ┌────────────────────────────────────────────────────────┐
-│ ORQUESTRAÇÃO (Fábrica/Claude): Processa os inputs 1,2,3│
-└───────┬────────────────────────────────────────────────┘
-│
-▼
-[ 5. CICLO DE VALIDAÇÃO AUTOMATIZADO ]
-┌────────────────────────────────────────────────────────┐
-│ TDD (ZOMBIES) ──► Execução pelo Tribunal (Antigravity) │
+│ CodeRabbit avalia a PR no GitHub buscando falhas       │
 └───────┬─────────────────────────┬──────────────────────┘
-        │ (Falhou)                │ (Passou RED->GREEN)
+        │ (Rejeitado)             │ (Aprovado)
         ▼                         ▼
 ┌─────────────────────────┐     ┌────────────────────────┐
-│ Feedback Loop automático│     │ Deploy Autorizado      │
-│ forçando a IA a refazer │     │ Merge no GitHub        │
+│ Loop de Correção Local  │     │ [ FASE 7: ENTREGA ]    │
 └─────────────────────────┘     └────────────────────────┘
 ```
 

@@ -67,21 +67,17 @@ if (Test-Path ".\docs") {
         }
     }
 
-    # 3.4. Concatenar Normas por Subpasta
+    # 3.4. Espelhar Normas (1 para 1) - Evitar quebra de LaTeX
     if (Test-Path ".\docs\normas") {
-        $normaFolders = Get-ChildItem -Path ".\docs\normas" -Directory
-        foreach ($folder in $normaFolders) {
-            $normaFiles = Get-ChildItem -Path $folder.FullName -Filter "*.md" -Recurse -File
-            if ($normaFiles.Count -gt 0) {
-                $compiladoName = "$($folder.Name)_Compilado_Full.txt"
-                $destFile = Join-Path $targetFolder $compiladoName
-                Clear-Content -Path $destFile -ErrorAction SilentlyContinue
-                foreach ($file in $normaFiles) {
-                    "`n`n=== ARQUIVO: $($file.Name) ===`n`n" | Out-File -FilePath $destFile -Append -Encoding UTF8
-                    Get-Content -Path $file.FullName -Raw | Out-File -FilePath $destFile -Append -Encoding UTF8
-                }
-                Write-Host " -> Espelhado (Concatenado): $compiladoName ($($normaFiles.Count) arquivos)" -ForegroundColor Yellow
-            }
+        $engenhariaTarget = Join-Path $targetFolder "Engenharia"
+        if (-not (Test-Path $engenhariaTarget)) {
+            New-Item -ItemType Directory -Force -Path $engenhariaTarget | Out-Null
+        }
+        $normaFiles = Get-ChildItem -Path ".\docs\normas" -Filter "*.md" -Recurse -File
+        foreach ($file in $normaFiles) {
+            $driveDest = Join-Path $engenhariaTarget $file.Name.Replace(".md", ".txt")
+            Copy-Item -Path $file.FullName -Destination $driveDest -Force
+            Write-Host " -> Espelhado (Direto -> Engenharia): $($file.Name)" -ForegroundColor DarkGray
         }
     }
 }

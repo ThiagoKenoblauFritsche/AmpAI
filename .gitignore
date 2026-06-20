@@ -1,0 +1,14 @@
+# Lixo do NodeJS
+node_modules/
+
+# Pastas de Staging e Logs do Nosso Ecossistema
+.sync_temp/
+.claude/
+.antigravitycli/
+
+# Arquivos do Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar o cérebro das IAs? 
+# NÃO. Precisamos manter o diretório .github/ no Git para que outros humanos tenham acesso à configuração dos agentes.

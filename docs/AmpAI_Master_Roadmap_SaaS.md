@@ -15,14 +15,21 @@ As fases abaixo devem ser executadas sequencialmente para garantir a integridade
 
 ---
 
-## 🏗️ Fase 7: Topologia de Produção e CI/CD Dual-Server (Fase Atual)
+## 🐇 Fase 7: Governança v7.0 Local & CodeRabbit (Fase Atual)
+*Estabelecimento da nova esteira purista de qualidade onde a máquina local apenas programa e a nuvem audita.*
+
+*   [x] **Fábrica Local CLI:** O Claude Code roda localmente no terminal assumindo as personas de Eletricista e Dev.
+*   [x] **Auditoria Contínua (CodeRabbit):** Instalação do robô revisor no GitHub interceptando PRs e caçando divisões por zero e bugs no `ui_render.js`.
+*   [x] **Injeção RAG Federada:** O script `sync.ps1` mantém o repositório sincronizado com as normas (Docs as Code).
+
+---
+
+## 🏗️ Fase 8: Topologia de Produção Remota (ROADMAP VPS/TELEGRAM)
 *Colocação da aplicação na internet com segurança de nível militar através da segregação de ambientes (Fábrica vs Tribunal).*
 
-*   [ ] **Alocação da Segunda VPS (VPS-A - Fábrica):** Provisionar nova VPS Hetzner de €5 (ambiente sujo) dedicada apenas a rodar o Claude Code via comandos móveis.
-*   [ ] **Implementação do CI/CD Isolado:** O Claude Code envia código para branches secundárias no GitHub. A VPS-B (Tribunal) intercepta o webhook, audita via TDD, e só então consolida na branch `main`.
-*   [ ] **Hospedagem Web Segura (VPS-B - Produção):** Instalação do Nginx na máquina do Tribunal para servir a branch `main` limpa e aprovada para a web.
+*   [ ] **Alocação da VPS (Fábrica):** Provisionar VPS Hetzner dedicada apenas a rodar o Claude Code via comandos móveis (Telegram).
+*   [ ] **Hospedagem Web Segura:** Instalação do Nginx na máquina do Tribunal para servir a branch `main` limpa e aprovada para a web.
 *   [ ] **Muralha da Cloudflare:** Configuração de domínio próprio apontando para a Cloudflare (Proxy reverso, mitigação DDoS e certificados HTTPS grátis).
-*   [ ] **Limpeza de Backlog (O.S. INF-015/017):** Implementação final de pre-commit hooks e linters sintáticos automáticos.
 
 ---
 

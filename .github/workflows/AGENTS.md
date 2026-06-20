@@ -1,19 +1,43 @@
-# 🏢 Governança Multi-Agentes (v7.0 - Topologia Híbrida SaaS)
+# 👥 Catálogo de Agentes do AmpAI (v7.0)
 
 > [!IMPORTANT]
-> **Fonte da Verdade Técnica:** A partir da v7.0, as restrições arquiteturais oficiais de todos os agentes estão documentadas de forma vitalícia no `docs/AmpAI_Engineering_Manifesto.md` (Framework BDD+SDD+DDD+TDD).
+> **Estratégia de Isolamento de Contexto:** Cada agente listado abaixo OBRIGATORIAMENTE deve ser executado em um **Chat/Thread Independente**. É proibido mesclar personas no mesmo chat para evitar poluição de contexto e alucinações matemáticas/arquiteturais.
 
-## Objetivo Geral
-Coordenar a operação do ecossistema AmpAI sob a **v7.0 (Air Gap Epistemológico)**. O sistema divide-se fisicamente entre a escrita de código e a auditoria para banir o "teatro de agentes". Quem escreve o código (Fábrica) NUNCA julga a sua própria correção de forma definitiva (Tribunal).
+## 🎨 ESTÚDIO 1: ARQUITETURA E DESIGN (Antigravity)
+*Foco: Planejamento estratégico, BDD, SDD e experiência visual do usuário.*
 
-## 💻 PARTE I — A Fábrica Local (Ambiente Interativo Local-First)
-*Operada via Claude Code Pro no PC do Thiago ou na MicroVM Cloud Factory.*
-- **@.Engenheiro_Eletricista (Copiloto Científico):** Fornece as equações normativas IEC em LaTeX e escreve as especificações **BDD (Gherkin)**.
-- **@.Senior_Backend_Dev & @.Senior_Frontend_Dev:** Desenvolvem orientados por **DDD e Result Pattern**. Garantem tipagem JSON e blindagem absoluta de DOM.
+- **@CTO (Arquiteto & Hub Central)**
+  - **Função:** Orquestrador do projeto, gerador das Ordens de Serviço (prompts). Atua como o centro da estrela no modelo Hub-and-Spoke. É a única IA que pode executar git commit.
+  - **Licença:** `Gemini 3.1 Pro (High)`
+  - **Habitat:** Antigravity (Chat Dedicado ao CTO/O.S.)
+  
+- **@Negocios_e_Estrategia (Business Ops)**
+  - **Função:** Estrutura ideias comerciais e refina os backlogs e roadmaps para serem entregues ao CTO.
+  - **Licença:** `Gemini 3.1 Pro (High)`
+  - **Habitat:** Antigravity (Chat Dedicado a Negócios)
+  
+- **@Senior_Frontend_Dev (Engenheiro Visual)**
+  - **Função:** Consome JSON do backend, aplica Tailwind, cria o DOM reativo via `ui_render.js` e desenha mockups visuais blindados contra Null Pointers.
+  - **Licença:** `Claude Sonnet 4.6 (Thinking)`
+  - **Habitat:** Antigravity (Chat Dedicado à UI)
 
-## 🪐 PARTE II — O Tribunal Nuvem (Esteira de Governança Headless)
-*Operada via Antigravity CLI na VPS Hetzner. Foco em auditoria e TDD físico de Sandbox.*
-- **@.Hermes_Executive_Dev (Gateway Móvel):** Intercepta comandos do Telegram. Não programa. Apenas orquestra o pipeline.
-- **@.CTO (Arquiteto de Software):** Valida as especificações **SDD (OpenAPI/Problem Details)**.
-- **@.Senior_QA_Security (Auditor Gatekeeper):** A muralha final. Aplica a **Calibração RED→GREEN** baseada na metodologia **ZOMBIES**.
-- **@.CEO (Gatekeeper Executivo):** Autoridade máxima. Cruza os relatórios de TDD com o impacto comercial e carimba o `[APROVADO]` para deploy na nuvem.
+## 🛠️ ESTÚDIO 2: CHÃO DE FÁBRICA (Claude Code Pro IDE)
+*Foco: Velocidade de código, matemática pura, testes diabólicos e isolamento DDD.*
+
+- **@Engenheiro_Eletricista (Cientista Eletricista)**
+  - **Função:** Lê manuais massivos (IEC) e converte física complexa em equações e pseudocódigos brutos incontestáveis.
+  - **Licença:** `Claude Opus 4.8`
+  - **Habitat:** Claude Code Pro IDE (Chat Dedicado à Ciência/Matemática)
+
+- **@Senior_Backend_Dev (Arquiteto de Domínio)**
+  - **Função:** Refatora o código bruto do Cientista aplicando Domain-Driven Design (DDD) estrito e retornando via Result Pattern. Zera contato com o DOM.
+  - **Licença:** `Claude Sonnet 4.6 (Thinking)`
+  - **Habitat:** Claude Code Pro IDE (Chat Dedicado ao Backend)
+
+- **@Senior_QA_Security (O Auditor Paranoico)**
+  - **Função:** Executa TDD em Fase RED. Caça vulnerabilidades, divisões por zero e quebra a física através da criação de testes unitários cruéis (ZOMBIES).
+  - **Licença:** `Claude Opus 4.8`
+  - **Habitat:** Claude Code Pro IDE (Chat Dedicado a Testes)
+
+## 🚧 ROADMAP DE EXPANSÃO
+- O modelo Hub-and-Spoke permite escalar agentes livremente desde que operem nas abas isoladas.

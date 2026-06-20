@@ -3,14 +3,14 @@ tags:
   - infraestrutura/vps
   - devops/backlog
   - ampai/core
-versao: 6
+versao: 7
 status: ativo
 ---
 
-# 📈 Backlog de Infraestrutura — Implementação v6.0
+# 📈 Backlog de Infraestrutura — Implementação v7.0
 
 > [!todo] **Diretriz de Execução (State Lock)**
-> As Fases 1 a 4 foram liquidadas com sucesso através da automação trilateral, e a infraestrutura básica da Fase 5 já está em operação. **O foco oficial da esteira agora engloba a sustentação da Fase 6 (Air Gap Epistemológico)**, garantindo o isolamento absoluto entre a máquina local e a nuvem [cite: 18, 22].
+> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) foi pivotada estrategicamente para o Roadmap Futuro. **O foco oficial da esteira agora engloba a sustentação da FASE 7 (TDD Purista + Nuvem)**, garantindo a validação de código via CodeRabbit no GitHub e a execução do Claude Code local.
 
 ---
 
@@ -53,7 +53,15 @@ ___
 
 ___
 
-### 🪐 FASE 6: Implantação do Air Gap Epistemológico (CONCLUÍDA)
-- [x] **O.S. #INF-019** | `[CRÍTICA]` **Segregação Oficial da Topologia Híbrida (v6.0):** Implementação da infraestrutura dividida entre a "Fábrica Local" (Claude Code Pro no PC) e o "Tribunal na Nuvem" (Antigravity na VPS Hetzner) [cite: 18, 159, 160].
-- [x] **O.S. #INF-020** | `[CRÍTICA]` **Estabelecimento do Veredito Puro:** Configuração da Sandbox hermética garantindo que o agente local nunca julga a sua própria correção [cite: 161, 168]. 
-- [x] **O.S. #INF-021** | `[ALTA]` Exigência da Calibração **RED→GREEN** obrigatória executada na Alemanha como Gatekeeper para Deploy [cite: 161, 167].
+### 🪐 FASE 6: Implantação do Air Gap Epistemológico (CONCLUÍDA/MOVIDA PARA ROADMAP)
+- [x] **O.S. #INF-019** | `[MIGRADA]` **Segregação:** Movido para o Roadmap de expansão futura (VPS/Telegram).
+- [x] **O.S. #INF-020** | `[CRÍTICA]` **Estabelecimento do Veredito Puro:** Substituído pelo CodeRabbit na Nuvem.
+- [x] **O.S. #INF-021** | `[ALTA]` Exigência da Calibração **RED→GREEN** obrigatória. Repassada para o `.Senior QA-Security.txt` via Claude Code Local.
+
+___
+
+### 🐇 FASE 7: Governança v7.0 (TDD Purista e Auditoria Nuvem) (ATIVA)
+- [x] **O.S. #INF-022** | `[CRÍTICA]` Instalação do **CodeRabbit AI** no repositório GitHub via `.coderabbit.yaml` para impor a metodologia ZOMBIES nos *Pull Requests*.
+- [x] **O.S. #INF-023** | `[CRÍTICA]` Transição da Fábrica para ambiente Local via **Claude Code CLI**.
+- [x] **O.S. #INF-024** | `[ALTA]` Implementação da estratégia de Injeção RAG Federada (Docs as Code) dispensando a necessidade de Pinecone/Vector DB.
+- [ ] **O.S. #INF-025** | `[ALTA]` Validação física em CI/CD com o Node.js rodando o `tests/core_curto_circuito.test.js` no GitHub Actions.

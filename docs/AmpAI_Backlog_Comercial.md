@@ -1,9 +1,7 @@
 ---
 tags:
   - gestao/backlog
-  - ampai/business
-versao: 6
-status: em-andamento
+versao: 7
 ---
 
 ## 📈 Backlog de Feedbacks e O.S. Comerciais

@@ -20,10 +20,10 @@ O software opera sob o framework de Engenharia **BDD + SDD + DDD + TDD**:
 - `js/ui_render.js`: Motor de reatividade do DOM e UI gerenciado pelo @Senior_Frontend_Dev, blindado com Null Pointer Mitigation.
 - `sync.ps1`: Script PowerShell de automação trilateral nativo (Docs as Code).
 
-## 🖥️ 3. Infraestrutura e Governança Dual-Server (SaaS)
-O projeto superou o desenvolvimento monolítico e agora opera na topologia **Dual-Server (Air Gap Epistemológico)**:
-1. **Cloud Factory (VPS-A / Local):** Ambiente isolado (Claude Code ou MicroVMs) onde o código é gerado. Não tem autoridade sobre o servidor web final.
-2. **Tribunal (VPS-B / Nginx):** Servidor limpo e seguro que hospeda o Nginx e o Backend (Supabase/Firebase). Ele executa a calibração RED->GREEN e o ZOMBIES TDD. Se o código falhar, ele é bloqueado via CI/CD.
+## 🖥️ 3. Infraestrutura e Governança (SaaS)
+O projeto superou o desenvolvimento monolítico e agora opera na topologia em duas fases:
+1. **Fase 1 (Atual - Local/Nuvem):** Claude Code CLI atua como a Fábrica local escrevendo código. O CodeRabbit atua na Nuvem do GitHub como o Tribunal/Gatekeeper validando PRs.
+2. **Fase 2 (Roadmap - Headless VPS):** A operação do Claude Code será movida para uma VPS isolada (Cloud Factory) sendo comandada remotamente via Telegram pelo humano.
 3. **Plano Semântico:** Google NotebookLM e Google Drive.
 
 ## 🔄 4. O Fluxo Docs As Code (`./sync.ps1`)
@@ -31,9 +31,9 @@ Todo o sistema de "Obsidian" foi oficialmente APOSENTADO para evitar overhead.
 Agora operamos no fluxo **Docs as Code**. O engenheiro escreve o `.md` direto na pasta `docs/`. O script `sync.ps1` lê a pasta `docs/`, converte para `.txt` e injeta no Google Drive (NotebookLM), e por fim empurra para o GitHub.
 
 ## 📈 5. Estado Atual do Backlog Macro
-- **Fase 1 a 6 (Fundação, Motores BT/MT, Air Gap):** 100% Concluídas.
-- **Fase 7 (CI/CD Dual-Server e Nginx):** PRÓXIMO PASSO ATIVO.
-- **Fase 8 (BDD e SDD):** Implementação progressiva.
+- **Fase 1 a 6 (Fundação, Motores BT/MT, Air Gap v6):** 100% Concluídas ou migrado para o roadmap.
+- **Fase 7 (Claude CLI Local + CodeRabbit CI/CD):** PRÓXIMO PASSO ATIVO.
+- **Fase 8 (Expansão Headless VPS/Telegram):** Em planejamento comercial.
 - **Fase 9 e 10 (SaaS Multi-Tenant e Stripe):** Em planejamento comercial.
 
 --------------------------------------------------------------------------------
