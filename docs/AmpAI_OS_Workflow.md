@@ -21,25 +21,25 @@ sequenceDiagram
     CTO-->>CEO: Entrega a [Ordem de Serviço 1 - BDD]
     
     %% Fase 3: Ciência
-    CEO->>Cientista: Cola a [O.S. 1] gerada pelo CTO
+    CEO->>Cientista: Cola o prompt [O.S. 1.1] gerada pelo CTO
     Cientista-->>CEO: Devolve rascunho de física/BDD
     CEO->>CTO: Entrega o resultado do Eletricista
-    CTO-->>CEO: Aprova e gera a [O.S. 2 - ZOMBIES]
+    CTO-->>CEO: Aprova e gera a [O.S. 1.2 - ZOMBIES]
     
     %% Fase 4: QA (TDD Red)
-    CEO->>QA: Cola a [O.S. 2] gerada pelo CTO
-    QA-->>CEO: Devolve testes quebrando
-    CEO->>CTO: Entrega os testes quebrados
-    CTO-->>CEO: Aprova e gera a [O.S. 3 - Backend]
+    CEO->>QA: Cola o prompt [O.S. 1.2] gerada pelo CTO
+    QA-->>CEO: Devolve testes quebrando [RED]
+    CEO->>CTO: Entrega os testes quebrados [RED]
+    CTO-->>CEO: Aprova e gera a [O.S. 1.3 - Backend]
     
     %% Fase 5: Backend (TDD Green)
-    CEO->>Backend: Cola a [O.S. 3] gerada pelo CTO
-    Backend-->>CEO: Código verde e tipado
+    CEO->>Backend: Cola o prompt [O.S. 1.3] gerada pelo CTO
+    Backend-->>CEO: Código verde [GREEN] e tipado
     CEO->>CTO: Entrega o core_math.js funcional
-    CTO-->>CEO: Avalia e gera a [O.S. 4 - Frontend]
+    CTO-->>CEO: Avalia e gera a [O.S. 1.4 - Frontend]
     
     %% Fase 6: Frontend
-    CEO->>Frontend: Cola a [O.S. 4] gerada pelo CTO
+    CEO->>Frontend: Cola o prompt [O.S. 1.4] gerada pelo CTO
     Frontend-->>CEO: Entrega a UI pronta
     
     %% Fase 7: O Commit do CTO
