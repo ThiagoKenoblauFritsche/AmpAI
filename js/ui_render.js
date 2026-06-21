@@ -309,17 +309,42 @@ window.switchModule = function(moduleName) {
     const _method = document.getElementById('header-method-span')
         || document.querySelector('[data-i18n="header.method"],[data-i18n="header.cabling.method"]');
 
-    if (moduleName === 'cabling') {
-        // Ocultar módulo de Curto-Circuito
+    // Overlay do módulo de Impedâncias IEC 60909
+    const moduleImpedances = document.getElementById('module-impedances');
+    const navIMP = document.getElementById('nav-impedances');
+
+    if (moduleName === 'impedances') {
+        // Ocultar os outros módulos
         if (sidebarSC)   sidebarSC.style.display   = 'none';
         if (dashboardSC) dashboardSC.style.display  = 'none';
+        moduleCabling.style.display = 'none';
+
+        // Exibir overlay de Impedâncias
+        if (moduleImpedances) moduleImpedances.style.display = 'block';
+
+        // Atualizar nav active
+        if (navSC)  navSC.classList.remove('active');
+        if (navCB)  navCB.classList.remove('active');
+        if (navIMP) navIMP.classList.add('active');
+
+        // Header badge
+        if (_badge)  _badge.textContent = 'IEC 60909-0';
+        if (_method) _method.setAttribute('data-i18n', 'header.method');
+        if (typeof window.translatePage === 'function') window.translatePage();
+
+    } else if (moduleName === 'cabling') {
+        // Ocultar módulo de Curto-Circuito e overlay de Impedâncias
+        if (sidebarSC)   sidebarSC.style.display   = 'none';
+        if (dashboardSC) dashboardSC.style.display  = 'none';
+        if (moduleImpedances) moduleImpedances.style.display = 'none';
 
         // Mostrar módulo Cabling
         moduleCabling.style.display = 'block';
 
         // Atualizar nav active
-        if (navSC) navSC.classList.remove('active');
-        if (navCB) navCB.classList.add('active');
+        if (navSC)  navSC.classList.remove('active');
+        if (navCB)  navCB.classList.add('active');
+        if (navIMP) navIMP.classList.remove('active');
 
         // Header badge → norma de cabos (data-i18n dinâmico, sem hardcode PT)
         if (_badge)  _badge.textContent = 'IEC 60364 / 60502';
@@ -341,9 +366,11 @@ window.switchModule = function(moduleName) {
         if (sidebarSC)   sidebarSC.style.display   = '';
         if (dashboardSC) dashboardSC.style.display  = '';
         moduleCabling.style.display = 'none';
+        if (moduleImpedances) moduleImpedances.style.display = 'none';
 
-        if (navSC) navSC.classList.add('active');
-        if (navCB) navCB.classList.remove('active');
+        if (navSC)  navSC.classList.add('active');
+        if (navCB)  navCB.classList.remove('active');
+        if (navIMP) navIMP.classList.remove('active');
 
         // Header badge → norma de curto-circuito (data-i18n dinâmico, sem hardcode PT)
         if (_badge)  _badge.textContent = 'IEC 60909-0';
@@ -457,6 +484,21 @@ document.addEventListener('click', function(e) {
                 if (document.getElementById('mt-alert-msg')) document.getElementById('mt-alert-msg').innerText = '';
             }
             if (typeof window.calculateCablingMT === 'function') window.calculateCablingMT();
+            break;
+        case 'calc-icc-rede':
+            if (typeof window.calcIccRede === 'function') window.calcIccRede();
+            break;
+        case 'calc-icc-trafo':
+            if (typeof window.calcIccTrafo === 'function') window.calcIccTrafo();
+            break;
+        case 'calc-icc-gen':
+            if (typeof window.calcIccGen === 'function') window.calcIccGen();
+            break;
+        case 'calc-icc-cabo':
+            if (typeof window.calcIccCabo === 'function') window.calcIccCabo();
+            break;
+        case 'calc-icc-agr':
+            if (typeof window.calcIccAgr === 'function') window.calcIccAgr();
             break;
         case 'switch-bt':
             window.switchCablingCard('bt');
@@ -940,6 +982,236 @@ window.renderCardMT = function(r) {
 
 // Alias para compatibilidade com core_cabos_mt.js
 window.renderCablingMTResults = window.renderCardMT;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FUNÇÕES DE INTEGRAÇÃO DO MOTOR DE CURTO-CIRCUITO (IEC 60909)
+// ─────────────────────────────────────────────────────────────────────────────
+
+window.showIccToaster = function(msg) {
+    const toaster = document.getElementById('icc-toaster');
+    const toasterMsg = document.getElementById('icc-toaster-msg');
+    if (!toaster || !toasterMsg) return;
+    
+    toasterMsg.innerText = msg;
+    toaster.classList.add('active');
+    setTimeout(() => {
+        toaster.classList.remove('active');
+    }, 3000);
+};
+
+window.showIccError = function(alertId, inputIds) {
+    const alertBox = document.getElementById(`icc-alert-${alertId}`);
+    if (alertBox) alertBox.classList.add('active');
+    
+    if (inputIds && inputIds.length > 0) {
+        inputIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('icc-input-error');
+        });
+    }
+    
+    window.showIccToaster("Verifique os parâmetros e tente novamente.");
+};
+
+window.clearIccErrors = function(alertId, inputIds) {
+    const alertBox = document.getElementById(`icc-alert-${alertId}`);
+    if (alertBox) alertBox.classList.remove('active');
+    
+    if (inputIds && inputIds.length > 0) {
+        inputIds.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('icc-input-error');
+        });
+    }
+};
+
+window.renderIccPills = function(targetId, resultObj) {
+    const container = document.getElementById(targetId);
+    if (!container) return;
+    
+    let html = '';
+    for (const [key, val] of Object.entries(resultObj)) {
+        if (typeof val === 'number') {
+            html += `<span class="icc-pill"><strong>${key}:</strong> ${val.toFixed(4)} mΩ</span>`;
+        } else if (typeof val === 'object' && val !== null) {
+            html += `<span class="icc-pill"><strong>${key}:</strong> R=${val.re.toFixed(4)}, X=${val.im.toFixed(4)} mΩ</span>`;
+        } else {
+            html += `<span class="icc-pill"><strong>${key}:</strong> ${val}</span>`;
+        }
+    }
+    container.innerHTML = html;
+};
+
+window.calcIccRede = function() {
+    window.clearIccErrors('rede', ['icc-unq', 'icc-ikqpp', 'icc-tr']);
+    const inputs = {
+        Unq: parseFloat(document.getElementById('icc-unq').value),
+        IkqPP: parseFloat(document.getElementById('icc-ikqpp').value),
+        c: parseFloat(document.getElementById('icc-c-rede').value),
+        tr: parseFloat(document.getElementById('icc-tr').value)
+    };
+    
+    const res = window.CurtoCircuito.calcularImpedanciaRede(inputs);
+    if (!res.isSuccess) {
+        document.getElementById('icc-alert-rede-msg').innerText = res.error;
+        window.showIccError('rede', ['icc-unq', 'icc-ikqpp', 'icc-tr']);
+        return;
+    }
+    
+    window.renderIccPills('icc-pills-rede', res.value);
+    document.getElementById('icc-result-rede').classList.add('active');
+    
+    // Libera o checkbox e guarda os dados
+    const chk = document.getElementById('icc-chk-rede');
+    if (chk) {
+        chk.disabled = false;
+        chk.checked = true;
+        document.getElementById('icc-chk-status-rede').innerText = '✓ Zq';
+        chk.dataset.z = JSON.stringify(res.value.Zqt);
+    }
+};
+
+window.calcIccTrafo = function() {
+    window.clearIccErrors('trafo', ['icc-srt', 'icc-urt', 'icc-ukr', 'icc-pkrt', 'icc-urr']);
+    const uRrVal = document.getElementById('icc-urr').value;
+    const inputs = {
+        Srt: parseFloat(document.getElementById('icc-srt').value),
+        Urt: parseFloat(document.getElementById('icc-urt').value),
+        ukr: parseFloat(document.getElementById('icc-ukr').value),
+        Pkrt: parseFloat(document.getElementById('icc-pkrt').value),
+        uRr: uRrVal ? parseFloat(uRrVal) : undefined,
+        cMax: parseFloat(document.getElementById('icc-cmax-trafo').value),
+        tipoTrafo: document.getElementById('icc-tipo-trafo').value
+    };
+    
+    const res = window.CurtoCircuito.calcularImpedanciaTransformador(inputs);
+    if (!res.isSuccess) {
+        document.getElementById('icc-alert-trafo-msg').innerText = res.error;
+        window.showIccError('trafo', ['icc-srt', 'icc-urt', 'icc-ukr', 'icc-pkrt', 'icc-urr']);
+        return;
+    }
+    
+    window.renderIccPills('icc-pills-trafo', res.value);
+    document.getElementById('icc-result-trafo').classList.add('active');
+    
+    const chk = document.getElementById('icc-chk-trafo');
+    if (chk) {
+        chk.disabled = false;
+        chk.checked = true;
+        document.getElementById('icc-chk-status-trafo').innerText = '✓ Ztk';
+        chk.dataset.z = JSON.stringify(res.value.Ztk);
+    }
+};
+
+window.calcIccGen = function() {
+    window.clearIccErrors('gerador', ['icc-urg', 'icc-srg', 'icc-xdpp', 'icc-cosphi-gen', 'icc-un-gen', 'icc-rg']);
+    const RgVal = document.getElementById('icc-rg').value;
+    const inputs = {
+        Urg: parseFloat(document.getElementById('icc-urg').value),
+        Srg: parseFloat(document.getElementById('icc-srg').value),
+        xdPP: parseFloat(document.getElementById('icc-xdpp').value),
+        cosPhi: parseFloat(document.getElementById('icc-cosphi-gen').value),
+        Un: parseFloat(document.getElementById('icc-un-gen').value),
+        cMax: parseFloat(document.getElementById('icc-cmax-gen').value),
+        Rg: RgVal ? parseFloat(RgVal) : undefined,
+        regime: document.getElementById('icc-regime-gen').value
+    };
+    
+    const res = window.CurtoCircuito.calcularImpedanciaGerador(inputs);
+    if (!res.isSuccess) {
+        document.getElementById('icc-alert-gerador-msg').innerText = res.error;
+        window.showIccError('gerador', ['icc-urg', 'icc-srg', 'icc-xdpp', 'icc-cosphi-gen', 'icc-un-gen', 'icc-rg']);
+        return;
+    }
+    
+    window.renderIccPills('icc-pills-gerador', res.value);
+    document.getElementById('icc-result-gerador').classList.add('active');
+    
+    const chk = document.getElementById('icc-chk-gerador');
+    if (chk) {
+        chk.disabled = false;
+        chk.checked = true;
+        document.getElementById('icc-chk-status-gerador').innerText = '✓ Zgk';
+        chk.dataset.z = JSON.stringify(res.value.Zgk);
+    }
+};
+
+window.calcIccCabo = function() {
+    window.clearIccErrors('cabo', ['icc-qn', 'icc-L', 'icc-xline', 'icc-rho', 'icc-thetaE', 'icc-alpha', 'icc-thetaMax']);
+    const tE = document.getElementById('icc-thetaE').value;
+    const al = document.getElementById('icc-alpha').value;
+    const tMax = document.getElementById('icc-thetaMax').value;
+    const f = document.getElementById('icc-freq').value;
+
+    const inputs = {
+        qn: parseFloat(document.getElementById('icc-qn').value),
+        L: parseFloat(document.getElementById('icc-L').value),
+        xLinhaOhmKm: parseFloat(document.getElementById('icc-xline').value),
+        rho: parseFloat(document.getElementById('icc-rho').value),
+        regime: document.getElementById('icc-regime-cabo').value,
+        thetaE: tE ? parseFloat(tE) : undefined,
+        alpha: al ? parseFloat(al) : undefined,
+        thetaMax: tMax ? parseFloat(tMax) : undefined,
+        f: f ? parseFloat(f) : undefined
+    };
+    
+    const res = window.CurtoCircuito.calcularImpedanciaCabo(inputs);
+    if (!res.isSuccess) {
+        document.getElementById('icc-alert-cabo-msg').innerText = res.error;
+        window.showIccError('cabo', ['icc-qn', 'icc-L', 'icc-xline', 'icc-rho', 'icc-thetaE', 'icc-alpha', 'icc-thetaMax']);
+        return;
+    }
+    
+    window.renderIccPills('icc-pills-cabo', res.value);
+    document.getElementById('icc-result-cabo').classList.add('active');
+    
+    const chk = document.getElementById('icc-chk-cabo');
+    if (chk) {
+        chk.disabled = false;
+        chk.checked = true;
+        document.getElementById('icc-chk-status-cabo').innerText = '✓ Zl';
+        chk.dataset.z = JSON.stringify(res.value.Zl);
+    }
+};
+
+window.calcIccAgr = function() {
+    window.clearIccErrors('agregar', ['icc-agr-un', 'icc-agr-um']);
+    
+    const componentes = [];
+    ['icc-chk-rede', 'icc-chk-trafo', 'icc-chk-gerador', 'icc-chk-cabo'].forEach(id => {
+        const chk = document.getElementById(id);
+        if (chk && chk.checked && chk.dataset.z) {
+            try {
+                componentes.push(JSON.parse(chk.dataset.z));
+            } catch(e) {}
+        }
+    });
+
+    if (componentes.length === 0) {
+        document.getElementById('icc-alert-agregar-msg').innerText = 'Nenhum componente selecionado/calculado para agregação.';
+        window.showIccError('agregar', []);
+        return;
+    }
+
+    const inputs = {
+        componentes: componentes,
+        Un: parseFloat(document.getElementById('icc-agr-un').value),
+        cMax: parseFloat(document.getElementById('icc-agr-cmax').value),
+        Um: parseFloat(document.getElementById('icc-agr-um').value)
+    };
+    
+    const res = window.CurtoCircuito.agregarImpedanciaCurto(inputs);
+    if (!res.isSuccess) {
+        document.getElementById('icc-alert-agregar-msg').innerText = res.error;
+        window.showIccError('agregar', ['icc-agr-un', 'icc-agr-um']);
+        return;
+    }
+    
+    window.renderIccPills('icc-pills-agregar', res.value);
+    document.getElementById('icc-result-agregar').classList.add('active');
+    
+    window.showIccToaster("Cálculo de Agregação concluído com sucesso.");
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // SUITE DE TESTES TDD IN-BROWSER — O.S. #006-TDD (Senior_QA_Security)
