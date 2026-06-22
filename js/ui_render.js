@@ -380,26 +380,25 @@ window.switchModule = function(moduleName) {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
-// window.toggleFullscreen — Alterna a classe fullscreen em qualquer módulo
+// window.toggleSidebar — Recolhe/expande o menu global de Soluções
 // ─────────────────────────────────────────────────────────────────────────────
-window.toggleFullscreen = function(moduleId) {
-    const el = document.getElementById(moduleId);
-    if (!el) return;
+window.toggleSidebar = function() {
+    const layout = document.querySelector('.main-layout');
+    if (!layout) return;
 
-    el.classList.toggle('module-fullscreen-mode');
-    const isFullscreen = el.classList.contains('module-fullscreen-mode');
-
-    // Atualiza o botão correspondente
-    const btn = el.querySelector('.btn-fullscreen-toggle');
-    if (btn) {
-        btn.setAttribute('data-i18n', isFullscreen ? 'ui.exitFullscreen' : 'ui.enterFullscreen');
-        if (typeof window.translatePage === 'function') {
-            window.translatePage();
-        } else {
-            btn.textContent = isFullscreen ? '⛶ Sair da Tela Cheia' : '⛶ Tela Cheia';
-        }
-    }
+    layout.classList.toggle('sidebar-collapsed');
+    const isCollapsed = layout.classList.contains('sidebar-collapsed');
+    // Persistência de UX — sobrevive ao F5
+    localStorage.setItem('sidebarCollapsed', isCollapsed);
 };
+
+// Auto-init: restaura preferência do usuário no load
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('sidebarCollapsed') === 'true') {
+        const layout = document.querySelector('.main-layout');
+        if (layout) layout.classList.add('sidebar-collapsed');
+    }
+});
 
 // ─────────────────────────────────────────────────────────────────────────────
 // window.switchCablingCard — Troca entre BT e MT dentro do módulo Cabling
