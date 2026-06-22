@@ -213,7 +213,6 @@ const _btI18n = {
 };
 function _tbt(key) {
     const lang = document.documentElement.lang === 'en' ? 'en' : (document.documentElement.lang === 'es' ? 'es' : 'pt');
-    console.log(`[TBT DEBUG] key: ${key}, html.lang: ${document.documentElement.lang}, lang: ${lang}, result: ${(_btI18n[lang] || _btI18n.pt)[key]}`);
     return (_btI18n[lang] || _btI18n.pt)[key] || _btI18n.pt[key] || key;
 }
 
@@ -289,7 +288,6 @@ window.App = {
 // ─────────────────────────────────────────────────────────────────────────────
 window.switchModule = function(moduleName) {
     localStorage.setItem('ampai-active-module', moduleName);
-    console.log('[AmpAI] switchModule →', moduleName);
 
     // Elementos do módulo shortcircuit (sidebar de inputs + dashboard principal)
     const sidebarSC = document.querySelector('aside.sidebar');
@@ -301,7 +299,6 @@ window.switchModule = function(moduleName) {
     const navCB = document.getElementById('nav-cabling');
 
     if (!moduleCabling) {
-        console.error('[AmpAI] #module-cabling não encontrado no DOM!');
         return;
     }
 
@@ -405,15 +402,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // window.switchCablingCard — Troca entre BT e MT dentro do módulo Cabling
 // ─────────────────────────────────────────────────────────────────────────────
 window.switchCablingCard = function(card) {
-    console.log('[AmpAI] switchCablingCard →', card);
-
     const wrapperBT = document.getElementById('wrapper-bt');
     const wrapperMT = document.getElementById('wrapper-mt');
     const btnBT     = document.getElementById('cb-toggle-bt');
     const btnMT     = document.getElementById('cb-toggle-mt');
 
-    if (!wrapperBT) { console.warn('[AmpAI] #wrapper-bt não encontrado!'); return; }
-    if (!wrapperMT) { console.warn('[AmpAI] #wrapper-mt não encontrado!'); return; }
+    if (!wrapperBT) { return; }
+    if (!wrapperMT) { return; }
 
     // Mostrar/ocultar wrappers
     wrapperBT.style.display = (card === 'bt') ? 'block' : 'none';
@@ -430,9 +425,7 @@ window.switchCablingCard = function(card) {
                 const input = window.readBTInputsFromUI();
                 const payload = window.calculateCablingBT(input);
                 if (payload && typeof window.renderCardBT === 'function') window.renderCardBT(payload);
-            } catch (err) {
-                console.error('[AmpAI][BT] Erro ao trocar aba:', err.message);
-            }
+            } catch (err) {}
         } else if (card === 'mt' && typeof window.calculateCablingMT === 'function') {
             window.calculateCablingMT();
         }
@@ -471,7 +464,6 @@ document.addEventListener('click', function(e) {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
     const action = btn.getAttribute('data-action');
-    console.log('[AmpAI] data-action disparado:', action);
 
     switch (action) {
         case 'calc-bt':
@@ -496,7 +488,6 @@ document.addEventListener('click', function(e) {
                         const el = document.getElementById(id);
                         if (el) el.innerHTML = '--';
                     });
-                    console.error('[AmpAI][BT] Erro no motor:', err.message);
                 }
             }
             break;
@@ -561,8 +552,6 @@ document.addEventListener('click', function(e) {
             break;
         }
         case 'toggle-memorial-bt': {
-            // O CSS do acordeão colapsa por max-height:0; a abertura visual
-            // exige a classe 'open' (padrão homologado do módulo Curto-Circuito)
             const el = document.getElementById('cb-mem-bt-container');
             if (el) {
                 const abrir = el.classList.contains('hidden');
@@ -584,7 +573,6 @@ document.addEventListener('click', function(e) {
             }
             const chevBT = document.getElementById('accordion-chevron-bt');
             if (chevBT) chevBT.classList.add('rotated');
-            // Pequeno delay para garantir o render antes da impressão nativa
             setTimeout(() => window.print(), 100);
             break;
         }
@@ -617,12 +605,10 @@ document.addEventListener('click', function(e) {
 // Injeção Segura e Reativa (com Retries e proteção Anti-Loop)
 // ─────────────────────────────────────────────────────────────────────────────
 function injectWithRetry(id, renderFunction, payload, retries = 5) {
-    console.log('[AmpAI] Tentando injetar em:', id, '| Tentativa:', 6 - retries);
     const container = document.getElementById(id);
 
     if (!container) {
         if (retries > 0) {
-            console.log('[AmpAI] Container', id, 'não encontrado. Nova tentativa em 200ms...');
             setTimeout(() => injectWithRetry(id, renderFunction, payload, retries - 1), 200);
         } else {
             console.error('[AmpAI] FALHA CRÍTICA: Container', id, 'não encontrado após todas as tentativas.');
@@ -631,7 +617,6 @@ function injectWithRetry(id, renderFunction, payload, retries = 5) {
     }
 
     if (window.isRendering) {
-        console.log('[AmpAI] Renderização bloqueada (cooldown anti-loop)');
         return;
     }
     window.isRendering = true;
