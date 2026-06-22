@@ -2265,6 +2265,29 @@
     </div><!-- /#module-impedances -->
 
         </div><!-- /.main-layout -->
+        <script>
+            // Pre-paint hydration to prevent UI flicker on Module restore
+            (function(){
+                var mod = localStorage.getItem('ampai-active-module') || 'shortcircuit';
+                if (mod !== 'shortcircuit') {
+                    // Update Nav
+                    var navSc = document.getElementById('nav-shortcircuit');
+                    var navTarget = document.getElementById('nav-' + mod);
+                    if (navSc) navSc.classList.remove('active');
+                    if (navTarget) navTarget.classList.add('active');
+                    
+                    // Hide Default SC DOM
+                    var sidebarSc = document.querySelector('aside.sidebar');
+                    var dashSc = document.querySelector('main.dashboard');
+                    if (sidebarSc) sidebarSc.style.display = 'none';
+                    if (dashSc) dashSc.style.display = 'none';
+                    
+                    // Show Target DOM
+                    var modEl = document.getElementById('module-' + mod);
+                    if (modEl) modEl.style.display = 'block';
+                }
+            })();
+        </script>
     </div><!-- /.app-container -->
 
 
@@ -3360,6 +3383,9 @@
 
         // Theme Toggle Logic
         document.addEventListener('DOMContentLoaded', () => {
+            const savedMod = localStorage.getItem('ampai-active-module') || 'shortcircuit';
+            if (typeof window.switchModule === 'function') window.switchModule(savedMod);
+
             const themeToggle = document.getElementById('theme-toggle');
             const themeIcon = document.getElementById('theme-icon');
             const root = document.getElementById('html-root');

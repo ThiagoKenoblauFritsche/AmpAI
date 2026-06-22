@@ -288,6 +288,7 @@ window.App = {
 // Esta é a função chamada pelos links do nav: window.switchModule('cabling')
 // ─────────────────────────────────────────────────────────────────────────────
 window.switchModule = function(moduleName) {
+    localStorage.setItem('ampai-active-module', moduleName);
     console.log('[AmpAI] switchModule →', moduleName);
 
     // Elementos do módulo shortcircuit (sidebar de inputs + dashboard principal)
