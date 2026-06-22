@@ -2285,6 +2285,21 @@
                     // Show Target DOM
                     var modEl = document.getElementById('module-' + mod);
                     if (modEl) modEl.style.display = 'block';
+
+                    // NOVO: Sub-module Hydration (Cabling BT/MT)
+                    if (mod === 'cabling') {
+                        var card = localStorage.getItem('ampai-active-cabling-card') || 'bt';
+                        if (card === 'mt') {
+                            var wBt = document.getElementById('wrapper-bt');
+                            var wMt = document.getElementById('wrapper-mt');
+                            var btnBt = document.getElementById('cb-toggle-bt');
+                            var btnMt = document.getElementById('cb-toggle-mt');
+                            if (wBt) wBt.style.display = 'none';
+                            if (wMt) wMt.style.display = 'block';
+                            if (btnBt) btnBt.classList.remove('active');
+                            if (btnMt) btnMt.classList.add('active');
+                        }
+                    }
                 }
             })();
         </script>

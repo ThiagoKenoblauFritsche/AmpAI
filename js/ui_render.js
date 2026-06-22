@@ -349,8 +349,10 @@ window.switchModule = function(moduleName) {
         if (_method) _method.setAttribute('data-i18n', 'header.cabling.method');
         if (typeof window.translatePage === 'function') window.translatePage();
 
-        // Iniciar no card BT por padrão
-        window.switchCablingCard('bt');
+        // Iniciar no card salvo (ou BT por padrão)
+        const savedCard = localStorage.getItem('ampai-active-cabling-card') || 'bt';
+        window.switchCablingCard(savedCard);
+        
         // Pré-calcular MT para que _lastMTPayload fique disponível para i18n
         // Delay de 350ms: aguarda o cooldown de isRendering do BT (50ms + sync template + 100ms lock)
         setTimeout(() => {
@@ -402,6 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // window.switchCablingCard — Troca entre BT e MT dentro do módulo Cabling
 // ─────────────────────────────────────────────────────────────────────────────
 window.switchCablingCard = function(card) {
+    localStorage.setItem('ampai-active-cabling-card', card);
     const wrapperBT = document.getElementById('wrapper-bt');
     const wrapperMT = document.getElementById('wrapper-mt');
     const btnBT     = document.getElementById('cb-toggle-bt');
