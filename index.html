@@ -1053,6 +1053,42 @@
             transition: opacity 0.2s ease, visibility 0.2s ease; pointer-events: none;
         }
         [data-tooltip]:hover::after { opacity: 1; visibility: visible; }
+
+        /* ICC module */
+        .icc-toaster{position:fixed;top:1.25rem;right:1.25rem;z-index:9999;background:#1a0a0a;border:1px solid var(--danger);border-left:4px solid var(--danger);color:#fca5a5;padding:.85rem 1.1rem;border-radius:10px;font-size:.8rem;max-width:380px;box-shadow:0 8px 32px rgba(239,68,68,.25);display:flex;align-items:flex-start;gap:.6rem;opacity:0;transform:translateX(110%);transition:opacity .3s ease,transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+        .icc-toaster.show{opacity:1;transform:translateX(0);pointer-events:auto}
+        .icc-toaster-msg{line-height:1.4;font-family:'JetBrains Mono',monospace;word-break:break-word}
+        .icc-panel{background:var(--bg-secondary);border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--card-shadow)}
+        .icc-panel-header{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg-tertiary)}
+        .icc-panel-accent{width:4px;height:28px;border-radius:2px;flex-shrink:0}
+        .icc-panel-title{font-size:.9rem;font-weight:700;color:var(--text-primary);flex:1}
+        .icc-panel-norm{font-size:.68rem;font-weight:700;color:var(--text-muted);background:var(--bg-primary);border:1px solid var(--border);padding:.15rem .45rem;border-radius:4px;font-family:'JetBrains Mono',monospace}
+        .icc-panel-body{padding:1.25rem}
+        .icc-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.25rem}
+        @media(max-width:900px){.icc-form-grid{grid-template-columns:1fr}}
+        .icc-field label{display:block;font-size:.72rem;font-weight:600;color:var(--text-secondary);margin-bottom:.2rem}
+        .icc-input-error{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(239,68,68,.18)!important;animation:shake .3s ease-in-out}
+        .icc-result-block{background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;display:none}
+        .icc-result-block.visible{display:block;animation:fadeIn .2s ease-out}
+        .icc-result-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:.6rem}
+        .icc-result-pills{display:flex;flex-wrap:wrap;gap:.5rem}
+        .icc-pill{display:flex;flex-direction:column;background:var(--bg-secondary);border:1px solid var(--border);border-radius:8px;padding:.5rem .85rem;min-width:110px}
+        .icc-pill-sym{font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:700;color:var(--text-muted)}
+        .icc-pill-val{font-family:'JetBrains Mono',monospace;font-size:1.1rem;font-weight:700;color:var(--accent-hover);line-height:1.2}
+        .icc-pill-unit{font-size:.65rem;color:var(--text-muted);font-weight:600}
+        .icc-pill.primary .icc-pill-val{color:var(--accent)}
+        .icc-checkbox-row{display:flex;align-items:center;gap:.65rem;padding:.6rem .75rem;background:var(--bg-tertiary);border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:var(--transition);user-select:none}
+        .icc-checkbox-row:hover{border-color:var(--accent)}
+        .icc-checkbox-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+        .icc-checkbox-label{font-size:.8rem;font-weight:600;color:var(--text-primary);flex:1}
+        .icc-checkbox-status{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}
+        .icc-checkbox-status.ready{color:var(--success);font-weight:700}
+        .btn-icc-calc{display:inline-flex;align-items:center;gap:.4rem;background:var(--accent);color:#fff;border:none;padding:.55rem 1.1rem;font-size:.82rem;font-weight:700;border-radius:8px;cursor:pointer;transition:var(--transition);margin-top:1rem}
+        .btn-icc-calc:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:var(--neon-glow)}
+        .btn-icc-agregar{background:var(--text-primary);color:var(--bg-secondary)}
+        .btn-icc-agregar:hover{background:#374151;transform:translateY(-1px)}
+        /* ── Fullscreen toggle utilitário global ── */
+        .module-fullscreen-mode{position:fixed!important;top:0;left:0;width:100vw;height:100vh;z-index:9999;background-color:var(--bg-body,var(--bg-primary));overflow-y:auto;padding:2rem}
     </style>
 </head>
 
@@ -1101,6 +1137,11 @@
                 <a href="#" class="nav-item nav-link" id="nav-cabling" onclick="window.switchModule('cabling'); return false;">
                     <span style="font-size: 1.1rem;">🔌</span>
                     <span style="flex: 1;" data-i18n="nav.cableSizing">Dimensionamento de Cabos (BT e MT)</span>
+                </a>
+
+                <a href="#" class="nav-item nav-link" id="nav-impedances" onclick="window.switchModule('impedances'); return false;">
+                    <span style="font-size:1.1rem;">&#x1F527;</span>
+                    <span style="flex:1;" data-i18n="icc.navLabel">Imped&#226;ncias IEC 60909</span>
                 </a>
 
                 <a href="#" class="nav-item locked" data-i18n-title="nav.comingSoon" title="Em breve / Bloqueado">
@@ -1881,7 +1922,333 @@
                 </div>
             </div>
 
-</div>
+        </div><!-- /.main-layout -->
+    </div><!-- /.app-container -->
+
+    <!-- ================================================================
+         M&#211;DULO: IMPED&#194;NCIAS IEC 60909-0:2016 (overlay fullscreen)
+         ================================================================ -->
+    <div id="module-impedances" style="display:none;">
+
+        <div style="max-width:1440px;margin:0 auto;">
+            <!-- Cabeçalho -->
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem;">
+                <div>
+                    <h2 style="font-size:1.2rem;font-weight:800;color:var(--text-primary);letter-spacing:-.02em;">
+                        &#x1F527; <span data-i18n="icc.moduleTitle">Imped&#226;ncias por Componente</span>
+                    </h2>
+                    <p style="font-size:.8rem;color:var(--text-muted);">IEC 60909-0:2016 &middot; F&#243;rmulas (4)(6)(7&#8211;9)(12a)(17&#8211;18)(14)(32)</p>
+                </div>
+                <div style="display:flex;gap:.75rem;align-items:center;">
+                    <span class="norm-badge" style="font-size:.75rem;padding:.25rem .65rem;">IEC 60909-0</span>
+                    <button class="btn-fullscreen-toggle" onclick="window.toggleFullscreen('module-impedances')" style="background:var(--bg-tertiary);border:1px solid var(--border);color:var(--text-secondary);padding:.4rem .75rem;border-radius:6px;cursor:pointer;font-size:.8rem;" data-i18n="ui.enterFullscreen">&#x26F6; Tela Cheia</button>
+                </div>
+            </div>
+
+            <!-- Grid 2 colunas -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+
+                <!-- PAINEL 1: REDE -->
+                <div class="icc-panel">
+                    <div class="icc-panel-header">
+                        <div class="icc-panel-accent" style="background:#3b82f6;"></div>
+                        <span class="icc-panel-title">&#x1F310; <span data-i18n="icc.netTitle">Rede de Alimenta&#231;&#227;o (Zq)</span></span>
+                        <span class="icc-panel-norm">&sect;6.2 Form.(4)(6)</span>
+                    </div>
+                    <div class="icc-panel-body">
+                        <div class="alert-banner" id="icc-alert-rede" style="margin-bottom:.75rem;">
+                            <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                            <div id="icc-alert-rede-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                        </div>
+                        <div class="icc-form-grid">
+                            <div class="icc-field">
+                                <label for="icc-unq" data-i18n="icc.net.unq">Tens&#227;o nominal Unq</label>
+                                <div class="input-wrapper"><input type="number" id="icc-unq" value="13800" min="1" step="100"><span class="unit-badge">V</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-ikqpp" data-i18n="icc.net.ikqpp">I&apos;&apos;kq &mdash; Corrente de CC da rede</label>
+                                <div class="input-wrapper"><input type="number" id="icc-ikqpp" value="5000" min="0.001" step="100"><span class="unit-badge">A</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-c-rede" data-i18n="icc.net.c">Fator de tens&#227;o c</label>
+                                <select id="icc-c-rede">
+                                    <option value="1.10" selected data-i18n="icc.copt.110max">c = 1.10 (m&#225;x BT/MT)</option>
+                                    <option value="1.05" data-i18n="icc.copt.105min">c = 1.05 (m&#237;n BT)</option>
+                                    <option value="0.95" data-i18n="icc.copt.095min">c = 0.95 (m&#237;n MT)</option>
+                                    <option value="0.90" data-i18n="icc.copt.090min">c = 0.90 (m&#237;n AT)</option>
+                                </select>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-tr" data-i18n="icc.net.tr">Rela&#231;&#227;o de transforma&#231;&#227;o tr</label>
+                                <div class="input-wrapper"><input type="number" id="icc-tr" value="36.3" min="1" step="0.1"><span class="unit-badge">&mdash;</span></div>
+                            </div>
+                        </div>
+                        <button class="btn-icc-calc" data-action="calc-icc-rede">
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.net.btn">Calcular Zq</span>
+                        </button>
+                        <div class="icc-result-block" id="icc-result-rede">
+                            <div class="icc-result-label" data-i18n="icc.net.resultLabel">&#x2713; Resultados &mdash; Rede</div>
+                            <div class="icc-result-pills" id="icc-pills-rede"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL 2: TRANSFORMADOR -->
+                <div class="icc-panel">
+                    <div class="icc-panel-header">
+                        <div class="icc-panel-accent" style="background:#f59e0b;"></div>
+                        <span class="icc-panel-title">&#x1F532; <span data-i18n="icc.trafoTitle">Transformador (Zt, Kt)</span></span>
+                        <span class="icc-panel-norm">&sect;6.3.1 Form.(7&#8211;9)(12a)</span>
+                    </div>
+                    <div class="icc-panel-body">
+                        <div class="alert-banner" id="icc-alert-trafo" style="margin-bottom:.75rem;">
+                            <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                            <div id="icc-alert-trafo-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                        </div>
+                        <div class="icc-form-grid">
+                            <div class="icc-field">
+                                <label for="icc-srt" data-i18n="icc.trafo.srt">Pot&#234;ncia nominal Srt</label>
+                                <div class="input-wrapper"><input type="number" id="icc-srt" value="1500000" min="1" step="1000"><span class="unit-badge">VA</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-urt" data-i18n="icc.trafo.urt">Tens&#227;o de ref. Urt</label>
+                                <div class="input-wrapper"><input type="number" id="icc-urt" value="380" min="1" step="10"><span class="unit-badge">V</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-ukr" data-i18n="icc.trafo.ukr">Tens&#227;o de CC ukr</label>
+                                <div class="input-wrapper"><input type="number" id="icc-ukr" value="6" min="0.01" max="20" step="0.1"><span class="unit-badge">%</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-pkrt" data-i18n="icc.trafo.pkrt">Perdas no cobre Pkrt</label>
+                                <div class="input-wrapper"><input type="number" id="icc-pkrt" value="18000" min="1" step="100"><span class="unit-badge">W</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-urr" data-i18n="icc.trafo.urr">Comp. resistiva uRr (opcional)</label>
+                                <div class="input-wrapper"><input type="number" id="icc-urr" value="" min="0" max="20" step="0.01" placeholder="Opcional"><span class="unit-badge">%</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-cmax-trafo" data-i18n="icc.trafo.cmax">Fator c m&#225;ximo (cMax)</label>
+                                <select id="icc-cmax-trafo">
+                                    <option value="1.10" selected>1.10 (BT/MT)</option>
+                                    <option value="1.05">1.05</option>
+                                </select>
+                            </div>
+                            <div class="icc-field" style="grid-column:1/-1;">
+                                <label for="icc-tipo-trafo" data-i18n="icc.trafo.tipo">Tipo de transformador</label>
+                                <select id="icc-tipo-trafo">
+                                    <option value="rede" selected data-i18n="icc.trafo.tipoRede">Rede (aplica Kt &mdash; &sect;6.3.1)</option>
+                                    <option value="grupo_gerador" data-i18n="icc.trafo.tipoGG">Grupo-gerador (&sect;6.7, Kt inv&#225;lido)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-icc-calc" data-action="calc-icc-trafo">
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.trafo.btn">Calcular Zt</span>
+                        </button>
+                        <div class="icc-result-block" id="icc-result-trafo">
+                            <div class="icc-result-label" data-i18n="icc.trafo.resultLabel">&#x2713; Resultados &mdash; Transformador</div>
+                            <div class="icc-result-pills" id="icc-pills-trafo"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL 3: GERADOR -->
+                <div class="icc-panel">
+                    <div class="icc-panel-header">
+                        <div class="icc-panel-accent" style="background:#10b981;"></div>
+                        <span class="icc-panel-title">&#x2699;&#xFE0F; <span data-i18n="icc.genTitle">Gerador S&#237;ncrono (Zgk, Kg)</span></span>
+                        <span class="icc-panel-norm">&sect;6.6.1 Form.(17)(18)</span>
+                    </div>
+                    <div class="icc-panel-body">
+                        <div class="alert-banner" id="icc-alert-gerador" style="margin-bottom:.75rem;">
+                            <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                            <div id="icc-alert-gerador-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                        </div>
+                        <div class="icc-form-grid">
+                            <div class="icc-field">
+                                <label for="icc-urg" data-i18n="icc.gen.urg">Tens&#227;o nominal Urg</label>
+                                <div class="input-wrapper"><input type="number" id="icc-urg" value="13800" min="1" step="100"><span class="unit-badge">V</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-srg" data-i18n="icc.gen.srg">Pot&#234;ncia aparente Srg</label>
+                                <div class="input-wrapper"><input type="number" id="icc-srg" value="10000000" min="1" step="100000"><span class="unit-badge">VA</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-xdpp" data-i18n="icc.gen.xdpp">Reat&#226;ncia subtransit&#243;ria x''d</label>
+                                <div class="input-wrapper"><input type="number" id="icc-xdpp" value="0.15" min="0.001" max="1" step="0.01"><span class="unit-badge">p.u.</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-cosphi-gen" data-i18n="icc.gen.cosphi">cos(&#x03C6;) nominal</label>
+                                <div class="input-wrapper"><input type="number" id="icc-cosphi-gen" value="0.85" min="0" max="1" step="0.01"><span class="unit-badge">&mdash;</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-un-gen" data-i18n="icc.gen.un">Tens&#227;o nominal sistema Un</label>
+                                <div class="input-wrapper"><input type="number" id="icc-un-gen" value="13800" min="1" step="100"><span class="unit-badge">V</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-cmax-gen" data-i18n="icc.gen.cmax">Fator cMax</label>
+                                <select id="icc-cmax-gen">
+                                    <option value="1.10" selected>1.10</option>
+                                    <option value="1.05">1.05</option>
+                                </select>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-rg" data-i18n="icc.gen.rg">Resist&#234;ncia Rg</label>
+                                <div class="input-wrapper"><input type="number" id="icc-rg" value="0.05" min="0" step="0.001"><span class="unit-badge">&#937;</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-regime-gen" data-i18n="icc.gen.regime">Regime de corrente</label>
+                                <select id="icc-regime-gen">
+                                    <option value="maxima" selected data-i18n="icc.regimeMax">M&#225;xima (aplica cMax)</option>
+                                    <option value="minima" data-i18n="icc.regimeMin">M&#237;nima (Kg = 1)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-icc-calc" data-action="calc-icc-gerador">
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.gen.btn">Calcular Zgk</span>
+                        </button>
+                        <div class="icc-result-block" id="icc-result-gerador">
+                            <div class="icc-result-label" data-i18n="icc.gen.resultLabel">&#x2713; Resultados &mdash; Gerador</div>
+                            <div class="icc-result-pills" id="icc-pills-gerador"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PAINEL 4: CABO -->
+                <div class="icc-panel">
+                    <div class="icc-panel-header">
+                        <div class="icc-panel-accent" style="background:#8b5cf6;"></div>
+                        <span class="icc-panel-title">&#x1F50C; <span data-i18n="icc.cableTitle">Linha / Cabo (Zl)</span></span>
+                        <span class="icc-panel-norm">&sect;6.4 Form.(14)(32)</span>
+                    </div>
+                    <div class="icc-panel-body">
+                        <div class="alert-banner" id="icc-alert-cabo" style="margin-bottom:.75rem;">
+                            <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                            <div id="icc-alert-cabo-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                        </div>
+                        <div class="icc-form-grid">
+                            <div class="icc-field">
+                                <label for="icc-qn" data-i18n="icc.cable.qn">Se&#231;&#227;o nominal qn</label>
+                                <div class="input-wrapper"><input type="number" id="icc-qn" value="50" min="0.001" step="1"><span class="unit-badge">mm&#178;</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-L" data-i18n="icc.cable.L">Comprimento L</label>
+                                <div class="input-wrapper"><input type="number" id="icc-L" value="100" min="0.001" step="1"><span class="unit-badge">m</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-xline" data-i18n="icc.cable.xline">Reat&#226;ncia x' (por km)</label>
+                                <div class="input-wrapper"><input type="number" id="icc-xline" value="0.08" min="0" step="0.001"><span class="unit-badge">&#937;/km</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-rho" data-i18n="icc.cable.rho">Resistividade &#x03C1; a 20&deg;C</label>
+                                <div class="input-wrapper"><input type="number" id="icc-rho" value="0.00001724" min="0.000001" step="0.000001"><span class="unit-badge">&#937;&#183;mm&#178;/m</span></div>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-regime-cabo" data-i18n="icc.cable.regime">Regime</label>
+                                <select id="icc-regime-cabo">
+                                    <option value="maxima" selected data-i18n="icc.cable.regimeMax">M&#225;xima (Rl20)</option>
+                                    <option value="minima" data-i18n="icc.cable.regimeMin">M&#237;nima (corrige por &#x03B8;e)</option>
+                                </select>
+                            </div>
+                            <div class="icc-field">
+                                <label for="icc-freq" data-i18n="icc.cable.freq">Frequ&#234;ncia</label>
+                                <select id="icc-freq">
+                                    <option value="60" selected>60 Hz</option>
+                                    <option value="50">50 Hz</option>
+                                </select>
+                            </div>
+                            <div class="icc-field" id="icc-campo-thetaE" style="display:none;">
+                                <label for="icc-thetaE" data-i18n="icc.cable.thetaE">Temperatura final &#x03B8;e</label>
+                                <div class="input-wrapper"><input type="number" id="icc-thetaE" value="70" min="0" max="250" step="1"><span class="unit-badge">&deg;C</span></div>
+                            </div>
+                            <div class="icc-field" id="icc-campo-alpha" style="display:none;">
+                                <label for="icc-alpha" data-i18n="icc.cable.alpha">Coef. temp. &#x03B1;</label>
+                                <div class="input-wrapper"><input type="number" id="icc-alpha" value="0.00393" min="0" step="0.00001"><span class="unit-badge">1/&deg;C</span></div>
+                            </div>
+                            <div class="icc-field" id="icc-campo-thetaMax" style="display:none;">
+                                <label for="icc-thetaMax" data-i18n="icc.cable.thetaMax">Temp. m&#225;x. isola&#231;&#227;o &#x03B8;max</label>
+                                <div class="input-wrapper"><input type="number" id="icc-thetaMax" value="90" min="0" max="250" step="1"><span class="unit-badge">&deg;C</span></div>
+                            </div>
+                        </div>
+                        <button class="btn-icc-calc" data-action="calc-icc-cabo">
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.cable.btn">Calcular Zl</span>
+                        </button>
+                        <div class="icc-result-block" id="icc-result-cabo">
+                            <div class="icc-result-label" data-i18n="icc.cable.resultLabel">&#x2713; Resultados &mdash; Cabo</div>
+                            <div class="icc-result-pills" id="icc-pills-cabo"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /grid 2col -->
+
+            <!-- PAINEL 5: AGREGA&#199;&#195;O Zk -->
+            <div class="icc-panel" style="margin-top:1.25rem;">
+                <div class="icc-panel-header">
+                    <div class="icc-panel-accent" style="background:#ef4444;"></div>
+                    <span class="icc-panel-title">&#x2211; <span data-i18n="icc.agrTitle">Agrega&#231;&#227;o de Imped&#226;ncias no Ponto de Falta (Zk)</span></span>
+                    <span class="icc-panel-norm" data-i18n="icc.agrNorm">S&#233;rie + Blindagem diel&#233;trica</span>
+                </div>
+                <div class="icc-panel-body">
+                    <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem;" data-i18n="icc.agrDesc">Selecione os componentes calculados com sucesso para incluir na soma de imped&#226;ncias.</p>
+                    <div class="alert-banner" id="icc-alert-agregar" style="margin-bottom:.75rem;">
+                        <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
+                        <div id="icc-alert-agregar-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
+                        <label class="icc-checkbox-row" for="icc-chk-rede">
+                            <input type="checkbox" id="icc-chk-rede" disabled>
+                            <span class="icc-checkbox-label">&#x1F310; <span data-i18n="icc.agr.chkRede">Rede (Rqt, Xqt)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-rede" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                        </label>
+                        <label class="icc-checkbox-row" for="icc-chk-trafo">
+                            <input type="checkbox" id="icc-chk-trafo" disabled>
+                            <span class="icc-checkbox-label">&#x1F532; <span data-i18n="icc.agr.chkTrafo">Trafo (Ztk: Rkt, Xkt)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-trafo" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                        </label>
+                        <label class="icc-checkbox-row" for="icc-chk-gerador">
+                            <input type="checkbox" id="icc-chk-gerador" disabled>
+                            <span class="icc-checkbox-label">&#x2699;&#xFE0F; <span data-i18n="icc.agr.chkGen">Gerador (Zgk: Rg, Xg)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-gerador" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                        </label>
+                        <label class="icc-checkbox-row" for="icc-chk-cabo">
+                            <input type="checkbox" id="icc-chk-cabo" disabled>
+                            <span class="icc-checkbox-label">&#x1F50C; <span data-i18n="icc.agr.chkCabo">Cabo (Rl, Xl)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-cabo" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                        </label>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;">
+                        <div class="icc-field">
+                            <label for="icc-agr-un" data-i18n="icc.agr.un">Un &mdash; Tens&#227;o nominal sistema</label>
+                            <div class="input-wrapper"><input type="number" id="icc-agr-un" value="380" min="1" step="10"><span class="unit-badge">V</span></div>
+                        </div>
+                        <div class="icc-field">
+                            <label for="icc-agr-cmax" data-i18n="icc.agr.cmax">cMax (Tabela 1 IEC)</label>
+                            <select id="icc-agr-cmax"><option value="1.10" selected>1.10</option><option value="1.05">1.05</option></select>
+                        </div>
+                        <div class="icc-field">
+                            <label for="icc-agr-um" data-i18n="icc.agr.um">Um &mdash; Tens&#227;o m&#225;x. equipamento</label>
+                            <div class="input-wrapper"><input type="number" id="icc-agr-um" value="420" min="1" step="10"><span class="unit-badge">V</span></div>
+                        </div>
+                    </div>
+                    <button class="btn-icc-calc btn-icc-agregar" data-action="calc-icc-agregar">
+                        <i data-lucide="sigma" style="width:14px;height:14px;"></i> <span data-i18n="icc.agr.btn">Calcular Zk Total</span>
+                    </button>
+                    <div class="icc-result-block" id="icc-result-agregar">
+                        <div class="icc-result-label" data-i18n="icc.agr.resultLabel">&#x2713; Imped&#226;ncia total no ponto de falta</div>
+                        <div class="icc-result-pills" id="icc-pills-agregar"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /max-width -->
+    </div><!-- /#module-impedances -->
+
+    <!-- Toaster ICC -->
+    <div id="icc-toaster" class="icc-toaster" role="alert" aria-live="assertive">
+        <svg style="flex-shrink:0;margin-top:1px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <span class="icc-toaster-msg" id="icc-toaster-msg"></span>
     </div>
 
     <!-- i18n + Calculations Script -->
@@ -2032,6 +2399,77 @@
                 'cabling.mt.depth': 'Profundidade (m)',
                 'cabling.mt.rhoSoil': 'Resistividade do Solo (K·m/W)',
                 'cabling.mt.ncirc': 'Circuitos Agrupados',
+                // ── Módulo Impedâncias IEC 60909 (icc.*)
+                'icc.navLabel': 'Impedâncias IEC 60909',
+                'icc.moduleTitle': 'Impedâncias por Componente',
+                'icc.btnBack': '← Voltar',
+                'icc.physViolation': 'Violação física detectada.',
+                'icc.netTitle': 'Rede de Alimentação (Zq)',
+                'icc.net.unq': 'Tensão nominal Unq',
+                'icc.net.ikqpp': "I''kq — Corrente de CC da rede",
+                'icc.net.c': 'Fator de tensão c',
+                'icc.copt.110max': 'c = 1.10 (máx BT/MT)',
+                'icc.copt.105min': 'c = 1.05 (mín BT)',
+                'icc.copt.095min': 'c = 0.95 (mín MT)',
+                'icc.copt.090min': 'c = 0.90 (mín AT)',
+                'icc.net.tr': 'Relação de transformação tr (≥ 1)',
+                'icc.net.btn': 'Calcular Zq',
+                'icc.net.resultLabel': '✓ Resultados — Rede',
+                'icc.trafoTitle': 'Transformador (Zt, Kt)',
+                'icc.trafo.srt': 'Potência nominal Srt',
+                'icc.trafo.urt': 'Tensão de ref. Urt',
+                'icc.trafo.ukr': 'Tensão de CC ukr',
+                'icc.trafo.pkrt': 'Perdas no cobre Pkrt',
+                'icc.trafo.urr': 'Comp. resistiva uRr (opcional)',
+                'icc.trafo.cmax': 'Fator c máximo (cMax)',
+                'icc.trafo.tipo': 'Tipo de transformador',
+                'icc.trafo.tipoRede': 'Rede (aplica Kt — §6.3.1)',
+                'icc.trafo.tipoGG': 'Grupo-gerador (§6.7, Kt inválido)',
+                'icc.trafo.btn': 'Calcular Zt',
+                'icc.trafo.resultLabel': '✓ Resultados — Transformador',
+                'icc.genTitle': 'Gerador Síncrono (Zgk, Kg)',
+                'icc.gen.urg': 'Tensão nominal Urg',
+                'icc.gen.srg': 'Potência aparente Srg',
+                'icc.gen.xdpp': "Reatância subtransitória x''d",
+                'icc.gen.cosphi': 'cos(φ) nominal',
+                'icc.gen.un': 'Tensão nominal sistema Un',
+                'icc.gen.cmax': 'Fator cMax',
+                'icc.gen.rg': 'Resistência Rg',
+                'icc.gen.regime': 'Regime de corrente',
+                'icc.regimeMax': 'Máxima (aplica cMax)',
+                'icc.regimeMin': 'Mínima (Kg = 1)',
+                'icc.gen.btn': 'Calcular Zgk',
+                'icc.gen.resultLabel': '✓ Resultados — Gerador',
+                'icc.cableTitle': 'Linha / Cabo (Zl)',
+                'icc.cable.qn': 'Seção nominal qn',
+                'icc.cable.L': 'Comprimento L',
+                'icc.cable.xline': "Reatância x' (por km)",
+                'icc.cable.rho': 'Resistividade ρ a 20°C',
+                'icc.cable.regime': 'Regime',
+                'icc.cable.regimeMax': 'Máxima (Rl20)',
+                'icc.cable.regimeMin': 'Mínima (corrige por θe)',
+                'icc.cable.freq': 'Frequência',
+                'icc.cable.thetaE': 'Temperatura final θe',
+                'icc.cable.alpha': 'Coef. temp. α',
+                'icc.cable.thetaMax': 'Temp. máx. isolação θmax',
+                'icc.cable.btn': 'Calcular Zl',
+                'icc.cable.resultLabel': '✓ Resultados — Cabo',
+                'icc.agrTitle': 'Agregação de Impedâncias no Ponto de Falta (Zk)',
+                'icc.agrNorm': 'Série + Blindagem dielétrica',
+                'icc.agrDesc': 'Selecione os componentes calculados com sucesso para incluir na soma de impedâncias.',
+                'icc.agr.chkRede': 'Rede (Rqt, Xqt)',
+                'icc.agr.chkTrafo': 'Trafo (Ztk: Rkt, Xkt)',
+                'icc.agr.chkGen': 'Gerador (Zgk: Rg, Xg)',
+                'icc.agr.chkCabo': 'Cabo (Rl, Xl)',
+                'icc.agr.pending': 'Aguardando cálculo',
+                'icc.agr.un': 'Un — Tensão nominal sistema',
+                'icc.agr.cmax': 'cMax (Tabela 1 IEC)',
+                'icc.agr.um': 'Um — Tensão máx. equipamento',
+                'icc.agr.btn': 'Calcular Zk Total',
+                'icc.agr.resultLabel': '✓ Impedância total no ponto de falta',
+                // ── Fullscreen toggle
+                'ui.enterFullscreen': '⛶ Tela Cheia',
+                'ui.exitFullscreen': '⛶ Sair da Tela Cheia',
             },
             en: {
                 'header.title': 'Electrical Engineering Assistant',
@@ -2175,6 +2613,77 @@
                 'cabling.mt.depth': 'Burial Depth (m)',
                 'cabling.mt.rhoSoil': 'Soil Resistivity (K·m/W)',
                 'cabling.mt.ncirc': 'Grouped Circuits',
+                // ── Módulo Impedâncias IEC 60909 (icc.*)
+                'icc.navLabel': 'IEC 60909 Impedances',
+                'icc.moduleTitle': 'Impedances per Component',
+                'icc.btnBack': '← Back',
+                'icc.physViolation': 'Physical violation detected.',
+                'icc.netTitle': 'Upstream Grid (Zq)',
+                'icc.net.unq': 'Nominal Voltage Unq',
+                'icc.net.ikqpp': "I''kq — Grid SC Current",
+                'icc.net.c': 'Voltage factor c',
+                'icc.copt.110max': 'c = 1.10 (max LV/MV)',
+                'icc.copt.105min': 'c = 1.05 (min LV)',
+                'icc.copt.095min': 'c = 0.95 (min MV)',
+                'icc.copt.090min': 'c = 0.90 (min HV)',
+                'icc.net.tr': 'Transformation ratio tr (≥ 1)',
+                'icc.net.btn': 'Calculate Zq',
+                'icc.net.resultLabel': '✓ Results — Grid',
+                'icc.trafoTitle': 'Transformer (Zt, Kt)',
+                'icc.trafo.srt': 'Rated Power Srt',
+                'icc.trafo.urt': 'Ref. Voltage Urt',
+                'icc.trafo.ukr': 'SC Voltage ukr',
+                'icc.trafo.pkrt': 'Copper Losses Pkrt',
+                'icc.trafo.urr': 'Resistive comp. uRr (optional)',
+                'icc.trafo.cmax': 'Max c factor (cMax)',
+                'icc.trafo.tipo': 'Transformer Type',
+                'icc.trafo.tipoRede': 'Grid (applies Kt — §6.3.1)',
+                'icc.trafo.tipoGG': 'Genset (§6.7, Kt invalid)',
+                'icc.trafo.btn': 'Calculate Zt',
+                'icc.trafo.resultLabel': '✓ Results — Transformer',
+                'icc.genTitle': 'Synchronous Generator (Zgk, Kg)',
+                'icc.gen.urg': 'Rated Voltage Urg',
+                'icc.gen.srg': 'Apparent Power Srg',
+                'icc.gen.xdpp': "Subtransient Reactance x''d",
+                'icc.gen.cosphi': 'Rated cos(φ)',
+                'icc.gen.un': 'System Nom. Voltage Un',
+                'icc.gen.cmax': 'Factor cMax',
+                'icc.gen.rg': 'Resistance Rg',
+                'icc.gen.regime': 'Current Regime',
+                'icc.regimeMax': 'Maximum (applies cMax)',
+                'icc.regimeMin': 'Minimum (Kg = 1)',
+                'icc.gen.btn': 'Calculate Zgk',
+                'icc.gen.resultLabel': '✓ Results — Generator',
+                'icc.cableTitle': 'Line / Cable (Zl)',
+                'icc.cable.qn': 'Nominal Section qn',
+                'icc.cable.L': 'Length L',
+                'icc.cable.xline': "Reactance x' (per km)",
+                'icc.cable.rho': 'Resistivity ρ at 20°C',
+                'icc.cable.regime': 'Regime',
+                'icc.cable.regimeMax': 'Maximum (Rl20)',
+                'icc.cable.regimeMin': 'Minimum (corrects by θe)',
+                'icc.cable.freq': 'Frequency',
+                'icc.cable.thetaE': 'End temperature θe',
+                'icc.cable.alpha': 'Temp. coeff. α',
+                'icc.cable.thetaMax': 'Max. insulation temp. θmax',
+                'icc.cable.btn': 'Calculate Zl',
+                'icc.cable.resultLabel': '✓ Results — Cable',
+                'icc.agrTitle': 'Impedance Aggregation at Fault Point (Zk)',
+                'icc.agrNorm': 'Series + Dielectric Shield',
+                'icc.agrDesc': 'Select successfully calculated components to include in the impedance sum.',
+                'icc.agr.chkRede': 'Grid (Rqt, Xqt)',
+                'icc.agr.chkTrafo': 'Trafo (Ztk: Rkt, Xkt)',
+                'icc.agr.chkGen': 'Generator (Zgk: Rg, Xg)',
+                'icc.agr.chkCabo': 'Cable (Rl, Xl)',
+                'icc.agr.pending': 'Awaiting calculation',
+                'icc.agr.un': 'Un — System Nominal Voltage',
+                'icc.agr.cmax': 'cMax (IEC Table 1)',
+                'icc.agr.um': 'Um — Max. Equipment Voltage',
+                'icc.agr.btn': 'Calculate Total Zk',
+                'icc.agr.resultLabel': '✓ Total impedance at fault point',
+                // ── Fullscreen toggle
+                'ui.enterFullscreen': '⛶ Fullscreen',
+                'ui.exitFullscreen': '⛶ Exit Fullscreen',
             },
             es: {
                 'header.title': 'Asistente de Ingeniería Eléctrica',
@@ -2318,6 +2827,77 @@
                 'cabling.mt.depth': 'Profundidad (m)',
                 'cabling.mt.rhoSoil': 'Resistividad del Suelo (K·m/W)',
                 'cabling.mt.ncirc': 'Circuitos Agrupados',
+                // ── Módulo Impedâncias IEC 60909 (icc.*)
+                'icc.navLabel': 'Impedancias IEC 60909',
+                'icc.moduleTitle': 'Impedancias por Componente',
+                'icc.btnBack': '← Volver',
+                'icc.physViolation': 'Violación física detectada.',
+                'icc.netTitle': 'Red de Alimentación (Zq)',
+                'icc.net.unq': 'Tensión nominal Unq',
+                'icc.net.ikqpp': "I''kq — Corriente CC de la red",
+                'icc.net.c': 'Factor de tensión c',
+                'icc.copt.110max': 'c = 1.10 (máx BT/MT)',
+                'icc.copt.105min': 'c = 1.05 (mín BT)',
+                'icc.copt.095min': 'c = 0.95 (mín MT)',
+                'icc.copt.090min': 'c = 0.90 (mín AT)',
+                'icc.net.tr': 'Relación de transformación tr (≥ 1)',
+                'icc.net.btn': 'Calcular Zq',
+                'icc.net.resultLabel': '✓ Resultados — Red',
+                'icc.trafoTitle': 'Transformador (Zt, Kt)',
+                'icc.trafo.srt': 'Potencia nominal Srt',
+                'icc.trafo.urt': 'Tensión de ref. Urt',
+                'icc.trafo.ukr': 'Tensión de CC ukr',
+                'icc.trafo.pkrt': 'Pérdidas en el cobre Pkrt',
+                'icc.trafo.urr': 'Comp. resistiva uRr (opcional)',
+                'icc.trafo.cmax': 'Factor c máximo (cMax)',
+                'icc.trafo.tipo': 'Tipo de transformador',
+                'icc.trafo.tipoRede': 'Red (aplica Kt — §6.3.1)',
+                'icc.trafo.tipoGG': 'Grupo-generador (§6.7, Kt inválido)',
+                'icc.trafo.btn': 'Calcular Zt',
+                'icc.trafo.resultLabel': '✓ Resultados — Transformador',
+                'icc.genTitle': 'Generador Síncrono (Zgk, Kg)',
+                'icc.gen.urg': 'Tensión nominal Urg',
+                'icc.gen.srg': 'Potencia aparente Srg',
+                'icc.gen.xdpp': "Reactancia subtransitoria x''d",
+                'icc.gen.cosphi': 'cos(φ) nominal',
+                'icc.gen.un': 'Tensión nominal sistema Un',
+                'icc.gen.cmax': 'Factor cMax',
+                'icc.gen.rg': 'Resistencia Rg',
+                'icc.gen.regime': 'Régimen de corriente',
+                'icc.regimeMax': 'Máxima (aplica cMax)',
+                'icc.regimeMin': 'Mínima (Kg = 1)',
+                'icc.gen.btn': 'Calcular Zgk',
+                'icc.gen.resultLabel': '✓ Resultados — Generador',
+                'icc.cableTitle': 'Línea / Cable (Zl)',
+                'icc.cable.qn': 'Sección nominal qn',
+                'icc.cable.L': 'Longitud L',
+                'icc.cable.xline': "Reactancia x' (por km)",
+                'icc.cable.rho': 'Resistividad ρ a 20°C',
+                'icc.cable.regime': 'Régimen',
+                'icc.cable.regimeMax': 'Máxima (Rl20)',
+                'icc.cable.regimeMin': 'Mínima (corrige por θe)',
+                'icc.cable.freq': 'Frecuencia',
+                'icc.cable.thetaE': 'Temperatura final θe',
+                'icc.cable.alpha': 'Coef. temp. α',
+                'icc.cable.thetaMax': 'Temp. máx. aislamiento θmax',
+                'icc.cable.btn': 'Calcular Zl',
+                'icc.cable.resultLabel': '✓ Resultados — Cable',
+                'icc.agrTitle': 'Agregación de Impedancias en el Punto de Falla (Zk)',
+                'icc.agrNorm': 'Serie + Blindaje dieléctrico',
+                'icc.agrDesc': 'Seleccione los componentes calculados con éxito para incluir en la suma de impedancias.',
+                'icc.agr.chkRede': 'Red (Rqt, Xqt)',
+                'icc.agr.chkTrafo': 'Trafo (Ztk: Rkt, Xkt)',
+                'icc.agr.chkGen': 'Generador (Zgk: Rg, Xg)',
+                'icc.agr.chkCabo': 'Cable (Rl, Xl)',
+                'icc.agr.pending': 'Esperando cálculo',
+                'icc.agr.un': 'Un — Tensión nominal sistema',
+                'icc.agr.cmax': 'cMax (Tabla 1 IEC)',
+                'icc.agr.um': 'Um — Tensión máx. equipo',
+                'icc.agr.btn': 'Calcular Zk Total',
+                'icc.agr.resultLabel': '✓ Impedancia total en el punto de falla',
+                // ── Fullscreen toggle
+                'ui.enterFullscreen': '⛶ Pantalla Completa',
+                'ui.exitFullscreen': '⛶ Salir de Pantalla Completa',
             }
         };
 

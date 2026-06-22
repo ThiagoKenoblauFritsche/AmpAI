@@ -314,12 +314,12 @@ window.switchModule = function(moduleName) {
     const navIMP = document.getElementById('nav-impedances');
 
     if (moduleName === 'impedances') {
-        // Ocultar os outros módulos
-        if (sidebarSC)   sidebarSC.style.display   = 'none';
+        // Mantém a sidebar visível; oculta apenas o dashboard de CC e o módulo Cabling
+        if (sidebarSC)   sidebarSC.style.display   = '';
         if (dashboardSC) dashboardSC.style.display  = 'none';
         moduleCabling.style.display = 'none';
 
-        // Exibir overlay de Impedâncias
+        // Exibir módulo de Impedâncias (flui no DOM normalmente)
         if (moduleImpedances) moduleImpedances.style.display = 'block';
 
         // Atualizar nav active
@@ -376,6 +376,28 @@ window.switchModule = function(moduleName) {
         if (_badge)  _badge.textContent = 'IEC 60909-0';
         if (_method) _method.setAttribute('data-i18n', 'header.method');
         if (typeof window.translatePage === 'function') window.translatePage();
+    }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// window.toggleFullscreen — Alterna a classe fullscreen em qualquer módulo
+// ─────────────────────────────────────────────────────────────────────────────
+window.toggleFullscreen = function(moduleId) {
+    const el = document.getElementById(moduleId);
+    if (!el) return;
+
+    el.classList.toggle('module-fullscreen-mode');
+    const isFullscreen = el.classList.contains('module-fullscreen-mode');
+
+    // Atualiza o botão correspondente
+    const btn = el.querySelector('.btn-fullscreen-toggle');
+    if (btn) {
+        btn.setAttribute('data-i18n', isFullscreen ? 'ui.exitFullscreen' : 'ui.enterFullscreen');
+        if (typeof window.translatePage === 'function') {
+            window.translatePage();
+        } else {
+            btn.textContent = isFullscreen ? '⛶ Sair da Tela Cheia' : '⛶ Tela Cheia';
+        }
     }
 };
 
