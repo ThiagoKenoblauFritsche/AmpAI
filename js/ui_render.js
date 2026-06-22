@@ -461,6 +461,14 @@ document.addEventListener('submit', function(e) {
     }
 });
 
+// Neutralizador de "Phantom Scrolling" em campos numéricos
+document.addEventListener('wheel', function(event) {
+    if (document.activeElement.type === 'number') {
+        // Remove o foco do campo numérico para que o scroll atue na página
+        document.activeElement.blur();
+    }
+});
+
 document.addEventListener('click', function(e) {
     const btn = e.target.closest('[data-action]');
     if (!btn) return;
