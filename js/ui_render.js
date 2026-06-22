@@ -513,13 +513,13 @@ document.addEventListener('click', function(e) {
         case 'calc-icc-trafo':
             if (typeof window.calcIccTrafo === 'function') window.calcIccTrafo();
             break;
-        case 'calc-icc-gen':
+        case 'calc-icc-gerador':
             if (typeof window.calcIccGen === 'function') window.calcIccGen();
             break;
         case 'calc-icc-cabo':
             if (typeof window.calcIccCabo === 'function') window.calcIccCabo();
             break;
-        case 'calc-icc-agr':
+        case 'calc-icc-agregar':
             if (typeof window.calcIccAgr === 'function') window.calcIccAgr();
             break;
         case 'switch-bt':
