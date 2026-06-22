@@ -1075,7 +1075,7 @@ window.calcIccRede = function() {
         chk.disabled = false;
         chk.checked = true;
         document.getElementById('icc-chk-status-rede').innerText = '✓ Zq';
-        chk.dataset.z = JSON.stringify(res.value.Zqt);
+        chk.dataset.z = JSON.stringify({ re: res.value.Rqt, im: res.value.Xqt });
     }
 };
 
@@ -1178,7 +1178,7 @@ window.calcIccCabo = function() {
         chk.disabled = false;
         chk.checked = true;
         document.getElementById('icc-chk-status-cabo').innerText = '✓ Zl';
-        chk.dataset.z = JSON.stringify(res.value.Zl);
+        chk.dataset.z = JSON.stringify({ re: res.value.Rl, im: res.value.Xl });
     }
 };
 
