@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" id="html-root">
+<html id="html-root" lang="en">
 
 <head>
     <meta charset="UTF-8">
@@ -1123,13 +1123,13 @@
                 <img src="img/logo_symbol.png" alt="AmpAI Logo" class="header-logo">
                 <h1 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; color: var(--text-primary); margin: 0;">
                     Amp<span style="color: var(--accent);">AI</span>
-                    <span style="font-size: 1.6rem; font-weight: 500; color: var(--text-muted); margin-left: 0.25rem;"> - <span data-i18n="header.subtitle">Soluções em Engenharia Elétrica</span></span>
+                    <span style="font-size: 1.6rem; font-weight: 500; color: var(--text-muted); margin-left: 0.25rem;"> - <span data-i18n="header.subtitle">Electrical Engineering Solutions</span></span>
                 </h1>
             </div>
             <div class="header-actions" style="display: flex; align-items: center; gap: 1.5rem;">
                 <div class="header-meta">
                     <span class="norm-badge" id="header-norm-badge">IEC 60909-0</span>
-                    <span id="header-method-span" data-i18n="header.method">Método das Impedâncias Percentuais</span>
+                    <span id="header-method-span" data-i18n="header.method">Percentage Impedance Method</span>
                 </div>
                 <!-- Seletor de idiomas no header (O.S. 007/008) -->
                 <div class="lang-switcher" aria-label="Language selector">
@@ -1151,7 +1151,7 @@
             <!-- SaaS Navigation Sidebar -->
             <nav class="nav-sidebar">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
-                    <div class="nav-section-title" data-i18n="nav.solutions" style="margin:0;">Soluções</div>
+                    <div class="nav-section-title" data-i18n="nav.solutions" style="margin:0;">Solutions</div>
                     <button onclick="window.toggleSidebar()" title="Recolher menu" style="background:transparent; border:none; cursor:pointer; color:var(--text-muted); line-height:1; padding:.2rem .3rem; border-radius:4px; transition:var(--transition);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-muted)'">
                         <span style="font-size:1.2rem;">&#9776;</span>
                     </button>
@@ -1159,23 +1159,23 @@
 
                 <a href="#" class="nav-item nav-link active" id="nav-shortcircuit" onclick="window.switchModule('shortcircuit'); return false;">
                     <span style="font-size: 1.1rem;">⚡</span>
-                    <span style="flex: 1;" data-i18n="nav.shortCircuit">Curto-Circuito Trifásico (IEC 60909)</span>
+                    <span style="flex: 1;" data-i18n="nav.shortCircuit">Three-Phase Short-Circuit (IEC 60909)</span>
                 </a>
 
                 <a href="#" class="nav-item nav-link" id="nav-cabling" onclick="window.switchModule('cabling'); return false;">
                     <span style="font-size: 1.1rem;">🔌</span>
-                    <span style="flex: 1;" data-i18n="nav.cableSizing">Dimensionamento de Cabos (BT e MT)</span>
+                    <span style="flex: 1;" data-i18n="nav.cableSizing">Cable Sizing (LV & MV)</span>
                 </a>
 
                 <a href="#" class="nav-item nav-link" id="nav-impedances" onclick="window.switchModule('impedances'); return false;">
                     <span style="font-size:1.1rem;">&#x1F527;</span>
-                    <span style="flex:1;" data-i18n="icc.navLabel">Imped&#226;ncias IEC 60909</span>
+                    <span style="flex:1;" data-i18n="icc.navLabel">IEC 60909 Impedances</span>
                 </a>
 
-                <a href="#" class="nav-item locked" data-i18n-title="nav.comingSoon" title="Em breve / Bloqueado">
+                <a href="#" class="nav-item locked" data-i18n-title="Coming Soon / Locked" title="Coming Soon / Locked">
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <span style="font-size: 1.1rem;">⛰️</span>
-                        <span data-i18n="nav.altitudeDerating">Derating por Altitude (Motores e Painéis BT/MT)</span>
+                        <span data-i18n="nav.altitudeDerating">Altitude Derating (Motors & LV/MV Panels)</span>
                     </div>
                     <i data-lucide="lock" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
                 </a>
@@ -1185,7 +1185,7 @@
             <aside class="sidebar">
                 <div class="sidebar-title">
                     <i data-lucide="sliders" style="color: var(--text-primary); width: 16px; height: 16px;"></i>
-                    <span data-i18n="inputs.title">Parâmetros do Sistema</span>
+                    <span data-i18n="inputs.title">System Parameters</span>
                 </div>
 
                 <!-- Alert Banner -->
@@ -1198,30 +1198,30 @@
                 <!-- 1. Rede Upstream -->
                 <div class="input-group-title">
                     <i data-lucide="globe" style="width: 12px; height: 12px;"></i>
-                    <span data-i18n="inputs.group1">1. Rede de Alimentação</span>
+                    <span data-i18n="inputs.group1">1. Upstream Grid</span>
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.voltageFactor" for="input-c">Fator de Tensão da Rede (c)</label>
+                    <label data-i18n="inputs.voltageFactor" for="input-c">Grid Voltage Factor (c)</label>
                     <select id="input-c" onchange="calculate()">
-                        <option value="1.05" data-i18n="inputs.voltageFactorOpt1">c = 1.05 (Mínimo BT)</option>
-                        <option value="1.10" data-i18n="inputs.voltageFactorOpt2">c = 1.10 (Máximo BT / MT)</option>
-                        <option value="1.00" data-i18n="inputs.voltageFactorOpt3">c = 1.00 (Fator Unitário)</option>
+                        <option value="1.05" data-i18n="inputs.voltageFactorOpt1">c = 1.05 (LV Minimum)</option>
+                        <option value="1.10" data-i18n="inputs.voltageFactorOpt2">c = 1.10 (LV/MV Maximum)</option>
+                        <option value="1.00" data-i18n="inputs.voltageFactorOpt3">c = 1.00 (Unit Factor)</option>
                     </select>
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.gridLevel">Nível da Rede Upstream</label>
+                    <label data-i18n="inputs.gridLevel">Upstream Grid Level</label>
                     <div class="toggle-btn-group">
                         <button type="button" class="toggle-btn active" id="toggle-scc" onclick="setGridInputMode('scc')"
-                            data-i18n="inputs.gridPower">Potência (Scc)</button>
+                            data-i18n="inputs.gridPower">Power (Scc)</button>
                         <button type="button" class="toggle-btn" id="toggle-icc" onclick="setGridInputMode('icc')"
-                            data-i18n="inputs.gridCurrent">Corrente (Icc)</button>
+                            data-i18n="inputs.gridCurrent">Current (Icc)</button>
                     </div>
                 </div>
 
                 <div class="form-control" id="group-scc">
-                    <label data-i18n="inputs.sccPower" for="input-scc">Potência de Curto-Circuito (Scc)</label>
+                    <label data-i18n="inputs.sccPower" for="input-scc">Short-Circuit Power (Scc)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-scc" value="500" min="1" step="50" oninput="calculate()">
                         <span class="unit-badge">MVA</span>
@@ -1229,7 +1229,7 @@
                 </div>
 
                 <div class="form-control" id="group-icc" style="display: none;">
-                    <label data-i18n="inputs.iccCurrent" for="input-icc">Corrente de Curto-Circuito (Icc)</label>
+                    <label data-i18n="inputs.iccCurrent" for="input-icc">Short-Circuit Current (Icc)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-icc" value="20" min="0.1" step="0.5" oninput="calculate()">
                         <span class="unit-badge">kA</span>
@@ -1239,13 +1239,13 @@
                 <!-- 2. Transformador -->
                 <div class="input-group-title">
                     <i data-lucide="box" style="width: 12px; height: 12px;"></i>
-                    <span data-i18n="inputs.group2">2. Transformador</span>
+                    <span data-i18n="inputs.group2">2. Transformer</span>
                 </div>
 
 
 
                 <div class="form-control">
-                    <label data-i18n="inputs.nomPower" for="input-snt">Potência Nominal (SnT)</label>
+                    <label data-i18n="inputs.nomPower" for="input-snt">Rated Power (SnT)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-snt" value="1500" min="10" step="50" oninput="calculate()">
                         <span class="unit-badge">kVA</span>
@@ -1253,7 +1253,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.nomVoltage" for="input-unt">Tensão Secundária Nominal (UnT)</label>
+                    <label data-i18n="inputs.nomVoltage" for="input-unt">Rated Secondary Voltage (UnT)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-unt" value="380" min="110" max="36000" step="10"
                             oninput="calculate()">
@@ -1262,7 +1262,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.impedancePct" for="input-zk">Impedância Percentual (Z% ou uk%)</label>
+                    <label data-i18n="inputs.impedancePct" for="input-zk">Percentage Impedance (Z% or uk%)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-zk" value="6.0" min="1" max="25" step="0.1"
                             oninput="calculate()">
@@ -1271,7 +1271,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.copperLoss" for="input-pcu">Perdas no Cobre (Pcu)</label>
+                    <label data-i18n="inputs.copperLoss" for="input-pcu">Copper Losses (Pcu)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-pcu" value="18" min="0.1" step="0.5" oninput="calculate()">
                         <span class="unit-badge">kW</span>
@@ -1281,35 +1281,35 @@
                 <!-- 3. Grupo de Ligação e Neutro -->
                 <div class="input-group-title">
                     <i data-lucide="git-branch" style="width: 12px; height: 12px;"></i>
-                    <span data-i18n="inputs.group3">3. Ligação e Neutro</span>
+                    <span data-i18n="inputs.group3">3. Winding & Neutral</span>
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.vectorGroup" for="input-vector-group">Grupo de Ligação (Sequência Zero)</label>
+                    <label data-i18n="inputs.vectorGroup" for="input-vector-group">Vector Group (Zero Sequence)</label>
                     <select id="input-vector-group" onchange="calculate()">
-                        <option value="Dyn11" data-i18n="inputs.vgDyn11">Dyn11 (Estrela Aterrado / Delta)</option>
-                        <option value="Yzn5" data-i18n="inputs.vgYzn5">Yzn5 (Estrela-Zigzag Aterrado)</option>
-                        <option value="Ynyn" data-i18n="inputs.vgYnyn">Ynyn0 (Estrela-Estrela Aterrado)</option>
-                        <option value="Custom" data-i18n="inputs.vgCustom">Customizado (R0/R1 e X0/X1)</option>
+                        <option value="Dyn11" data-i18n="inputs.vgDyn11">Dyn11 (Star Earthed / Delta)</option>
+                        <option value="Yzn5" data-i18n="inputs.vgYzn5">Yzn5 (Star-Zigzag Earthed)</option>
+                        <option value="Ynyn" data-i18n="inputs.vgYnyn">Ynyn0 (Star-Star Earthed)</option>
+                        <option value="Custom" data-i18n="inputs.vgCustom">Custom (R0/R1 & X0/X1)</option>
                     </select>
                 </div>
 
                 <div id="custom-vector-group-inputs"
                     style="display: none; background: var(--bg-primary); padding: 0.5rem; border-radius: 6px; margin-bottom: 0.75rem; border: 1px solid var(--border);">
                     <div class="form-control">
-                        <label data-i18n="inputs.r0r1" for="input-r0r1">Relação R0/R1</label>
+                        <label data-i18n="inputs.r0r1" for="input-r0r1">R0/R1 Ratio</label>
                         <input type="number" id="input-r0r1" value="1.0" min="0.1" max="20" step="0.1"
                             oninput="calculate()">
                     </div>
                     <div class="form-control">
-                        <label data-i18n="inputs.x0x1" for="input-x0x1">Relação X0/X1</label>
+                        <label data-i18n="inputs.x0x1" for="input-x0x1">X0/X1 Ratio</label>
                         <input type="number" id="input-x0x1" value="0.95" min="0.05" max="20" step="0.05"
                             oninput="calculate()">
                     </div>
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.groundingR" for="input-rn">Resistência de Aterramento (RN)</label>
+                    <label data-i18n="inputs.groundingR" for="input-rn">Grounding Resistance (RN)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-rn" value="0.0" min="0" step="0.01" oninput="calculate()">
                         <span class="unit-badge">Ω</span>
@@ -1317,7 +1317,7 @@
                 </div>
 
                 <div class="form-control">
-                    <label data-i18n="inputs.groundingX" for="input-xn">Reatância de Aterramento (XN)</label>
+                    <label data-i18n="inputs.groundingX" for="input-xn">Grounding Reactance (XN)</label>
                     <div class="input-wrapper">
                         <input type="number" id="input-xn" value="0.0" min="0" step="0.01" oninput="calculate()">
                         <span class="unit-badge">Ω</span>
@@ -1328,79 +1328,72 @@
                 <div class="input-group-title"
                     style="margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1rem;">
                     <i data-lucide="book-open" style="width: 12px; height: 12px;"></i>
-                    <span data-i18n="inputs.group4">4. Dicionário de Símbolos</span>
+                    <span data-i18n="inputs.group4">4. Symbol Dictionary</span>
                 </div>
                 <div class="symbols-legend">
                     <div class="symbol-item">
                         <span class="symbol-code">Sn</span>
-                        <span class="symbol-def" data-i18n="sym.Sn">Potência Nominal do Transformador (kVA)</span>
+                        <span class="symbol-def" data-i18n="sym.Sn">Transformer Rated Power (kVA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Vn</span>
-                        <span class="symbol-def" data-i18n="sym.Vn">Tensão de Linha Secundária (V)</span>
+                        <span class="symbol-def" data-i18n="sym.Vn">Secondary Line Voltage (V)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Z%</span>
-                        <span class="symbol-def" data-i18n="sym.Zpct">Impedância de Curto-Circuito (%)</span>
+                        <span class="symbol-def" data-i18n="sym.Zpct">Short-Circuit Impedance (%)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Pcu</span>
-                        <span class="symbol-def" data-i18n="sym.Pcu">Perdas no Cobre do Transformador (kW)</span>
+                        <span class="symbol-def" data-i18n="sym.Pcu">Transformer Copper Losses (kW)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Scc</span>
-                        <span class="symbol-def" data-i18n="sym.Scc">Potência de Curto-Circuito da Rede Upstream
-                            (MVA)</span>
+                        <span class="symbol-def" data-i18n="sym.Scc">Upstream Grid Short-Circuit Power (MVA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Icc</span>
-                        <span class="symbol-def" data-i18n="sym.Icc">Corrente de Curto-Circuito da Rede Upstream
-                            (kA)</span>
+                        <span class="symbol-def" data-i18n="sym.Icc">Upstream Grid Short-Circuit Current (kA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">c</span>
-                        <span class="symbol-def" data-i18n="sym.c">Fator de Tensão de Rede (norma IEC 60909)</span>
+                        <span class="symbol-def" data-i18n="sym.c">Grid Voltage Factor (IEC 60909)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">ZQ</span>
-                        <span class="symbol-def" data-i18n="sym.ZQ">Impedância da Rede Upstream referida ao secundário
-                            (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.ZQ">Upstream Grid Impedance referred to secondary (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">ZT</span>
-                        <span class="symbol-def" data-i18n="sym.ZT">Impedância Interna do Transformador (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.ZT">Transformer Internal Impedance (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">RN / XN</span>
-                        <span class="symbol-def" data-i18n="sym.RNXN">Resistência e Reatância de Aterramento do Neutro
-                            (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.RNXN">Neutral Grounding Resistance & Reactance (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Z(1)</span>
-                        <span class="symbol-def" data-i18n="sym.Z1">Impedância Equivalente de Sequência Positiva
-                            (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.Z1">Positive-Sequence Equivalent Impedance (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Z(0)</span>
-                        <span class="symbol-def" data-i18n="sym.Z0">Impedância Equivalente de Sequência Zero (Ω)</span>
+                        <span class="symbol-def" data-i18n="sym.Z0">Zero-Sequence Equivalent Impedance (Ω)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">In</span>
-                        <span class="symbol-def" data-i18n="sym.In">Corrente Nominal Secundária do Trafo (A)</span>
+                        <span class="symbol-def" data-i18n="sym.In">Transformer Secondary Rated Current (A)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">Ik''</span>
-                        <span class="symbol-def" data-i18n="sym.Ikpp">Corrente de Curto-Circuito Inicial Simétrica
-                            (kA)</span>
+                        <span class="symbol-def" data-i18n="sym.Ikpp">Initial Symmetrical Short-Circuit Current (kA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">ip</span>
-                        <span class="symbol-def" data-i18n="sym.ip">Corrente de Pico Assimétrica Inicial (kA)</span>
+                        <span class="symbol-def" data-i18n="sym.ip">Initial Asymmetric Peak Current (kA)</span>
                     </div>
                     <div class="symbol-item">
                         <span class="symbol-code">κ</span>
-                        <span class="symbol-def" data-i18n="sym.kappa">Fator de Crista de Pico Assemelhado (IEC
-                            60909)</span>
+                        <span class="symbol-def" data-i18n="sym.kappa">Peak Factor (IEC 60909)</span>
                     </div>
                 </div>
 
@@ -1412,36 +1405,34 @@
                 <div class="results-grid">
                     <div class="result-card primary">
                         <div class="result-title">
-                            <span data-i18n="kpi.nomCurrentTitle">Corrente Nominal (In)</span>
+                            <span data-i18n="kpi.nomCurrentTitle">Rated Current (In)</span>
                         </div>
                         <div class="result-value" id="val-int">-- <span class="result-unit">A</span></div>
-                        <div class="result-desc" data-i18n="kpi.nomCurrentDesc">Corrente nominal em plena carga
-                            secundária.</div>
+                        <div class="result-desc" data-i18n="kpi.nomCurrentDesc">Rated current at full secondary load.</div>
                     </div>
 
                     <div class="result-card danger">
                         <div class="result-title">
-                            <span data-i18n="kpi.ik3Title">Curto Trifásico (I''k3)</span>
+                            <span data-i18n="kpi.ik3Title">Three-Phase Fault (I\</span>
                         </div>
                         <div class="result-value" id="val-ik3">-- <span class="result-unit">kA</span></div>
-                        <div class="result-desc" data-i18n="kpi.ik3Desc">Falha trifásica simétrica inicial máxima.</div>
+                        <div class="result-desc" data-i18n="kpi.ik3Desc">Maximum initial symmetric three-phase fault.</div>
                     </div>
 
                     <div class="result-card success">
                         <div class="result-title">
-                            <span data-i18n="kpi.ik2Title">Curto Bifásico (I''k2)</span>
+                            <span data-i18n="kpi.ik2Title">Two-Phase Fault (I\</span>
                         </div>
                         <div class="result-value" id="val-ik2">-- <span class="result-unit">kA</span></div>
-                        <div class="result-desc" data-i18n="kpi.ik2Desc">Curto bifásico livre de terra.</div>
+                        <div class="result-desc" data-i18n="kpi.ik2Desc">Phase-to-phase fault, earth free.</div>
                     </div>
 
                     <div class="result-card info">
                         <div class="result-title">
-                            <span data-i18n="kpi.ik1Title">Curto Monofásico (I''k1)</span>
+                            <span data-i18n="kpi.ik1Title">Single-Phase Fault (I\</span>
                         </div>
                         <div class="result-value" id="val-ik1">-- <span class="result-unit">kA</span></div>
-                        <div class="result-desc" data-i18n="kpi.ik1Desc">Fase-terra. Altamente dependente do neutro.
-                        </div>
+                        <div class="result-desc" data-i18n="kpi.ik1Desc">Phase-to-earth. Highly dependent on neutral.</div>
                     </div>
                 </div>
 
@@ -1449,15 +1440,15 @@
                 <div class="tabs-header">
                     <button class="tab-btn active" onclick="switchTab(event, 'tab-results')">
                         <i data-lucide="table" style="width: 14px; height: 14px;"></i> <span
-                            data-i18n="tabs.impedances">Impedâncias e Dados</span>
+                            data-i18n="tabs.impedances">Impedances & Data</span>
                     </button>
                     <button class="tab-btn" onclick="switchTab(event, 'tab-diagram')">
                         <i data-lucide="git-commit" style="width: 14px; height: 14px;"></i> <span
-                            data-i18n="tabs.diagram">Diagrama Unifilar</span>
+                            data-i18n="tabs.diagram">Single-Line Diagram</span>
                     </button>
                     <button class="tab-btn" onclick="switchTab(event, 'tab-charts')">
                         <i data-lucide="activity" style="width: 14px; height: 14px;"></i> <span
-                            data-i18n="tabs.curves">Curvas Analíticas</span>
+                            data-i18n="tabs.curves">Analytical Curves</span>
                     </button>
                 </div>
 
@@ -1468,57 +1459,57 @@
                         <table class="tech-table">
                             <thead>
                                 <tr>
-                                    <th data-i18n="tbl.param">Parâmetro do Sistema</th>
-                                    <th data-i18n="tbl.symbol">Símbolo</th>
-                                    <th data-i18n="tbl.positive">Positivo (+) [Ω]</th>
+                                    <th data-i18n="tbl.param">System Parameter</th>
+                                    <th data-i18n="tbl.symbol">Symbol</th>
+                                    <th data-i18n="tbl.positive">Positive (+) [Ω]</th>
                                     <th data-i18n="tbl.zero">Zero (0) [Ω]</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td data-i18n="tbl.rq">Resistência da Rede Upstream</td>
+                                    <td data-i18n="tbl.rq">Upstream Grid Resistance</td>
                                     <td>RQ</td>
                                     <td id="tbl-rq-1">--</td>
-                                    <td data-i18n="tbl.naIsolated">N/A (Rede Isolada)</td>
+                                    <td data-i18n="tbl.naIsolated">N/A (Isolated Grid)</td>
                                 </tr>
                                 <tr>
-                                    <td data-i18n="tbl.xq">Reatância da Rede Upstream</td>
+                                    <td data-i18n="tbl.xq">Upstream Grid Reactance</td>
                                     <td>XQ</td>
                                     <td id="tbl-xq-1">--</td>
-                                    <td data-i18n="tbl.naIsolated">N/A (Rede Isolada)</td>
+                                    <td data-i18n="tbl.naIsolated">N/A (Isolated Grid)</td>
                                 </tr>
                                 <tr>
-                                    <td data-i18n="tbl.rt">Resistência Interna do Transformador</td>
+                                    <td data-i18n="tbl.rt">Transformer Internal Resistance</td>
                                     <td>RT</td>
                                     <td id="tbl-rt-1">--</td>
                                     <td id="tbl-rt-0">--</td>
                                 </tr>
                                 <tr>
-                                    <td data-i18n="tbl.xt">Reatância Interna do Transformador</td>
+                                    <td data-i18n="tbl.xt">Transformer Internal Reactance</td>
                                     <td>XT</td>
                                     <td id="tbl-xt-1">--</td>
                                     <td id="tbl-xt-0">--</td>
                                 </tr>
                                 <tr>
-                                    <td data-i18n="tbl.zn">Impedância de Aterramento do Neutro</td>
+                                    <td data-i18n="tbl.zn">Neutral Grounding Impedance</td>
                                     <td>3ZN</td>
                                     <td>N/A</td>
                                     <td id="tbl-zn-0">--</td>
                                 </tr>
                                 <tr style="border-top: 1.5px solid var(--border); font-weight: 700;">
-                                    <td data-i18n="tbl.req">Resistência Equivalente no Ponto de Falha</td>
+                                    <td data-i18n="tbl.req">Equivalent Resistance at Fault Point</td>
                                     <td>R_eq</td>
                                     <td id="tbl-req-1">--</td>
                                     <td id="tbl-req-0">--</td>
                                 </tr>
                                 <tr style="font-weight: 700;">
-                                    <td data-i18n="tbl.xeq">Reatância Equivalente no Ponto de Falha</td>
+                                    <td data-i18n="tbl.xeq">Equivalent Reactance at Fault Point</td>
                                     <td>X_eq</td>
                                     <td id="tbl-xeq-1">--</td>
                                     <td id="tbl-xeq-0">--</td>
                                 </tr>
                                 <tr style="font-weight: 700; border-bottom: 2px solid var(--text-primary);">
-                                    <td data-i18n="tbl.zeq">Impedância Equivalente Total</td>
+                                    <td data-i18n="tbl.zeq">Total Equivalent Impedance</td>
                                     <td>Z_eq</td>
                                     <td id="tbl-zeq-1" style="color: var(--accent-hover);">--</td>
                                     <td id="tbl-zeq-0" style="color: var(--accent-hover);">--</td>
@@ -1531,9 +1522,9 @@
                             <div>
                                 <span
                                     style="font-size: 0.8rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase;"
-                                    data-i18n="diagram.peakTitle">CORRENTE DE CRISTA ASSIMÉTRICA (IP)</span>
+                                    data-i18n="diagram.peakTitle">ASYMMETRIC PEAK CURRENT (IP)</span>
                                 <p style="font-size: 0.75rem; color: var(--text-muted);"
-                                    data-i18n="diagram.peakDesc">Corrente máxima de pico mecânico no primeiro semi-ciclo de curto-circuito.</p>
+                                    data-i18n="diagram.peakDesc">Maximum mechanical peak current in the first short-circuit semi-cycle.</p>
                             </div>
                             <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700;"
                                 id="val-ip3-aux">-- kA</div>
@@ -1614,7 +1605,7 @@
                         <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
                             <i data-lucide="file-text"
                                 style="width: 18px; height: 18px; color: var(--text-primary);"></i>
-                            <span data-i18n="memorial.title">Memorial de Cálculo Completo (Norma IEC 60909)</span>
+                            <span data-i18n="memorial.title">Full Calculation Report (IEC 60909)</span>
                         </span>
                         <i data-lucide="chevron-down" id="accordion-chevron" class="chevron-icon"
                             style="width: 18px; height: 18px;"></i>
@@ -1623,11 +1614,11 @@
                         <!-- Step 1: Base Parameters -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num" data-i18n="memorial.step1num">Passo 1</span>
+                                <span class="step-num" data-i18n="memorial.step1num">Step 1</span>
                                 <span class="step-title" data-i18n="memorial.step1title">Corrente Nominal Secundária do
                                     Enrolamento</span>
                             </div>
-                            <p style="font-size: 0.85rem; color: var(--text-secondary);" data-i18n="memorial.step1explanation">Calculada com base na potência aparente nominal (SnT) e tensão nominal secundária entre fases (UnT):</p>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);" data-i18n="memorial.step1explanation">Calculated based on the rated apparent power (SnT) and rated secondary line-to-line voltage (UnT):</p>
                             <div class="math-block">
                                 <div class="math-line">InT = SnT / (√3 · UnT)</div>
                                 <div class="math-line" id="m-calc-int">InT = -- A</div>
@@ -1637,7 +1628,7 @@
                         <!-- Step 2: Grid Upstream -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num" data-i18n="memorial.step2num">Passo 2</span>
+                                <span class="step-num" data-i18n="memorial.step2num">Step 2</span>
                                 <span class="step-title" data-i18n="memorial.step2title">Impedância Equivalente da Rede
                                     de Média Tensão</span>
                             </div>
@@ -1655,7 +1646,7 @@
                         <!-- Step 3: Transformer internal impedances -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num" data-i18n="memorial.step3num">Passo 3</span>
+                                <span class="step-num" data-i18n="memorial.step3num">Step 3</span>
                                 <span class="step-title" data-i18n="memorial.step3title">Impedâncias de Sequência
                                     Positiva e Zero do Transformador</span>
                             </div>
@@ -1681,7 +1672,7 @@
                         <!-- Step 4: Total impedance loop -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num" data-i18n="memorial.step4num">Passo 4</span>
+                                <span class="step-num" data-i18n="memorial.step4num">Step 4</span>
                                 <span class="step-title" data-i18n="memorial.step4title">Somatório de Impedâncias
                                     Equivalentes de Loop</span>
                             </div>
@@ -1698,24 +1689,24 @@
                         <!-- Step 5: Short circuit calculations under IEC 60909 -->
                         <div class="memorial-step">
                             <div class="step-header">
-                                <span class="step-num" data-i18n="memorial.step5num">Passo 5</span>
+                                <span class="step-num" data-i18n="memorial.step5num">Step 5</span>
                                 <span class="step-title" data-i18n="memorial.step5title">Resoluções Analíticas Finais
                                     (IEC 60909)</span>
                             </div>
                             <div class="math-block">
-                                <div class="math-line" data-i18n="memorial.step5item1">1. Curto-Circuito Trifásico Simétrico Inicial (I''k3):</div>
+                                <div class="math-line" data-i18n="memorial.step5item1">1. Initial Symmetrical Three-Phase Short-Circuit Current (I</div>
                                 <div class="math-line">I''k3 = c · UnT / (√3 · Z(1))</div>
                                 <div class="math-line" id="m-calc-ik3" class="math-result">I''k3 = -- kA</div>
                                 <br>
-                                <div class="math-line" data-i18n="memorial.step5item2">2. Curto-Circuito Bifásico Livre de Terra (I''k2):</div>
+                                <div class="math-line" data-i18n="memorial.step5item2">2. Line-to-Line Short-Circuit Current, Earth-Free (I</div>
                                 <div class="math-line">I''k2 = √3/2 · I''k3</div>
                                 <div class="math-line" id="m-calc-ik2" class="math-result">I''k2 = -- kA</div>
                                 <br>
-                                <div class="math-line" data-i18n="memorial.step5item3">3. Curto-Circuito Monofásico Terra Inicial (I''k1):</div>
+                                <div class="math-line" data-i18n="memorial.step5item3">3. Initial Line-to-Earth Short-Circuit Current (I</div>
                                 <div class="math-line">I''k1 = (√3 · c · UnT) / |2·Z(1) + Z(0)|</div>
                                 <div class="math-line" id="m-calc-ik1" class="math-result">I''k1 = -- kA</div>
                                 <br>
-                                <div class="math-line" data-i18n="memorial.step5item4">4. Fator e Corrente de Pico Assimétrica (ip3):</div>
+                                <div class="math-line" data-i18n="memorial.step5item4">4. Peak Short-Circuit Current Factor and Value (ip3):</div>
                                 <div class="math-line">κ = 1.02 + 0.98 · e^(-3 · R(1)/X(1)) = <span
                                         id="m-val-kappa">--</span></div>
                                 <div class="math-line">ip3 = κ · √2 · I''k3</div>
@@ -1727,7 +1718,7 @@
                         <div class="actions-bar" style="margin-top: 1rem;">
                             <button class="btn-action btn-secondary" onclick="window.print()">
                                 <i data-lucide="printer" style="width: 14px; height: 14px;"></i> <span
-                                    data-i18n="memorial.printBtn">Imprimir Memorial Técnico</span>
+                                    data-i18n="memorial.printBtn">Print Attachment</span>
                             </button>
                         </div>
                     </div>
@@ -1743,13 +1734,13 @@
                 <!-- Cabeçalho do Módulo -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:1rem;">
                     <div>
-                        <h2 style="font-size:1.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;" data-i18n="cabling.title">Dimensionamento de Cabos</h2>
+                        <h2 style="font-size:1.2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;" data-i18n="cabling.title">Cable Sizing</h2>
                         <p style="font-size:0.8rem; color:var(--text-muted);">IEC 60502-2 · IEC 60364-5-52 · IEC 60949 · IEC 60287</p>
                     </div>
                     <!-- Toggle BT / MT -->
                     <div style="display:flex; gap:0.5rem; background:var(--bg-tertiary); padding:4px; border-radius:8px;">
-                        <button type="button" id="cb-toggle-bt" class="toggle-btn active" data-action="switch-bt" data-i18n="cabling.toggle.bt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">⚡ BT (≤ 1 kV)</button>
-                        <button type="button" id="cb-toggle-mt" class="toggle-btn" data-action="switch-mt" data-i18n="cabling.toggle.mt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">🔆 MT (6–30 kV)</button>
+                        <button type="button" id="cb-toggle-bt" class="toggle-btn active" data-action="switch-bt" data-i18n="cabling.toggle.bt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">⚡ LV (≤ 1 kV)</button>
+                        <button type="button" id="cb-toggle-mt" class="toggle-btn" data-action="switch-mt" data-i18n="cabling.toggle.mt" style="padding:0.4rem 1.2rem; font-size:0.8rem;">🔆 MV (6–30 kV)</button>
                     </div>
                 </div>
 
@@ -1760,14 +1751,14 @@
                     <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
                         <!-- Sidebar BT -->
                         <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
-                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.bt.params">Parâmetros BT</div>
+                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.bt.params">LV Parameters</div>
                             <div class="alert-banner" id="bt-alert-error" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
                             <form id="form-bt" novalidate>
 
-                            <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method" for="bt-method">Método de Instalação</label>
+                            <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method" for="bt-method">Installation Method</label>
                                 <select id="bt-method" data-input-bt="true">
                                     <option value="B1">B1 — Eletroduto Embutido em Parede</option>
                                     <option value="B2">B2 — Eletroduto Aparente</option>
@@ -1777,55 +1768,55 @@
                                     <option value="F">F — Cabo Unipolares, Bandeja (Trifólio)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.conductor">Material do Condutor</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.conductor">Conductor Material</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="bt-btn-cu" data-action="set-bt-cu" aria-label="Condutor de Cobre">Cu</button>
                                     <button type="button" class="toggle-btn" id="bt-btn-al" data-action="set-bt-al" aria-label="Condutor de Alumínio">Al</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.insulation">Isolação</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.insulation">Insulation</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="bt-btn-xlpe" data-action="set-bt-xlpe" aria-label="Isolação XLPE 90°C">XLPE 90°C</button>
                                     <button type="button" class="toggle-btn" id="bt-btn-pvc" data-action="set-bt-pvc" aria-label="Isolação PVC 70°C">PVC 70°C</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.phases" for="bt-phases">Fases do Sistema</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.phases" for="bt-phases">System Phases</label>
                                 <select id="bt-phases" data-input-bt="true">
                                     <option value="3">Trifásico (3F+N)</option>
                                     <option value="1">Monofásico (1F+N)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.ib" for="bt-ib">Corrente de Projeto Ib (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ib" for="bt-ib">Design Current Ib (A)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ib" value="100" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.in" for="bt-in">Corrente Nominal do Disjuntor In (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.in" for="bt-in">Breaker Rated Current In (A)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-in" value="125" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-bt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.ull" for="bt-ull">Tensão de Linha ULL (V)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ull" for="bt-ull">Line Voltage ULL (V)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ull" value="380" min="110" max="1000" data-input-bt="true"><span class="unit-badge">V</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.length" for="bt-length">Comprimento (m)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.length" for="bt-length">Length (m)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-length" value="50" min="1" data-input-bt="true"><span class="unit-badge">m</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.cosphi" for="bt-cosphi">Fator de Potência cosφ</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.cosphi" for="bt-cosphi">Power Factor cosφ</label>
                                 <div class="input-wrapper"><input type="number" id="bt-cosphi" value="0.92" min="0.7" max="1" step="0.01" data-input-bt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.voltdrop" for="bt-du-max">Queda de Tensão Máx. ΔU%</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.voltdrop" for="bt-du-max">Max. Voltage Drop ΔU%</label>
                                 <div class="input-wrapper"><input type="number" id="bt-du-max" value="3.0" min="0.5" max="10" step="0.5" data-input-bt="true"><span class="unit-badge">%</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.tamb" for="bt-tamb">Temperatura Ambiente (°C)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.tamb" for="bt-tamb">Ambient Temperature (°C)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tamb" value="30" min="0" max="60" data-input-bt="true"><span class="unit-badge">°C</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.ncirc" for="bt-ncirc">Nº de Circuitos Agrupados</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.ncirc" for="bt-ncirc">No. of Grouped Circuits</label>
                                 <div class="input-wrapper"><input type="number" id="bt-ncirc" value="1" min="1" max="20" data-input-bt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.icc" for="bt-icc">Icc no ponto de instalação (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.icc" for="bt-icc">Icc at installation point (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-icc" value="10" min="0.1" step="0.5" data-input-bt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.bt.tprot" for="bt-tprot">Tempo de atuação da proteção (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.bt.tprot" for="bt-tprot">Protection trip time (s)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tprot" value="0.2" min="0.01" max="5" step="0.01" data-input-bt="true"><span class="unit-badge">s</span></div>
                             </div>
-                            <button id="btn-bt" class="btn-action btn-accent" data-action="calc-bt" data-i18n="cabling.btn.calcBT">⚡ Calcular BT</button>
+                            <button id="btn-bt" class="btn-action btn-accent" data-action="calc-bt" data-i18n="cabling.btn.calcBT">⚡ Calculate LV</button>
                             </form>
                         </aside>
 
@@ -1843,7 +1834,7 @@
                     <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
                         <!-- Sidebar MT -->
                         <aside id="mt-params" style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
-                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.mt.params">Parâmetros MT</div>
+                            <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.mt.params">MV Parameters</div>
 
                             <div class="alert-banner" id="mt-alert-error" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
@@ -1851,10 +1842,10 @@
                             </div>
                             <form id="form-mt" novalidate>
 
-                            <div class="form-control"><label for="mt-ull" data-i18n="cabling.mt.ull">Tensão de Operação (ULL - kV)</label>
+                            <div class="form-control"><label for="mt-ull" data-i18n="cabling.mt.ull">Operating Voltage (ULL - kV)</label>
                                 <input type="number" step="any" min="0" id="mt-ull" value="13.8" data-input-mt="true" required>
                             </div>
-                            <div class="form-control"><label for="mt-insulation-class" data-i18n="cabling.mt.insulClass">Classe de Isolação IEC (Um)</label>
+                            <div class="form-control"><label for="mt-insulation-class" data-i18n="cabling.mt.insulClass">IEC Insulation Class (Um)</label>
                                 <select id="mt-insulation-class" data-input-mt="true" required>
                                     <option value="3.6/6">3.6/6 kV</option>
                                     <option value="6/10">6/10 kV</option>
@@ -1863,26 +1854,26 @@
                                     <option value="18/30">18/30 kV</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.conductor">Material do Condutor</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.conductor">Conductor Material</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="mt-btn-cu" data-action="set-mt-cu" aria-label="Condutor de Cobre">Cu</button>
                                     <button type="button" class="toggle-btn" id="mt-btn-al" data-action="set-mt-al" aria-label="Condutor de Alumínio">Al</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.insulation">Isolação</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.insulation">Insulation</label>
                                 <div class="toggle-btn-group">
                                     <button type="button" class="toggle-btn active" id="mt-btn-xlpe" data-action="set-mt-xlpe" aria-label="Isolação XLPE 90°C">XLPE 90°C</button>
                                     <button type="button" class="toggle-btn" id="mt-btn-epr" data-action="set-mt-epr" aria-label="Isolação EPR 90°C">EPR 90°C</button>
                                 </div>
                             </div>
-                            <div class="form-control"><label data-tooltip="Tipo de instalação MT conforme IEC 60502-2: duto enterrado, cabo diretamente enterrado no solo ou ao ar livre em bandeja/leito." data-i18n="cabling.mt.install" for="mt-installation">Tipo de Instalação</label>
+                            <div class="form-control"><label data-tooltip="Tipo de instalação MT conforme IEC 60502-2: duto enterrado, cabo diretamente enterrado no solo ou ao ar livre em bandeja/leito." data-i18n="cabling.mt.install" for="mt-installation">Installation Type</label>
                                 <select id="mt-installation" data-input-mt="true">
                                     <option value="UNDERGROUND_DUCT">Duto Enterrado</option>
                                     <option value="DIRECT_BURIED">Diretamente Enterrado</option>
                                     <option value="IN_AIR">Ao Ar Livre (Bandeja/Leito)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.formation" for="mt-formation">Formação dos Cabos</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.formation" for="mt-formation">Cable Formation</label>
                                 <select id="mt-formation" data-input-mt="true">
                                     <option value="TREFOIL_TOUCHING">Trifólio Tocando (Trefoil Touching)</option>
                                     <option value="TREFOIL_SPACED">Trifólio Espaçado (Trefoil Spaced)</option>
@@ -1890,49 +1881,49 @@
                                     <option value="FLAT_SPACED">Plano Espaçado (Flat Spaced)</option>
                                 </select>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.ib" for="mt-ib">Corrente de Projeto Ib (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.ib" for="mt-ib">Design Current Ib (A)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-ib" value="250" min="1" step="1" required aria-label="Corrente de Projeto Ib em Ampères" data-input-mt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.in" for="mt-in">Corrente Nominal do Disjuntor In (A)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.in" for="mt-in">Breaker Rated Current In (A)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-in" value="300" min="1" step="1" required aria-label="Corrente Nominal do Disjuntor In em Ampères" data-input-mt="true"><span class="unit-badge">A</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.length" for="mt-length">Comprimento do Circuito (m)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.length" for="mt-length">Circuit Length (m)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-length" value="150" min="1" required aria-label="Comprimento do Circuito em Metros" data-input-mt="true"><span class="unit-badge">m</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.cosphi" for="mt-cosphi">Fator de Potência cosφ</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.cosphi" for="mt-cosphi">Power Factor cosφ</label>
                                 <div class="input-wrapper"><input type="number" id="mt-cosphi" value="0.90" min="0.7" max="1" step="0.01" data-input-mt="true"><span class="unit-badge">—</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.voltdrop" for="mt-du-max">Queda de Tensão Máx. ΔU%</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.voltdrop" for="mt-du-max">Max. Voltage Drop ΔU%</label>
                                 <div class="input-wrapper"><input type="number" id="mt-du-max" value="2.0" min="0.5" max="10" step="0.1" data-input-mt="true"><span class="unit-badge">%</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.icc" for="mt-icc">Icc no ponto de instalação (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.icc" for="mt-icc">Icc at installation point (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-icc" value="12.5" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.ifault" for="mt-ifault">Icc Fase-Terra (kA)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.ifault" for="mt-ifault">Phase-Earth Fault Current (kA)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-ifault" value="1" min="0.1" step="0.5" data-input-mt="true"><span class="unit-badge">kA</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.tcond" for="mt-tcond">Tempo de atuação Fase (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.tcond" for="mt-tcond">Phase trip time (s)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-tcond" value="0.5" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
                             </div>
-                            <div class="form-control"><label data-i18n="cabling.mt.tscreen" for="mt-tscreen">Tempo de atuação Terra (s)</label>
+                            <div class="form-control"><label data-i18n="cabling.mt.tscreen" for="mt-tscreen">Earth trip time (s)</label>
                                 <div class="input-wrapper"><input type="number" id="mt-tscreen" value="1.0" min="0.01" max="5" step="0.01" data-input-mt="true"><span class="unit-badge">s</span></div>
                             </div>
                             <div style="padding-top:1rem; border-top:1px solid var(--border); margin-top:1rem;">
-                                <div style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem;" data-i18n="cabling.mt.envFactors">Fatores Ambientais</div>
-                                <div class="form-control"><label data-i18n="cabling.mt.tamb" for="mt-tamb">Temperatura Ambiente (°C)</label>
+                                <div style="font-size:0.7rem; font-weight:700; color:var(--text-muted); margin-bottom:0.5rem;" data-i18n="cabling.mt.envFactors">Environmental Factors</div>
+                                <div class="form-control"><label data-i18n="cabling.mt.tamb" for="mt-tamb">Ambient Temperature (°C)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-tamb" value="20" min="0" max="60" data-input-mt="true"><span class="unit-badge">°C</span></div>
                                 </div>
-                                <div class="form-control"><label data-i18n="cabling.mt.depth" for="mt-depth">Profundidade (m)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.depth" for="mt-depth">Burial Depth (m)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-depth" value="0.8" min="0.3" max="3" step="0.1" data-input-mt="true"><span class="unit-badge">m</span></div>
                                 </div>
-                                <div class="form-control"><label data-i18n="cabling.mt.rhoSoil" for="mt-rho-soil">Resistividade do Solo (K·m/W)</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.rhoSoil" for="mt-rho-soil">Soil Resistivity (K·m/W)</label>
                                     <div class="input-wrapper"><input type="number" id="mt-rho-soil" value="1.0" min="0.5" max="3" step="0.1" data-input-mt="true"><span class="unit-badge"></span></div>
                                 </div>
-                                <div class="form-control"><label data-i18n="cabling.mt.ncirc" for="mt-ncirc">Circuitos Agrupados</label>
+                                <div class="form-control"><label data-i18n="cabling.mt.ncirc" for="mt-ncirc">Grouped Circuits</label>
                                     <div class="input-wrapper"><input type="number" id="mt-ncirc" value="1" min="1" max="10" step="1" data-input-mt="true"><span class="unit-badge">—</span></div>
                                 </div>
                             </div>
-                            <button id="btn-mt" class="btn-action btn-accent" data-action="calc-mt" data-i18n="cabling.btn.calcMT">🔆 Calcular MT</button>
+                            <button id="btn-mt" class="btn-action btn-accent" data-action="calc-mt" data-i18n="cabling.btn.calcMT">🔆 Calculate MV</button>
                             </form>
                         </aside>
 
@@ -1961,7 +1952,7 @@
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;border-bottom:1px solid var(--border);padding-bottom:1rem;">
                 <div>
                     <h2 style="font-size:1.2rem;font-weight:800;color:var(--text-primary);letter-spacing:-.02em;">
-                        &#x1F527; <span data-i18n="icc.moduleTitle">Imped&#226;ncias por Componente</span>
+                        &#x1F527; <span data-i18n="icc.moduleTitle">Impedances per Component</span>
                     </h2>
                     <p style="font-size:.8rem;color:var(--text-muted);">IEC 60909-0:2016</p>
                 </div>
@@ -1974,42 +1965,42 @@
                 <div class="icc-panel">
                     <div class="icc-panel-header">
                         <div class="icc-panel-accent" style="background:#3b82f6;"></div>
-                        <span class="icc-panel-title">&#x1F310; <span data-i18n="icc.netTitle">Rede de Alimenta&#231;&#227;o (Zq)</span></span>
+                        <span class="icc-panel-title">&#x1F310; <span data-i18n="icc.netTitle">Upstream Grid (Zq)</span></span>
                         <span class="icc-panel-norm">&sect;6.2 Form.(4)(6)</span>
                     </div>
                     <div class="icc-panel-body">
                         <div class="alert-banner" id="icc-alert-rede" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
-                            <div id="icc-alert-rede-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                            <div id="icc-alert-rede-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
                         <div class="icc-form-grid">
                             <div class="icc-field">
-                                <label for="icc-unq" data-i18n="icc.net.unq">Tens&#227;o nominal Unq</label>
+                                <label for="icc-unq" data-i18n="icc.net.unq">Nominal Voltage Unq</label>
                                 <div class="input-wrapper"><input type="number" id="icc-unq" value="13800" min="1" step="100"><span class="unit-badge">V</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-ikqpp" data-i18n="icc.net.ikqpp">I&apos;&apos;kq &mdash; Corrente de CC da rede</label>
+                                <label for="icc-ikqpp" data-i18n="icc.net.ikqpp">I</label>
                                 <div class="input-wrapper"><input type="number" id="icc-ikqpp" value="5000" min="0.001" step="100"><span class="unit-badge">A</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-c-rede" data-i18n="icc.net.c">Fator de tens&#227;o c</label>
+                                <label for="icc-c-rede" data-i18n="icc.net.c">Voltage factor c</label>
                                 <select id="icc-c-rede">
-                                    <option value="1.10" selected data-i18n="icc.copt.110max">c = 1.10 (m&#225;x BT/MT)</option>
-                                    <option value="1.05" data-i18n="icc.copt.105min">c = 1.05 (m&#237;n BT)</option>
-                                    <option value="0.95" data-i18n="icc.copt.095min">c = 0.95 (m&#237;n MT)</option>
-                                    <option value="0.90" data-i18n="icc.copt.090min">c = 0.90 (m&#237;n AT)</option>
+                                    <option value="1.10" selected data-i18n="icc.copt.110max">c = 1.10 (max LV/MV)</option>
+                                    <option value="1.05" data-i18n="icc.copt.105min">c = 1.05 (min LV)</option>
+                                    <option value="0.95" data-i18n="icc.copt.095min">c = 0.95 (min MV)</option>
+                                    <option value="0.90" data-i18n="icc.copt.090min">c = 0.90 (min HV)</option>
                                 </select>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-tr" data-i18n="icc.net.tr">Rela&#231;&#227;o de transforma&#231;&#227;o tr</label>
+                                <label for="icc-tr" data-i18n="icc.net.tr">Transformation ratio tr (≥ 1)</label>
                                 <div class="input-wrapper"><input type="number" id="icc-tr" value="36.3" min="1" step="0.1"><span class="unit-badge">&mdash;</span></div>
                             </div>
                         </div>
                         <button class="btn-icc-calc" data-action="calc-icc-rede">
-                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.net.btn">Calcular Zq</span>
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.net.btn">Calculate Zq</span>
                         </button>
                         <div class="icc-result-block" id="icc-result-rede">
-                            <div class="icc-result-label" data-i18n="icc.net.resultLabel">&#x2713; Resultados &mdash; Rede</div>
+                            <div class="icc-result-label" data-i18n="icc.net.resultLabel">✓ Results — Grid</div>
                             <div class="icc-result-pills" id="icc-pills-rede"></div>
                         </div>
                     </div>
@@ -2019,55 +2010,55 @@
                 <div class="icc-panel">
                     <div class="icc-panel-header">
                         <div class="icc-panel-accent" style="background:#f59e0b;"></div>
-                        <span class="icc-panel-title">&#x1F532; <span data-i18n="icc.trafoTitle">Transformador (Zt, Kt)</span></span>
+                        <span class="icc-panel-title">&#x1F532; <span data-i18n="icc.trafoTitle">Transformer (Zt, Kt)</span></span>
                         <span class="icc-panel-norm">&sect;6.3.1 Form.(7&#8211;9)(12a)</span>
                     </div>
                     <div class="icc-panel-body">
                         <div class="alert-banner" id="icc-alert-trafo" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
-                            <div id="icc-alert-trafo-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                            <div id="icc-alert-trafo-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
                         <div class="icc-form-grid">
                             <div class="icc-field">
-                                <label for="icc-srt" data-i18n="icc.trafo.srt">Pot&#234;ncia nominal Srt</label>
+                                <label for="icc-srt" data-i18n="icc.trafo.srt">Rated Power Srt</label>
                                 <div class="input-wrapper"><input type="number" id="icc-srt" value="1500000" min="1" step="1000"><span class="unit-badge">VA</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-urt" data-i18n="icc.trafo.urt">Tens&#227;o de ref. Urt</label>
+                                <label for="icc-urt" data-i18n="icc.trafo.urt">Ref. Voltage Urt</label>
                                 <div class="input-wrapper"><input type="number" id="icc-urt" value="380" min="1" step="10"><span class="unit-badge">V</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-ukr" data-i18n="icc.trafo.ukr">Tens&#227;o de CC ukr</label>
+                                <label for="icc-ukr" data-i18n="icc.trafo.ukr">SC Voltage ukr</label>
                                 <div class="input-wrapper"><input type="number" id="icc-ukr" value="6" min="0.01" max="20" step="0.1"><span class="unit-badge">%</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-pkrt" data-i18n="icc.trafo.pkrt">Perdas no cobre Pkrt</label>
+                                <label for="icc-pkrt" data-i18n="icc.trafo.pkrt">Copper Losses Pkrt</label>
                                 <div class="input-wrapper"><input type="number" id="icc-pkrt" value="18000" min="1" step="100"><span class="unit-badge">W</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-urr" data-i18n="icc.trafo.urr">Comp. resistiva uRr (opcional)</label>
+                                <label for="icc-urr" data-i18n="icc.trafo.urr">Resistive comp. uRr (optional)</label>
                                 <div class="input-wrapper"><input type="number" id="icc-urr" value="" min="0" max="20" step="0.01" placeholder="Opcional"><span class="unit-badge">%</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-cmax-trafo" data-i18n="icc.trafo.cmax">Fator c m&#225;ximo (cMax)</label>
+                                <label for="icc-cmax-trafo" data-i18n="icc.trafo.cmax">Max c factor (cMax)</label>
                                 <select id="icc-cmax-trafo">
                                     <option value="1.10" selected>1.10 (BT/MT)</option>
                                     <option value="1.05">1.05</option>
                                 </select>
                             </div>
                             <div class="icc-field" style="grid-column:1/-1;">
-                                <label for="icc-tipo-trafo" data-i18n="icc.trafo.tipo">Tipo de transformador</label>
+                                <label for="icc-tipo-trafo" data-i18n="icc.trafo.tipo">Transformer Type</label>
                                 <select id="icc-tipo-trafo">
-                                    <option value="rede" selected data-i18n="icc.trafo.tipoRede">Rede (aplica Kt &mdash; &sect;6.3.1)</option>
-                                    <option value="grupo_gerador" data-i18n="icc.trafo.tipoGG">Grupo-gerador (&sect;6.7, Kt inv&#225;lido)</option>
+                                    <option value="rede" selected data-i18n="icc.trafo.tipoRede">Grid (applies Kt — §6.3.1)</option>
+                                    <option value="grupo_gerador" data-i18n="icc.trafo.tipoGG">Genset (§6.7, Kt invalid)</option>
                                 </select>
                             </div>
                         </div>
                         <button class="btn-icc-calc" data-action="calc-icc-trafo">
-                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.trafo.btn">Calcular Zt</span>
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.trafo.btn">Calculate Zt</span>
                         </button>
                         <div class="icc-result-block" id="icc-result-trafo">
-                            <div class="icc-result-label" data-i18n="icc.trafo.resultLabel">&#x2713; Resultados &mdash; Transformador</div>
+                            <div class="icc-result-label" data-i18n="icc.trafo.resultLabel">✓ Results — Transformer</div>
                             <div class="icc-result-pills" id="icc-pills-trafo"></div>
                         </div>
                     </div>
@@ -2077,59 +2068,59 @@
                 <div class="icc-panel">
                     <div class="icc-panel-header">
                         <div class="icc-panel-accent" style="background:#10b981;"></div>
-                        <span class="icc-panel-title">&#x2699;&#xFE0F; <span data-i18n="icc.genTitle">Gerador S&#237;ncrono (Zgk, Kg)</span></span>
+                        <span class="icc-panel-title">&#x2699;&#xFE0F; <span data-i18n="icc.genTitle">Synchronous Generator (Zgk, Kg)</span></span>
                         <span class="icc-panel-norm">&sect;6.6.1 Form.(17)(18)</span>
                     </div>
                     <div class="icc-panel-body">
                         <div class="alert-banner" id="icc-alert-gerador" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
-                            <div id="icc-alert-gerador-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                            <div id="icc-alert-gerador-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
                         <div class="icc-form-grid">
                             <div class="icc-field">
-                                <label for="icc-urg" data-i18n="icc.gen.urg">Tens&#227;o nominal Urg</label>
+                                <label for="icc-urg" data-i18n="icc.gen.urg">Rated Voltage Urg</label>
                                 <div class="input-wrapper"><input type="number" id="icc-urg" value="13800" min="1" step="100"><span class="unit-badge">V</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-srg" data-i18n="icc.gen.srg">Pot&#234;ncia aparente Srg</label>
+                                <label for="icc-srg" data-i18n="icc.gen.srg">Apparent Power Srg</label>
                                 <div class="input-wrapper"><input type="number" id="icc-srg" value="10000000" min="1" step="100000"><span class="unit-badge">VA</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-xdpp" data-i18n="icc.gen.xdpp">Reat&#226;ncia subtransit&#243;ria x''d</label>
+                                <label for="icc-xdpp" data-i18n="icc.gen.xdpp">Subtransient Reactance x</label>
                                 <div class="input-wrapper"><input type="number" id="icc-xdpp" value="0.15" min="0.001" max="1" step="0.01"><span class="unit-badge">p.u.</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-cosphi-gen" data-i18n="icc.gen.cosphi">cos(&#x03C6;) nominal</label>
+                                <label for="icc-cosphi-gen" data-i18n="icc.gen.cosphi">Rated cos(φ)</label>
                                 <div class="input-wrapper"><input type="number" id="icc-cosphi-gen" value="0.85" min="0" max="1" step="0.01"><span class="unit-badge">&mdash;</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-un-gen" data-i18n="icc.gen.un">Tens&#227;o nominal sistema Un</label>
+                                <label for="icc-un-gen" data-i18n="icc.gen.un">System Nom. Voltage Un</label>
                                 <div class="input-wrapper"><input type="number" id="icc-un-gen" value="13800" min="1" step="100"><span class="unit-badge">V</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-cmax-gen" data-i18n="icc.gen.cmax">Fator cMax</label>
+                                <label for="icc-cmax-gen" data-i18n="icc.gen.cmax">Factor cMax</label>
                                 <select id="icc-cmax-gen">
                                     <option value="1.10" selected>1.10</option>
                                     <option value="1.05">1.05</option>
                                 </select>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-rg" data-i18n="icc.gen.rg">Resist&#234;ncia Rg</label>
+                                <label for="icc-rg" data-i18n="icc.gen.rg">Resistance Rg</label>
                                 <div class="input-wrapper"><input type="number" id="icc-rg" value="0.05" min="0" step="0.001"><span class="unit-badge">&#937;</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-regime-gen" data-i18n="icc.gen.regime">Regime de corrente</label>
+                                <label for="icc-regime-gen" data-i18n="icc.gen.regime">Current Regime</label>
                                 <select id="icc-regime-gen">
-                                    <option value="maxima" selected data-i18n="icc.regimeMax">M&#225;xima (aplica cMax)</option>
-                                    <option value="minima" data-i18n="icc.regimeMin">M&#237;nima (Kg = 1)</option>
+                                    <option value="maxima" selected data-i18n="icc.regimeMax">Maximum (applies cMax)</option>
+                                    <option value="minima" data-i18n="icc.regimeMin">Minimum (Kg = 1)</option>
                                 </select>
                             </div>
                         </div>
                         <button class="btn-icc-calc" data-action="calc-icc-gerador">
-                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.gen.btn">Calcular Zgk</span>
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.gen.btn">Calculate Zgk</span>
                         </button>
                         <div class="icc-result-block" id="icc-result-gerador">
-                            <div class="icc-result-label" data-i18n="icc.gen.resultLabel">&#x2713; Resultados &mdash; Gerador</div>
+                            <div class="icc-result-label" data-i18n="icc.gen.resultLabel">✓ Results — Generator</div>
                             <div class="icc-result-pills" id="icc-pills-gerador"></div>
                         </div>
                     </div>
@@ -2139,63 +2130,63 @@
                 <div class="icc-panel">
                     <div class="icc-panel-header">
                         <div class="icc-panel-accent" style="background:#8b5cf6;"></div>
-                        <span class="icc-panel-title">&#x1F50C; <span data-i18n="icc.cableTitle">Linha / Cabo (Zl)</span></span>
+                        <span class="icc-panel-title">&#x1F50C; <span data-i18n="icc.cableTitle">Line / Cable (Zl)</span></span>
                         <span class="icc-panel-norm">&sect;6.4 Form.(14)(32)</span>
                     </div>
                     <div class="icc-panel-body">
                         <div class="alert-banner" id="icc-alert-cabo" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
-                            <div id="icc-alert-cabo-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                            <div id="icc-alert-cabo-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
                         <div class="icc-form-grid">
                             <div class="icc-field">
-                                <label for="icc-qn" data-i18n="icc.cable.qn">Se&#231;&#227;o nominal qn</label>
+                                <label for="icc-qn" data-i18n="icc.cable.qn">Nominal Section qn</label>
                                 <div class="input-wrapper"><input type="number" id="icc-qn" value="50" min="0.001" step="1"><span class="unit-badge">mm&#178;</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-L" data-i18n="icc.cable.L">Comprimento L</label>
+                                <label for="icc-L" data-i18n="icc.cable.L">Length L</label>
                                 <div class="input-wrapper"><input type="number" id="icc-L" value="100" min="0.001" step="1"><span class="unit-badge">m</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-xline" data-i18n="icc.cable.xline">Reat&#226;ncia x' (por km)</label>
+                                <label for="icc-xline" data-i18n="icc.cable.xline">Reactance x</label>
                                 <div class="input-wrapper"><input type="number" id="icc-xline" value="0.08" min="0" step="0.001"><span class="unit-badge">&#937;/km</span></div>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-rho" data-i18n="icc.cable.rho">Resistividade &#x03C1; a 20&deg;C</label>
+                                <label for="icc-rho" data-i18n="icc.cable.rho">Resistivity ρ at 20°C</label>
                                 <div class="input-wrapper"><input type="number" id="icc-rho" value="0.00001724" min="0.000001" step="0.000001"><span class="unit-badge">&#937;&#183;mm&#178;/m</span></div>
                             </div>
                             <div class="icc-field">
                                 <label for="icc-regime-cabo" data-i18n="icc.cable.regime">Regime</label>
                                 <select id="icc-regime-cabo">
-                                    <option value="maxima" selected data-i18n="icc.cable.regimeMax">M&#225;xima (Rl20)</option>
-                                    <option value="minima" data-i18n="icc.cable.regimeMin">M&#237;nima (corrige por &#x03B8;e)</option>
+                                    <option value="maxima" selected data-i18n="icc.cable.regimeMax">Maximum (Rl20)</option>
+                                    <option value="minima" data-i18n="icc.cable.regimeMin">Minimum (corrects by θe)</option>
                                 </select>
                             </div>
                             <div class="icc-field">
-                                <label for="icc-freq" data-i18n="icc.cable.freq">Frequ&#234;ncia</label>
+                                <label for="icc-freq" data-i18n="icc.cable.freq">Frequency</label>
                                 <select id="icc-freq">
                                     <option value="60" selected>60 Hz</option>
                                     <option value="50">50 Hz</option>
                                 </select>
                             </div>
                             <div class="icc-field" id="icc-campo-thetaE" style="display:none;">
-                                <label for="icc-thetaE" data-i18n="icc.cable.thetaE">Temperatura final &#x03B8;e</label>
+                                <label for="icc-thetaE" data-i18n="icc.cable.thetaE">End temperature θe</label>
                                 <div class="input-wrapper"><input type="number" id="icc-thetaE" value="70" min="0" max="250" step="1"><span class="unit-badge">&deg;C</span></div>
                             </div>
                             <div class="icc-field" id="icc-campo-alpha" style="display:none;">
-                                <label for="icc-alpha" data-i18n="icc.cable.alpha">Coef. temp. &#x03B1;</label>
+                                <label for="icc-alpha" data-i18n="icc.cable.alpha">Temp. coeff. α</label>
                                 <div class="input-wrapper"><input type="number" id="icc-alpha" value="0.00393" min="0" step="0.00001"><span class="unit-badge">1/&deg;C</span></div>
                             </div>
                             <div class="icc-field" id="icc-campo-thetaMax" style="display:none;">
-                                <label for="icc-thetaMax" data-i18n="icc.cable.thetaMax">Temp. m&#225;x. isola&#231;&#227;o &#x03B8;max</label>
+                                <label for="icc-thetaMax" data-i18n="icc.cable.thetaMax">Max. insulation temp. θmax</label>
                                 <div class="input-wrapper"><input type="number" id="icc-thetaMax" value="90" min="0" max="250" step="1"><span class="unit-badge">&deg;C</span></div>
                             </div>
                         </div>
                         <button class="btn-icc-calc" data-action="calc-icc-cabo">
-                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.cable.btn">Calcular Zl</span>
+                            <i data-lucide="zap" style="width:14px;height:14px;"></i> <span data-i18n="icc.cable.btn">Calculate Zl</span>
                         </button>
                         <div class="icc-result-block" id="icc-result-cabo">
-                            <div class="icc-result-label" data-i18n="icc.cable.resultLabel">&#x2713; Resultados &mdash; Cabo</div>
+                            <div class="icc-result-label" data-i18n="icc.cable.resultLabel">✓ Results — Cable</div>
                             <div class="icc-result-pills" id="icc-pills-cabo"></div>
                         </div>
                     </div>
@@ -2207,56 +2198,56 @@
             <div class="icc-panel" style="margin-top:1.25rem;">
                 <div class="icc-panel-header">
                     <div class="icc-panel-accent" style="background:#ef4444;"></div>
-                    <span class="icc-panel-title">&#x2211; <span data-i18n="icc.agrTitle">Agrega&#231;&#227;o de Imped&#226;ncias no Ponto de Falta (Zk)</span></span>
-                    <span class="icc-panel-norm" data-i18n="icc.agrNorm">S&#233;rie + Blindagem diel&#233;trica</span>
+                    <span class="icc-panel-title">&#x2211; <span data-i18n="icc.agrTitle">Impedance Aggregation at Fault Point (Zk)</span></span>
+                    <span class="icc-panel-norm" data-i18n="icc.agrNorm">Series + Dielectric Shield</span>
                 </div>
                 <div class="icc-panel-body">
-                    <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem;" data-i18n="icc.agrDesc">Selecione os componentes calculados com sucesso para incluir na soma de imped&#226;ncias.</p>
+                    <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem;" data-i18n="icc.agrDesc">Select successfully calculated components to include in the impedance sum.</p>
                     <div class="alert-banner" id="icc-alert-agregar" style="margin-bottom:.75rem;">
                         <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
-                        <div id="icc-alert-agregar-msg" data-i18n="icc.physViolation">Viola&#231;&#227;o f&#237;sica detectada.</div>
+                        <div id="icc-alert-agregar-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem;">
                         <label class="icc-checkbox-row" for="icc-chk-rede">
                             <input type="checkbox" id="icc-chk-rede" disabled>
-                            <span class="icc-checkbox-label">&#x1F310; <span data-i18n="icc.agr.chkRede">Rede (Rqt, Xqt)</span></span>
-                            <span class="icc-checkbox-status" id="icc-chk-status-rede" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                            <span class="icc-checkbox-label">&#x1F310; <span data-i18n="icc.agr.chkRede">Grid (Rqt, Xqt)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-rede" data-i18n="icc.agr.pending">Awaiting calculation</span>
                         </label>
                         <label class="icc-checkbox-row" for="icc-chk-trafo">
                             <input type="checkbox" id="icc-chk-trafo" disabled>
                             <span class="icc-checkbox-label">&#x1F532; <span data-i18n="icc.agr.chkTrafo">Trafo (Ztk: Rkt, Xkt)</span></span>
-                            <span class="icc-checkbox-status" id="icc-chk-status-trafo" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-trafo" data-i18n="icc.agr.pending">Awaiting calculation</span>
                         </label>
                         <label class="icc-checkbox-row" for="icc-chk-gerador">
                             <input type="checkbox" id="icc-chk-gerador" disabled>
-                            <span class="icc-checkbox-label">&#x2699;&#xFE0F; <span data-i18n="icc.agr.chkGen">Gerador (Zgk: Rg, Xg)</span></span>
-                            <span class="icc-checkbox-status" id="icc-chk-status-gerador" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                            <span class="icc-checkbox-label">&#x2699;&#xFE0F; <span data-i18n="icc.agr.chkGen">Generator (Zgk: Rg, Xg)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-gerador" data-i18n="icc.agr.pending">Awaiting calculation</span>
                         </label>
                         <label class="icc-checkbox-row" for="icc-chk-cabo">
                             <input type="checkbox" id="icc-chk-cabo" disabled>
-                            <span class="icc-checkbox-label">&#x1F50C; <span data-i18n="icc.agr.chkCabo">Cabo (Rl, Xl)</span></span>
-                            <span class="icc-checkbox-status" id="icc-chk-status-cabo" data-i18n="icc.agr.pending">Aguardando c&#225;lculo</span>
+                            <span class="icc-checkbox-label">&#x1F50C; <span data-i18n="icc.agr.chkCabo">Cable (Rl, Xl)</span></span>
+                            <span class="icc-checkbox-status" id="icc-chk-status-cabo" data-i18n="icc.agr.pending">Awaiting calculation</span>
                         </label>
                     </div>
                     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:.75rem;">
                         <div class="icc-field">
-                            <label for="icc-agr-un" data-i18n="icc.agr.un">Un &mdash; Tens&#227;o nominal sistema</label>
+                            <label for="icc-agr-un" data-i18n="icc.agr.un">Un — System Nominal Voltage</label>
                             <div class="input-wrapper"><input type="number" id="icc-agr-un" value="380" min="1" step="10"><span class="unit-badge">V</span></div>
                         </div>
                         <div class="icc-field">
-                            <label for="icc-agr-cmax" data-i18n="icc.agr.cmax">cMax (Tabela 1 IEC)</label>
+                            <label for="icc-agr-cmax" data-i18n="icc.agr.cmax">cMax (IEC Table 1)</label>
                             <select id="icc-agr-cmax"><option value="1.10" selected>1.10</option><option value="1.05">1.05</option></select>
                         </div>
                         <div class="icc-field">
-                            <label for="icc-agr-um" data-i18n="icc.agr.um">Um &mdash; Tens&#227;o m&#225;x. equipamento</label>
+                            <label for="icc-agr-um" data-i18n="icc.agr.um">Um — Max. Equipment Voltage</label>
                             <div class="input-wrapper"><input type="number" id="icc-agr-um" value="420" min="1" step="10"><span class="unit-badge">V</span></div>
                         </div>
                     </div>
                     <button class="btn-icc-calc btn-icc-agregar" data-action="calc-icc-agregar">
-                        <i data-lucide="sigma" style="width:14px;height:14px;"></i> <span data-i18n="icc.agr.btn">Calcular Zk Total</span>
+                        <i data-lucide="sigma" style="width:14px;height:14px;"></i> <span data-i18n="icc.agr.btn">Calculate Total Zk</span>
                     </button>
                     <div class="icc-result-block" id="icc-result-agregar">
-                        <div class="icc-result-label" data-i18n="icc.agr.resultLabel">&#x2713; Imped&#226;ncia total no ponto de falta</div>
+                        <div class="icc-result-label" data-i18n="icc.agr.resultLabel">✓ Total impedance at fault point</div>
                         <div class="icc-result-pills" id="icc-pills-agregar"></div>
                     </div>
                 </div>
@@ -2937,11 +2928,34 @@
         // ─────────────────────────────────────────────
         // i18n — Runtime Engine
         // ─────────────────────────────────────────────
-        let currentLang = localStorage.getItem('ampai-lang') || 'pt';
+        let currentLang = localStorage.getItem('ampai-lang') || 'en';
+        let isInitialTranslateLoad = true;
 
         function t(key) {
             return (i18nDictionary[currentLang] || i18nDictionary['pt'])[key] || key;
         }
+
+        // Expõe tradução de elementos [data-i18n] sem disparar calculate() (O.S. #023)
+        window.translatePage = function() {
+            if (isInitialTranslateLoad && currentLang === 'en') {
+                isInitialTranslateLoad = false;
+                document.getElementById('html-root').lang = 'en';
+                return; // Early return to save CPU since DOM is natively EN
+            }
+            isInitialTranslateLoad = false;
+
+            document.querySelectorAll('[data-i18n]').forEach(function(el) {
+                el.textContent = t(el.getAttribute('data-i18n'));
+            });
+            document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
+                el.title = t(el.getAttribute('data-i18n-title'));
+            });
+            // Update html lang attribute synchronously
+            document.getElementById('html-root').lang = currentLang === 'pt' ? 'pt-BR' : currentLang;
+        };
+
+        // Bootstrap: execute translation synchronously before paint!
+        window.translatePage();
 
         function setLanguage(lang) {
             currentLang = lang;
