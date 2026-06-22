@@ -314,8 +314,8 @@ window.switchModule = function(moduleName) {
     const navIMP = document.getElementById('nav-impedances');
 
     if (moduleName === 'impedances') {
-        // Mantém a sidebar visível; oculta apenas o dashboard de CC e o módulo Cabling
-        if (sidebarSC)   sidebarSC.style.display   = '';
+        // Oculta a sidebar de inputs do Curto-Circuito e o dashboard de CC
+        if (sidebarSC)   sidebarSC.style.display   = 'none';
         if (dashboardSC) dashboardSC.style.display  = 'none';
         moduleCabling.style.display = 'none';
 
