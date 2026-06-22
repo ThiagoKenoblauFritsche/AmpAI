@@ -421,18 +421,16 @@ window.switchCablingCard = function(card) {
     if (btnBT) btnBT.classList.toggle('active', card === 'bt');
     if (btnMT) btnMT.classList.toggle('active', card === 'mt');
 
-    // Disparar cálculo após o DOM se estabilizar
-    setTimeout(() => {
-        if (card === 'bt' && typeof window.calculateCablingBT === 'function') {
-            try {
-                const input = window.readBTInputsFromUI();
-                const payload = window.calculateCablingBT(input);
-                if (payload && typeof window.renderCardBT === 'function') window.renderCardBT(payload);
-            } catch (err) {}
-        } else if (card === 'mt' && typeof window.calculateCablingMT === 'function') {
-            window.calculateCablingMT();
-        }
-    }, 50);
+    // Disparar cálculo de forma síncrona para evitar flicker
+    if (card === 'bt' && typeof window.calculateCablingBT === 'function') {
+        try {
+            const input = window.readBTInputsFromUI();
+            const payload = window.calculateCablingBT(input);
+            if (payload && typeof window.renderCardBT === 'function') window.renderCardBT(payload);
+        } catch (err) {}
+    } else if (card === 'mt' && typeof window.calculateCablingMT === 'function') {
+        window.calculateCablingMT();
+    }
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
