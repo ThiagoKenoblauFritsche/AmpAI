@@ -261,3 +261,8 @@ class CurtoCircuitoIEC60909 {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { CurtoCircuitoIEC60909 };
 }
+
+// Exposição global para o front-end
+if (typeof window !== 'undefined') {
+    window.CurtoCircuito = CurtoCircuitoIEC60909;
+}
