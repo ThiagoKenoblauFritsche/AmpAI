@@ -639,14 +639,6 @@ function injectWithRetry(id, renderFunction, payload, retries = 5) {
     container.style.display = 'block';
     container.style.visibility = 'visible';
 
-    requestAnimationFrame(() => {
-        const rect = container.getBoundingClientRect();
-        console.log('[AmpAI] DOM rect para', id, ':', { width: rect.width, height: rect.height });
-        if (rect.width === 0 || rect.height === 0) {
-            console.warn('[AmpAI] AVISO: Container', id, 'tem dimensões zeradas! Verifique CSS do container pai.');
-        }
-    });
-
     setTimeout(() => { window.isRendering = false; }, 100);
 }
 

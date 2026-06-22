@@ -1106,6 +1106,12 @@
         .btn-icc-agregar:hover{background:#374151;transform:translateY(-1px)}
         /* ── Fullscreen toggle utilitário global ── */
         .module-fullscreen-mode{position:fixed!important;top:0;left:0;width:100vw;height:100vh;z-index:9999;background-color:var(--bg-body,var(--bg-primary));overflow-y:auto;padding:2rem}
+        /* OS 12: Reserva de altura para mitigar CLS em injeções dinâmicas */
+        #card-bt, #card-mt, .result-container {
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+        }
     </style>
 </head>
 
