@@ -1764,7 +1764,7 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
-                            <form id="form-bt" novalidate>
+                            <form id="form-bt" novalidate autocomplete="off" data-lpignore="true">
 
                             <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method" for="bt-method">Installation Method</label>
                                 <select id="bt-method" data-input-bt="true">
@@ -1848,7 +1848,7 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="mt-alert-msg">Erro nos parâmetros.</div>
                             </div>
-                            <form id="form-mt" novalidate>
+                            <form id="form-mt" novalidate autocomplete="off" data-lpignore="true">
 
                             <div class="form-control"><label for="mt-ull" data-i18n="cabling.mt.ull">Operating Voltage (ULL - kV)</label>
                                 <input type="number" step="any" min="0" id="mt-ull" value="13.8" data-input-mt="true" required>
