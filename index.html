@@ -532,6 +532,21 @@
             font-weight: 600;
         }
 
+        /* O.S. 041 — sinal visual semântico via borda superior, sem hex novo
+           e sem !important: especificidade do seletor composto (2 classes)
+           já vence o "border: none" da base; texto/fundo permanecem
+           intocados, preservando o contraste AA já existente nos dois temas. */
+        .result-card.success,
+        .result-card.danger,
+        .result-card.info {
+            border-top-width: 4px;
+            border-top-style: solid;
+        }
+
+        .result-card.success { border-top-color: var(--success); }
+        .result-card.danger { border-top-color: var(--danger); }
+        .result-card.info { border-top-color: var(--info); }
+
         .result-title {
             font-size: 0.75rem;
             font-weight: 700;

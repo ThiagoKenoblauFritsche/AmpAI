@@ -1,0 +1,46 @@
+name: QA OS040-R
+
+on:
+  push:
+    branches:
+      - Refat_Frontend
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  os040r:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - run: npm ci
+
+      - name: Execute OS040-R and capture evidence
+        id: os040r
+        shell: bash
+        run: |
+          set +e
+          node tests/test_os040_restart.js > os040r-evidence.txt 2>&1
+          exit_code=$?
+          echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Publish OS040-R evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: os040r-evidence
+          path: os040r-evidence.txt
+          if-no-files-found: error
+
+      - name: Fail when OS040-R fails
+        if: steps.os040r.outputs.exit_code != '0'
+        shell: bash
+        run: exit "${{ steps.os040r.outputs.exit_code }}"
