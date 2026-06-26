@@ -1,6 +1,9 @@
 name: QA Visual In-Browser
 
 on:
+  push:
+    branches:
+      - Refat_Frontend
   workflow_dispatch:
     inputs:
       test_file:
@@ -26,7 +29,7 @@ jobs:
         id: visual
         shell: bash
         env:
-          TEST_FILE: ${{ inputs.test_file }}
+          TEST_FILE: ${{ github.event_name == 'workflow_dispatch' && inputs.test_file || 'tests/test_os040_restart.js' }}
         run: |
           set +e
           exit_code=0
