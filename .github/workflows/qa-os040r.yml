@@ -22,13 +22,46 @@ jobs:
 
       - run: npm ci
 
+      - name: Configure Chromium sandbox
+        shell: bash
+        run: |
+          set +e
+          sandbox_path="$(find "$HOME/.cache/puppeteer" -name chrome_sandbox -type f | head -n 1)"
+          if [ -z "$sandbox_path" ]; then
+            echo "OS040R_SANDBOX_STATUS=missing" >> "$GITHUB_ENV"
+            echo "::warning::Puppeteer chrome_sandbox not found."
+            exit 0
+          fi
+          sudo chown root:root "$sandbox_path"
+          chown_exit=$?
+          sudo chmod 4755 "$sandbox_path"
+          chmod_exit=$?
+          echo "CHROME_DEVEL_SANDBOX=$sandbox_path" >> "$GITHUB_ENV"
+          echo "OS040R_SANDBOX_STATUS=chown:${chown_exit},chmod:${chmod_exit}" >> "$GITHUB_ENV"
+          ls -l "$sandbox_path"
+
       - name: Execute OS040-R and capture evidence
         id: os040r
         shell: bash
         run: |
           set +e
-          node tests/test_os040_restart.js > os040r-evidence.txt 2>&1
-          exit_code=$?
+          {
+            echo "OS040R_ENV node=$(node --version)"
+            echo "OS040R_ENV chromium_sandbox=${CHROME_DEVEL_SANDBOX:-unset}"
+            echo "OS040R_ENV sandbox_status=${OS040R_SANDBOX_STATUS:-unset}"
+            echo "OS040R_PREFLIGHT_COMMAND=node -e \"require('puppeteer').launch({headless:'new'}).then(b=>b.close())\""
+            node -e "require('puppeteer').launch({headless:'new'}).then(b=>b.close()).then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})"
+            preflight_exit=$?
+            echo "OS040R_PREFLIGHT_EXIT=${preflight_exit}"
+            if [ "$preflight_exit" -eq 0 ]; then
+              echo "OS040R_COMMAND=node tests/test_os040_restart.js"
+              node tests/test_os040_restart.js
+              exit_code=$?
+            else
+              exit_code=$preflight_exit
+            fi
+            echo "OS040R_EXIT=${exit_code}"
+          } > os040r-evidence.txt 2>&1
           echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
           exit 0
 
