@@ -129,6 +129,18 @@
             padding-bottom: 1.25rem;
         }
 
+        @media (max-width: 640px) {
+            header {
+                flex-wrap: wrap;
+                row-gap: 0.75rem;
+            }
+            .header-actions {
+                flex-wrap: wrap;
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
         .header-title {
             display: flex;
             align-items: center;
@@ -220,6 +232,16 @@
         @media (max-width: 1024px) {
             .main-layout {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        #module-cabling {
+            grid-column: 2 / -1;
+        }
+
+        @media (max-width: 1024px) {
+            #module-cabling {
+                grid-column: auto;
             }
         }
 
@@ -1099,6 +1121,14 @@
         .icc-panel-body{padding:1.25rem}
         .icc-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.25rem}
         @media(max-width:900px){.icc-form-grid{grid-template-columns:1fr}}
+        .cabling-grid{display:grid;grid-template-columns:320px 1fr;gap:1.5rem}
+        @media(max-width:900px){.cabling-grid{grid-template-columns:1fr}}
+        .cabling-grid > aside,
+        .cabling-grid > main {
+            min-width: 0;
+            max-width: 100%;
+            overflow-x: auto;
+        }
         .icc-field label{display:block;font-size:.72rem;font-weight:600;color:var(--text-secondary);margin-bottom:.2rem}
         .icc-input-error{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(239,68,68,.18)!important;animation:shake .3s ease-in-out}
         .icc-result-block{background:var(--bg-primary);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin-top:1rem;display:none}
@@ -1754,7 +1784,7 @@
             <!-- ════════════════════════════════════════════════════════════════
                  MÓDULO: DIMENSIONAMENTO DE CABOS BT / MT
                  ════════════════════════════════════════════════════════════════ -->
-            <div id="module-cabling" style="display:none; padding: 0; max-width:1440px; margin:0 auto; grid-column: 2 / -1;">
+            <div id="module-cabling" style="display:none; padding: 0; max-width:1440px; margin:0 auto;">
                 <!-- Cabeçalho do Módulo -->
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem; border-bottom:1px solid var(--border); padding-bottom:1rem;">
                     <div>
@@ -1772,7 +1802,7 @@
                      CARD BT — Baixa Tensão (IEC 60364-5-52)
                      ═══════════════════════════════════════════════ -->
                 <div id="wrapper-bt" style="display:block; min-height: 500px;">
-                    <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
+                    <div class="cabling-grid">
                         <!-- Sidebar BT -->
                         <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
                             <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.bt.params">LV Parameters</div>
@@ -1855,7 +1885,7 @@
                      CARD MT — Média Tensão (IEC 60502-2)
                      ═══════════════════════════════════════════════ -->
                 <div id="wrapper-mt" style="display:none; min-height: 500px;">
-                    <div class="cabling-grid" style="display:grid; grid-template-columns:320px 1fr; gap:1.5rem;">
+                    <div class="cabling-grid">
                         <!-- Sidebar MT -->
                         <aside id="mt-params" style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
                             <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.mt.params">MV Parameters</div>
