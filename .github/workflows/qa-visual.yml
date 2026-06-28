@@ -1,0 +1,140 @@
+name: QA Visual In-Browser
+
+on:
+  workflow_dispatch:
+    inputs:
+      test_file:
+        description: 'Puppeteer test file under tests/, e.g. tests/test_os042_restart.js'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  qa-visual:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Execute visual QA and capture evidence
+        id: visual
+        shell: bash
+        env:
+          TEST_FILE: ${{ inputs.test_file }}
+        run: |
+          set +e
+          exit_code=0
+
+          {
+            echo "QA_VISUAL_ENV node=$(node --version)"
+            echo "QA_VISUAL_ENV test_file=${TEST_FILE}"
+
+            case "$TEST_FILE" in
+              tests/*.js) ;;
+              *)
+                echo "QA_VISUAL_ENV chromium_sandbox=unset"
+                echo "QA_VISUAL_ENV sandbox_status=not_run_invalid_input"
+                echo "QA_VISUAL_ERROR=invalid test_file; expected tests/*.js"
+                echo "QA_VISUAL_PREFLIGHT_COMMAND=node -e \"require('puppeteer').launch({headless:'new'}).then(b=>b.close()).then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})\""
+                echo "QA_VISUAL_PREFLIGHT_EXIT=2"
+                echo "QA_VISUAL_COMMAND=node ${TEST_FILE}"
+                echo "QA_VISUAL_EXIT=2"
+                exit_code=2
+                echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+                exit 0
+                ;;
+            esac
+
+            if [ ! -f "$TEST_FILE" ]; then
+              echo "QA_VISUAL_ENV chromium_sandbox=unset"
+              echo "QA_VISUAL_ENV sandbox_status=not_run_missing_test"
+              echo "QA_VISUAL_ERROR=test_file not found: ${TEST_FILE}"
+              echo "QA_VISUAL_PREFLIGHT_COMMAND=node -e \"require('puppeteer').launch({headless:'new'}).then(b=>b.close()).then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})\""
+              echo "QA_VISUAL_PREFLIGHT_EXIT=2"
+              echo "QA_VISUAL_COMMAND=node ${TEST_FILE}"
+              echo "QA_VISUAL_EXIT=2"
+              exit_code=2
+              echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            echo "QA_VISUAL_NPM_COMMAND=npm ci"
+            npm ci
+            npm_exit=$?
+            echo "QA_VISUAL_NPM_EXIT=${npm_exit}"
+
+            sandbox_path=""
+            sandbox_status="not_run_npm_failed"
+            if [ "$npm_exit" -eq 0 ]; then
+              sandbox_path="$(find "$HOME/.cache/puppeteer" -name chrome_sandbox -type f | head -n 1)"
+              if [ -z "$sandbox_path" ]; then
+                sandbox_status="missing"
+              else
+                sudo chown root:root "$sandbox_path"
+                chown_exit=$?
+                sudo chmod 4755 "$sandbox_path"
+                chmod_exit=$?
+                echo "CHROME_DEVEL_SANDBOX=$sandbox_path" >> "$GITHUB_ENV"
+                export CHROME_DEVEL_SANDBOX="$sandbox_path"
+                sandbox_status="chown:${chown_exit},chmod:${chmod_exit}"
+                ls -l "$sandbox_path"
+              fi
+            fi
+
+            echo "QA_VISUAL_ENV chromium_sandbox=${sandbox_path:-unset}"
+            echo "QA_VISUAL_ENV sandbox_status=${sandbox_status}"
+            echo "QA_VISUAL_PREFLIGHT_COMMAND=node -e \"require('puppeteer').launch({headless:'new'}).then(b=>b.close()).then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})\""
+
+            if [ "$npm_exit" -ne 0 ]; then
+              echo "QA_VISUAL_PREFLIGHT_EXIT=${npm_exit}"
+              echo "QA_VISUAL_COMMAND=node ${TEST_FILE}"
+              echo "QA_VISUAL_EXIT=${npm_exit}"
+              exit_code=$npm_exit
+              echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            if [ -z "$sandbox_path" ]; then
+              echo "QA_VISUAL_PREFLIGHT_EXIT=2"
+              echo "QA_VISUAL_COMMAND=node ${TEST_FILE}"
+              echo "QA_VISUAL_EXIT=2"
+              exit_code=2
+              echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+
+            node -e "require('puppeteer').launch({headless:'new'}).then(b=>b.close()).then(()=>process.exit(0)).catch(e=>{console.error(e);process.exit(1)})"
+            preflight_exit=$?
+            echo "QA_VISUAL_PREFLIGHT_EXIT=${preflight_exit}"
+
+            echo "QA_VISUAL_COMMAND=node ${TEST_FILE}"
+            if [ "$preflight_exit" -eq 0 ]; then
+              node "$TEST_FILE"
+              exit_code=$?
+            else
+              exit_code=$preflight_exit
+            fi
+            echo "QA_VISUAL_EXIT=${exit_code}"
+          } > qa-visual-evidence.txt 2>&1
+
+          echo "exit_code=${exit_code}" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Publish visual QA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qa-visual-evidence
+          path: qa-visual-evidence.txt
+          if-no-files-found: error
+
+      - name: Return visual QA exit code
+        if: steps.visual.outputs.exit_code != '0'
+        shell: bash
+        run: exit "${{ steps.visual.outputs.exit_code }}"
