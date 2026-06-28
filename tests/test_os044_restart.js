@@ -173,7 +173,14 @@ async function inspectKeyboardFocus(page, theme, view) {
   const maximumTabs = expected.length * 2 + 8;
 
   for (let index = 0; index < maximumTabs && observedById.size < expected.length; index += 1) {
+    await page.evaluate(() => {
+      window.__os044rPreviousActiveElement = document.activeElement;
+    });
     await page.keyboard.press('Tab');
+    await page.waitForFunction(
+      () => document.activeElement !== window.__os044rPreviousActiveElement,
+      { polling: 'raf', timeout: 5000 }
+    );
     const snapshot = await page.evaluate(() => {
       const element = document.activeElement;
       const focusId = element?.getAttribute?.('data-os044r-focus-id');
