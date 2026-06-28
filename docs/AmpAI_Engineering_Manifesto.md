@@ -26,10 +26,10 @@ graph TD
     DDD --> TDD[4. TDD: Avalia a matemática com testes rigorosos]
 ```
 
-*   **BDD (O Comportamento):** Fornece o contexto de negócio. Cenários escritos em formato Gherkin funcionam como *prompts* de alta qualidade e blindados para a IA.
+*   **BDD (O Comportamento):** Fornece o contexto de negócio. Cenários escritos em formato Gherkin funcionam como *prompts* de alta qualidade e blindados para a IA. O @Engenheiro_Eletricista opera sobre RNC-P/RNC-C em Markdown, classifica a fonte e entrega prova de cálculo contestável antes de qualquer contrato técnico.
 *   **SDD (O Contrato):** Define as interfaces de comunicação técnica (ex: Contratos JSON de entrada e saída). Garante que a IA gere payloads estritamente corretos sem inventar variáveis.
 *   **DDD (O Design Interno):** Modela o núcleo da regra de negócio (Os motores `core_*.js`). Impede terminantemente que a IA misture lógica de cálculos matemáticos com renderização de interface (DOM).
-*   **TDD (A Validação):** Cria a rede de segurança (ZOMBIES). Se o código gerado pela IA falhar nos testes in-browser ou na VPS, o próprio erro é devolvido para que ela se autocorrija.
+*   **TDD/CI (A Validação):** Cria a rede de segurança (ZOMBIES). Se o código gerado pela IA falhar nos testes locais, in-browser ou no GitHub Actions, o próprio erro é devolvido ao CTO como evidência para correção. CI é validação reprodutível do Tribunal; não é deploy.
 
 ---
 
@@ -46,25 +46,25 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 ▼
 [ FASE 3: BDD (Comportamento) ]
 ┌────────────────────────────────────────────────────────┐
-│ Claude CLI escreve os cenários no diretório features/  │
+│ Engenheiro Eletricista gera BDD + prova contestável    │
 └───────┬────────────────────────────────────────────────┘
 │
 ▼
 [ FASE 4: TDD RED (ZOMBIES Testes) ]
 ┌────────────────────────────────────────────────────────┐
-│ Claude CLI escreve testes falhos obrigatórios primeiro │
+│ QA/Codex escreve e executa testes falhos primeiro      │
 └───────┬────────────────────────────────────────────────┘
 │
 ▼
 [ FASE 5: TDD GREEN (Matemática Pura / DDD) ]
 ┌────────────────────────────────────────────────────────┐
-│ Claude CLI codifica a matemática isolada para passar   │
+│ Backend/Claude Code codifica a matemática para passar  │
 └───────┬────────────────────────────────────────────────┘
 │
 ▼
-[ FASE 6: AUDITORIA EM NUVEM ]
+[ FASE 6: AUDITORIA / CI DO TRIBUNAL ]
 ┌────────────────────────────────────────────────────────┐
-│ CodeRabbit avalia a PR no GitHub buscando falhas       │
+│ QA/Codex atesta evidências, artifact CI e exit code    │
 └───────┬─────────────────────────┬──────────────────────┘
         │ (Rejeitado)             │ (Aprovado)
         ▼                         ▼
@@ -84,5 +84,8 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 ## 3. Arquitetura e Diretrizes Fundamentais para os Agentes
 
 *   **Verdade Única:** Se o comportamento não está especificado no BDD ou nos contratos SDD, a IA está terminantemente **proibida de codificá-lo**. Invenções ("Hallucinations") são consideradas infrações graves de governança.
+*   **RNC antes de dedução:** O Engenheiro Eletricista deve usar Registros Normativos Computáveis em Markdown como fonte operacional. PDF bruto é material de origem, não o formato preferencial de execução.
+*   **RNC-P não é RNC-C:** RNC-P é Markdown processado de norma, livro ou guia técnico; RNC-C é documento curado pelo AmpAI com fonte, escopo, equações conferidas, unidades SI, premissas, limites físicos e regras QA. A IA não pode transformar RNC-P em regra de produção sem declarar a promoção para RNC-C.
 *   **Caixa Preta de Testes:** Peça primeiro para a IA criar os testes com o objetivo explícito de **tentar quebrar a aplicação** com entradas inválidas, sobrecargas elétricas e limites estourados.
-*   **Loops Sem Intervenção Humana (Air Gap):** Os Agentes conectados ao terminal (Fábrica vs Tribunal) usarão o log de erro do TDD para retroalimentar os seus próprios *prompts* num loop infinito, encerrando-se **apenas** quando o código passar em 100% dos testes sem margem para dúvidas.
+*   **Air Gap Epistemológico:** Fábrica e Tribunal são agentes distintos. A Fábrica não atesta o próprio código; o Tribunal executa testes isoladamente, valida artifacts de CI quando aplicável e devolve a evidência ao CTO. O ciclo encerra apenas com GREEN verificável, PR validado e aprovação humana para merge.
+*   **CI não é CD:** GitHub Actions integra o Tribunal QA para gerar logs, artifacts e `exit code` reprodutível. Deploy para staging e produção são etapas futuras, separadas e dependentes de decisão explícita do CEO.
