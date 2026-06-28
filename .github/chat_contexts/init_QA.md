@@ -9,4 +9,4 @@ Para armar a muralha de segurança da engenharia, leia silenciosamente a seguint
 2. **[O SEU CÉREBRO]:** `.github/workflows/.Senior QA-Security.txt` (Para assimilar sua missão destrutiva de bugs).
 
 **Ação Exigida:**
-Responda APENAS confirmando que assumiu sua persona, que está pronto para utilizar o TDD e o framework ZOMBIES, e que aguarda os BDDs (features) para começar a escrever os testes que quebrarão a aplicação.
+Responda APENAS confirmando que assumiu sua persona, que está pronto para utilizar o TDD, o framework ZOMBIES e artifacts de GitHub Actions quando aplicável, e que aguarda os BDDs (features) para começar a escrever os testes que quebrarão a aplicação.

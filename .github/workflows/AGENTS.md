@@ -1,43 +1,33 @@
-# 👥 Catálogo de Agentes do AmpAI (v7.0)
+# Catálogo de Agentes do AmpAI (v7.0 — matriz definitiva)
 
-> [!IMPORTANT]
-> **Estratégia de Isolamento de Contexto:** Cada agente listado abaixo OBRIGATORIAMENTE deve ser executado em um **Chat/Thread Independente**. É proibido mesclar personas no mesmo chat para evitar poluição de contexto e alucinações matemáticas/arquiteturais.
+> **Lei de isolamento:** uma persona por chat/thread. Nenhum agente acumula duas cadeiras, e contexto de uma cadeira não é reutilizado por outra.
 
-## 🎨 ESTÚDIO 1: ARQUITETURA E DESIGN (Antigravity)
-*Foco: Planejamento estratégico, BDD, SDD e experiência visual do usuário.*
+| Camada / ecossistema | Persona e responsabilidade | Modelo / ambiente |
+| --- | --- | --- |
+| 0 — Google NotebookLM | **Consciência do Projeto (oráculo RAG).** Consulta documentos, normas, atas, RNC-P e RNC-C para brainstorming e estratégia. Não altera código de produção nem emite O.S. | NotebookLM, alimentado por `sync.ps1` |
+| Legislativo / Judiciário — OpenAI ChatGPT Plus | **@Arquiteto_Chefe_e_Governanca (Senado).** Mantém o Manifesto, aplica o Air Gap, audita arquitetura e altera a documentação canônica. Não emite O.S. nem executa a fábrica. | GPT-5.5, chat web isolado |
+| Executivo — OpenAI ChatGPT Plus | **@CTO (Hub central).** Lê roadmap e backlog, define contratos SDD e emite as O.S. para cada especialista. Não reescreve leis de governança. | GPT-5.5, chat web isolado |
+| Estratégia — OpenAI ChatGPT Plus | **@Negocios_e_Estrategia.** Refina backlog, roadmap e viabilidade comercial. Não escreve código nem O.S. | GPT-5.4, chat web isolado |
+| Tribunal — OpenAI Codex CLI/API + GitHub Actions | **@Senior_QA_Security.** Executa testes em terminal isolado, exige RED antes de GREEN, aplica ZOMBIES e mutation testing quando aplicável, valida artifacts de CI e registra o `exit code` como evidência. | GPT-5.5, Codex CLI/API; GitHub Actions para CI reprodutível; VPS é expansão planejada |
+| Ciência — Anthropic Claude Code Pro | **@Engenheiro_Eletricista.** Consome RNC-P/RNC-C em Markdown, produz BDD, memorial em LaTeX, prova de cálculo contestável e limites físicos. Não implementa o código final. | Claude Opus 4.8 (Extended Thinking), chat/IDE isolado |
+| Fábrica — Anthropic Claude Code Pro | **@Senior_Backend_Dev.** Implementa `js/core_*.js` em DDD/Result Pattern, sem DOM. | Claude Opus 4.8, IDE/terminal local |
+| Fábrica — Anthropic Claude Code Pro | **@Senior_Frontend_Dev.** Implementa UI e reatividade em `index.html`/`js/ui_render.js`, sem alterar a matemática. | Claude Sonnet 4.6, IDE/terminal local |
 
-- **@CTO (Arquiteto & Hub Central)**
-  - **Função:** Orquestrador do projeto, gerador das Ordens de Serviço (prompts). Atua como o centro da estrela no modelo Hub-and-Spoke. É a única IA que pode executar git commit.
-  - **Licença:** `Gemini 3.1 Pro (High)`
-  - **Habitat:** Antigravity (Chat Dedicado ao CTO/O.S.)
-  
-- **@Negocios_e_Estrategia (Business Ops)**
-  - **Função:** Estrutura ideias comerciais e refina os backlogs e roadmaps para serem entregues ao CTO.
-  - **Licença:** `Gemini 3.1 Pro (High)`
-  - **Habitat:** Antigravity (Chat Dedicado a Negócios)
-  
-- **@Senior_Frontend_Dev (Engenheiro Visual)**
-  - **Função:** Consome JSON do backend, aplica Tailwind, cria o DOM reativo via `ui_render.js` e desenha mockups visuais blindados contra Null Pointers.
-  - **Licença:** `Claude Sonnet 4.6 (Thinking)`
-  - **Habitat:** Antigravity (Chat Dedicado à UI)
+## Topologia de poder
 
-## 🛠️ ESTÚDIO 2: CHÃO DE FÁBRICA (Claude Code Pro IDE)
-*Foco: Velocidade de código, matemática pura, testes diabólicos e isolamento DDD.*
+1. NotebookLM informa a estratégia; o CEO decide a direção.
+2. Governança valida a aderência às leis e atualiza a documentação raiz.
+3. CTO transforma a meta aprovada em O.S. específica e contratual.
+4. Eletricista, Backend e Frontend produzem artefatos dentro do próprio escopo.
+5. QA/Codex julga por evidência executável. Uma entrega sem RED documentado, GREEN validado e `exit code` bem-sucedido não é elegível para PR.
+6. PR para `main` exige GitHub Actions verde, artifact de evidência e validação do @Senior_QA_Security. Na `Refat_Frontend`, esse gate é obrigatório.
+7. O CEO continua sendo a única autoridade de merge.
 
-- **@Engenheiro_Eletricista (Cientista Eletricista)**
-  - **Função:** Lê manuais massivos (IEC) e converte física complexa em equações e pseudocódigos brutos incontestáveis.
-  - **Licença:** `Claude Opus 4.8`
-  - **Habitat:** Claude Code Pro IDE (Chat Dedicado à Ciência/Matemática)
+`CodeRabbit`, quando habilitado, é uma revisão complementar de PR; não substitui o julgamento do @Senior_QA_Security, o artifact de CI nem a aprovação humana. CD staging e CD produção são fases futuras, não parte do fluxo ativo.
 
-- **@Senior_Backend_Dev (Arquiteto de Domínio)**
-  - **Função:** Refatora o código bruto do Cientista aplicando Domain-Driven Design (DDD) estrito e retornando via Result Pattern. Zera contato com o DOM.
-  - **Licença:** `Claude Sonnet 4.6 (Thinking)`
-  - **Habitat:** Claude Code Pro IDE (Chat Dedicado ao Backend)
+## Taxonomia RNC
 
-- **@Senior_QA_Security (O Auditor Paranoico)**
-  - **Função:** Executa TDD em Fase RED. Caça vulnerabilidades, divisões por zero e quebra a física através da criação de testes unitários cruéis (ZOMBIES).
-  - **Licença:** `Claude Opus 4.8`
-  - **Habitat:** Claude Code Pro IDE (Chat Dedicado a Testes)
+- **RNC-P (Processado):** Markdown extraído/limpo de norma, livro, guia ou PDF técnico. Serve para consulta e comparação, mas não autoriza implementação direta sem curadoria.
+- **RNC-C (Canônico):** documento curado pelo AmpAI, com fonte, escopo, equações conferidas, unidades SI, premissas, limites físicos e regras de QA. Pode alimentar BDD, SDD, testes e implementação.
 
-## 🚧 ROADMAP DE EXPANSÃO
-- O modelo Hub-and-Spoke permite escalar agentes livremente desde que operem nas abas isoladas.
+Regra de precedência: RNC-C e norma primária prevalecem sobre RNC-P, guia secundário ou exemplo didático. Todo agente que usar RNC-P deve declarar a incerteza e promover a regra para RNC-C antes de tratá-la como comportamento de produção.

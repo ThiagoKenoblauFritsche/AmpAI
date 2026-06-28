@@ -70,7 +70,7 @@ claude
 
 ## 3. Preservando o "Air Gap" via Firecracker (MicroVMs)
 
-O Claude Code precisa escrever os códigos, mas o Antigravity (QA) ficará no Host julgando-o. Para a segurança máxima exigida pelo projeto, usaremos **Firecracker** (via `ignite`) para provisionar MicroVMs super leves e totalmente isoladas no nível de kernel, em vez de containers Docker tradicionais.
+O Claude Code precisa escrever os códigos, mas o Codex (@Senior_QA_Security) ficará no ambiente de Tribunal julgando-os. Para a segurança máxima exigida pelo projeto, usaremos **Firecracker** (via `ignite`) para provisionar MicroVMs super leves e totalmente isoladas no nível de kernel, em vez de containers Docker tradicionais.
 
 > [!WARNING]
 > **Requisito de Hardware (KVM):** O Firecracker exige aceleração de hardware (KVM). Se a sua instância Hetzner for um VPS Cloud comum (linha CX/CPX), ela **NÃO** suporta *nested virtualization* e o Firecracker não vai rodar. Ele exige um Servidor Dedicado (Bare Metal) ou instâncias cloud específicas que exponham `/dev/kvm`. Verifique rodando `kvm-ok` na sua VPS.
@@ -110,7 +110,7 @@ sudo ignite run weaveworks/ignite-ubuntu \
 sudo ignite rm -f $VM_NAME
 ```
 
-Dessa forma, a Fábrica roda em um kernel isolado (MicroVM), blindando o host da VPS (onde fica o Tribunal Antigravity) contra qualquer escape de sandbox.
+Dessa forma, a Fábrica roda em um kernel isolado (MicroVM), blindando o host da VPS (onde fica o Tribunal Codex) contra qualquer escape de sandbox.
 
 ---
 
