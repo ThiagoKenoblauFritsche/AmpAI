@@ -136,18 +136,120 @@ async function inspectInvalidField(page, scenario) {
   };
 }
 
-async function inspectKeyboardFocus(page, theme, view) {
-  await page.evaluate(async ({ selectedTheme, selectedView }) => {
+async function prepareKeyboardFocusView(page, theme, view) {
+  const preparation = await page.evaluate(({ selectedTheme, selectedView }) => {
     const root = document.documentElement;
     if (selectedTheme === 'light') root.setAttribute('data-theme', 'light');
     else root.removeAttribute('data-theme');
     localStorage.setItem('ampai-theme', selectedTheme);
 
-    if (typeof window.switchModule === 'function') window.switchModule(selectedView.moduleName);
-    if (selectedView.card && typeof window.switchCablingCard === 'function') {
-      window.switchCablingCard(selectedView.card);
+    const isVisible = (selector) => {
+      const element = document.querySelector(selector);
+      return Boolean(element && element.getClientRects().length > 0 && getComputedStyle(element).display !== 'none');
+    };
+    const moduleSelectors = {
+      shortcircuit: '.dashboard',
+      cabling: '#module-cabling',
+      impedances: '#module-impedances'
+    };
+    const moduleAlreadyVisible = isVisible(moduleSelectors[selectedView.moduleName]);
+    let waitsForScheduledMtRender = false;
+
+    if (!moduleAlreadyVisible && typeof window.switchModule === 'function') {
+      if (selectedView.moduleName === 'cabling') {
+        const mtCard = document.getElementById('card-mt');
+        window.__os044rScheduledMtRenderObserved = false;
+        window.__os044rMtStableFrames = 0;
+        window.__os044rMtStabilityActive = false;
+        window.__os044rMtRenderObserver?.disconnect();
+        if (mtCard) {
+          window.__os044rMtRenderObserver = new MutationObserver((records) => {
+            if (records.some((record) => record.type === 'childList')) {
+              window.__os044rScheduledMtRenderObserved = true;
+              window.__os044rMtStableFrames = 0;
+            }
+          });
+          window.__os044rMtRenderObserver.observe(mtCard, { childList: true });
+          window.__os044rMtStabilityActive = true;
+          const countStableFrame = () => {
+            if (!window.__os044rMtStabilityActive) return;
+            window.__os044rMtStableFrames += 1;
+            requestAnimationFrame(countStableFrame);
+          };
+          requestAnimationFrame(countStableFrame);
+          waitsForScheduledMtRender = true;
+        }
+        localStorage.setItem('ampai-active-cabling-card', 'bt');
+      }
+      window.switchModule(selectedView.moduleName);
     }
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    return { waitsForScheduledMtRender };
+  }, { selectedTheme: theme, selectedView: view });
+
+  await page.waitForFunction(
+    ({ moduleName }) => {
+      const selectors = {
+        shortcircuit: '.dashboard',
+        cabling: '#module-cabling',
+        impedances: '#module-impedances'
+      };
+      const element = document.querySelector(selectors[moduleName]);
+      return Boolean(element && element.getClientRects().length > 0 && getComputedStyle(element).display !== 'none');
+    },
+    { polling: 'raf', timeout: 10000 },
+    { moduleName: view.moduleName }
+  );
+
+  if (preparation.waitsForScheduledMtRender) {
+    await page.waitForFunction(
+      () =>
+        window.__os044rScheduledMtRenderObserved === true &&
+        window.__os044rMtStableFrames >= 120 &&
+        window.isRendering !== true,
+      { polling: 'raf', timeout: 10000 }
+    );
+    await page.evaluate(() => {
+      window.__os044rMtStabilityActive = false;
+      window.__os044rMtRenderObserver?.disconnect();
+    });
+  } else {
+    await page.waitForFunction(
+      () => window.isRendering !== true,
+      { polling: 'raf', timeout: 10000 }
+    );
+  }
+
+  if (view.card) {
+    await page.evaluate((card) => {
+      const wrapper = document.getElementById(`wrapper-${card}`);
+      const isActive = Boolean(wrapper && getComputedStyle(wrapper).display !== 'none');
+      if (!isActive && typeof window.switchCablingCard === 'function') window.switchCablingCard(card);
+    }, view.card);
+    await page.waitForFunction(
+      (card) => {
+        const wrapper = document.getElementById(`wrapper-${card}`);
+        return Boolean(
+          wrapper &&
+          wrapper.getClientRects().length > 0 &&
+          getComputedStyle(wrapper).display !== 'none' &&
+          window.isRendering !== true &&
+          document.getElementById(`btn-memorial-${card}`) &&
+          document.getElementById(`btn-export-memorial-${card}`)
+        );
+      },
+      { polling: 'raf', timeout: 10000 },
+      view.card
+    );
+  }
+
+  await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+}
+
+async function inspectKeyboardFocus(page, theme, view) {
+  await prepareKeyboardFocusView(page, theme, view);
+
+  await page.evaluate((selectedView) => {
 
     const focusableSelector = 'a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"])';
     const candidates = [...document.querySelectorAll(focusableSelector)].filter((element) => {
@@ -160,7 +262,7 @@ async function inspectKeyboardFocus(page, theme, view) {
     candidates.forEach((element, index) => element.setAttribute('data-os044r-focus-id', `${selectedView.name}-${index}`));
     document.body.setAttribute('tabindex', '-1');
     document.body.focus();
-  }, { selectedTheme: theme, selectedView: view });
+  }, view);
 
   const expected = await page.evaluate(() => [...document.querySelectorAll('[data-os044r-focus-id]')]
     .filter((element) => element.getClientRects().length > 0 && !element.disabled)
@@ -272,6 +374,18 @@ async function inspectKeyboardFocus(page, theme, view) {
   const missing = expected.filter(({ focusId }) => !observedById.has(focusId));
   const observed = [...observedById.values()];
   const failures = observed.filter((item) => !item.compliant);
+  const requiredSelectors = view.name === 'cabling-mt'
+    ? ['#btn-memorial-mt', '#btn-export-memorial-mt']
+    : [];
+  const requiredControls = requiredSelectors.map((selector) => {
+    const expectedControl = expected.find((item) => item.selector === selector);
+    return {
+      selector,
+      expected: Boolean(expectedControl),
+      reachedByTab: Boolean(expectedControl && observedById.has(expectedControl.focusId))
+    };
+  });
+  const requiredControlsReached = requiredControls.every((control) => control.expected && control.reachedByTab);
 
   return {
     criterion: 'keyboard-focus-indicator',
@@ -281,10 +395,17 @@ async function inspectKeyboardFocus(page, theme, view) {
       navigation: 'Tab',
       expectedCount: expected.length,
       reachedCount: observed.length,
+      expectedEqualsReached: expected.length === observed.length,
       missing,
-      failures
+      failures,
+      requiredControls
     },
-    compliant: expected.length > 0 && missing.length === 0 && failures.length === 0
+    compliant:
+      expected.length > 0 &&
+      expected.length === observed.length &&
+      missing.length === 0 &&
+      requiredControlsReached &&
+      failures.length === 0
   };
 }
 
