@@ -424,6 +424,25 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
+        /* O.S. 045 — foco visível global (teclado). var(--text-primary) é
+           branco no tema dark e quase-preto no tema light, garantindo >=3:1
+           contra os fundos --bg-* de ambos os temas sem nenhuma cor nova.
+           outline: 3px (não 2px) para vencer o box-shadow de 3px de
+           input/select:focus na comparação de espessura do indicador.
+           ":focus-visible:focus-visible" (pseudo-classe repetida) eleva a
+           especificidade para (0,2,0), vencendo de forma determinística o
+           empate de especificidade (0,1,0) com .btn-action/.btn-accent/etc.
+           — sem isso, a "transition" dessas classes (mesma especificidade,
+           porém declaradas depois no arquivo) ganhava o cascade e o
+           outline herdava cor/largura transitórias incorretas. */
+        :focus-visible:focus-visible,
+        input[type="number"]:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--text-primary);
+            outline-offset: 2px;
+            transition: none;
+        }
+
         .unit-badge {
             position: absolute;
             right: 10px;
@@ -1124,7 +1143,7 @@
         .cabling-grid{display:grid;grid-template-columns:320px 1fr;gap:1.5rem}
         @media(max-width:900px){.cabling-grid{grid-template-columns:1fr}}
         .cabling-grid > aside,
-        .cabling-grid > main {
+        .cabling-grid > section {
             min-width: 0;
             max-width: 100%;
             overflow-x: auto;
@@ -1243,7 +1262,7 @@
                 </div>
 
                 <!-- Alert Banner -->
-                <div class="alert-banner" id="alert-error">
+                <div class="alert-banner" id="alert-error" role="alert" aria-live="assertive">
                     <i data-lucide="alert-circle"
                         style="flex-shrink: 0; color: var(--danger); width: 14px; height: 14px;"></i>
                     <div id="alert-error-msg">Erro físico nos parâmetros.</div>
@@ -1655,7 +1674,7 @@
 
                 <!-- Accordion Memorial Section -->
                 <div class="accordion-item">
-                    <button class="accordion-header" onclick="toggleAccordion()">
+                    <button class="accordion-header" id="accordion-header-sc" onclick="toggleAccordion()" aria-controls="accordion-memorial-content" aria-expanded="false">
                         <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
                             <i data-lucide="file-text"
                                 style="width: 18px; height: 18px; color: var(--text-primary);"></i>
@@ -1806,7 +1825,7 @@
                         <!-- Sidebar BT -->
                         <aside style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
                             <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.bt.params">LV Parameters</div>
-                            <div class="alert-banner" id="bt-alert-error" style="margin-bottom:0.75rem;">
+                            <div class="alert-banner" id="bt-alert-error" role="alert" aria-live="assertive" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
@@ -1875,9 +1894,9 @@
                         </aside>
 
                         <!-- Resultados BT -->
-                        <main id="card-bt">
+                        <section id="card-bt" aria-label="LV Results" data-i18n-aria-label="cabling.bt.resultsLabel">
                             <!-- O conteúdo dinâmico (Clonagem Curto-Circuito) será injetado via js/ui_render.js -->
-                        </main>
+                        </section>
                     </div>
                 </div>
 
@@ -1890,7 +1909,7 @@
                         <aside id="mt-params" style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.25rem;">
                             <div style="font-size:0.7rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); letter-spacing:0.08em; margin-bottom:1rem;" data-i18n="cabling.mt.params">MV Parameters</div>
 
-                            <div class="alert-banner" id="mt-alert-error" style="margin-bottom:0.75rem;">
+                            <div class="alert-banner" id="mt-alert-error" role="alert" aria-live="assertive" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="mt-alert-msg">Erro nos parâmetros.</div>
                             </div>
@@ -1982,7 +2001,7 @@
                         </aside>
 
                         <!-- Resultados MT -->
-                        <main id="card-mt">
+                        <section id="card-mt" aria-label="MV Results" data-i18n-aria-label="cabling.mt.resultsLabel">
                             <div class="results-grid" style="margin-bottom:1rem;">
                                 <div class="result-card primary">
                                     <div class="result-title">Seção Adotada</div>
@@ -1990,7 +2009,7 @@
                                     <div class="result-desc" id="mt-val-dominant">Dominante: --</div>
                                 </div>
                             </div>
-                        </main>
+                        </section>
                     </div>
                 </div>
             </div>
@@ -2023,7 +2042,7 @@
                         <span class="icc-panel-norm">&sect;6.2 Form.(4)(6)</span>
                     </div>
                     <div class="icc-panel-body">
-                        <div class="alert-banner" id="icc-alert-rede" style="margin-bottom:.75rem;">
+                        <div class="alert-banner" id="icc-alert-rede" role="alert" aria-live="assertive" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                             <div id="icc-alert-rede-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
@@ -2068,7 +2087,7 @@
                         <span class="icc-panel-norm">&sect;6.3.1 Form.(7&#8211;9)(12a)</span>
                     </div>
                     <div class="icc-panel-body">
-                        <div class="alert-banner" id="icc-alert-trafo" style="margin-bottom:.75rem;">
+                        <div class="alert-banner" id="icc-alert-trafo" role="alert" aria-live="assertive" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                             <div id="icc-alert-trafo-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
@@ -2126,7 +2145,7 @@
                         <span class="icc-panel-norm">&sect;6.6.1 Form.(17)(18)</span>
                     </div>
                     <div class="icc-panel-body">
-                        <div class="alert-banner" id="icc-alert-gerador" style="margin-bottom:.75rem;">
+                        <div class="alert-banner" id="icc-alert-gerador" role="alert" aria-live="assertive" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                             <div id="icc-alert-gerador-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
@@ -2188,7 +2207,7 @@
                         <span class="icc-panel-norm">&sect;6.4 Form.(14)(32)</span>
                     </div>
                     <div class="icc-panel-body">
-                        <div class="alert-banner" id="icc-alert-cabo" style="margin-bottom:.75rem;">
+                        <div class="alert-banner" id="icc-alert-cabo" role="alert" aria-live="assertive" style="margin-bottom:.75rem;">
                             <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                             <div id="icc-alert-cabo-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                         </div>
@@ -2257,7 +2276,7 @@
                 </div>
                 <div class="icc-panel-body">
                     <p style="font-size:.8rem;color:var(--text-muted);margin-bottom:1rem;" data-i18n="icc.agrDesc">Select successfully calculated components to include in the impedance sum.</p>
-                    <div class="alert-banner" id="icc-alert-agregar" style="margin-bottom:.75rem;">
+                    <div class="alert-banner" id="icc-alert-agregar" role="alert" aria-live="assertive" style="margin-bottom:.75rem;">
                         <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                         <div id="icc-alert-agregar-msg" data-i18n="icc.physViolation">Physical violation detected.</div>
                     </div>
@@ -2367,6 +2386,8 @@
         // ─────────────────────────────────────────────
         const i18nDictionary = {
             pt: {
+                'theme.toggle.toLight': 'Mudar para tema claro',
+                'theme.toggle.toDark': 'Mudar para tema escuro',
                 'header.title': 'Assistente de Engenharia Elétrica',
                 'header.subtitle': 'Soluções em Engenharia Elétrica',
                 'header.method': 'Método das Impedâncias Percentuais',
@@ -2472,6 +2493,8 @@
                 'cabling.title': 'Dimensionamento de Cabos',
                 'cabling.bt.params': 'Parâmetros BT',
                 'cabling.mt.params': 'Parâmetros MT',
+                'cabling.bt.resultsLabel': 'Resultados BT',
+                'cabling.mt.resultsLabel': 'Resultados MT',
                 'cabling.bt.method': 'Método de Instalação',
                 'cabling.bt.conductor': 'Material do Condutor',
                 'cabling.bt.insulation': 'Isolação',
@@ -2584,6 +2607,8 @@
                 'ui.exitFullscreen': '⛶ Sair da Tela Cheia',
             },
             en: {
+                'theme.toggle.toLight': 'Switch to light theme',
+                'theme.toggle.toDark': 'Switch to dark theme',
                 'header.title': 'Electrical Engineering Assistant',
                 'header.subtitle': 'Electrical Engineering Solutions',
                 'header.method': 'Percentage Impedance Method',
@@ -2689,6 +2714,8 @@
                 'cabling.title': 'Cable Sizing',
                 'cabling.bt.params': 'LV Parameters',
                 'cabling.mt.params': 'MV Parameters',
+                'cabling.bt.resultsLabel': 'LV Results',
+                'cabling.mt.resultsLabel': 'MV Results',
                 'cabling.bt.method': 'Installation Method',
                 'cabling.bt.conductor': 'Conductor Material',
                 'cabling.bt.insulation': 'Insulation',
@@ -2800,6 +2827,8 @@
                 'ui.exitFullscreen': '⛶ Exit Fullscreen',
             },
             es: {
+                'theme.toggle.toLight': 'Cambiar a tema claro',
+                'theme.toggle.toDark': 'Cambiar a tema oscuro',
                 'header.title': 'Asistente de Ingeniería Eléctrica',
                 'header.subtitle': 'Soluciones en Ingeniería Eléctrica',
                 'header.method': 'Método de las Impedancias Porcentuales',
@@ -2905,6 +2934,8 @@
                 'cabling.title': 'Dimensionamiento de Cables',
                 'cabling.bt.params': 'Parámetros BT',
                 'cabling.mt.params': 'Parámetros MT',
+                'cabling.bt.resultsLabel': 'Resultados BT',
+                'cabling.mt.resultsLabel': 'Resultados MT',
                 'cabling.bt.method': 'Método de Instalación',
                 'cabling.bt.conductor': 'Material del Conductor',
                 'cabling.bt.insulation': 'Aislamiento',
@@ -3042,6 +3073,9 @@
             document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
                 el.title = t(el.getAttribute('data-i18n-title'));
             });
+            document.querySelectorAll('[data-i18n-aria-label]').forEach(function(el) {
+                el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label')));
+            });
             // Update html lang attribute synchronously
             document.getElementById('html-root').lang = currentLang === 'pt' ? 'pt-BR' : currentLang;
         };
@@ -3080,6 +3114,14 @@
                 el.title = t(el.getAttribute('data-i18n-title'));
             });
 
+            // Translate aria-label attributes
+            document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+                el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label')));
+            });
+
+            // O.S. 045 — rótulo do theme-toggle acompanha o idioma ativo
+            if (typeof refreshThemeToggleLabel === 'function') refreshThemeToggleLabel();
+
             // Recalculate to refresh formatted numbers with new locale
             calculate();
         }
@@ -3112,8 +3154,10 @@
         function toggleAccordion() {
             const content = document.getElementById('accordion-memorial-content');
             const chevron = document.getElementById('accordion-chevron');
-            content.classList.toggle('open');
-            chevron.classList.toggle('rotated');
+            const header = document.getElementById('accordion-header-sc');
+            const isOpen = content.classList.toggle('open');
+            chevron.classList.toggle('rotated', isOpen);
+            if (header) header.setAttribute('aria-expanded', String(isOpen));
         }
 
 
@@ -3432,6 +3476,17 @@
             });
         }
 
+        // O.S. 045 — rótulo do theme-toggle sempre descreve a PRÓXIMA ação, traduzido.
+        function refreshThemeToggleLabel() {
+            const btn = document.getElementById('theme-toggle');
+            const htmlRoot = document.getElementById('html-root');
+            if (!btn || !htmlRoot) return;
+            const isLight = htmlRoot.hasAttribute('data-theme');
+            const label = isLight ? t('theme.toggle.toDark') : t('theme.toggle.toLight');
+            btn.setAttribute('aria-label', label);
+            btn.setAttribute('title', label);
+        }
+
         // Theme Toggle Logic
         document.addEventListener('DOMContentLoaded', () => {
             const savedMod = localStorage.getItem('ampai-active-module') || 'shortcircuit';
@@ -3459,6 +3514,12 @@
 
             // Initial apply
             applyTheme(savedTheme);
+            refreshThemeToggleLabel();
+
+            // O.S. 045 — qualquer mudança em data-theme (própria ou externa,
+            // ex.: testes que manipulam o atributo diretamente) atualiza o rótulo.
+            new MutationObserver(refreshThemeToggleLabel)
+                .observe(root, { attributes: true, attributeFilter: ['data-theme'] });
 
             themeToggle.addEventListener('click', () => {
                 const isLight = root.hasAttribute('data-theme');
