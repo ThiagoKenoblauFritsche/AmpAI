@@ -30,6 +30,89 @@ const _fmt = (v, d = 2) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// O.S. 045 — Helpers de acessibilidade dinâmica
+// Expõem/limpam aria-invalid + aria-describedby nos campos associados ao
+// alert-banner que reporta o erro. Reutilizados por BT, MT e ICC.
+// ─────────────────────────────────────────────────────────────────────────────
+window.setAccessibleError = function(inputIds, bannerId) {
+    (inputIds || []).forEach((id) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', bannerId);
+    });
+};
+
+window.clearAccessibleError = function(inputIds) {
+    (inputIds || []).forEach((id) => {
+        const input = document.getElementById(id);
+        if (!input) return;
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+    });
+};
+
+// Mapa código QA (lançado por core_cabos_*.js) → campo(s) implicado(s).
+// Permite apontar aria-describedby para o campo certo sem alterar os motores.
+const BT_ERROR_FIELDS = {
+    'QA-BT-001': ['bt-in', 'bt-ib'],
+    'QA-BT-002': ['bt-ncirc'],
+    'QA-BT-003': ['bt-length'],
+    'QA-BT-004': ['bt-icc'],
+    'QA-BT-006': ['bt-cosphi'],
+    'QA-BT-007': ['bt-tamb']
+};
+const BT_MAPPED_FIELDS = [...new Set(Object.values(BT_ERROR_FIELDS).flat())];
+
+const MT_ERROR_FIELDS = {
+    'QA-MT-001': ['mt-ull'],
+    'QA-MT-002': ['mt-ull'],
+    'QA-MT-003': ['mt-insulation-class'],
+    'QA-MT-004': ['mt-ull'],
+    'QA-MT-005': ['mt-ib'],
+    'QA-MT-044': ['mt-in'],
+    'QA-MT-045': ['mt-in', 'mt-ib'],
+    'QA-MT-006': ['mt-cosphi'],
+    'QA-MT-007': ['mt-ull'],
+    'QA-MT-043': ['mt-ull'],
+    'QA-MT-010': ['mt-icc'],
+    'QA-MT-012': ['mt-tcond'],
+    'QA-MT-015': ['mt-ifault'],
+    'QA-MT-021': ['mt-tamb'],
+    'QA-MT-022': ['mt-rho-soil'],
+    'QA-MT-024': ['mt-depth'],
+    'QA-MT-034': ['mt-ncirc'],
+    'QA-MT-036': ['mt-length'],
+    'QA-MT-038': ['mt-du-max']
+};
+const MT_MAPPED_FIELDS = [...new Set(Object.values(MT_ERROR_FIELDS).flat())];
+
+function fieldsForErrorMessage(map, message) {
+    const match = /\[([A-Z]+-[A-Z]+-\d+)\]/.exec(message || '');
+    return (match && map[match[1]]) || [];
+}
+
+// calculateCablingMT (core_cabos_mt.js, arquivo proibido nesta O.S.) ativa
+// #mt-alert-error internamente em seu próprio catch. Observamos a mudança de
+// classe para aplicar o mesmo contrato de acessibilidade sem tocar no motor.
+document.addEventListener('DOMContentLoaded', () => {
+    const mtAlertBox = document.getElementById('mt-alert-error');
+    if (!mtAlertBox) return;
+    const mtAlertObserver = new MutationObserver(() => {
+        if (mtAlertBox.classList.contains('active')) {
+            const msg = document.getElementById('mt-alert-msg')?.textContent || '';
+            window.setAccessibleError(fieldsForErrorMessage(MT_ERROR_FIELDS, msg), 'mt-alert-error');
+        } else {
+            // O.S. 045 — observa a desativação também: cobre o submit por
+            // teclado (Enter em form-mt), que recalcula sem passar pelo
+            // clear inline que o clique em data-action="calc-mt" já fazia.
+            window.clearAccessibleError(MT_MAPPED_FIELDS);
+        }
+    });
+    mtAlertObserver.observe(mtAlertBox, { attributes: true, attributeFilter: ['class'] });
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Dicionário i18n BT (O.S. #017 — Internacionalização Semântica)
 // ─────────────────────────────────────────────────────────────────────────────
 const _btI18n = {
@@ -221,19 +304,22 @@ function _tbt(key) {
 // ─────────────────────────────────────────────────────────────────────────────
 window.readBTInputsFromUI = function() {
     const safe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+    // 0 é falsy em JS — "|| fallback" mascarava valores inválidos digitados como
+    // 0 (ex.: comprimento 0m) substituindo-os pelo default antes da validação.
+    const num = (id, fallback) => { const v = parseFloat(safe(id)); return Number.isNaN(v) ? fallback : v; };
     return {
         method:      safe('bt-method') || 'C',
         phases:      parseInt(safe('bt-phases')) || 3,
-        Ib_A:        parseFloat(safe('bt-ib')) || 100,
-        In_A:        parseFloat(safe('bt-in')) || 125,
-        ULL_V:       parseFloat(safe('bt-ull')) || 380,
-        length_m:    parseFloat(safe('bt-length')) || 50,
-        cosPhi:      parseFloat(safe('bt-cosphi')) || 0.92,
-        duMax_pct:   parseFloat(safe('bt-du-max')) || 3.0,
-        thetaAmb_C:  parseFloat(safe('bt-tamb')) || 30,
+        Ib_A:        num('bt-ib', 100),
+        In_A:        num('bt-in', 125),
+        ULL_V:       num('bt-ull', 380),
+        length_m:    num('bt-length', 50),
+        cosPhi:      num('bt-cosphi', 0.92),
+        duMax_pct:   num('bt-du-max', 3.0),
+        thetaAmb_C:  num('bt-tamb', 30),
         nCircuits:   parseInt(safe('bt-ncirc')) || 1,
-        Icc_A:       (parseFloat(safe('bt-icc')) || 10) * 1000,
-        tProt_s:     parseFloat(safe('bt-tprot')) || 0.2,
+        Icc_A:       num('bt-icc', 10) * 1000,
+        tProt_s:     num('bt-tprot', 0.2),
         conductor:   window.AmpAI_State?.btCond || 'Cu',
         insulation:  window.AmpAI_State?.btIns  || 'XLPE'
     };
@@ -442,6 +528,14 @@ document.addEventListener('submit', function(e) {
     if (e.target && e.target.id === 'form-bt') {
         e.preventDefault();
         if (typeof window.calculateCablingBT === 'function') {
+            // O.S. 045 — submit por teclado (Enter) também passa por aqui;
+            // sem este clear, aria-invalid/aria-describedby de um erro
+            // anterior sobreviveriam a um recálculo bem-sucedido.
+            const btAlertBox = document.getElementById('bt-alert-error');
+            const btAlertMsg = document.getElementById('bt-alert-msg');
+            if (btAlertBox) btAlertBox.classList.remove('active');
+            if (btAlertMsg) btAlertMsg.innerText = '';
+            window.clearAccessibleError(BT_MAPPED_FIELDS);
             try {
                 const input = window.readBTInputsFromUI();
                 const payload = window.calculateCablingBT(input);
@@ -453,6 +547,7 @@ document.addEventListener('submit', function(e) {
                 const alertMsg = document.getElementById('bt-alert-msg');
                 if (alertBox) alertBox.classList.add('active');
                 if (alertMsg) alertMsg.innerText = err.message;
+                window.setAccessibleError(fieldsForErrorMessage(BT_ERROR_FIELDS, err.message), 'bt-alert-error');
             }
         }
     } else if (e.target && e.target.id === 'form-mt') {
@@ -480,6 +575,7 @@ document.addEventListener('click', function(e) {
                 document.getElementById('bt-alert-error').classList.remove('active');
                 if (document.getElementById('bt-alert-msg')) document.getElementById('bt-alert-msg').innerText = '';
             }
+            window.clearAccessibleError(BT_MAPPED_FIELDS);
             if (typeof window.calculateCablingBT === 'function') {
                 try {
                     const input = window.readBTInputsFromUI();
@@ -492,6 +588,7 @@ document.addEventListener('click', function(e) {
                     const alertMsg = document.getElementById('bt-alert-msg');
                     if (alertBox) alertBox.classList.add('active');
                     if (alertMsg) alertMsg.innerText = err.message;
+                    window.setAccessibleError(fieldsForErrorMessage(BT_ERROR_FIELDS, err.message), 'bt-alert-error');
 
                     ['bt-val-section', 'bt-val-iz', 'bt-val-du', 'bt-val-temp'].forEach(id => {
                         const el = document.getElementById(id);
@@ -505,6 +602,7 @@ document.addEventListener('click', function(e) {
                 document.getElementById('mt-alert-error').classList.remove('active');
                 if (document.getElementById('mt-alert-msg')) document.getElementById('mt-alert-msg').innerText = '';
             }
+            window.clearAccessibleError(MT_MAPPED_FIELDS);
             if (typeof window.calculateCablingMT === 'function') window.calculateCablingMT();
             break;
         case 'calc-icc-rede':
@@ -568,6 +666,8 @@ document.addEventListener('click', function(e) {
                 el.classList.toggle('open', abrir);
                 const chev = document.getElementById('accordion-chevron-bt');
                 if (chev) chev.classList.toggle('rotated', abrir);
+                const headerBT = document.getElementById('btn-memorial-bt');
+                if (headerBT) headerBT.setAttribute('aria-expanded', String(abrir));
                 if (abrir) {
                     el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
@@ -582,6 +682,7 @@ document.addEventListener('click', function(e) {
             }
             const chevBT = document.getElementById('accordion-chevron-bt');
             if (chevBT) chevBT.classList.add('rotated');
+            document.getElementById('btn-memorial-bt')?.setAttribute('aria-expanded', 'true');
             setTimeout(() => window.print(), 100);
             break;
         }
@@ -593,6 +694,8 @@ document.addEventListener('click', function(e) {
                 container.classList.toggle('open', abrir);
                 const chev = document.getElementById('accordion-chevron-mt');
                 if (chev) chev.classList.toggle('rotated', abrir);
+                const headerMT = document.getElementById('btn-memorial-mt');
+                if (headerMT) headerMT.setAttribute('aria-expanded', String(abrir));
                 if (abrir) {
                     container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
@@ -605,6 +708,7 @@ document.addEventListener('click', function(e) {
                 container.classList.remove('hidden');
                 container.classList.add('open');
             }
+            document.getElementById('btn-memorial-mt')?.setAttribute('aria-expanded', 'true');
             setTimeout(() => window.print(), 100);
             break;
         }
@@ -771,7 +875,7 @@ window.renderCardBT = function(r) {
 
             <!-- Accordion Memorial Section -->
             <div class="accordion-item">
-                <button class="accordion-header" id="btn-memorial-bt" data-action="toggle-memorial-bt">
+                <button class="accordion-header" id="btn-memorial-bt" data-action="toggle-memorial-bt" aria-controls="cb-mem-bt-container" aria-expanded="false">
                     <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
                         <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
                         <span>${_tbt('memorial.title')}</span>
@@ -907,7 +1011,7 @@ window.renderCardMT = function(r) {
 
             <!-- Accordion Memorial Section -->
             <div class="accordion-item" style="margin-top: 1rem;">
-                <button class="accordion-header" id="btn-memorial-mt" data-action="toggle-memorial-mt">
+                <button class="accordion-header" id="btn-memorial-mt" data-action="toggle-memorial-mt" aria-controls="cb-mem-mt-container" aria-expanded="false">
                     <span style="display: inline-flex; align-items: center; gap: 0.5rem;">
                         <i data-lucide="file-text" style="width: 18px; height: 18px; color: var(--text-primary);"></i>
                         <span>${_tbt('mt.memorial.title')}</span>
@@ -1010,20 +1114,22 @@ window.showIccToaster = function(msg) {
 window.showIccError = function(alertId, inputIds) {
     const alertBox = document.getElementById(`icc-alert-${alertId}`);
     if (alertBox) alertBox.classList.add('active');
-    
+
     if (inputIds && inputIds.length > 0) {
         inputIds.forEach(id => {
             const el = document.getElementById(id);
             if (el) el.classList.add('icc-input-error');
         });
     }
-    
+    window.setAccessibleError(inputIds, `icc-alert-${alertId}`);
+
     window.showIccToaster("Verifique os parâmetros e tente novamente.");
 };
 
 window.clearIccErrors = function(alertId, inputIds) {
     const alertBox = document.getElementById(`icc-alert-${alertId}`);
     if (alertBox) alertBox.classList.remove('active');
+    window.clearAccessibleError(inputIds);
     
     if (inputIds && inputIds.length > 0) {
         inputIds.forEach(id => {
