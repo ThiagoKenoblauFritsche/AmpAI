@@ -52,65 +52,385 @@ window.clearAccessibleError = function(inputIds) {
     });
 };
 
-// Mapa código QA (lançado por core_cabos_*.js) → campo(s) implicado(s).
-// Permite apontar aria-describedby para o campo certo sem alterar os motores.
+// Mapa código QA (SDD O.S. 046/047/048) → campo(s) DOM implicado(s).
+// Cobre o catálogo completo de erros e avisos (docs/api/OS046_Erros_Avisos_SDD.md).
+// Permite apontar aria-describedby/aria-invalid para o campo certo sem alterar os motores.
 const BT_ERROR_FIELDS = {
     'QA-BT-001': ['bt-in', 'bt-ib'],
     'QA-BT-002': ['bt-ncirc'],
     'QA-BT-003': ['bt-length'],
     'QA-BT-004': ['bt-icc'],
+    'QA-BT-005': ['bt-tprot'],
     'QA-BT-006': ['bt-cosphi'],
-    'QA-BT-007': ['bt-tamb']
+    'QA-BT-007': ['bt-tamb'],
+    'QA-BT-010': ['bt-in'],
+    'QA-BT-011': ['bt-method', 'bt-ncirc']
 };
 const BT_MAPPED_FIELDS = [...new Set(Object.values(BT_ERROR_FIELDS).flat())];
 
 const MT_ERROR_FIELDS = {
-    'QA-MT-001': ['mt-ull'],
-    'QA-MT-002': ['mt-ull'],
+    'QA-MT-001': ['mt-insulation-class'],
+    'QA-MT-002': ['mt-insulation-class'],
     'QA-MT-003': ['mt-insulation-class'],
-    'QA-MT-004': ['mt-ull'],
+    'QA-MT-004': ['mt-insulation-class'],
     'QA-MT-005': ['mt-ib'],
-    'QA-MT-044': ['mt-in'],
-    'QA-MT-045': ['mt-in', 'mt-ib'],
     'QA-MT-006': ['mt-cosphi'],
     'QA-MT-007': ['mt-ull'],
-    'QA-MT-043': ['mt-ull'],
     'QA-MT-010': ['mt-icc'],
+    'QA-MT-011': ['mt-icc'],
     'QA-MT-012': ['mt-tcond'],
+    'QA-MT-013': ['mt-tcond'],
+    'QA-MT-014': ['mt-tcond'],
     'QA-MT-015': ['mt-ifault'],
+    'QA-MT-020': ['mt-tamb'],
     'QA-MT-021': ['mt-tamb'],
     'QA-MT-022': ['mt-rho-soil'],
+    'QA-MT-023': ['mt-rho-soil'],
     'QA-MT-024': ['mt-depth'],
+    'QA-MT-025': ['mt-depth'],
+    'QA-MT-030': [],
+    'QA-MT-032': ['mt-ifault', 'mt-tscreen'],
+    'QA-MT-033': ['mt-ifault', 'mt-tscreen'],
     'QA-MT-034': ['mt-ncirc'],
+    'QA-MT-035': ['mt-ncirc'],
     'QA-MT-036': ['mt-length'],
-    'QA-MT-038': ['mt-du-max']
+    'QA-MT-037': ['mt-length'],
+    'QA-MT-038': ['mt-du-max'],
+    'QA-MT-040': [],
+    'QA-MT-041': ['mt-ib'],
+    'QA-MT-042': ['mt-tamb', 'mt-rho-soil', 'mt-depth', 'mt-ncirc'],
+    'QA-MT-043': ['mt-ull'],
+    'QA-MT-044': ['mt-in'],
+    'QA-MT-045': ['mt-in', 'mt-ib'],
+    'QA-MT-046': [],
+    'QA-MT-047': ['mt-formation']
 };
 const MT_MAPPED_FIELDS = [...new Set(Object.values(MT_ERROR_FIELDS).flat())];
 
-function fieldsForErrorMessage(map, message) {
-    const match = /\[([A-Z]+-[A-Z]+-\d+)\]/.exec(message || '');
-    return (match && map[match[1]]) || [];
+// O.S. 050 — aria-describedby apenas (sem aria-invalid): um warning não torna
+// o campo inválido (envelope.ok permanece true) — apenas adiciona contexto
+// perceptível a leitores de tela, sem acusar o valor de estar errado.
+window.setAccessibleNote = function(inputIds, bannerId) {
+    (inputIds || []).forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.setAttribute('aria-describedby', bannerId);
+    });
+};
+window.clearAccessibleNote = function(inputIds) {
+    (inputIds || []).forEach((id) => {
+        const input = document.getElementById(id);
+        if (input) input.removeAttribute('aria-describedby');
+    });
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// O.S. 050 — Catálogo de localização de diagnósticos (Contrato SDD O.S. 046).
+// Os motores (core_cabos_*.js) emitem SOMENTE {code, params}; toda mensagem
+// humana em PT/EN/ES é resolvida exclusivamente aqui a partir desse par.
+// ─────────────────────────────────────────────────────────────────────────────
+const DIAGNOSTIC_MESSAGES = {
+    'QA-BT-001': {
+        pt: (p) => `A corrente nominal do disjuntor (In = ${p.In_A} A) é menor que a corrente de projeto do circuito (Ib = ${p.Ib_A} A). O disjuntor deve suportar a corrente de projeto.`,
+        en: (p) => `The breaker rated current (In = ${p.In_A} A) is lower than the circuit design current (Ib = ${p.Ib_A} A). The breaker must withstand the design current.`,
+        es: (p) => `La corriente nominal del interruptor (In = ${p.In_A} A) es menor que la corriente de diseño del circuito (Ib = ${p.Ib_A} A). El interruptor debe soportar la corriente de diseño.`
+    },
+    'QA-BT-002': {
+        pt: (p) => `O número de circuitos agrupados informado (${p.nCircuits}) deve ser no mínimo 1.`,
+        en: (p) => `The provided number of grouped circuits (${p.nCircuits}) must be at least 1.`,
+        es: (p) => `El número de circuitos agrupados informado (${p.nCircuits}) debe ser como mínimo 1.`
+    },
+    'QA-BT-003': {
+        pt: (p) => `O comprimento do circuito informado (${p.length_m} m) deve ser maior que zero.`,
+        en: (p) => `The provided circuit length (${p.length_m} m) must be greater than zero.`,
+        es: (p) => `La longitud del circuito informada (${p.length_m} m) debe ser mayor que cero.`
+    },
+    'QA-BT-004': {
+        pt: (p) => `A corrente de curto-circuito informada (${(p.Icc_A || 0) / 1000} kA) deve ser maior que zero.`,
+        en: (p) => `The provided short-circuit current (${(p.Icc_A || 0) / 1000} kA) must be greater than zero.`,
+        es: (p) => `La corriente de cortocircuito informada (${(p.Icc_A || 0) / 1000} kA) debe ser mayor que cero.`
+    },
+    'QA-BT-005': {
+        pt: (p) => {
+            const t = p.t_s ?? p.tProt_s;
+            const max = p.recommendedMax_s;
+            return max !== undefined
+                ? `O tempo de atuação da proteção informado (${t} segundos) é maior que o limite recomendado de ${max} segundos para este critério de curto-circuito. O dimensionamento prossegue, mas verifique a coordenação da proteção.`
+                : `O tempo de atuação da proteção informado (${t} segundos) está acima do usual para este critério de curto-circuito. O dimensionamento prossegue, mas verifique a coordenação da proteção.`;
+        },
+        en: (p) => {
+            const t = p.t_s ?? p.tProt_s;
+            const max = p.recommendedMax_s;
+            return max !== undefined
+                ? `The provided protection trip time (${t} seconds) exceeds the recommended limit of ${max} seconds for this short-circuit criterion. Sizing proceeds, but review protection coordination.`
+                : `The provided protection trip time (${t} seconds) is above typical for this short-circuit criterion. Sizing proceeds, but review protection coordination.`;
+        },
+        es: (p) => {
+            const t = p.t_s ?? p.tProt_s;
+            const max = p.recommendedMax_s;
+            return max !== undefined
+                ? `El tiempo de actuación de la protección informado (${t} segundos) supera el límite recomendado de ${max} segundos para este criterio de cortocircuito. El dimensionamiento continúa, pero verifique la coordinación de la protección.`
+                : `El tiempo de actuación de la protección informado (${t} segundos) está por encima de lo habitual para este criterio de cortocircuito. El dimensionamiento continúa, pero verifique la coordinación de la protección.`;
+        }
+    },
+    'QA-BT-006': {
+        pt: (p) => `O fator de potência informado (cosφ = ${p.cosPhi}) deve estar entre 0,70 e 1,00.`,
+        en: (p) => `The provided power factor (cosφ = ${p.cosPhi}) must be between 0.70 and 1.00.`,
+        es: (p) => `El factor de potencia informado (cosφ = ${p.cosPhi}) debe estar entre 0,70 y 1,00.`
+    },
+    'QA-BT-007': {
+        pt: (p) => `A temperatura ambiente informada (${p.thetaAmb_C} °C) atingiu ou superou a temperatura máxima admissível da isolação (${p.tMax} °C).`,
+        en: (p) => `The provided ambient temperature (${p.thetaAmb_C} °C) reached or exceeded the insulation's maximum admissible temperature (${p.tMax} °C).`,
+        es: (p) => `La temperatura ambiente informada (${p.thetaAmb_C} °C) alcanzó o superó la temperatura máxima admisible del aislamiento (${p.tMax} °C).`
+    },
+    'QA-BT-010': {
+        pt: (p) => `Nenhuma seção padronizada atende ao critério de ampacidade: mesmo na maior seção da tabela, a capacidade corrigida (${p.Iz_corr} A) é menor que a corrente nominal do disjuntor (In = ${p.In_A} A). Revise os fatores de correção ou o método de instalação.`,
+        en: (p) => `No standard section satisfies the ampacity criterion: even at the table's largest section, the corrected capacity (${p.Iz_corr} A) is lower than the breaker rated current (In = ${p.In_A} A). Review the correction factors or installation method.`,
+        es: (p) => `Ninguna sección normalizada cumple el criterio de amperaje: incluso en la mayor sección de la tabla, la capacidad corregida (${p.Iz_corr} A) es menor que la corriente nominal del interruptor (In = ${p.In_A} A). Revise los factores de corrección o el método de instalación.`
+    },
+    'QA-BT-011': {
+        pt: (p) => `O método de instalação selecionado (${p.method}) com múltiplos circuitos agrupados utiliza um fator de agrupamento aproximado. O dimensionamento prossegue como estimativa conservadora.`,
+        en: (p) => `The selected installation method (${p.method}) with multiple grouped circuits uses an approximate grouping factor. Sizing proceeds as a conservative estimate.`,
+        es: (p) => `El método de instalación seleccionado (${p.method}) con múltiples circuitos agrupados utiliza un factor de agrupamiento aproximado. El dimensionamiento continúa como una estimación conservadora.`
+    },
+    'QA-MT-001': {
+        pt: (p) => `A tensão fase-terra da classe selecionada (U0 = ${p.U0} kV) é menor que o mínimo suportado (3,6 kV).`,
+        en: (p) => `The selected voltage class's phase-to-earth voltage (U0 = ${p.U0} kV) is below the supported minimum (3.6 kV).`,
+        es: (p) => `La tensión fase-tierra de la clase seleccionada (U0 = ${p.U0} kV) es menor que el mínimo soportado (3,6 kV).`
+    },
+    'QA-MT-002': {
+        pt: (p) => `A tensão fase-terra da classe selecionada (U0 = ${p.U0} kV) é maior que o máximo suportado (18 kV).`,
+        en: (p) => `The selected voltage class's phase-to-earth voltage (U0 = ${p.U0} kV) exceeds the supported maximum (18 kV).`,
+        es: (p) => `La tensión fase-tierra de la clase seleccionada (U0 = ${p.U0} kV) supera el máximo soportado (18 kV).`
+    },
+    'QA-MT-003': {
+        pt: (p) => `A isolação ${p.insulation} não é adequada para a classe de tensão selecionada (U0 = ${p.U0} kV); PVC é limitado a até 6 kV.`,
+        en: (p) => `${p.insulation} insulation is not suitable for the selected voltage class (U0 = ${p.U0} kV); PVC is limited to up to 6 kV.`,
+        es: (p) => `El aislamiento ${p.insulation} no es adecuado para la clase de tensión seleccionada (U0 = ${p.U0} kV); el PVC está limitado a hasta 6 kV.`
+    },
+    'QA-MT-004': {
+        pt: (p) => `A classe de tensão informada ("${p.voltageClass}") não é reconhecida pelo motor de cálculo.`,
+        en: (p) => `The provided voltage class ("${p.voltageClass}") is not recognized by the calculation engine.`,
+        es: (p) => `La clase de tensión informada ("${p.voltageClass}") no es reconocida por el motor de cálculo.`
+    },
+    'QA-MT-005': {
+        pt: (p) => `A corrente de projeto (Ib = ${p.Ib_A} A) deve ser positiva (maior que zero).`,
+        en: (p) => `The design current (Ib = ${p.Ib_A} A) must be positive (greater than zero).`,
+        es: (p) => `La corriente de diseño (Ib = ${p.Ib_A} A) debe ser positiva (mayor que cero).`
+    },
+    'QA-MT-006': {
+        pt: (p) => `O fator de potência informado (cosφ = ${p.cosPhi}) deve estar entre 0,70 e 1,00.`,
+        en: (p) => `The provided power factor (cosφ = ${p.cosPhi}) must be between 0.70 and 1.00.`,
+        es: (p) => `El factor de potencia informado (cosφ = ${p.cosPhi}) debe estar entre 0,70 y 1,00.`
+    },
+    'QA-MT-007': {
+        pt: (p) => `A tensão de linha informada (ULL = ${p.ULL_V} V) deve ser maior que zero.`,
+        en: (p) => `The provided line voltage (ULL = ${p.ULL_V} V) must be greater than zero.`,
+        es: (p) => `La tensión de línea informada (ULL = ${p.ULL_V} V) debe ser mayor que cero.`
+    },
+    'QA-MT-010': {
+        pt: (p) => `A corrente de curto-circuito informada (${(p.Icc_A || 0) / 1000} kA) deve ser maior que zero.`,
+        en: (p) => `The provided short-circuit current (${(p.Icc_A || 0) / 1000} kA) must be greater than zero.`,
+        es: (p) => `La corriente de cortocircuito informada (${(p.Icc_A || 0) / 1000} kA) debe ser mayor que cero.`
+    },
+    'QA-MT-011': {
+        pt: (p) => {
+            const value = p.Icc_A ?? p.Ib_A;
+            const ref = p.referenceMax_A;
+            return ref !== undefined
+                ? `A corrente de curto-circuito informada (${value} A) é considerada muito alta e improvável frente à referência usual de ${ref} A. O dimensionamento prossegue; confirme o valor com o estudo de curto-circuito da instalação.`
+                : `A corrente de curto-circuito informada (${value} A) é considerada muito alta e improvável para uma instalação MT típica. O dimensionamento prossegue; confirme o valor com o estudo de curto-circuito da instalação.`;
+        },
+        en: (p) => {
+            const value = p.Icc_A ?? p.Ib_A;
+            const ref = p.referenceMax_A;
+            return ref !== undefined
+                ? `The provided short-circuit current (${value} A) is considered unusually high and unlikely relative to the typical reference of ${ref} A. Sizing proceeds; confirm the value against the installation's short-circuit study.`
+                : `The provided short-circuit current (${value} A) is considered unusually high and unlikely for a typical MV installation. Sizing proceeds; confirm the value against the installation's short-circuit study.`;
+        },
+        es: (p) => {
+            const value = p.Icc_A ?? p.Ib_A;
+            const ref = p.referenceMax_A;
+            return ref !== undefined
+                ? `La corriente de cortocircuito informada (${value} A) se considera muy alta e improbable frente a la referencia habitual de ${ref} A. El dimensionamiento continúa; confirme el valor con el estudio de cortocircuito de la instalación.`
+                : `La corriente de cortocircuito informada (${value} A) se considera muy alta e improbable para una instalación MT típica. El dimensionamiento continúa; confirme el valor con el estudio de cortocircuito de la instalación.`;
+        }
+    },
+    'QA-MT-012': {
+        pt: (p) => `O tempo de atuação da proteção de fase informado (${p.tConductor_s} segundos) deve ser maior que zero.`,
+        en: (p) => `The provided phase protection trip time (${p.tConductor_s} seconds) must be greater than zero.`,
+        es: (p) => `El tiempo de actuación de la protección de fase informado (${p.tConductor_s} segundos) debe ser mayor que cero.`
+    },
+    'QA-MT-013': {
+        pt: (p) => `O tempo de atuação da proteção de fase informado (${p.tConductor_s} segundos) é elevado; verifique a coordenação da proteção.`,
+        en: (p) => `The provided phase protection trip time (${p.tConductor_s} seconds) is high; review protection coordination.`,
+        es: (p) => `El tiempo de actuación de la protección de fase informado (${p.tConductor_s} segundos) es elevado; verifique la coordinación de la protección.`
+    },
+    'QA-MT-014': {
+        pt: (p) => `O tempo de atuação da proteção de fase informado (${p.tConductor_s} segundos) é muito curto; confirme a configuração da proteção.`,
+        en: (p) => `The provided phase protection trip time (${p.tConductor_s} seconds) is very short; confirm the protection settings.`,
+        es: (p) => `El tiempo de actuación de la protección de fase informado (${p.tConductor_s} segundos) es muy corto; confirme la configuración de la protección.`
+    },
+    'QA-MT-015': {
+        pt: (p) => `A corrente de falta fase-terra informada (${p.iFault_A} A) é inválida${p.Icc_A !== undefined ? ` (deve ser positiva e não superior à corrente de curto-circuito de ${p.Icc_A} A)` : ' (deve ser positiva)'}.`,
+        en: (p) => `The provided phase-earth fault current (${p.iFault_A} A) is invalid${p.Icc_A !== undefined ? ` (it must be positive and not exceed the short-circuit current of ${p.Icc_A} A)` : ' (it must be positive)'}.`,
+        es: (p) => `La corriente de falta fase-tierra informada (${p.iFault_A} A) es inválida${p.Icc_A !== undefined ? ` (debe ser positiva y no superar la corriente de cortocircuito de ${p.Icc_A} A)` : ' (debe ser positiva)'}.`
+    },
+    'QA-MT-020': {
+        pt: (p) => `A temperatura ambiente informada (${p.thetaAmb_C} °C) é extremamente baixa; confirme o valor.`,
+        en: (p) => `The provided ambient temperature (${p.thetaAmb_C} °C) is extremely low; confirm the value.`,
+        es: (p) => `La temperatura ambiente informada (${p.thetaAmb_C} °C) es extremadamente baja; confirme el valor.`
+    },
+    'QA-MT-021': {
+        pt: (p) => `A temperatura ambiente informada (${p.thetaAmb_C} °C) atingiu ou superou a temperatura máxima admissível da isolação (${p.thetaMax} °C).`,
+        en: (p) => `The provided ambient temperature (${p.thetaAmb_C} °C) reached or exceeded the insulation's maximum admissible temperature (${p.thetaMax} °C).`,
+        es: (p) => `La temperatura ambiente informada (${p.thetaAmb_C} °C) alcanzó o superó la temperatura máxima admisible del aislamiento (${p.thetaMax} °C).`
+    },
+    'QA-MT-022': {
+        pt: (p) => `A resistividade térmica do solo informada (${p.rhoSoil_KmW} K·m/W) deve ser maior que zero.`,
+        en: (p) => `The provided soil thermal resistivity (${p.rhoSoil_KmW} K·m/W) must be greater than zero.`,
+        es: (p) => `La resistividad térmica del suelo informada (${p.rhoSoil_KmW} K·m/W) debe ser mayor que cero.`
+    },
+    'QA-MT-023': {
+        pt: (p) => `A resistividade térmica do solo informada (${p.rhoSoil_KmW} K·m/W) é elevada; confirme o levantamento geotécnico.`,
+        en: (p) => `The provided soil thermal resistivity (${p.rhoSoil_KmW} K·m/W) is high; confirm the geotechnical survey.`,
+        es: (p) => `La resistividad térmica del suelo informada (${p.rhoSoil_KmW} K·m/W) es elevada; confirme el levantamiento geotécnico.`
+    },
+    'QA-MT-024': {
+        pt: (p) => `A profundidade de instalação informada (${p.depth_m} m) deve ser de no mínimo 0,3 m.`,
+        en: (p) => `The provided installation depth (${p.depth_m} m) must be at least 0.3 m.`,
+        es: (p) => `La profundidad de instalación informada (${p.depth_m} m) debe ser de al menos 0,3 m.`
+    },
+    'QA-MT-025': {
+        pt: (p) => `A profundidade de instalação informada (${p.depth_m} m) é incomum; confirme o projeto de lançamento.`,
+        en: (p) => `The provided installation depth (${p.depth_m} m) is unusual; confirm the laying design.`,
+        es: (p) => `La profundidad de instalación informada (${p.depth_m} m) es inusual; confirme el proyecto de tendido.`
+    },
+    'QA-MT-030': {
+        pt: (p) => `A seção calculada (${p.sCalc} mm²) é menor que a mínima da série normalizada (10 mm²) para cabos MT.`,
+        en: (p) => `The calculated section (${p.sCalc} mm²) is below the minimum standard series value (10 mm²) for MV cables.`,
+        es: (p) => `La sección calculada (${p.sCalc} mm²) es menor que la mínima de la serie normalizada (10 mm²) para cables MT.`
+    },
+    'QA-MT-032': {
+        pt: (p) => `A seção calculada da tela metálica (${p.S_screen} mm²) é menor que o mínimo usual (6 mm²).`,
+        en: (p) => `The calculated metallic screen section (${p.S_screen} mm²) is below the usual minimum (6 mm²).`,
+        es: (p) => `La sección calculada de la pantalla metálica (${p.S_screen} mm²) es menor que el mínimo habitual (6 mm²).`
+    },
+    'QA-MT-033': {
+        pt: (p) => `A seção da tela metálica (${p.S_screen} mm²) é maior que a seção do condutor (${p.sFinal} mm²); configuração incomum, porém não impeditiva.`,
+        en: (p) => `The metallic screen section (${p.S_screen} mm²) is larger than the conductor section (${p.sFinal} mm²); an unusual but non-blocking configuration.`,
+        es: (p) => `La sección de la pantalla metálica (${p.S_screen} mm²) es mayor que la sección del conductor (${p.sFinal} mm²); una configuración inusual, pero no bloqueante.`
+    },
+    'QA-MT-034': {
+        pt: (p) => `O número de circuitos agrupados informado (${p.nCircuits}) deve ser no mínimo 1.`,
+        en: (p) => `The provided number of grouped circuits (${p.nCircuits}) must be at least 1.`,
+        es: (p) => `El número de circuitos agrupados informado (${p.nCircuits}) debe ser como mínimo 1.`
+    },
+    'QA-MT-035': {
+        pt: (p) => `O número de circuitos agrupados informado (${p.nCircuits}) é elevado; confirme o arranjo de instalação.`,
+        en: (p) => `The provided number of grouped circuits (${p.nCircuits}) is high; confirm the installation arrangement.`,
+        es: (p) => `El número de circuitos agrupados informado (${p.nCircuits}) es elevado; confirme la disposición de instalación.`
+    },
+    'QA-MT-036': {
+        pt: (p) => `O comprimento do circuito informado (${p.length_m} m) deve ser maior que zero.`,
+        en: (p) => `The provided circuit length (${p.length_m} m) must be greater than zero.`,
+        es: (p) => `La longitud del circuito informada (${p.length_m} m) debe ser mayor que cero.`
+    },
+    'QA-MT-037': {
+        pt: (p) => `O comprimento do circuito informado (${p.length_m} m) é incomum para um único circuito; confirme o valor.`,
+        en: (p) => `The provided circuit length (${p.length_m} m) is unusual for a single circuit; confirm the value.`,
+        es: (p) => `La longitud del circuito informada (${p.length_m} m) es inusual para un único circuito; confirme el valor.`
+    },
+    'QA-MT-038': {
+        pt: (p) => `O limite de queda de tensão informado (${p.duMax_pct}%) é inválido; deve estar entre 0 (exclusivo) e 15%.`,
+        en: (p) => `The provided maximum voltage drop (${p.duMax_pct}%) is invalid; it must be between 0 (exclusive) and 15%.`,
+        es: (p) => `El límite de caída de tensión informado (${p.duMax_pct}%) es inválido; debe estar entre 0 (exclusivo) y 15%.`
+    },
+    'QA-MT-040': {
+        pt: (p) => `A seção final calculada (${p.sFinal} mm²) excede o máximo da série normalizada (1200 mm²).`,
+        en: (p) => `The calculated final section (${p.sFinal} mm²) exceeds the maximum standard series value (1200 mm²).`,
+        es: (p) => `La sección final calculada (${p.sFinal} mm²) supera el máximo de la serie normalizada (1200 mm²).`
+    },
+    'QA-MT-041': {
+        pt: (p) => `A ampacidade corrigida (${p.Iz_corr} A) é insuficiente para a corrente de projeto (Ib = ${p.Ib_A} A), mesmo na maior seção disponível.`,
+        en: (p) => `The corrected ampacity (${p.Iz_corr} A) is insufficient for the design current (Ib = ${p.Ib_A} A), even at the largest available section.`,
+        es: (p) => `El amperaje corregido (${p.Iz_corr} A) es insuficiente para la corriente de diseño (Ib = ${p.Ib_A} A), incluso en la mayor sección disponible.`
+    },
+    'QA-MT-042': {
+        pt: (p) => p.condition === 'zero-or-negative'
+            ? `O fator de correção combinado (f_comb = ${p.f_combined}) é nulo ou negativo; as condições de instalação informadas inviabilizam o cálculo. Revise temperatura, resistividade do solo, profundidade e agrupamento.`
+            : `O fator de correção combinado (f_comb = ${p.f_combined}) é baixo; as condições de instalação são severas. O dimensionamento prossegue, mas revise temperatura, resistividade do solo, profundidade e agrupamento.`,
+        en: (p) => p.condition === 'zero-or-negative'
+            ? `The combined correction factor (f_comb = ${p.f_combined}) is zero or negative; the provided installation conditions make the calculation unfeasible. Review ambient temperature, soil resistivity, depth and grouping.`
+            : `The combined correction factor (f_comb = ${p.f_combined}) is low; installation conditions are severe. Sizing proceeds, but review ambient temperature, soil resistivity, depth and grouping.`,
+        es: (p) => p.condition === 'zero-or-negative'
+            ? `El factor de corrección combinado (f_comb = ${p.f_combined}) es nulo o negativo; las condiciones de instalación informadas inviabilizan el cálculo. Revise temperatura, resistividad del suelo, profundidad y agrupamiento.`
+            : `El factor de corrección combinado (f_comb = ${p.f_combined}) es bajo; las condiciones de instalación son severas. El dimensionamiento continúa, pero revise temperatura, resistividad del suelo, profundidad y agrupamiento.`
+    },
+    'QA-MT-043': {
+        pt: (p) => `A tensão de linha informada (ULL = ${p.ULL_V} V) excede o máximo suportado pela classe (Um = ${p.Um} kV).`,
+        en: (p) => `The provided line voltage (ULL = ${p.ULL_V} V) exceeds the maximum supported by the class (Um = ${p.Um} kV).`,
+        es: (p) => `La tensión de línea informada (ULL = ${p.ULL_V} V) supera el máximo soportado por la clase (Um = ${p.Um} kV).`
+    },
+    'QA-MT-044': {
+        pt: (p) => `A corrente nominal do disjuntor informada (In = ${p.In_A} A) deve ser maior que zero.`,
+        en: (p) => `The provided breaker rated current (In = ${p.In_A} A) must be greater than zero.`,
+        es: (p) => `La corriente nominal del interruptor informada (In = ${p.In_A} A) debe ser mayor que cero.`
+    },
+    'QA-MT-045': {
+        pt: (p) => `A corrente nominal do disjuntor (In = ${p.In_A} A) é menor que a corrente de projeto do circuito (Ib = ${p.Ib_A} A).`,
+        en: (p) => `The breaker rated current (In = ${p.In_A} A) is lower than the circuit design current (Ib = ${p.Ib_A} A).`,
+        es: (p) => `La corriente nominal del interruptor (In = ${p.In_A} A) es menor que la corriente de diseño del circuito (Ib = ${p.Ib_A} A).`
+    },
+    'QA-MT-046': {
+        pt: (p) => `Não há dado de ampacidade tabelado para a seção ${p.section} mm² com condutor ${p.conductor}/${p.insulation}.`,
+        en: (p) => `No tabulated ampacity data is available for section ${p.section} mm² with ${p.conductor}/${p.insulation} conductor.`,
+        es: (p) => `No hay datos de amperaje tabulados para la sección ${p.section} mm² con conductor ${p.conductor}/${p.insulation}.`
+    },
+    'QA-MT-047': {
+        pt: (p) => `A formação de instalação informada ("${p.formation}") não é reconhecida pelo motor de cálculo.`,
+        en: (p) => `The provided cable formation ("${p.formation}") is not recognized by the calculation engine.`,
+        es: (p) => `La formación de instalación informada ("${p.formation}") no es reconocida por el motor de cálculo.`
+    }
+};
+
+function _diagnosticLang() {
+    const lang = document.documentElement.lang === 'en' ? 'en' : (document.documentElement.lang === 'es' ? 'es' : 'pt');
+    return lang;
 }
 
-// calculateCablingMT (core_cabos_mt.js, arquivo proibido nesta O.S.) ativa
-// #mt-alert-error internamente em seu próprio catch. Observamos a mudança de
-// classe para aplicar o mesmo contrato de acessibilidade sem tocar no motor.
-document.addEventListener('DOMContentLoaded', () => {
-    const mtAlertBox = document.getElementById('mt-alert-error');
-    if (!mtAlertBox) return;
-    const mtAlertObserver = new MutationObserver(() => {
-        if (mtAlertBox.classList.contains('active')) {
-            const msg = document.getElementById('mt-alert-msg')?.textContent || '';
-            window.setAccessibleError(fieldsForErrorMessage(MT_ERROR_FIELDS, msg), 'mt-alert-error');
-        } else {
-            // O.S. 045 — observa a desativação também: cobre o submit por
-            // teclado (Enter em form-mt), que recalcula sem passar pelo
-            // clear inline que o clique em data-action="calc-mt" já fazia.
-            window.clearAccessibleError(MT_MAPPED_FIELDS);
-        }
-    });
-    mtAlertObserver.observe(mtAlertBox, { attributes: true, attributeFilter: ['class'] });
-});
+// Resolve {code, params} → texto localizado. Código desconhecido usa mensagem
+// técnica genérica e segura (sem inventar diagnóstico físico).
+function localizeDiagnostic(diagnostic) {
+    const lang = _diagnosticLang();
+    const params = diagnostic?.params || {};
+    const entry = DIAGNOSTIC_MESSAGES[diagnostic?.code];
+    if (!entry) {
+        const generic = {
+            pt: `Ocorreu uma condição não catalogada (código ${diagnostic?.code || '--'}). Verifique os parâmetros informados.`,
+            en: `An uncatalogued condition occurred (code ${diagnostic?.code || '--'}). Please review the provided parameters.`,
+            es: `Se produjo una condición no catalogada (código ${diagnostic?.code || '--'}). Verifique los parámetros informados.`
+        };
+        return generic[lang];
+    }
+    const template = entry[lang] || entry.pt;
+    return template(params);
+}
+
+function showDiagnosticBanner(bannerId, msgId, diagnostic) {
+    const banner = document.getElementById(bannerId);
+    const msg = document.getElementById(msgId);
+    if (!banner || !msg) return;
+    msg.textContent = localizeDiagnostic(diagnostic);
+    banner.setAttribute('data-diagnostic-code', diagnostic?.code || '');
+    banner.classList.add('active');
+}
+
+function clearDiagnosticBanner(bannerId, msgId) {
+    const banner = document.getElementById(bannerId);
+    const msg = document.getElementById(msgId);
+    if (banner) { banner.classList.remove('active'); banner.removeAttribute('data-diagnostic-code'); }
+    if (msg) msg.textContent = '';
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Dicionário i18n BT (O.S. #017 — Internacionalização Semântica)
@@ -326,6 +646,89 @@ window.readBTInputsFromUI = function() {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// Leitura dos inputs MT da DOM (O.S. 050 — o motor MT não lê mais o DOM; a UI
+// deve construir e fornecer explicitamente o objeto de entrada).
+// ─────────────────────────────────────────────────────────────────────────────
+window.readMTInputsFromUI = function() {
+    const safe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
+    const num = (id, fallback) => { const v = parseFloat(safe(id)); return Number.isNaN(v) ? fallback : v; };
+    return {
+        voltageClass: safe('mt-insulation-class') || '8.7/15',
+        conductor:    window.AmpAI_State?.mtCond || 'Cu',
+        insulation:   window.AmpAI_State?.mtIns  || 'XLPE',
+        installation: safe('mt-installation') || 'UNDERGROUND_DUCT',
+        formation:    safe('mt-formation') || 'TREFOIL_TOUCHING',
+        Ib_A:         num('mt-ib', 250),
+        In_A:         num('mt-in', 300),
+        ULL_V:        num('mt-ull', 13.8) * 1000,
+        length_m:     num('mt-length', 150),
+        cosPhi:       num('mt-cosphi', 0.90),
+        duMax_pct:    num('mt-du-max', 2.0),
+        Icc_A:        num('mt-icc', 12.5) * 1000,
+        iFault_A:     num('mt-ifault', 1) * 1000,
+        tConductor_s: num('mt-tcond', 0.5),
+        tScreen_s:    num('mt-tscreen', 1.0),
+        thetaAmb_C:   num('mt-tamb', 20),
+        depth_m:      num('mt-depth', 0.8),
+        rhoSoil_KmW:  num('mt-rho-soil', 1.0),
+        nCircuits:    parseInt(safe('mt-ncirc')) || 1,
+        sheath:       'PVC'
+    };
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// O.S. 050 — Orquestrador único de consumo do envelope SDD (Contrato O.S. 046).
+// Único ponto que decide o que fazer com {ok, data, warnings} ou
+// {ok:false, error}: garante que apenas envelope.data (nunca o envelope
+// inteiro) chega ao renderizador existente, que warnings não bloqueiam o
+// resultado numérico e que erros nunca deixam resíduo numérico na tela.
+// ─────────────────────────────────────────────────────────────────────────────
+function consumeCablingEnvelope(domain, envelope) {
+    const isBT = domain === 'BT';
+    const cardId = isBT ? 'card-bt' : 'card-mt';
+    const errorBannerId = isBT ? 'bt-alert-error' : 'mt-alert-error';
+    const errorMsgId = isBT ? 'bt-alert-msg' : 'mt-alert-msg';
+    const warningBannerId = isBT ? 'bt-alert-warning' : 'mt-alert-warning';
+    const warningMsgId = isBT ? 'bt-alert-warning-msg' : 'mt-alert-warning-msg';
+    const fieldsMap = isBT ? BT_ERROR_FIELDS : MT_ERROR_FIELDS;
+    const mappedFields = isBT ? BT_MAPPED_FIELDS : MT_MAPPED_FIELDS;
+    const renderFn = isBT ? window.renderCardBT : window.renderCardMT;
+
+    // Estado residual (erro/aviso/aria) de execuções anteriores é sempre limpo primeiro.
+    clearDiagnosticBanner(errorBannerId, errorMsgId);
+    clearDiagnosticBanner(warningBannerId, warningMsgId);
+    window.clearAccessibleError(mappedFields);
+    window.clearAccessibleNote(mappedFields);
+
+    if (!envelope || envelope.ok !== true) {
+        const card = document.getElementById(cardId);
+        if (card) card.innerHTML = '';
+        const problem = envelope && envelope.error;
+        if (problem) {
+            showDiagnosticBanner(errorBannerId, errorMsgId, problem);
+            window.setAccessibleError(fieldsMap[problem.code] || [], errorBannerId);
+        }
+        return;
+    }
+
+    if (typeof renderFn === 'function') renderFn(envelope.data);
+
+    const warnings = envelope.warnings || [];
+    if (warnings.length > 0) {
+        const banner = document.getElementById(warningBannerId);
+        const msg = document.getElementById(warningMsgId);
+        if (banner && msg) {
+            msg.textContent = warnings.map((w) => localizeDiagnostic(w)).join(' ');
+            banner.setAttribute('data-diagnostic-code', warnings.map((w) => w.code).join(','));
+            banner.classList.add('active');
+        }
+        warnings.forEach((w) => {
+            window.setAccessibleNote(fieldsMap[w.code] || [], warningBannerId);
+        });
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 // Semeadura do estado no load (DOM → AmpAI_State)
 // O HTML define quais toggles nascem .active; sem esta leitura inicial, o
 // estado só seria populado no primeiro clique e os cálculos usariam os
@@ -443,7 +846,8 @@ window.switchModule = function(moduleName) {
         // Delay de 350ms: aguarda o cooldown de isRendering do BT (50ms + sync template + 100ms lock)
         setTimeout(() => {
             if (typeof window.calculateCablingMT === 'function') {
-                try { window.calculateCablingMT(); } catch(e) {}
+                const input = window.readMTInputsFromUI();
+                consumeCablingEnvelope('MT', window.calculateCablingMT(input));
             }
         }, 350);
 
@@ -509,13 +913,11 @@ window.switchCablingCard = function(card) {
 
     // Disparar cálculo de forma síncrona para evitar flicker
     if (card === 'bt' && typeof window.calculateCablingBT === 'function') {
-        try {
-            const input = window.readBTInputsFromUI();
-            const payload = window.calculateCablingBT(input);
-            if (payload && typeof window.renderCardBT === 'function') window.renderCardBT(payload);
-        } catch (err) {}
+        const input = window.readBTInputsFromUI();
+        consumeCablingEnvelope('BT', window.calculateCablingBT(input));
     } else if (card === 'mt' && typeof window.calculateCablingMT === 'function') {
-        window.calculateCablingMT();
+        const input = window.readMTInputsFromUI();
+        consumeCablingEnvelope('MT', window.calculateCablingMT(input));
     }
 };
 
@@ -528,31 +930,15 @@ document.addEventListener('submit', function(e) {
     if (e.target && e.target.id === 'form-bt') {
         e.preventDefault();
         if (typeof window.calculateCablingBT === 'function') {
-            // O.S. 045 — submit por teclado (Enter) também passa por aqui;
-            // sem este clear, aria-invalid/aria-describedby de um erro
-            // anterior sobreviveriam a um recálculo bem-sucedido.
-            const btAlertBox = document.getElementById('bt-alert-error');
-            const btAlertMsg = document.getElementById('bt-alert-msg');
-            if (btAlertBox) btAlertBox.classList.remove('active');
-            if (btAlertMsg) btAlertMsg.innerText = '';
-            window.clearAccessibleError(BT_MAPPED_FIELDS);
-            try {
-                const input = window.readBTInputsFromUI();
-                const payload = window.calculateCablingBT(input);
-                if (payload && typeof window.renderCardBT === 'function') {
-                    window.renderCardBT(payload);
-                }
-            } catch (err) {
-                const alertBox = document.getElementById('bt-alert-error');
-                const alertMsg = document.getElementById('bt-alert-msg');
-                if (alertBox) alertBox.classList.add('active');
-                if (alertMsg) alertMsg.innerText = err.message;
-                window.setAccessibleError(fieldsForErrorMessage(BT_ERROR_FIELDS, err.message), 'bt-alert-error');
-            }
+            const input = window.readBTInputsFromUI();
+            consumeCablingEnvelope('BT', window.calculateCablingBT(input));
         }
     } else if (e.target && e.target.id === 'form-mt') {
         e.preventDefault();
-        if (typeof window.calculateCablingMT === 'function') window.calculateCablingMT();
+        if (typeof window.calculateCablingMT === 'function') {
+            const input = window.readMTInputsFromUI();
+            consumeCablingEnvelope('MT', window.calculateCablingMT(input));
+        }
     }
 });
 
@@ -571,39 +957,16 @@ document.addEventListener('click', function(e) {
 
     switch (action) {
         case 'calc-bt':
-            if (document.getElementById('bt-alert-error')) {
-                document.getElementById('bt-alert-error').classList.remove('active');
-                if (document.getElementById('bt-alert-msg')) document.getElementById('bt-alert-msg').innerText = '';
-            }
-            window.clearAccessibleError(BT_MAPPED_FIELDS);
             if (typeof window.calculateCablingBT === 'function') {
-                try {
-                    const input = window.readBTInputsFromUI();
-                    const payload = window.calculateCablingBT(input);
-                    if (payload && typeof window.renderCardBT === 'function') {
-                        window.renderCardBT(payload);
-                    }
-                } catch (err) {
-                    const alertBox = document.getElementById('bt-alert-error');
-                    const alertMsg = document.getElementById('bt-alert-msg');
-                    if (alertBox) alertBox.classList.add('active');
-                    if (alertMsg) alertMsg.innerText = err.message;
-                    window.setAccessibleError(fieldsForErrorMessage(BT_ERROR_FIELDS, err.message), 'bt-alert-error');
-
-                    ['bt-val-section', 'bt-val-iz', 'bt-val-du', 'bt-val-temp'].forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.innerHTML = '--';
-                    });
-                }
+                const input = window.readBTInputsFromUI();
+                consumeCablingEnvelope('BT', window.calculateCablingBT(input));
             }
             break;
         case 'calc-mt':
-            if (document.getElementById('mt-alert-error')) {
-                document.getElementById('mt-alert-error').classList.remove('active');
-                if (document.getElementById('mt-alert-msg')) document.getElementById('mt-alert-msg').innerText = '';
+            if (typeof window.calculateCablingMT === 'function') {
+                const input = window.readMTInputsFromUI();
+                consumeCablingEnvelope('MT', window.calculateCablingMT(input));
             }
-            window.clearAccessibleError(MT_MAPPED_FIELDS);
-            if (typeof window.calculateCablingMT === 'function') window.calculateCablingMT();
             break;
         case 'calc-icc-rede':
             if (typeof window.calcIccRede === 'function') window.calcIccRede();
