@@ -292,8 +292,17 @@ async function runCase(page, testCase) {
       await waitForFrames();
     }
 
-    window.switchModule('cabling');
-    window.switchCablingCard(domain);
+    const navigationErrors = [];
+    try {
+      window.switchModule('cabling');
+    } catch (error) {
+      navigationErrors.push({ step: 'switchModule', message: String(error?.message || error) });
+    }
+    try {
+      window.switchCablingCard(domain);
+    } catch (error) {
+      navigationErrors.push({ step: 'switchCablingCard', message: String(error?.message || error) });
+    }
     const navigationState = await waitForVisibleAndStable(card, `#card-${domain}`);
 
     const engineCalls = [];
@@ -451,6 +460,8 @@ async function runCase(page, testCase) {
         navigationPrepared: true,
         cardVisibleBeforeClick,
         navigationState,
+        navigationErrorCount: navigationErrors.length,
+        navigationErrors,
         compliant,
       };
     } finally {
