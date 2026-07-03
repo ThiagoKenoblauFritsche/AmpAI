@@ -4,7 +4,20 @@
  * Motor Matemático: Dimensionamento de Cabos MT (IEC 60502-2 / IEC 60949 / IEC 60287)
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * CONTRATO DE DADOS — Payload de Saída de calculateCablingMT():
+ * MOTOR 100% PURO (Governança v7.0 — Contrato SDD O.S. 046/047/048-R):
+ * • NÃO lê DOM. NÃO renderiza. NÃO usa console. A leitura de formulário e o
+ *   render vivem em js/ui_render.js.
+ * • Contrato: window.calculateCablingMT(input) → envelope { ok, data, warnings }.
+ *     - Sucesso: { ok:true,  data:<payload>, warnings:[ {code,params,severity:'warning'} ] }
+ *     - Falha:   { ok:false, data:null, warnings:[],
+ *                  error:<RFC 7807 {type,title,status,code,params,severity:'error'}> }
+ * • O core emite SOMENTE code + params (agnóstico de idioma); mensagens humanas
+ *   são responsabilidade da camada de apresentação (i18n em ui_render.js).
+ * • Erros de domínio são 100% return-based (sem exceções internas). A ausência
+ *   total de input é erro técnico de PROGRAMAÇÃO (throw), fora do catálogo SDD.
+ *
+ * CONTRATO DE DADOS — Payload (data) de calculateCablingMT(): matemática, unidades,
+ * limites e formato numérico preservados integralmente:
  * {
  *   // Critérios e Seção Final
  *   S1: Number,           // mm² — Seção por Ampacidade
@@ -38,8 +51,8 @@
  *   du_pct: Number,       // % — Queda de tensão real com sFinal
  *   du_V: Number,         // V — Queda de tensão em Volts
  *
- *   // Objeto de entrada espelhado para o renderizador
- *   input: Object         // Todos os campos de readMTInputs()
+ *   // Objeto de entrada espelhado (mesmos campos recebidos)
+ *   input: Object
  * }
  */
 
@@ -143,14 +156,42 @@ const MT = {
 
     // ── Helpers ────────────────────────────────────────────────────────────
     getMaxSection() { return Math.max.apply(null, this.series); },
+    // Lookup puro: retorna a ampacidade (Number) ou null se a seção não existir
+    // na tabela. O tratamento do caso ausente (QA-MT-046) é return-based no caller.
     getIzFromTable(section, conductor, insulation) {
         const iz = this.IZ_BASE_MT[conductor]?.[insulation]?.[section];
-        if (typeof iz !== 'number') throw new Error(`[QA-MT-046] Ampacidade não encontrada na tabela para Seção ${section} mm², Condutor ${conductor}, Isolação ${insulation}.`);
-        return iz;
+        return typeof iz === 'number' ? iz : null;
     },
 
     SQRT3: Math.sqrt(3)
 };
+// ── Contrato SDD (O.S. 046/047/048-R) — fábricas de envelope RFC 7807 e avisos ──
+// O core emite SOMENTE code + params (sem `detail`, agnóstico de idioma).
+// Nomes prefixados (sddMT*) para não colidir com core_cabos_bt.js no escopo global.
+const SDD_MT_PROBLEM_BASE = 'https://ampai.dev/problems/';
+
+function sddMTProblem(code, params) {
+    return {
+        type: SDD_MT_PROBLEM_BASE + code,
+        title: code,
+        status: 422,
+        code: code,
+        params: params || {},
+        severity: 'error'
+    };
+}
+
+function sddMTWarning(code, params) {
+    return { code: code, params: params || {}, severity: 'warning' };
+}
+
+function sddMTOk(data, warnings) {
+    return { ok: true, data: data, warnings: warnings || [] };
+}
+
+function sddMTFail(problem) {
+    return { ok: false, data: null, warnings: [], error: problem };
+}
 
 // ── Alias globais para compatibilidade com código legado ───────────────────
 window.getMTIzFromTable  = (s, c, i) => MT.getIzFromTable(s, c, i);
@@ -159,93 +200,69 @@ window.roundToIEC_MT     = (sCalc) => MT.series.find(s => s >= sCalc) || MT.getM
 // ═══════════════════════════════════════════════════════════════════════════
 // Estado Modular MT (compartilhado com index.html)
 // ═══════════════════════════════════════════════════════════════════════════
-// Globais descontinuadas: O cálculo utiliza estritamente o window.AmpAI_State
+// Globais descontinuadas: O cálculo utiliza estritamente o objeto de entrada.
+// A leitura de inputs do DOM foi movida para js/ui_render.js (Contrato SDD).
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Leitura de Inputs
+// Validação — QA-MT-001 a QA-MT-047
+// Retorna um problem (RFC 7807) na primeira falha física, ou null quando válido.
+// Avisos não-fatais são acumulados no array `warnings` (preservam o cálculo).
 // ═══════════════════════════════════════════════════════════════════════════
-function readMTInputs() {
-    const safe = (id) => { const el = document.getElementById(id); return el ? el.value : ''; };
-    
-    const ull = parseFloat(safe('mt-ull')) || 13.8;
-    const vClass = safe('mt-insulation-class') || '8.7/15';
-
-    return {
-        voltageClass:   vClass,
-        earthing:       safe('mt-earthing') || 'solid',
-        iFault_A:       parseFloat(safe('mt-ifault')) * 1000,
-        conductor:      window.AmpAI_State?.mtCond || 'Cu',
-        insulation:     window.AmpAI_State?.mtIns || 'XLPE',
-        Ib_A:           parseFloat(safe('mt-ib')),
-        In_A:           parseFloat(safe('mt-in')),
-        cosPhi:         parseFloat(safe('mt-cosphi')),
-        ULL_V:          ull * 1000,
-        length_m:       parseFloat(safe('mt-length')),
-        duMax_pct:      parseFloat(safe('mt-du-max')),
-        formation:      safe('mt-formation'),
-        nCircuits:      parseInt(safe('mt-ncirc')) || 1,
-        rhoSoil_KmW:    parseFloat(safe('mt-rho-soil')),
-        depth_m:        parseFloat(safe('mt-depth')),
-        thetaAmb_C:     parseFloat(safe('mt-tamb')),
-        Icc_A:          parseFloat(safe('mt-icc')) * 1000,
-        tConductor_s:   parseFloat(safe('mt-tcond')),
-        tScreen_s:      parseFloat(safe('mt-tscreen')),
-        sheath:         safe('mt-sheath') || 'PVC',
-        _warnings:      []
-    };
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// Validação — QA-MT-001 a QA-MT-043
-// ═══════════════════════════════════════════════════════════════════════════
-function validateMTInputs(i) {
+function validateMTInputs(i, warnings) {
     const V = MT.voltageClasses[i.voltageClass];
-    if (!V)                         throw new Error('[QA-MT-004] Classe de tensão não padronizada pela IEC 60502-2.');
-    if (V.U0 < 3.6)                 throw new Error('[QA-MT-001] Tensão U₀ < 3,6 kV — utilize o módulo BT.');
-    if (V.U0 > 18)                  throw new Error('[QA-MT-002] Tensão U₀ > 18 kV (Um > 36 kV) — use IEC 60840.');
-    if (i.insulation === 'PVC' && V.U0 > 6) throw new Error('[QA-MT-003] Isolação PVC não aplicável acima de 6 kV (IEC 60502-2).');
+    if (!V)                         return sddMTProblem('QA-MT-004', { voltageClass: i.voltageClass });
+    if (V.U0 < 3.6)                 return sddMTProblem('QA-MT-001', { U0: V.U0 });
+    if (V.U0 > 18)                  return sddMTProblem('QA-MT-002', { U0: V.U0 });
+    if (i.insulation === 'PVC' && V.U0 > 6) return sddMTProblem('QA-MT-003', { insulation: i.insulation, U0: V.U0 });
 
-    if (isNaN(i.Ib_A) || i.Ib_A <= 0) throw new Error('[QA-MT-005] Corrente de projeto Ib deve ser positiva.');
-    if (isNaN(i.In_A) || i.In_A <= 0) throw new Error('[QA-MT-044] Corrente nominal do disjuntor In deve ser positiva.');
-    if (i.In_A < i.Ib_A) throw new Error(`[QA-MT-045] O Disjuntor/Fusível (In = ${i.In_A}A) não pode ser menor que a Corrente de Projeto (Ib = ${i.Ib_A}A).`);
-    if (isNaN(i.cosPhi) || i.cosPhi < 0.70 || i.cosPhi > 1.00) throw new Error('[QA-MT-006] Fator de potência deve estar entre 0,70 e 1,00.');
-    if (isNaN(i.ULL_V) || i.ULL_V <= 0) throw new Error('[QA-MT-007] Tensão ULL deve ser positiva.');
-    if (i.ULL_V > V.Um * 1000)      throw new Error(`[QA-MT-043] Tensão de operação ULL (${i.ULL_V / 1000}kV) é superior à suportada pela classe de isolação ${i.voltageClass} (Um = ${V.Um}kV).`);
+    if (isNaN(i.Ib_A) || i.Ib_A <= 0) return sddMTProblem('QA-MT-005', { Ib_A: i.Ib_A });
+    if (isNaN(i.In_A) || i.In_A <= 0) return sddMTProblem('QA-MT-044', { In_A: i.In_A });
+    if (i.In_A < i.Ib_A) return sddMTProblem('QA-MT-045', { In_A: i.In_A, Ib_A: i.Ib_A });
+    if (isNaN(i.cosPhi) || i.cosPhi < 0.70 || i.cosPhi > 1.00) return sddMTProblem('QA-MT-006', { cosPhi: i.cosPhi });
+    if (isNaN(i.ULL_V) || i.ULL_V <= 0) return sddMTProblem('QA-MT-007', { ULL_V: i.ULL_V });
+    if (i.ULL_V > V.Um * 1000)      return sddMTProblem('QA-MT-043', { ULL_V: i.ULL_V, Um: V.Um });
 
-    if (isNaN(i.Icc_A) || i.Icc_A <= 0) throw new Error('[QA-MT-010] Corrente de curto-circuito deve ser estritamente positiva.');
-    if (i.Icc_A > 100000) i._warnings.push('[QA-MT-011] Icc > 100 kA é fisicamente improvável em MT.');
-    if (isNaN(i.tConductor_s) || i.tConductor_s <= 0) throw new Error('[QA-MT-012] Tempo de eliminação do curto deve ser positivo.');
-    if (i.tConductor_s > 5.0)       i._warnings.push('[QA-MT-013] t > 5 s invalida hipótese adiabática (IEC 60949).');
-    if (i.tConductor_s < 0.01)      i._warnings.push('[QA-MT-014] t < 10 ms é incomum para sistemas MT.');
+    if (isNaN(i.Icc_A) || i.Icc_A <= 0) return sddMTProblem('QA-MT-010', { Icc_A: i.Icc_A });
+    if (i.Icc_A > 100000) warnings.push(sddMTWarning('QA-MT-011', { Icc_A: i.Icc_A }));
+    if (isNaN(i.tConductor_s) || i.tConductor_s <= 0) return sddMTProblem('QA-MT-012', { tConductor_s: i.tConductor_s });
+    if (i.tConductor_s > 5.0)       warnings.push(sddMTWarning('QA-MT-013', { tConductor_s: i.tConductor_s }));
+    if (i.tConductor_s < 0.01)      warnings.push(sddMTWarning('QA-MT-014', { tConductor_s: i.tConductor_s }));
 
-    if (isNaN(i.iFault_A) || i.iFault_A <= 0) throw new Error('[QA-MT-015] Corrente de falta na tela deve ser positiva.');
-    if (i.iFault_A > i.Icc_A)       throw new Error('[QA-MT-015] Corrente de falta na tela não pode superar a Icc do sistema.');
+    if (isNaN(i.iFault_A) || i.iFault_A <= 0) return sddMTProblem('QA-MT-015', { iFault_A: i.iFault_A });
+    if (i.iFault_A > i.Icc_A)       return sddMTProblem('QA-MT-015', { iFault_A: i.iFault_A, Icc_A: i.Icc_A });
 
-    if (i.thetaAmb_C < -20)         i._warnings.push('[QA-MT-020] Temperatura < -20°C é incomum.');
+    if (i.thetaAmb_C < -20)         warnings.push(sddMTWarning('QA-MT-020', { thetaAmb_C: i.thetaAmb_C }));
     const thetaMax = MT.conductor[i.insulation] ? MT.conductor[i.insulation].thetaMax : 90;
-    if (i.thetaAmb_C >= thetaMax)   throw new Error(`[QA-MT-021] Temperatura do solo (${i.thetaAmb_C}°C) ≥ θmax do condutor (${thetaMax}°C). Dissipação térmica impossível.`);
+    if (i.thetaAmb_C >= thetaMax)   return sddMTProblem('QA-MT-021', { thetaAmb_C: i.thetaAmb_C, thetaMax: thetaMax });
 
-    if (isNaN(i.rhoSoil_KmW) || i.rhoSoil_KmW <= 0) throw new Error('[QA-MT-022] Resistividade térmica do solo deve ser > 0.');
-    if (i.rhoSoil_KmW > 5.0)        i._warnings.push('[QA-MT-023] Resistividade > 5,0 K·m/W é extrema — verifique o solo.');
-    if (isNaN(i.depth_m) || i.depth_m < 0.3) throw new Error('[QA-MT-024] Profundidade < 0,30 m viola proteção mecânica (IEC 60502-2).');
-    if (i.depth_m > 5.0)            i._warnings.push('[QA-MT-025] Profundidade > 5,0 m é incomum.');
+    if (isNaN(i.rhoSoil_KmW) || i.rhoSoil_KmW <= 0) return sddMTProblem('QA-MT-022', { rhoSoil_KmW: i.rhoSoil_KmW });
+    if (i.rhoSoil_KmW > 5.0)        warnings.push(sddMTWarning('QA-MT-023', { rhoSoil_KmW: i.rhoSoil_KmW }));
+    if (isNaN(i.depth_m) || i.depth_m < 0.3) return sddMTProblem('QA-MT-024', { depth_m: i.depth_m });
+    if (i.depth_m > 5.0)            warnings.push(sddMTWarning('QA-MT-025', { depth_m: i.depth_m }));
 
-    if (isNaN(i.nCircuits) || i.nCircuits < 1) throw new Error('[QA-MT-034] Número de circuitos deve ser ≥ 1.');
-    if (i.nCircuits > 20)           i._warnings.push('[QA-MT-035] > 20 circuitos agrupados exige análise por Elementos Finitos.');
-    if (isNaN(i.length_m) || i.length_m <= 0) throw new Error('[QA-MT-036] Comprimento do cabo deve ser > 0.');
-    if (i.length_m > 50000)         i._warnings.push('[QA-MT-037] Comprimento > 50 km é atípico para MT — verifique o dado.');
-    if (isNaN(i.duMax_pct) || i.duMax_pct <= 0 || i.duMax_pct > 15) throw new Error('[QA-MT-038] ΔUmax deve estar entre 0,1% e 15%.');
+    if (isNaN(i.nCircuits) || i.nCircuits < 1) return sddMTProblem('QA-MT-034', { nCircuits: i.nCircuits });
+    if (i.nCircuits > 20)           warnings.push(sddMTWarning('QA-MT-035', { nCircuits: i.nCircuits }));
+    if (isNaN(i.length_m) || i.length_m <= 0) return sddMTProblem('QA-MT-036', { length_m: i.length_m });
+    if (i.length_m > 50000)         warnings.push(sddMTWarning('QA-MT-037', { length_m: i.length_m }));
+    if (isNaN(i.duMax_pct) || i.duMax_pct <= 0 || i.duMax_pct > 15) return sddMTProblem('QA-MT-038', { duMax_pct: i.duMax_pct });
+
+    // QA-MT-047 — formação de instalação reconhecida (mesma precedência do fluxo
+    // original: após toda a validação, antes do cálculo dos fatores de correção).
+    const fKey = String(i.formation || '').toLowerCase();
+    if (!MT.grouping[fKey]) return sddMTProblem('QA-MT-047', { formation: i.formation });
+
+    return null;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Fatores de Correção (IEC 60287)
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** Fator de temperatura do solo (IEC 60287-3-1, eq. de referência) */
+/** Fator de temperatura do solo (IEC 60287-3-1, eq. de referência).
+ *  Pré-condição θA < θmax garantida por validateMTInputs (QA-MT-021). */
 function getMTFtemp(thetaA) {
     const tMax = MT.ref.thetaMax;
     const tRef = MT.ref.thetaA;
-    if (thetaA >= tMax) throw new Error('[QA-MT-021] Temperatura do solo ≥ 90°C — dissipação térmica impossível.');
     return Math.sqrt((tMax - thetaA) / (tMax - tRef));
 }
 
@@ -268,26 +285,24 @@ function getMTFdepth(depth) {
     return 1.00;
 }
 
-/** Fator de agrupamento (IEC 60287-1-1, Tabela B.2)
- *  AUD-2026-001/F001: normalização de caixa + fail-fast. O retorno silencioso
- *  de 1,00 para formações desconhecidas anulava o derating de agrupamento e
- *  subdimensionava criticamente cabos multi-circuito. */
+/** Fator de agrupamento (IEC 60287-1-1, Tabela B.2).
+ *  AUD-2026-001/F001: normalização de caixa. A formação já foi validada em
+ *  validateMTInputs (QA-MT-047), portanto a tabela existe garantidamente. */
 function getMTFgrouping(nCircuits, formation) {
     const key = String(formation || '').toLowerCase();
     const table = MT.grouping[key];
-    if (!table) {
-        throw new Error(`[QA-MT-047] REJECT_UNKNOWN_GROUPING: Formação de instalação não reconhecida: "${formation}". Valores válidos: trefoil_touching, trefoil_spaced, flat_touching, flat_spaced.`);
-    }
     const n = Math.min(Math.max(1, Math.round(nCircuits)), table.length - 1);
     return table[n];
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Busca de Seção por Ampacidade
+// (getIzFromTable retorna null fora da tabela; null >= IzRef é false → segue.)
 // ═══════════════════════════════════════════════════════════════════════════
 function getMTSectionByAmpacity(IzRef, conductor, insulation) {
     for (const s of MT.series) {
-        if (MT.getIzFromTable(s, conductor, insulation) >= IzRef) return s;
+        const iz = MT.getIzFromTable(s, conductor, insulation);
+        if (iz !== null && iz >= IzRef) return s;
     }
     return 1200; // overflow — retorna máximo da série
 }
@@ -296,110 +311,92 @@ function getMTSectionByAmpacity(IzRef, conductor, insulation) {
 // Motor Principal — calculateCablingMT()
 // IEC 60502-2 (Ampacidade e ΔU) + IEC 60949 (Adiabático) + IEC 60287 (Fatores)
 // ═══════════════════════════════════════════════════════════════════════════
-window.calculateCablingMT = function(mockInput = null) {
-    const alertBox = document.getElementById('cb-alert-error');
-    if (alertBox) alertBox.classList.remove('active');
-
-    try {
-        // 1. Leitura dos inputs (Mock ou DOM)
-        const input = mockInput || readMTInputs();
-
-        // 2. Validação (QA-MT-001 a QA-MT-043)
-        validateMTInputs(input);
-
-        // 3. Fatores de Correção (IEC 60287)
-        const f_temp     = getMTFtemp(input.thetaAmb_C);
-        const f_soil     = getMTFsoil(input.rhoSoil_KmW);
-        const f_depth    = getMTFdepth(input.depth_m);
-        const f_group    = getMTFgrouping(input.nCircuits, input.formation);
-        const f_combined = f_temp * f_soil * f_depth * f_group;
-
-        if (f_combined < 0.30) input._warnings.push('[QA-MT-042] Fator combinado < 0,30 — condições de instalação extremas.');
-        if (f_combined <= 0)   throw new Error('[QA-MT-042] Fator combinado nulo ou negativo — verifique os parâmetros de solo e agrupamento.');
-
-        // 4. CRITÉRIO 1 — Ampacidade (IEC 60502-2)
-        //    Iz_corr = Iz_base × f_combined ≥ Ib  →  Iz_base ≥ Ib / f_combined
-        const IzRef = input.Ib_A / f_combined;
-        const S1    = getMTSectionByAmpacity(IzRef, input.conductor, input.insulation);
-
-        // 5. CRITÉRIO 2 — Queda de Tensão (IEC 60502-2)
-        //    S = (√3 · ρ · L · Ib · cosφ) / ΔUmax_V
-        const duMax_V  = (input.duMax_pct / 100) * input.ULL_V;
-        if (duMax_V <= 0) throw new Error('[QA-MT-038] ΔUmax calculada é zero ou negativa — verifique ULL e ΔUmax%.');
-        const rho_op   = MT.rho90;
-        const S2_cont  = (MT.SQRT3 * rho_op * input.length_m * input.Ib_A * input.cosPhi) / duMax_V;
-        const S2       = window.roundToIEC_MT(S2_cont);
-
-        // 6. CRITÉRIO 3 — Curto-Circuito Adiabático Condutor (IEC 60949)
-        //    S = (Icc · √t) / k
-        const k_cond   = MT.kConductor[input.conductor];
-        const S3_cont  = (input.Icc_A * Math.sqrt(input.tConductor_s)) / k_cond;
-        const S3       = window.roundToIEC_MT(S3_cont);
-
-        // 7. Seção Final: max(S1, S2, S3) → normalizar IEC 60228
-        const sCalc    = Math.max(S1, S2, S3);
-        const sFinal   = window.roundToIEC_MT(sCalc);
-
-        if (sCalc < 10)   throw new Error('[QA-MT-030] Seção calculada < 10 mm² — não padronizada para MT.');
-        if (sFinal > 1200) throw new Error('[QA-MT-040] Seção excede 1200 mm² — projete paralelismo de cabos ou limite a Icc.');
-
-        const dominant = (S3 > S1 && S3 > S2) ? 'CURTO-CIRCUITO'
-                       : (S2 > S1)             ? 'QUEDA DE TENSÃO'
-                       :                         'AMPACIDADE';
-
-        // 8. Seção da Tela Metálica (IEC 60949)
-        const k_screen      = MT.kScreen[input.sheath] || 115;
-        const S_screen_cont = (input.iFault_A * Math.sqrt(input.tScreen_s)) / k_screen;
-        const S_screen      = window.roundToIEC_MT(S_screen_cont);
-
-        if (S_screen < 6)       throw new Error('[QA-MT-032] Seção da tela < 6 mm² — insuficiente para suportar a corrente de falta.');
-        if (S_screen > sFinal)  input._warnings.push('[QA-MT-033] Seção da tela > condutor principal — verifique a corrente de falta.');
-
-        // 9. Verificações Finais de Ampacidade
-        const Iz_base = MT.getIzFromTable(sFinal, input.conductor, input.insulation);
-        const Iz_corr = Iz_base * f_combined;
-
-        if (Iz_corr <= 0) throw new Error('[QA-MT-041] Ampacidade corrigida inválida — verifique os fatores de correção.');
-        if (Iz_corr < input.Ib_A) throw new Error(`[QA-MT-041] Ampacidade corrigida Iz=${Iz_corr.toFixed(1)} A < Ib=${input.Ib_A} A — aumente a seção.`);
-
-        // 10. Temperatura de Operação
-        const thetaMax = MT.conductor[input.insulation]?.thetaMax || 90;
-        const thetaOp  = input.thetaAmb_C + Math.pow(input.Ib_A / Iz_corr, 2) * (thetaMax - input.thetaAmb_C);
-
-        // 11. Queda de Tensão com Seção Final
-        const du_V   = (MT.SQRT3 * rho_op * input.length_m * input.Ib_A * input.cosPhi) / sFinal;
-        const du_pct = (du_V / input.ULL_V) * 100;
-
-        // 12. Montar payload e chamar renderizador
-        const payload = {
-            S1, S2_cont, S2, S3_cont, S3, sFinal, dominant,
-            S_screen_cont, S_screen, k_screen, k_cond,
-            f_temp, f_soil, f_depth, f_group, f_combined,
-            Iz_base, Iz_corr, thetaOp, thetaMax,
-            du_pct, du_V,
-            input
-        };
-
-        // Chamar renderizador (definido em ui_render.js)
-        if (typeof window.renderCablingMTResults === 'function') {
-            window.renderCablingMTResults(payload);
-        } else {
-            console.error('[AmpAI] renderCablingMTResults não encontrado — verifique se ui_render.js foi carregado.');
-        }
-
-    } catch (err) {
-        const alertBox = document.getElementById('mt-alert-error');
-        const alertMsg = document.getElementById('mt-alert-msg');
-        if (alertBox) alertBox.classList.add('active');
-        if (alertMsg) alertMsg.innerText = err.message;
-
-        // Limpar KPIs em caso de erro
-        ['cb-val-section', 'cb-val-iz', 'cb-val-du', 'cb-val-temp', 'mt-val-screen'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.innerHTML = '--';
-        });
-
-        console.error('[AmpAI][MT] Erro no motor:', err.message);
+window.calculateCablingMT = function(input) {
+    // Ausência total de input é erro técnico de PROGRAMAÇÃO (contrato de chamada
+    // violado), fora do catálogo de diagnósticos físicos. Sem DOM, sem envelope.
+    if (!input) {
+        throw new Error('calculateCablingMT: input payload é obrigatório (erro de programação, fora do catálogo SDD).');
     }
-}
 
+    const warnings = [];
+
+    // 1. Validação (QA-MT-001 a QA-MT-047) + coleta de avisos
+    const problem = validateMTInputs(input, warnings);
+    if (problem) return sddMTFail(problem);
+
+    // 2. Fatores de Correção (IEC 60287)
+    const f_temp     = getMTFtemp(input.thetaAmb_C);
+    const f_soil     = getMTFsoil(input.rhoSoil_KmW);
+    const f_depth    = getMTFdepth(input.depth_m);
+    const f_group    = getMTFgrouping(input.nCircuits, input.formation);
+    const f_combined = f_temp * f_soil * f_depth * f_group;
+
+    if (f_combined < 0.30) warnings.push(sddMTWarning('QA-MT-042', { f_combined: f_combined, condition: 'low' }));
+    if (f_combined <= 0)   return sddMTFail(sddMTProblem('QA-MT-042', { f_combined: f_combined, condition: 'zero-or-negative' }));
+
+    // 3. CRITÉRIO 1 — Ampacidade (IEC 60502-2)
+    //    Iz_corr = Iz_base × f_combined ≥ Ib  →  Iz_base ≥ Ib / f_combined
+    const IzRef = input.Ib_A / f_combined;
+    const S1    = getMTSectionByAmpacity(IzRef, input.conductor, input.insulation);
+
+    // 4. CRITÉRIO 2 — Queda de Tensão (IEC 60502-2)
+    //    S = (√3 · ρ · L · Ib · cosφ) / ΔUmax_V
+    const duMax_V  = (input.duMax_pct / 100) * input.ULL_V;
+    if (duMax_V <= 0) return sddMTFail(sddMTProblem('QA-MT-038', { duMax_pct: input.duMax_pct, ULL_V: input.ULL_V }));
+    const rho_op   = MT.rho90;
+    const S2_cont  = (MT.SQRT3 * rho_op * input.length_m * input.Ib_A * input.cosPhi) / duMax_V;
+    const S2       = window.roundToIEC_MT(S2_cont);
+
+    // 5. CRITÉRIO 3 — Curto-Circuito Adiabático Condutor (IEC 60949)
+    //    S = (Icc · √t) / k
+    const k_cond   = MT.kConductor[input.conductor];
+    const S3_cont  = (input.Icc_A * Math.sqrt(input.tConductor_s)) / k_cond;
+    const S3       = window.roundToIEC_MT(S3_cont);
+
+    // 6. Seção Final: max(S1, S2, S3) → normalizar IEC 60228
+    const sCalc    = Math.max(S1, S2, S3);
+    const sFinal   = window.roundToIEC_MT(sCalc);
+
+    if (sCalc < 10)    return sddMTFail(sddMTProblem('QA-MT-030', { sCalc: sCalc }));
+    if (sFinal > 1200) return sddMTFail(sddMTProblem('QA-MT-040', { sFinal: sFinal }));
+
+    const dominant = (S3 > S1 && S3 > S2) ? 'CURTO-CIRCUITO'
+                   : (S2 > S1)             ? 'QUEDA DE TENSÃO'
+                   :                         'AMPACIDADE';
+
+    // 7. Seção da Tela Metálica (IEC 60949)
+    const k_screen      = MT.kScreen[input.sheath] || 115;
+    const S_screen_cont = (input.iFault_A * Math.sqrt(input.tScreen_s)) / k_screen;
+    const S_screen      = window.roundToIEC_MT(S_screen_cont);
+
+    if (S_screen < 6)       return sddMTFail(sddMTProblem('QA-MT-032', { S_screen: S_screen }));
+    if (S_screen > sFinal)  warnings.push(sddMTWarning('QA-MT-033', { S_screen: S_screen, sFinal: sFinal }));
+
+    // 8. Verificações Finais de Ampacidade
+    const Iz_base = MT.getIzFromTable(sFinal, input.conductor, input.insulation);
+    if (Iz_base === null) return sddMTFail(sddMTProblem('QA-MT-046', { section: sFinal, conductor: input.conductor, insulation: input.insulation }));
+    const Iz_corr = Iz_base * f_combined;
+
+    if (Iz_corr <= 0) return sddMTFail(sddMTProblem('QA-MT-041', { Iz_corr: Iz_corr, Ib_A: input.Ib_A }));
+    if (Iz_corr < input.Ib_A) return sddMTFail(sddMTProblem('QA-MT-041', { Iz_corr: Iz_corr, Ib_A: input.Ib_A }));
+
+    // 9. Temperatura de Operação
+    const thetaMax = MT.conductor[input.insulation]?.thetaMax || 90;
+    const thetaOp  = input.thetaAmb_C + Math.pow(input.Ib_A / Iz_corr, 2) * (thetaMax - input.thetaAmb_C);
+
+    // 10. Queda de Tensão com Seção Final
+    const du_V   = (MT.SQRT3 * rho_op * input.length_m * input.Ib_A * input.cosPhi) / sFinal;
+    const du_pct = (du_V / input.ULL_V) * 100;
+
+    // 11. Montar payload (data) — formato numérico preservado integralmente
+    const payload = {
+        S1, S2_cont, S2, S3_cont, S3, sFinal, dominant,
+        S_screen_cont, S_screen, k_screen, k_cond,
+        f_temp, f_soil, f_depth, f_group, f_combined,
+        Iz_base, Iz_corr, thetaOp, thetaMax,
+        du_pct, du_V,
+        input
+    };
+
+    return sddMTOk(payload, warnings);
+};
