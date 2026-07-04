@@ -19,11 +19,15 @@
 2. Governança valida a aderência às leis e atualiza a documentação raiz.
 3. CTO transforma a meta aprovada em O.S. específica e contratual.
 4. Eletricista, Backend e Frontend produzem artefatos dentro do próprio escopo.
-5. QA/Codex julga por evidência executável. Uma entrega sem RED documentado, GREEN validado e `exit code` bem-sucedido não é elegível para PR.
-6. PR para `main` exige GitHub Actions verde, artifact de evidência e validação do @Senior_QA_Security. Na `Refat_Frontend`, esse gate é obrigatório.
+5. QA/Codex julga por evidência executável e governa tecnicamente a classificação dos testes. Teste novo nasce `experimental`; somente promoção formal o torna `stable`.
+6. Quando a infraestrutura ratificada for ativada, todo PR para `main` exigirá `regression-gate` com a suíte `stable` completa, artifact consolidado e validação do @Senior_QA_Security. Durante o shadow mode, os workflows vigentes continuam oficiais.
 7. O CEO continua sendo a única autoridade de merge.
 
 `CodeRabbit`, quando habilitado, é uma revisão complementar de PR; não substitui o julgamento do @Senior_QA_Security, o artifact de CI nem a aprovação humana. CD staging e CD produção são fases futuras, não parte do fluxo ativo.
+
+## Gate Consolidado de Regressão
+
+A decisão canônica está em `docs/AmpAI_Gate_Regressao.md`. O gate protege cumulativamente features, correções, refatorações e adequações. `stable` bloqueia PR; `experimental`, `flaky`, `archived` e `utility` ficam fora do required check. Falha de Chromium, sandbox, runner ou configuração bloqueia a entrega, mas não pode ser classificada como RED/GREEN funcional. Nenhuma IA pode remover ou flexibilizar teste aprovado para liberar sua implementação.
 
 ## Taxonomia RNC
 

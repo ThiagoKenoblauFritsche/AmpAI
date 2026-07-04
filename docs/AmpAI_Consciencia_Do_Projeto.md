@@ -24,11 +24,12 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 ## Leis operacionais
 
 - Um chat por persona; nunca cruzar contextos.
-- Quem implementa não julga a própria implementação. QA independente atesta RED, GREEN, artifact de CI quando aplicável e `exit code`.
+- Quem implementa não julga a própria implementação. QA independente atesta RED, GREEN, classificação dos testes, regressões stable, artifact de CI quando aplicável e `exit code`.
 - O código só nasce de BDD e SDD; erros seguem RFC 7807 e o core nunca toca o DOM.
 - RNC-P é fonte normativa processada; RNC-C é fonte canônica curada. Um `.md` em `docs/normas/` não vira canônico automaticamente.
 - `sync.ps1` mantém a base Docs as Code disponível ao NotebookLM.
-- O CEO é o gatekeeper final de merge. Para a `Refat_Frontend`, PR para `main` exige GitHub Actions verde, artifact de evidência, validação QA e revisão complementar do CodeRabbit quando habilitado.
+- O CEO é o gatekeeper final de merge. O Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md` protegerá todo PR para `main` depois do shadow mode e da ativação explícita do required check.
+- Teste novo nasce experimental; somente promoção formal o torna stable. Falha de infraestrutura bloqueia, mas não constitui RED/GREEN funcional.
 - CodeRabbit é revisor complementar, não autoridade final. CD staging e CD produção são fases futuras e separadas.
 
 ## Estado de infraestrutura

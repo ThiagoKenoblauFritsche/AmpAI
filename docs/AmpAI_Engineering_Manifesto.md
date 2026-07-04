@@ -89,3 +89,15 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 *   **Caixa Preta de Testes:** Peça primeiro para a IA criar os testes com o objetivo explícito de **tentar quebrar a aplicação** com entradas inválidas, sobrecargas elétricas e limites estourados.
 *   **Air Gap Epistemológico:** Fábrica e Tribunal são agentes distintos. A Fábrica não atesta o próprio código; o Tribunal executa testes isoladamente, valida artifacts de CI quando aplicável e devolve a evidência ao CTO. O ciclo encerra apenas com GREEN verificável, PR validado e aprovação humana para merge.
 *   **CI não é CD:** GitHub Actions integra o Tribunal QA para gerar logs, artifacts e `exit code` reprodutível. Deploy para staging e produção são etapas futuras, separadas e dependentes de decisão explícita do CEO.
+
+## 4. Gate Consolidado e Proteção Cumulativa
+
+O AmpAI adota uma suíte de regressão cumulativa para features, correções, refatorações, adequações normativas e mudanças de infraestrutura. A lei completa está em `docs/AmpAI_Gate_Regressao.md`.
+
+*   **Manifesto explícito:** somente testes declarados e classificados podem compor o gate; `tests/*.js` não é fonte automática.
+*   **Classes distintas:** `stable` bloqueia PR; `experimental` está em validação; `flaky` permanece em quarentena; `archived` preserva história; `utility` não é teste.
+*   **Promoção em duas PRs:** teste novo nasce experimental, demonstra RED→GREEN, passa por repetibilidade e execução pós-merge, e só então é promovido para `stable`.
+*   **Regressão completa:** todo PR para `main` executará a suíte `stable` integral quando o `regression-gate` for ativado, inclusive PR documental na primeira versão.
+*   **Taxonomia rigorosa:** `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` bloqueiam a entrega, mas somente falha com contrato exercido é funcional.
+*   **Cobertura responsável:** a meta é rastrear todos os contratos críticos conhecidos, não prometer ausência absoluta de falhas nem maximizar porcentagem de linhas sem significado.
+*   **Imutabilidade do Tribunal:** nenhuma IA pode flexibilizar, silenciar ou remover teste aprovado para produzir GREEN.

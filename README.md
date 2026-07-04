@@ -9,6 +9,7 @@ SaaS de missão crítica para cálculos e memoriais de engenharia elétrica de b
 - **DDD:** o @Senior_Backend_Dev implementa somente motores matemáticos puros em `js/core_*.js`, retornando Result Pattern e sem DOM.
 - **UI:** o @Senior_Frontend_Dev concentra DOM e Tailwind em `index.html` e `js/ui_render.js`.
 - **TDD/CI:** o @Senior_QA_Security usa Codex em terminal isolado para produzir e executar ZOMBIES, registrar RED → GREEN e atestar o `exit code`. Quando a entrega exige navegador real ou reprodutibilidade externa, GitHub Actions é o braço de CI do Tribunal e deve publicar artifact de evidência.
+- **Regressão cumulativa:** a arquitetura ratificada separa testes `stable`, `experimental`, `flaky`, `archived` e `utility`. Quando ativado após shadow mode, `regression-gate` executará toda a suíte stable em cada PR para `main`.
 
 ## Matriz operacional v7.0
 
@@ -23,13 +24,15 @@ SaaS de missão crítica para cálculos e memoriais de engenharia elétrica de b
 
 Cada persona opera em chat/thread isolado. O CTO é o único emissor de Ordens de Serviço; Governança mantém as leis e não sofre a pressão da execução. O CEO é a única autoridade de merge.
 
-## Gate obrigatório da `Refat_Frontend`
+## Gate de regressão para `main`
 
-Enquanto a refatoração do frontend estiver ativa, a entrega só é elegível para `main` após este fluxo:
+A arquitetura permanente de entrega é:
 
-`Refat_Frontend → Pull Request → GitHub Actions CI → artifact de evidência → CodeRabbit complementar → validação QA/CEO → merge humano`
+`branch de trabalho → Pull Request → regression-gate → artifact consolidado → CodeRabbit complementar → validação QA/CEO → merge humano`
 
-O CI atual é evidência de Tribunal, não CD. Deploy automático para staging e produção permanece fora do fluxo ativo até a consolidação de PR, artifacts e revisão independente.
+O novo gate ainda passará por implantação e shadow mode; até sua ativação, os workflows vigentes permanecem oficiais. Testes novos começam como experimentais e só protegem PRs futuros depois da promoção formal. A decisão completa está em `docs/AmpAI_Gate_Regressao.md`.
+
+O CI é evidência de Tribunal, não CD. Deploy automático para staging e produção permanece fora do fluxo ativo até a consolidação de PR, artifacts e revisão independente.
 
 ## Docs as Code
 

@@ -24,8 +24,11 @@ As fases abaixo devem ser executadas sequencialmente para garantir a integridade
 *   [ ] **Curadoria RNC:** promover os RNC-P críticos de `docs/normas/` para RNC-C em `docs/engenharia/`, com equações, unidades, premissas, limites e regras QA auditáveis.
 *   [x] **Tribunal independente:** Codex QA registra RED → GREEN e `exit code` em terminal isolado.
 *   [x] **CI in-browser inicial:** GitHub Actions `qa-os040r.yml` executa `tests/test_os040_restart.js` na `Refat_Frontend` e publica artifact de evidência.
-*   [ ] **Evidência padronizada:** estabelecer formato único para comando, ambiente, artifact, resultado, cobertura/mutation testing aplicável e `exit code` nas O.S. de QA.
-*   [ ] **PR obrigatório para `main`:** consolidar `Refat_Frontend → Pull Request → GitHub Actions → artifact → CodeRabbit complementar → validação QA/CEO → merge humano`.
+*   [x] **Arquitetura do Gate Consolidado ratificada:** taxonomia, suíte inicial, promoção em duas PRs, `regression-gate`, artifacts e separação entre falha funcional/infraestrutura definidas em `docs/AmpAI_Gate_Regressao.md`.
+*   [ ] **Gate Consolidado em shadow mode:** implantar manifesto JSON, schema, executor Node, comandos `test:core`/`test:browser`/`test:regression`, matriz browser e agregador sem torná-lo required check inicialmente.
+*   [ ] **Evidência padronizada:** gerar artifacts individuais por suíte e consolidado processável, com ambiente, comando, relatórios, categoria e `exit code`.
+*   [ ] **Required check para `main`:** após validação do shadow mode pelo QA, ativar `regression-gate` em todo PR e em `push` pós-merge, mantendo CodeRabbit complementar e merge exclusivo do CEO.
+*   [ ] **Promoção pós-O.S. 050:** manter `test_os049.js` e `test_os049_e2e.js` como experimentais até três GREENs independentes no mesmo SHA, execução pós-merge, `navigationErrors=[]` e PR específica de promoção.
 
 ---
 
