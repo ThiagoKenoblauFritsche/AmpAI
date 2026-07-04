@@ -10,7 +10,7 @@ status: ativo
 # 📈 Backlog de Infraestrutura — Implementação v7.0
 
 > [!todo] **Diretriz de Execução (State Lock)**
-> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) permanece no roadmap futuro. **O foco oficial é a FASE 7:** separação de poderes, fábrica Claude especializada e Tribunal Codex com evidência RED→GREEN, `exit code`, artifact de CI quando aplicável e PR obrigatório antes de `main`. CodeRabbit é revisão complementar de PR, não o veredito. CD para staging e CD para produção são fases futuras e separadas.
+> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) permanece no roadmap futuro. **O foco oficial é a FASE 7:** separação de poderes, fábrica Claude especializada, Tribunal Codex e implantação do Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md`. CodeRabbit é revisão complementar, QA mantém o veredito, CEO mantém o merge e CD permanece separado.
 
 ---
 
@@ -65,11 +65,23 @@ ___
 - [x] **O.S. #INF-023** | `[ATUALIZADA]` Estúdio 2 local unificado: Claude Opus 4.8 para ciência normativa/BDD e Backend; Claude Sonnet 4.6 para Frontend. O @Engenheiro_Eletricista consome RNC-P/RNC-C em Markdown, não PDFs massivos.
 - [x] **O.S. #INF-026** | `[CRÍTICA]` Tribunal migrado para @Senior_QA_Security no Codex, com execução isolada e evidência de `exit code`.
 - [x] **O.S. #INF-024** | `[ALTA]` Implementação da estratégia de Injeção RAG Federada (Docs as Code) dispensando a necessidade de Pinecone/Vector DB.
-- [ ] **O.S. #INF-025** | `[ALTA]` Validação física em CI com o Node.js rodando o `tests/core_curto_circuito.test.js` no GitHub Actions.
+- [ ] **O.S. #INF-025** | `[ALTA]` Integrar `tests/core_curto_circuito.test.js` e `tests/test_os047.js` ao job core do futuro gate, com adaptador legado temporário exigindo 39/39 e protocolo processável.
 - [x] **O.S. #INF-027** | `[CRÍTICA]` GitHub Actions QA in-browser implantado para a `Refat_Frontend`: workflow `.github/workflows/qa-os040r.yml` executa `tests/test_os040_restart.js`, configura Chromium/Puppeteer, captura `exit code` e publica o artifact `os040r-evidence`.
-- [ ] **O.S. #INF-028** | `[CRÍTICA]` Formalizar o gate de PR da `Refat_Frontend`: abrir Pull Request para `main`, exigir GitHub Actions verde, artifact anexado, CodeRabbit complementar e validação final do @Senior_QA_Security antes do aceite do CEO.
-- [ ] **O.S. #INF-029** | `[ALTA]` Padronizar artifacts de QA/CI: todo workflow de Tribunal deve publicar arquivo de evidência com comando, ambiente, logs relevantes, resultado, `exit code` e referência à O.S.
+- [ ] **O.S. #INF-028** | `[CRÍTICA]` Decompor e implantar o Gate Consolidado v1: manifesto/schema, executor único, comandos npm, jobs core/browser, agregador `regression-gate`, shadow mode, PR e `push` para `main`, conforme decisão canônica.
+- [ ] **O.S. #INF-029** | `[ALTA]` Padronizar artifacts individuais e consolidado: ambiente, lockfile, comando, preflight, relatórios, categoria `PASS/FUNCTIONAL_FAILURE/INFRA_BLOCKED/CONFIG_ERROR`, `exit code`, hashes e referência à O.S.
 - [ ] **O.S. #INF-032** | `[ALTA]` Padronizar taxonomia RNC: classificar arquivos de `docs/normas/` como RNC-P, promover regras críticas para RNC-C em `docs/engenharia/` e impedir uso de RNC-P como base direta de implementação sem prova de cálculo contestável.
+
+#### Intake ratificado: Gate Consolidado v1 — não constitui O.S.
+
+> Cabe ao CTO decompor os pacotes abaixo em O.S. técnicas isoladas. Governança não autoriza implementação direta por esta lista.
+
+- [x] **GATE-GOV** | Arquitetura, taxonomia, suíte inicial, retenção, limites e promoção ratificados.
+- [ ] **GATE-MANIFEST** | Manifesto JSON, schema, registros de promoção e validação semântica.
+- [ ] **GATE-EXECUTOR** | Executor Node único e comandos `test:core`, `test:browser`, `test:regression`.
+- [ ] **GATE-CI-SHADOW** | Jobs core/browser paralelos, agregador e artifacts em modo informativo.
+- [ ] **GATE-QA** | Comparação independente, três execuções equivalentes, PR e execução pós-merge.
+- [ ] **GATE-REQUIRED** | Ativação do required check somente após veredito QA e autorização do CEO.
+- [ ] **GATE-PROMOTION-049** | Promover os dois testes O.S. 049/050 somente após `navigationErrors=[]` e toda a evidência exigida.
 
 ___
 

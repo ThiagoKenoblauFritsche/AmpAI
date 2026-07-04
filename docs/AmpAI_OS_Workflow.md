@@ -73,7 +73,7 @@ sequenceDiagram
 
     QA-->>CEO: Pacote final de evidências locais
     CEO->>GH: Autoriza commit e PR pelo executor permitido
-    GH->>GH: Executa CI e publica artifact de evidência
+    GH->>GH: Executa suíte stable consolidada e publica artifact
     GH-->>QA: Logs, artifact e exit code reprodutível
     QA-->>CEO: Validação do artifact CI
     opt CodeRabbit habilitado
@@ -117,6 +117,7 @@ Cada O.S. deve conter:
 4. links ou trechos mínimos de BDD/norma necessários, com classificação da fonte como RNC-P, RNC-C, norma primária ou referência secundária;
 5. critérios objetivos de aceite e evidências exigidas;
 6. regra explícita de retorno ao CTO em caso de falha.
+7. teste novo classificado inicialmente como `experimental`, vínculo com o contrato e regressões `stable` que devem permanecer verdes.
 
 ### 2. Ciência e especificação (BDD + SDD)
 
@@ -132,11 +133,13 @@ O @Senior_QA_Security recebe a O.S. de QA, não a implementação. Ele cria a su
 
 **Gate para seguir:** a evidência RED mostra que o teste falha pelo motivo esperado. Um teste que já passa sem a implementação não comprova a barreira pretendida.
 
+Todo teste novo nasce como `experimental`. Ele não integra automaticamente o gate obrigatório, mesmo depois do primeiro GREEN. Classificação, repetibilidade e promoção seguem `docs/AmpAI_Gate_Regressao.md`.
+
 ### 4. Fábrica GREEN (DDD)
 
 O @Senior_Backend_Dev recebe apenas BDD, SDD, testes RED e a O.S. de backend. Implementa nos arquivos `js/core_*.js`, com validação fail-fast, Result Pattern e RFC 7807; não toca o DOM. O código retorna ao Tribunal, nunca é autoaprovado pela Fábrica.
 
-**Gate para seguir:** QA executa a suíte de forma independente e registra GREEN com `exit code` zero. Falhas voltam ao CTO como evidência, e não como pedido genérico de “conserte”.
+**Gate para seguir:** QA executa de forma independente o teste novo e as regressões `stable` relacionadas, registrando GREEN com `exit code` zero. Falhas voltam ao CTO como evidência, e não como pedido genérico de “conserte”.
 
 ### 5. Interface, quando necessária
 
@@ -148,7 +151,11 @@ Somente após o core estar GREEN o CTO emite O.S. de interface. O @Senior_Fronte
 
 O CEO só autoriza commit/PR após receber o pacote final de evidências locais. O executor de Git utilizado deve ser autorizado pelo CEO e respeitar as permissões do ambiente.
 
-Para a branch `Refat_Frontend`, o PR para `main` deve acionar GitHub Actions antes do merge. Esse CI é parte oficial do Tribunal: roda os testes definidos, captura logs, publica artifact e devolve `exit code` reprodutível ao @Senior_QA_Security. O QA valida o artifact e só então a entrega permanece elegível para aceite.
+Todo PR para `main` deverá acionar o Gate Consolidado de Regressão quando sua infraestrutura for ativada. O required check estável será `regression-gate`: executará todos os testes explicitamente classificados como `stable`, separando core e browser, e bloqueará qualquer resultado diferente de `PASS`. Testes `experimental`, `flaky`, `archived` ou `utility` não podem entrar silenciosamente no gate.
+
+Durante a transição, os workflows atuais permanecem como evidência oficial até o novo gate completar shadow mode, comparação independente e autorização do CEO. A arquitetura, promoção em duas PRs, taxonomia de falhas e política de artifacts estão em `docs/AmpAI_Gate_Regressao.md`.
+
+GitHub Actions é parte oficial do Tribunal: captura logs, publica artifacts e devolve resultado reprodutível ao @Senior_QA_Security. `INFRA_BLOCKED` e `CONFIG_ERROR` bloqueiam o PR, mas não constituem RED/GREEN funcional. O QA valida o artifact e só então a entrega permanece elegível para aceite.
 
 O CodeRabbit, se habilitado, adiciona revisão complementar no PR: comentários técnicos relevantes retornam ao CTO como evidência para uma O.S. corretiva. Ele não substitui o Tribunal Codex, o artifact de CI nem o CEO.
 
@@ -165,7 +172,7 @@ Escopo testado: <arquivos e comportamento>
 Comando executado: <comando exato>
 Ambiente: local | GitHub Actions
 Artifact CI: não aplicável | <nome/link do artifact>
-Resultado: PASS | FAIL
+Resultado: PASS | FUNCTIONAL_FAILURE | INFRA_BLOCKED | CONFIG_ERROR
 Exit code: <inteiro>
 Mutation testing: não aplicável | <ferramenta e resultado>
 Falhas relevantes: <lista ou "nenhuma">
@@ -179,3 +186,6 @@ Veredito: BLOQUEADO | APROVADO PARA A PR
 3. **RED precede GREEN.** Não há implementação sem testes de fronteira e exceção previamente definidos.
 4. **Core não toca DOM.** UI não replica fórmula ou decisão normativa.
 5. **Sem evidência, sem PR; sem CI/artifact quando aplicável; sem CEO, sem merge.**
+6. **Stable é cumulativo.** Todo PR para `main` preserva todos os contratos `stable`; teste novo só entra no gate após promoção formal.
+7. **Infraestrutura não é comportamento.** Falha de Chromium, sandbox, runner ou bootstrap bloqueia a entrega, mas nunca pode ser declarada RED/GREEN funcional.
+8. **Teste aprovado não é moeda de troca.** Nenhuma IA pode removê-lo, arquivá-lo ou enfraquecê-lo para liberar implementação.

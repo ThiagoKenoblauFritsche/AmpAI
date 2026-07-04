@@ -23,9 +23,9 @@ status: ativo
 
 ## Fluxo de controle
 
-`NotebookLM/CEO → Governança (quando houver impacto nas leis) → CTO → especialista → QA/Codex → PR → GitHub Actions CI → CodeRabbit complementar → CEO (merge)`
+`NotebookLM/CEO → Governança (quando houver impacto nas leis) → CTO → especialista → QA/Codex → PR → regression-gate → CodeRabbit complementar → CEO (merge)`
 
-Uma entrega elegível para PR possui BDD/SDD aplicável, teste RED registrado, implementação GREEN, `exit code` bem-sucedido e documentação atualizada. Para a `Refat_Frontend`, a entrega só é elegível para `main` após PR, GitHub Actions verde, artifact de evidência validado pelo QA e revisão complementar do CodeRabbit quando habilitado.
+Uma entrega elegível para PR possui BDD/SDD aplicável, teste RED registrado, implementação GREEN, regressões relacionadas preservadas, `exit code` bem-sucedido e documentação atualizada. O Gate Consolidado v1 está ratificado, mas deve passar por shadow mode antes de se tornar required check. Depois de ativado, todo PR para `main` executará a suíte `stable` completa e publicará artifact consolidado validado pelo QA.
 
 CI é parte oficial do Tribunal QA. CD staging e CD produção permanecem fases futuras; não devem ser tratados como fluxo ativo.
 
@@ -38,5 +38,7 @@ CI é parte oficial do Tribunal QA. CD staging e CD produção permanecem fases 
 - Core matemático: `js/core_*.js`
 - UI: `js/ui_render.js`
 - Testes e evidências: `tests/`
+- Lei do gate cumulativo: `docs/AmpAI_Gate_Regressao.md`
+- Controle futuro do gate: `qa/` (manifesto, schema e promoções, após implementação por O.S.)
 - CI de Tribunal: `.github/workflows/`
 - Governança: `docs/AmpAI_Engineering_Manifesto.md`, `docs/AmpAI_OS_Workflow.md` e `.github/workflows/AGENTS.md`
