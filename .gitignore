@@ -6,6 +6,13 @@ node_modules/
 .claude/
 .antigravitycli/
 
+# Ferramentas e artefatos locais (nunca versionar)
+actions-runner/
+.coderev/
+.coderev-trash/
+.vs/
+tmp/
+
 # Arquivos do Sistema Operacional
 .DS_Store
 Thumbs.db

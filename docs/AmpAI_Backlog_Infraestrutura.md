@@ -80,3 +80,16 @@ ___
 
 ### 🚀 FASE 9: CD Produção (FUTURO — NÃO ATIVO)
 - [ ] **O.S. #INF-031** | `[CRÍTICA]` Avaliar CD para produção apenas depois de staging validado, contratos de erro estabilizados, testes visuais in-browser maduros e aprovação explícita do CEO.
+
+___
+
+### 🔐 INTAKE DE GOVERNANÇA: AUD-2026-003 / CodeRev
+
+> [!warning] **Não constitui O.S.**
+> A Governança validou os achados e publicou o plano em `docs/AUD-2026-003_CodeRev_Remediacao.md`. Cabe ao CTO decompor os pacotes `CRV-P0` a `CRV-P4` em O.S. isoladas, respeitando RED→GREEN, Tribunal independente, PR obrigatório e autorização de merge pelo CEO.
+
+- [ ] **CRV-P0** | Encerrar incidente de credenciais: revogação, rotação, limpeza coordenada do histórico e detector de segredos no gate de PR.
+- [ ] **CRV-P1** | Corrigir XSS estrutural comprovado e estabelecer comandos oficiais de teste/auditoria.
+- [ ] **CRV-P2** | Classificar testes e artifacts antes de qualquer exclusão; corrigir capturas duplicadas e extrair setup compartilhado.
+- [ ] **CRV-P3** | Decompor `ui_render.js`, eliminar polling de lifecycle e reduzir globais em entregas incrementais.
+- [ ] **CRV-P4** | Validar cientificamente diferenças BT/MT e formalizar limitações MVP antes de alterar motores.

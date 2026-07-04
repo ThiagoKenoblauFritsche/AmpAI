@@ -1,5 +1,8 @@
 # AmpAI ROADMAP (Fase 2): Guia de Deploy na VPS e Telegram
 
+> [!CAUTION]
+> **Segurança:** credenciais nunca devem ser registradas neste documento. Use o cofre de segredos aprovado, GitHub Secrets ou variáveis de ambiente não versionadas.
+
 > [!WARNING]
 > **Atenção:** Este documento descreve a **Fase 2 (Expansão)** do AmpAI. Atualmente operamos na **Fase 1 (v7.0)**, onde a Fábrica roda estritamente no terminal local via Claude Code. A implementação descrita abaixo será executada apenas quando as validações matemáticas locais estiverem perfeitas.
 
@@ -16,8 +19,8 @@ Este documento descreve os passos operacionais futuros para configurar a VPS Het
 *   **Usuário:** `root`
 *   **Acesso SSH:** `ssh root@178.105.252.252`
 *   **Diretório do Projeto:** `/app/ampai`
-*   **Senha Inicial:** `9KwtLXPAdrqwnH33dHmW`
-*   **GitHub PAT:** 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
+*   **Senha Inicial:** `<ver cofre de segredos: VPS_ROOT_PASSWORD>`
+*   **GitHub PAT:** `<ver cofre de segredos: GITHUB_PAT>`
 *   **Antigravity CLI Auth:** `thiagokenoblaufritsche@gmail.com`
 
 ---
