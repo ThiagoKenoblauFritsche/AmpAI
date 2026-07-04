@@ -31,6 +31,7 @@
             --border: #2A313C;
             --success: #10b981;
             --danger: #ef4444;
+            --warning: #f59e0b;
             --info: #3b82f6;
             --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             --neon-glow: 0 0 12px var(--accent-glow), 0 0 24px rgba(255, 107, 0, 0.2);
@@ -918,6 +919,28 @@
         .alert-banner.active {
             display: flex;
             animation: shake 0.3s ease-in-out;
+        }
+
+        /* O.S. 050 — banner de aviso não-bloqueante (severity:"warning" do
+           envelope SDD). Distinto de .alert-banner por cor (âmbar vs.
+           vermelho) e semântica (role=status/aria-live=polite vs.
+           role=alert/aria-live=assertive) — resultado numérico permanece
+           visível junto ao aviso. */
+        .warning-banner {
+            display: none;
+            background: rgba(245, 158, 11, 0.08);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.25);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            align-items: flex-start;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        .warning-banner.active {
+            display: flex;
         }
 
         @keyframes shake {
@@ -1829,6 +1852,10 @@
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="bt-alert-msg">Erro nos parâmetros.</div>
                             </div>
+                            <div class="warning-banner" id="bt-alert-warning" role="status" aria-live="polite" style="margin-bottom:0.75rem;">
+                                <i data-lucide="alert-triangle" style="flex-shrink:0;color:var(--warning);width:14px;height:14px;"></i>
+                                <div id="bt-alert-warning-msg"></div>
+                            </div>
                             <form id="form-bt" novalidate autocomplete="off" data-lpignore="true">
 
                             <div class="form-control"><label data-tooltip="Método IEC 60364-5-52: B1 = eletroduto embutido em parede, B2 = eletroduto aparente, C = superfície/bandeja perfilada, D1 = enterrado em conduto, E/F = ao ar livre em bandeja." data-i18n="cabling.bt.method" for="bt-method">Installation Method</label>
@@ -1889,7 +1916,7 @@
                             <div class="form-control"><label data-i18n="cabling.bt.tprot" for="bt-tprot">Protection trip time (s)</label>
                                 <div class="input-wrapper"><input type="number" id="bt-tprot" value="0.2" min="0.01" max="5" step="0.01" data-input-bt="true"><span class="unit-badge">s</span></div>
                             </div>
-                            <button id="btn-bt" class="btn-action btn-accent" data-action="calc-bt" data-i18n="cabling.btn.calcBT">⚡ Calculate LV</button>
+                            <button type="button" id="btn-bt" class="btn-action btn-accent" data-action="calc-bt" data-i18n="cabling.btn.calcBT">⚡ Calculate LV</button>
                             </form>
                         </aside>
 
@@ -1912,6 +1939,10 @@
                             <div class="alert-banner" id="mt-alert-error" role="alert" aria-live="assertive" style="margin-bottom:0.75rem;">
                                 <i data-lucide="alert-circle" style="flex-shrink:0;color:var(--danger);width:14px;height:14px;"></i>
                                 <div id="mt-alert-msg">Erro nos parâmetros.</div>
+                            </div>
+                            <div class="warning-banner" id="mt-alert-warning" role="status" aria-live="polite" style="margin-bottom:0.75rem;">
+                                <i data-lucide="alert-triangle" style="flex-shrink:0;color:var(--warning);width:14px;height:14px;"></i>
+                                <div id="mt-alert-warning-msg"></div>
                             </div>
                             <form id="form-mt" novalidate autocomplete="off" data-lpignore="true">
 
@@ -1996,7 +2027,7 @@
                                     <div class="input-wrapper"><input type="number" id="mt-ncirc" value="1" min="1" max="10" step="1" data-input-mt="true"><span class="unit-badge">—</span></div>
                                 </div>
                             </div>
-                            <button id="btn-mt" class="btn-action btn-accent" data-action="calc-mt" data-i18n="cabling.btn.calcMT">🔆 Calculate MV</button>
+                            <button type="button" id="btn-mt" class="btn-action btn-accent" data-action="calc-mt" data-i18n="cabling.btn.calcMT">🔆 Calculate MV</button>
                             </form>
                         </aside>
 
