@@ -234,13 +234,54 @@ async function runCase(page, testCase) {
         && (rect.width > 0 || rect.height > 0);
     };
 
+    const waitForVisibleAndStable = (element, selector, maxFrames = 180) => new Promise((resolve, reject) => {
+      let previousRect = null;
+      let stableFrames = 0;
+      let observedFrames = 0;
+
+      const observe = () => {
+        observedFrames += 1;
+        const rect = element.getBoundingClientRect();
+        const currentRect = {
+          left: rect.left,
+          top: rect.top,
+          width: rect.width,
+          height: rect.height,
+        };
+        const unchanged = previousRect
+          && Object.keys(currentRect).every((key) => Math.abs(currentRect[key] - previousRect[key]) < 0.01);
+
+        stableFrames = isVisible(element) && unchanged ? stableFrames + 1 : 0;
+        previousRect = currentRect;
+
+        if (stableFrames >= 60) {
+          resolve({ selector, observedFrames, rect: currentRect });
+          return;
+        }
+        if (observedFrames >= maxFrames) {
+          reject(new Error(`Harness OS049: ${selector} não ficou visível e estável após ${maxFrames} frames.`));
+          return;
+        }
+        requestAnimationFrame(observe);
+      };
+
+      requestAnimationFrame(observe);
+    });
+
     const domain = current.domain.toLowerCase();
     const engineName = current.domain === 'BT' ? 'calculateCablingBT' : 'calculateCablingMT';
     const button = document.querySelector(`#btn-${domain}`);
     const card = document.querySelector(`#card-${domain}`);
     const wrapper = document.querySelector(`#wrapper-${domain}`) || card?.parentElement;
 
-    if (!button || !card || !wrapper || typeof window[engineName] !== 'function') {
+    if (
+      !button
+      || !card
+      || !wrapper
+      || typeof window[engineName] !== 'function'
+      || typeof window.switchModule !== 'function'
+      || typeof window.switchCablingCard !== 'function'
+    ) {
       throw new Error(`Harness OS049 sem seletor/API para ${current.domain}`);
     }
 
@@ -250,6 +291,19 @@ async function runCase(page, testCase) {
       window.setLanguage(current.language);
       await waitForFrames();
     }
+
+    const navigationErrors = [];
+    try {
+      window.switchModule('cabling');
+    } catch (error) {
+      navigationErrors.push({ step: 'switchModule', message: String(error?.message || error) });
+    }
+    try {
+      window.switchCablingCard(domain);
+    } catch (error) {
+      navigationErrors.push({ step: 'switchCablingCard', message: String(error?.message || error) });
+    }
+    const navigationState = await waitForVisibleAndStable(card, `#card-${domain}`);
 
     const engineCalls = [];
     const renderCalls = [];
@@ -295,6 +349,12 @@ async function runCase(page, testCase) {
       });
       console.warn = (...args) => consoleWarn.push(args.map(String));
       console.error = (...args) => consoleError.push(args.map(String));
+
+      engineCalls.length = 0;
+      renderCalls.length = 0;
+      consoleWarn.length = 0;
+      consoleError.length = 0;
+      const cardVisibleBeforeClick = isVisible(card);
 
       try {
         button.click();
@@ -397,6 +457,11 @@ async function runCase(page, testCase) {
         residualNumericResult,
         escapedDomainException,
         activeDocumentLanguage: document.documentElement.lang || null,
+        navigationPrepared: true,
+        cardVisibleBeforeClick,
+        navigationState,
+        navigationErrorCount: navigationErrors.length,
+        navigationErrors,
         compliant,
       };
     } finally {
