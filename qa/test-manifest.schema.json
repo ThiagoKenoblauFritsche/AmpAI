@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ampai.dev/schemas/test-manifest.schema.json",
+  "title": "AmpAI — Manifesto do Gate Consolidado de Regressão",
+  "description": "Contrato declarativo e explícito da suíte de testes. Nenhuma descoberta por glob; nenhum comando shell no manifesto.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "tests"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1,
+      "description": "Versão do contrato do manifesto. Fixa em 1 nesta fundação."
+    },
+    "tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "file",
+          "classification",
+          "suite",
+          "timeoutSeconds",
+          "preflight",
+          "report"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Identificador único do teste no manifesto."
+          },
+          "file": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Caminho relativo do teste, restrito a tests/, extensão .js, sem glob nem travessia."
+          },
+          "classification": {
+            "type": "string",
+            "enum": ["stable", "experimental", "flaky", "archived", "utility"],
+            "description": "Somente 'stable' integra o gate obrigatório."
+          },
+          "suite": {
+            "type": "string",
+            "enum": ["core", "browser"]
+          },
+          "timeoutSeconds": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 600
+          },
+          "preflight": {
+            "type": "string",
+            "enum": ["node", "chromium"]
+          },
+          "report": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["protocol", "expectedCount"],
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": ["json-lines", "legacy-zombies"]
+              },
+              "expectedCount": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "prefix": {
+                "type": "string",
+                "description": "Prefixo das linhas de relatório (protocolo json-lines)."
+              },
+              "complianceField": {
+                "type": "string",
+                "description": "Caminho por pontos até o campo de conformidade (protocolo json-lines)."
+              },
+              "expectedValue": {
+                "description": "Valor esperado do campo de conformidade (qualquer tipo JSON)."
+              },
+              "greenLabel": {
+                "type": "string",
+                "description": "Rótulo do total de verdes (protocolo legacy-zombies)."
+              },
+              "redLabel": {
+                "type": "string",
+                "description": "Rótulo do total de vermelhos (protocolo legacy-zombies)."
+              },
+              "totalLabel": {
+                "type": "string",
+                "description": "Rótulo do total geral (protocolo legacy-zombies)."
+              }
+            },
+            "allOf": [
+              {
+                "if": { "properties": { "protocol": { "const": "json-lines" } } },
+                "then": { "required": ["prefix", "complianceField", "expectedValue"] }
+              },
+              {
+                "if": { "properties": { "protocol": { "const": "legacy-zombies" } } },
+                "then": { "required": ["greenLabel", "redLabel", "totalLabel"] }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
