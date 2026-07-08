@@ -65,9 +65,9 @@ ___
 - [x] **O.S. #INF-023** | `[ATUALIZADA]` Estúdio 2 local unificado: Claude Opus 4.8 para ciência normativa/BDD e Backend; Claude Sonnet 4.6 para Frontend. O @Engenheiro_Eletricista consome RNC-P/RNC-C em Markdown, não PDFs massivos.
 - [x] **O.S. #INF-026** | `[CRÍTICA]` Tribunal migrado para @Senior_QA_Security no Codex, com execução isolada e evidência de `exit code`.
 - [x] **O.S. #INF-024** | `[ALTA]` Implementação da estratégia de Injeção RAG Federada (Docs as Code) dispensando a necessidade de Pinecone/Vector DB.
-- [ ] **O.S. #INF-025** | `[ALTA]` Integrar `tests/core_curto_circuito.test.js` e `tests/test_os047.js` ao job core do futuro gate, com adaptador legado temporário exigindo 39/39 e protocolo processável.
+- [x] **O.S. #INF-025** | `[ALTA]` `tests/core_curto_circuito.test.js` e `tests/test_os047.js` integrados ao job core do Gate Consolidado, com adaptador legado exigindo 39/39 e protocolo processável.
 - [x] **O.S. #INF-027** | `[CRÍTICA]` GitHub Actions QA in-browser implantado para a `Refat_Frontend`: workflow `.github/workflows/qa-os040r.yml` executa `tests/test_os040_restart.js`, configura Chromium/Puppeteer, captura `exit code` e publica o artifact `os040r-evidence`.
-- [ ] **O.S. #INF-028** | `[CRÍTICA]` Decompor e implantar o Gate Consolidado v1: manifesto/schema, executor único, comandos npm, jobs core/browser, agregador `regression-gate`, shadow mode, PR e `push` para `main`, conforme decisão canônica.
+- [x] **O.S. #INF-028** | `[CRÍTICA]` Gate Consolidado v1 implantado em shadow mode por INF-028-A/B/C e integrado pela PR #17. GREEN pós-merge em `main@dd83008`; run `28910574756` com manifest, core, três browsers, agregador e artifacts verdes. **Não é required check.**
 - [ ] **O.S. #INF-029** | `[ALTA]` Padronizar artifacts individuais e consolidado: ambiente, lockfile, comando, preflight, relatórios, categoria `PASS/FUNCTIONAL_FAILURE/INFRA_BLOCKED/CONFIG_ERROR`, `exit code`, hashes e referência à O.S.
 - [ ] **O.S. #INF-032** | `[ALTA]` Padronizar taxonomia RNC: classificar arquivos de `docs/normas/` como RNC-P, promover regras críticas para RNC-C em `docs/engenharia/` e impedir uso de RNC-P como base direta de implementação sem prova de cálculo contestável.
 
@@ -76,11 +76,11 @@ ___
 > Cabe ao CTO decompor os pacotes abaixo em O.S. técnicas isoladas. Governança não autoriza implementação direta por esta lista.
 
 - [x] **GATE-GOV** | Arquitetura, taxonomia, suíte inicial, retenção, limites e promoção ratificados.
-- [ ] **GATE-MANIFEST** | Manifesto JSON, schema, registros de promoção e validação semântica.
-- [ ] **GATE-EXECUTOR** | Executor Node único e comandos `test:core`, `test:browser`, `test:regression`.
-- [ ] **GATE-CI-SHADOW** | Jobs core/browser paralelos, agregador e artifacts em modo informativo.
-- [ ] **GATE-QA** | Comparação independente, três execuções equivalentes, PR e execução pós-merge.
-- [ ] **GATE-REQUIRED** | Ativação do required check somente após veredito QA e autorização do CEO.
+- [x] **GATE-MANIFEST** | Manifesto JSON, schema, registros de classificação e validação semântica implantados pela INF-028-A.
+- [x] **GATE-EXECUTOR** | Executor Node único e comandos `test:core`, `test:browser`, `test:regression` implantados pela INF-028-B.
+- [x] **GATE-CI-SHADOW** | Jobs core/browser paralelos, agregador e artifacts implantados pela INF-028-C; GREEN pós-merge em `dd83008`.
+- [ ] **GATE-OBSERVATION** | Intake para **O.S. própria do CTO**: mínimo de sete dias, três execuções independentes no mesmo SHA, novo ciclo PR→merge→push, comparação legada, auditoria de artifacts e parecer QA. Evidência apenas; proibido alterar branch protection.
+- [ ] **GATE-REQUIRED** | **O.S. futura e separada**, bloqueada até aceite da observação. Ativação manual do required check somente após veredito QA e autorização explícita do CEO; nenhuma ativação automática.
 - [ ] **GATE-PROMOTION-049** | Promover os dois testes O.S. 049/050 somente após `navigationErrors=[]` e toda a evidência exigida.
 
 ___
