@@ -1,9 +1,12 @@
 ---
 tags: [sdd, gate, ci, shadow, infraestrutura, qa]
-versao: 1.0
-status: candidata
+versao: 1.1
+status: green_pos_merge
 os: INF-028-C
 baseline: f728fe2bf7d9f11412dcab696150a1945e7ccea9
+merge_main: dd83008dd2674f0ce0b602aa170740a3d9d4cd81
+run_pos_merge: 28910574756
+data_encerramento: 2026-07-07
 ---
 
 # SDD — Gate Consolidado em Shadow Mode (CI)
@@ -144,3 +147,19 @@ Todos os uploads usam `if: always()` (evidência preservada mesmo em falha).
 - o job reflete o resultado real — vermelho é evidência válida;
 - a promoção a required check depende de veredito do QA e autorização do CEO
   (O.S. futura — GATE-REQUIRED).
+
+## 7. Encerramento formal da INF-028-C
+
+**Veredito:** GREEN pós-merge em `main@dd83008dd2674f0ce0b602aa170740a3d9d4cd81`.
+
+O run de `push` [28910574756](https://github.com/ThiagoKenoblauFritsche/AmpAI/actions/runs/28910574756) terminou com `conclusion: success`. Foram concluídos com sucesso:
+
+- `manifest-validation`;
+- `core`;
+- `browser (os040r)`;
+- `browser (os042r)`;
+- `browser (os044r)`;
+- agregador `regression-gate`;
+- uploads de evidência individuais e consolidado.
+
+O encerramento confirma a implantação da INF-028-C, não a promoção do gate. O workflow permanece em **shadow mode**, não altera branch protection e não é required check. A observação e a promoção futura são pacotes separados definidos em `docs/AmpAI_Gate_Regressao.md`; nenhuma ativação automática foi autorizada.

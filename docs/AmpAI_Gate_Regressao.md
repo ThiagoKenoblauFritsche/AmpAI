@@ -1,9 +1,11 @@
 ---
 tags: [governanca, qa, ci, regressao]
-versao: 1.0
+versao: 1.1
 status: ratificado
 data: 2026-07-04
 baseline_decisao: c2565332367abfbbadea7da849fc90fff3fdfffc
+baseline_shadow_green: dd83008dd2674f0ce0b602aa170740a3d9d4cd81
+run_shadow_pos_merge: 28910574756
 ---
 
 # Gate Consolidado de Regressão — Decisão Arquitetural
@@ -201,5 +203,43 @@ Arquivamento retira o teste do manifesto executável, mas preserva arquivo, deci
 
 ## 13. Estado da decisão
 
-Esta arquitetura está ratificada. A infraestrutura executável ainda não está implementada. Cabe ao CTO decompor manifesto, schema, executor, CI em shadow mode, validação, promoção e ativação do required check em O.S. específicas.
+Esta arquitetura está ratificada e a infraestrutura executável v1 foi integrada em `main@dd83008dd2674f0ce0b602aa170740a3d9d4cd81` pela PR #17.
+
+A INF-028-C está formalmente **GREEN pós-merge**. O run de `push` em `main` [28910574756](https://github.com/ThiagoKenoblauFritsche/AmpAI/actions/runs/28910574756) concluiu `success`: `manifest-validation`, `core`, `browser (os040r)`, `browser (os042r)`, `browser (os044r)` e o agregador `regression-gate` ficaram verdes, com uploads de evidência concluídos.
+
+Esse GREEN comprova a implantação do shadow mode; **não ativa nem autoriza required check**. `regression-gate` permanece informativo, os workflows anteriores continuam oficiais durante a comparação e a proteção de `main` não pode ser alterada nesta etapa.
+
+## 14. State lock de observação e promoção futura
+
+A Governança define dois pacotes separados. Eles são intake para decomposição do CTO e **não constituem O.S. emitidas por este documento**.
+
+### 14.1 Período de observação — O.S. própria do CTO
+
+A O.S. de observação será exclusivamente comprobatória. É proibido nela alterar branch protection, tornar o check obrigatório, flexibilizar testes, habilitar rerun automático ou aposentar os workflows anteriores.
+
+Critérios mínimos cumulativos:
+
+1. observar por pelo menos sete dias corridos a partir do GREEN pós-merge;
+2. obter três execuções completas, consecutivas, independentes e sem rerun sobre o mesmo SHA imutável;
+3. observar ao menos um novo ciclo real `pull_request → merge → push main` posterior a `dd83008`;
+4. comparar os testes sobrepostos com `qa-visual.yml` e `qa-os040r.yml`, justificando qualquer divergência;
+5. baixar e auditar os artifacts individuais e consolidado, incluindo schema, SHA, ambiente, relatórios, classificação e `exit code`;
+6. confirmar duração total dentro do teto inicial de dez minutos e ausência de flakiness ou falha não classificada;
+7. tratar `CONFIG_ERROR`, `INFRA_BLOCKED` e `FUNCTIONAL_FAILURE` conforme a taxonomia, sem convertê-los em PASS;
+8. obter parecer final favorável e independente do QA.
+
+Falha durante a observação não autoriza ajuste oportunista do gate. O período pode ser estendido pelo CTO/QA; somente o CEO pode aceitar o relatório final.
+
+### 14.2 Promoção de `regression-gate` para required — O.S. futura e separada
+
+A O.S. de promoção só poderá ser emitida após todos os critérios de 14.1 e da seção 7 estarem comprovados. Ela deverá:
+
+- identificar o contexto exato do check `regression-gate`;
+- registrar a configuração anterior e proposta da proteção de `main`;
+- prever rollback explícito;
+- preservar CodeRabbit como revisão complementar e QA como autoridade técnica;
+- exigir autorização nominal do CEO imediatamente antes da alteração;
+- aplicar a branch protection manualmente e verificar o bloqueio em PR controlada.
+
+Não existe ativação automática, implícita ou por simples passagem do tempo. Até essa O.S. futura ser concluída e aceita, o estado canônico permanece **shadow mode não obrigatório**.
 

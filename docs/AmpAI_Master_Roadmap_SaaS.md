@@ -25,8 +25,9 @@ As fases abaixo devem ser executadas sequencialmente para garantir a integridade
 *   [x] **Tribunal independente:** Codex QA registra RED → GREEN e `exit code` em terminal isolado.
 *   [x] **CI in-browser inicial:** GitHub Actions `qa-os040r.yml` executa `tests/test_os040_restart.js` na `Refat_Frontend` e publica artifact de evidência.
 *   [x] **Arquitetura do Gate Consolidado ratificada:** taxonomia, suíte inicial, promoção em duas PRs, `regression-gate`, artifacts e separação entre falha funcional/infraestrutura definidas em `docs/AmpAI_Gate_Regressao.md`.
-*   [ ] **Gate Consolidado em shadow mode:** implantar manifesto JSON, schema, executor Node, comandos `test:core`/`test:browser`/`test:regression`, matriz browser e agregador sem torná-lo required check inicialmente.
-*   [ ] **Evidência padronizada:** gerar artifacts individuais por suíte e consolidado processável, com ambiente, comando, relatórios, categoria e `exit code`.
+*   [x] **Gate Consolidado em shadow mode:** manifesto, schema, executor Node, comandos npm, matriz browser e agregador integrados em `main@dd83008`; GREEN pós-merge no run `28910574756`. Permanece informativo e não obrigatório.
+*   [x] **Evidência padronizada do Gate v1:** artifacts individuais e consolidado processável implantados, com ambiente, comando, relatórios, categoria e `exit code`; validação longitudinal continua no período de observação. O escopo ampliado da INF-029 permanece pendente.
+*   [ ] **Observação do shadow mode:** O.S. própria do CTO para sete dias mínimos, repetibilidade, novo ciclo PR→merge, comparação com workflows legados, auditoria dos artifacts e parecer QA, sem alterar branch protection.
 *   [ ] **Required check para `main`:** após validação do shadow mode pelo QA, ativar `regression-gate` em todo PR e em `push` pós-merge, mantendo CodeRabbit complementar e merge exclusivo do CEO.
 *   [ ] **Promoção pós-O.S. 050:** manter `test_os049.js` e `test_os049_e2e.js` como experimentais até três GREENs independentes no mesmo SHA, execução pós-merge, `navigationErrors=[]` e PR específica de promoção.
 

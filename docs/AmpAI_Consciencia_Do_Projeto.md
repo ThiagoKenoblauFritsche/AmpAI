@@ -28,7 +28,7 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 - O código só nasce de BDD e SDD; erros seguem RFC 7807 e o core nunca toca o DOM.
 - RNC-P é fonte normativa processada; RNC-C é fonte canônica curada. Um `.md` em `docs/normas/` não vira canônico automaticamente.
 - `sync.ps1` mantém a base Docs as Code disponível ao NotebookLM.
-- O CEO é o gatekeeper final de merge. O Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md` protegerá todo PR para `main` depois do shadow mode e da ativação explícita do required check.
+- O CEO é o gatekeeper final de merge. O Gate Consolidado foi implantado em shadow mode em `main@dd83008` e obteve GREEN pós-merge no run `28910574756`; permanece informativo. Só protegerá obrigatoriamente `main` depois da O.S. de observação, parecer QA, O.S. futura de promoção e ativação explícita autorizada pelo CEO.
 - Teste novo nasce experimental; somente promoção formal o torna stable. Falha de infraestrutura bloqueia, mas não constitui RED/GREEN funcional.
 - CodeRabbit é revisor complementar, não autoridade final. CD staging e CD produção são fases futuras e separadas.
 
