@@ -114,8 +114,8 @@ function safeSegment(value) {
 // Parsing estrito de argumentos (arg desconhecido / valor ausente → erro)
 // ─────────────────────────────────────────────────────────────────────────────
 function parseArgs(argv) {
-  const args = { manifest: null, suite: null, output: null, errors: [] };
-  const known = { '--manifest': 'manifest', '--suite': 'suite', '--output': 'output' };
+  const args = { manifest: null, suite: null, output: null, testId: null, errors: [] };
+  const known = { '--manifest': 'manifest', '--suite': 'suite', '--output': 'output', '--test-id': 'testId' };
   for (let i = 0; i < argv.length; i += 1) {
     const token = argv[i];
     let key = token;
@@ -143,6 +143,17 @@ function parseArgs(argv) {
     if (value === '') {
       args.errors.push(`valor vazio para ${key}`);
       continue;
+    }
+    if (field === 'testId') {
+      // Seleção por ID é sempre singular: sem múltiplos IDs, glob ou lista textual.
+      if (args.testId !== null) {
+        args.errors.push('múltiplos --test-id não são permitidos (selecione exatamente um ID)');
+        continue;
+      }
+      if (/[,*?[\]\s]/.test(value)) {
+        args.errors.push(`--test-id inválido (sem glob, lista ou espaços): ${value}`);
+        continue;
+      }
     }
     args[field] = value;
   }
@@ -268,6 +279,25 @@ function selectTests(manifest, suite) {
   if (suite === 'core') return stable.filter((test) => test.suite === 'core');
   if (suite === 'browser') return stable.filter((test) => test.suite === 'browser');
   return stable; // 'all' → todos os stable, jamais experimentais
+}
+
+/**
+ * Seleção segura por --test-id (exatamente um teste). Rejeita, com CONFIG_ERROR:
+ * ID inexistente; ID não-stable (experimental incluso); e incompatibilidade com --suite.
+ * Nunca enfraquece a barreira stable-only (não seleciona experimentais).
+ */
+function selectById(manifest, testId, suite) {
+  const entry = (manifest.tests || []).find((test) => test.id === testId);
+  if (!entry) {
+    return { ok: false, reason: `--test-id inexistente no manifesto: ${testId}` };
+  }
+  if (entry.classification !== 'stable') {
+    return { ok: false, reason: `--test-id '${testId}' não é stable (classification='${entry.classification}'); experimentais não são executados pelo gate` };
+  }
+  if (suite !== 'all' && entry.suite !== suite) {
+    return { ok: false, reason: `--test-id '${testId}' (suite='${entry.suite}') é incompatível com --suite '${suite}'` };
+  }
+  return { ok: true, tests: [entry] };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -586,8 +616,20 @@ async function main() {
       ['CONFIG_ERROR: validação semântica do manifesto falhou:', ...semanticIssues.map((e) => `  - ${e}`)]);
   }
 
-  // Seleção (somente stable). Seleção vazia → CONFIG_ERROR (impede PASS vazio).
-  const selected = selectTests(manifest, args.suite);
+  // Seleção. Com --test-id: exatamente um teste stable compatível com a suíte.
+  // Sem --test-id: comportamento atual (todos os stable da suíte). Seleção vazia
+  // ou ID inválido → CONFIG_ERROR (impede PASS vazio e seleção insegura).
+  let selected;
+  if (args.testId) {
+    const selection = selectById(manifest, args.testId, args.suite);
+    if (!selection.ok) {
+      return emit(CLASSIFICATION.CONFIG_ERROR, configErrorSummary(selection.reason), writeTarget,
+        [`CONFIG_ERROR: ${selection.reason}`]);
+    }
+    selected = selection.tests;
+  } else {
+    selected = selectTests(manifest, args.suite);
+  }
   if (selected.length === 0) {
     return emit(CLASSIFICATION.CONFIG_ERROR, configErrorSummary(`nenhum teste stable selecionado para a suíte '${args.suite}'`), writeTarget,
       [`CONFIG_ERROR: nenhum teste stable selecionado para a suíte '${args.suite}'.`]);
