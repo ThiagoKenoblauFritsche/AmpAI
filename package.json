@@ -7,7 +7,10 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test:core": "node scripts/qa/run-regression.js --manifest qa/test-manifest.json --suite core --output tmp/qa-results/core",
+    "test:browser": "node scripts/qa/run-regression.js --manifest qa/test-manifest.json --suite browser --output tmp/qa-results/browser",
+    "test:regression": "node scripts/qa/run-regression.js --manifest qa/test-manifest.json --suite all --output tmp/qa-results/regression"
   },
   "repository": {
     "type": "git",
@@ -23,5 +26,8 @@
   "homepage": "https://github.com/ThiagoKenoblauFritsche/AmpAI#readme",
   "dependencies": {
     "puppeteer": "^25.1.0"
+  },
+  "devDependencies": {
+    "ajv": "^8.20.0"
   }
 }

@@ -34,6 +34,20 @@ O novo gate ainda passará por implantação e shadow mode; até sua ativação,
 
 O CI é evidência de Tribunal, não CD. Deploy automático para staging e produção permanece fora do fluxo ativo até a consolidação de PR, artifacts e revisão independente.
 
+### Gate local de regressão
+
+A suíte obrigatória é definida explicitamente em `qa/test-manifest.json`.
+
+```bash
+npm run test:core
+npm run test:browser
+npm run test:regression
+```
+
+Somente testes classificados como `stable` integram esses comandos. Testes experimentais exigem promoção formal antes de bloquear PR.
+
+O workflow `.github/workflows/regression-gate-shadow.yml` executa este mesmo gate no GitHub Actions em **shadow mode**: é informativo, **ainda não é required check** e não altera a proteção de `main`. Pode ficar vermelho — isso é evidência válida. Os workflows atuais (`qa-visual.yml`, `qa-os040r.yml`) permanecem oficiais até a promoção formal. Contrato em `docs/api/INF028_CI_Shadow_SDD.md`.
+
 ## Docs as Code
 
 As fontes canônicas vivem em `docs/`. O `sync.ps1` as transforma para consulta no Google Drive/NotebookLM. A documentação e a evidência de teste fazem parte da entrega, não são pós-processamento opcional.

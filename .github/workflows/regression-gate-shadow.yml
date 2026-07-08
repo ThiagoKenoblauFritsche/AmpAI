@@ -1,0 +1,261 @@
+name: Regression Gate (shadow)
+
+# Gate Consolidado de Regressao em SHADOW MODE (O.S. INF-028-C / -R).
+# Informativo: NAO e required check, NAO substitui qa-visual.yml/qa-os040r.yml,
+# NAO faz deploy nem merge, NAO executa experimentais, NAO usa rerun automatico.
+# Pode ficar vermelho: isso e evidencia valida.
+#
+# Captura de falhas (ordem obrigatoria): captura exit code -> upload artifact
+# (sempre, exigindo arquivos) -> so entao propaga. Falha de bootstrap
+# (npm ci / sandbox) gera evidencia estruturada INFRA_BLOCKED. Artifact ausente/
+# incompleto bloqueia como CONFIG_ERROR no agregador.
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Somente leitura. Nenhuma permissao de escrita.
+permissions:
+  contents: read
+
+jobs:
+  # ── Valida o proprio contrato do gate (INF-028-A) ─────────────────────────
+  manifest-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bootstrap (npm ci) — captura exit code
+        id: boot
+        shell: bash
+        run: |
+          set +e
+          mkdir -p tmp/evidence/manifest-validation
+          npm ci > tmp/evidence/manifest-validation/npm-ci.log 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Contrato INF-028-A ou evidencia INFRA_BLOCKED
+        id: run
+        shell: bash
+        run: |
+          set +e
+          if [ "${{ steps.boot.outputs.code }}" != "0" ]; then
+            echo "Bootstrap (npm ci) falhou -> INFRA_BLOCKED (contrato nao exercido)"
+            node -e 'const fs=require("fs");fs.mkdirSync("tmp/evidence/manifest-validation",{recursive:true});fs.writeFileSync("tmp/evidence/manifest-validation/status.json",JSON.stringify({schemaVersion:1,component:"manifest-validation",classification:"INFRA_BLOCKED"},null,2))'
+            echo "code=2" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node tests/test_inf028_gate_contract.js \
+            > tmp/evidence/manifest-validation/stdout.log \
+            2> tmp/evidence/manifest-validation/stderr.log
+          c=$?
+          cls=$([ "$c" = "0" ] && echo PASS || echo FUNCTIONAL_FAILURE)
+          node -e 'const fs=require("fs");fs.writeFileSync("tmp/evidence/manifest-validation/status.json",JSON.stringify({schemaVersion:1,component:"manifest-validation",classification:process.argv[1]},null,2))' "$cls"
+          echo "code=$c" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Capturar ambiente
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p tmp/evidence/manifest-validation
+          {
+            echo "node: $(node -v)"; echo "npm: $(npm -v)"; echo "os: $(uname -a)"
+            echo "commit: ${GITHUB_SHA}"; echo "event: ${GITHUB_EVENT_NAME}"
+          } > tmp/evidence/manifest-validation/environment.txt
+      - name: Upload evidencia (sempre)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest-validation-evidence
+          path: tmp/evidence/manifest-validation
+          retention-days: 30
+          if-no-files-found: error
+      - name: Propagar exit code
+        shell: bash
+        run: exit ${{ steps.run.outputs.code }}
+
+  # ── Suite core stable (sequencial): 39/39 + 8/8 → PASS ───────────────────
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Bootstrap (npm ci) — captura exit code
+        id: boot
+        shell: bash
+        run: |
+          set +e
+          mkdir -p tmp/qa-results/core
+          npm ci > tmp/qa-results/core/npm-ci.log 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: test:core ou evidencia INFRA_BLOCKED
+        id: run
+        shell: bash
+        run: |
+          set +e
+          mkdir -p tmp/qa-results/core
+          if [ "${{ steps.boot.outputs.code }}" != "0" ]; then
+            echo "Bootstrap (npm ci) falhou -> INFRA_BLOCKED para os testes core"
+            node -e 'const fs=require("fs"),path=require("path");const m=JSON.parse(fs.readFileSync("qa/test-manifest.json","utf8"));const a=process.argv.slice(1);const base=a[0];for(const id of a.slice(1)){const t=(m.tests||[]).find(x=>x.id===id);const exp=t&&t.report?t.report.expectedCount:0;const dir=path.join(base,id);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,"result.json"),JSON.stringify({schemaVersion:1,testId:id,classification:"INFRA_BLOCKED",stages:{configValidated:true,dependenciesReady:false,preflightPassed:false,testStarted:false,assertionExercised:false,reportsValidated:false},preflight:{exitCode:2},process:{exitCode:2},reports:{expected:exp,observed:0,conforming:0,nonConforming:0}},null,2));}' tmp/qa-results/core core-curto-circuito os047
+            echo "code=2" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          npm run test:core > tmp/qa-results/core/stdout.log 2> tmp/qa-results/core/stderr.log
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Capturar ambiente
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p tmp/qa-results/core
+          {
+            echo "node: $(node -v)"; echo "npm: $(npm -v)"; echo "os: $(uname -a)"
+            echo "commit: ${GITHUB_SHA}"; echo "event: ${GITHUB_EVENT_NAME}"
+          } > tmp/qa-results/core/environment.txt
+      - name: Upload evidencia (sempre)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-evidence
+          path: tmp/qa-results/core
+          retention-days: 30
+          if-no-files-found: error
+      - name: Propagar exit code
+        shell: bash
+        run: exit ${{ steps.run.outputs.code }}
+
+  # ── Suite browser stable: um teste por runner isolado (matriz) ────────────
+  browser:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [os040r, os042r, os044r]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Habilitar sandbox de namespace do Chromium (registrado, nunca oculto)
+        id: sandbox
+        shell: bash
+        run: |
+          # Reabilita user namespaces nao-privilegiados para o sandbox de namespace do
+          # Chromium operar intacto (ubuntu-24.04/AppArmor), preservando o sandbox e sem
+          # jamais desabilita-lo. O resultado do sysctl e sempre REGISTRADO, nunca
+          # silenciado. Uma indisponibilidade real do Chromium sera capturada como
+          # INFRA_BLOCKED pelo preflight do executor.
+          if sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0; then
+            echo "sandbox-namespace: habilitado"
+          else
+            rc=$?
+            echo "sandbox-namespace: sysctl retornou ${rc} (pode nao ser exigido neste runner); registrado" >&2
+          fi
+      - name: Bootstrap (npm ci) — captura exit code
+        id: boot
+        shell: bash
+        run: |
+          set +e
+          mkdir -p tmp/qa-results/${{ matrix.id }}
+          npm ci > tmp/qa-results/${{ matrix.id }}/npm-ci.log 2>&1
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Executor browser --test-id ou evidencia INFRA_BLOCKED
+        id: run
+        shell: bash
+        run: |
+          set +e
+          mkdir -p tmp/qa-results/${{ matrix.id }}
+          if [ "${{ steps.boot.outputs.code }}" != "0" ]; then
+            echo "Bootstrap (npm ci) falhou -> INFRA_BLOCKED para ${{ matrix.id }}"
+            node -e 'const fs=require("fs"),path=require("path");const m=JSON.parse(fs.readFileSync("qa/test-manifest.json","utf8"));const a=process.argv.slice(1);const base=a[0];for(const id of a.slice(1)){const t=(m.tests||[]).find(x=>x.id===id);const exp=t&&t.report?t.report.expectedCount:0;const dir=path.join(base,id);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,"result.json"),JSON.stringify({schemaVersion:1,testId:id,classification:"INFRA_BLOCKED",stages:{configValidated:true,dependenciesReady:false,preflightPassed:false,testStarted:false,assertionExercised:false,reportsValidated:false},preflight:{exitCode:2},process:{exitCode:2},reports:{expected:exp,observed:0,conforming:0,nonConforming:0}},null,2));}' tmp/qa-results/${{ matrix.id }} ${{ matrix.id }}
+            echo "code=2" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node scripts/qa/run-regression.js \
+            --manifest qa/test-manifest.json \
+            --suite browser \
+            --test-id ${{ matrix.id }} \
+            --output tmp/qa-results/${{ matrix.id }} \
+            > tmp/qa-results/${{ matrix.id }}/stdout.log \
+            2> tmp/qa-results/${{ matrix.id }}/stderr.log
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Capturar ambiente
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p tmp/qa-results/${{ matrix.id }}
+          {
+            echo "node: $(node -v)"; echo "npm: $(npm -v)"; echo "os: $(uname -a)"
+            echo "commit: ${GITHUB_SHA}"; echo "event: ${GITHUB_EVENT_NAME}"; echo "matrix.id: ${{ matrix.id }}"
+          } > tmp/qa-results/${{ matrix.id }}/environment.txt
+      - name: Upload evidencia (sempre)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-${{ matrix.id }}-evidence
+          path: tmp/qa-results/${{ matrix.id }}
+          retention-days: 30
+          if-no-files-found: error
+      - name: Propagar exit code
+        shell: bash
+        run: exit ${{ steps.run.outputs.code }}
+
+  # ── Agregador consolidado (sempre executa, mesmo apos falhas anteriores) ──
+  regression-gate:
+    needs: [manifest-validation, core, browser]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Baixar todos os artifacts
+        if: always()
+        uses: actions/download-artifact@v4
+        with:
+          path: tmp/artifacts
+      - name: Agregar evidencias (captura exit code)
+        id: agg
+        if: always()
+        shell: bash
+        run: |
+          set +e
+          node scripts/qa/aggregate-results.js \
+            --input tmp/artifacts \
+            --output tmp/consolidated
+          echo "code=$?" >> "$GITHUB_OUTPUT"
+          exit 0
+      - name: Upload consolidado (sempre)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-gate-evidence
+          path: tmp/consolidated
+          retention-days: 90
+          if-no-files-found: error
+      - name: Veredito consolidado
+        if: always()
+        shell: bash
+        run: |
+          node -e '
+            const fs=require("fs");
+            const PREC=["CONFIG_ERROR","INFRA_BLOCKED","FUNCTIONAL_FAILURE","PASS"];
+            const MAP={PASS:0,FUNCTIONAL_FAILURE:1,INFRA_BLOCKED:2,CONFIG_ERROR:3};
+            const rd=(p)=>{try{return JSON.parse(fs.readFileSync(p,"utf8")).classification||"CONFIG_ERROR"}catch(_){return "CONFIG_ERROR"}};
+            const agg=rd("tmp/consolidated/summary.json");
+            const mv=rd("tmp/artifacts/manifest-validation-evidence/status.json");
+            const worst=PREC.find(c=>[agg,mv].includes(c));
+            console.log("manifest-validation:",mv,"| aggregator(5 stable):",agg,"| consolidado:",worst);
+            process.exit(MAP[worst]);
+          '

@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "tests": [
+    {
+      "id": "core-curto-circuito",
+      "file": "tests/core_curto_circuito.test.js",
+      "classification": "stable",
+      "suite": "core",
+      "timeoutSeconds": 60,
+      "preflight": "node",
+      "report": {
+        "protocol": "legacy-zombies",
+        "expectedCount": 39,
+        "greenLabel": "Verdes",
+        "redLabel": "Vermelhos",
+        "totalLabel": "Total"
+      }
+    },
+    {
+      "id": "os047",
+      "file": "tests/test_os047.js",
+      "classification": "stable",
+      "suite": "core",
+      "timeoutSeconds": 60,
+      "preflight": "node",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "OS047_REPORT",
+        "expectedCount": 8,
+        "complianceField": "compliant",
+        "expectedValue": true
+      }
+    },
+    {
+      "id": "os040r",
+      "file": "tests/test_os040_restart.js",
+      "classification": "stable",
+      "suite": "browser",
+      "timeoutSeconds": 120,
+      "preflight": "chromium",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "OS040R_REPORT",
+        "expectedCount": 9,
+        "complianceField": "hasOwnVisualSignal",
+        "expectedValue": true
+      }
+    },
+    {
+      "id": "os042r",
+      "file": "tests/test_os042_restart.js",
+      "classification": "stable",
+      "suite": "browser",
+      "timeoutSeconds": 120,
+      "preflight": "chromium",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "OS042R_REPORT",
+        "expectedCount": 1,
+        "complianceField": "documentMetrics.hasHorizontalOverflow",
+        "expectedValue": false
+      }
+    },
+    {
+      "id": "os044r",
+      "file": "tests/test_os044_restart.js",
+      "classification": "stable",
+      "suite": "browser",
+      "timeoutSeconds": 120,
+      "preflight": "chromium",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "OS044R_REPORT",
+        "expectedCount": 26,
+        "complianceField": "compliant",
+        "expectedValue": true
+      }
+    },
+    {
+      "id": "os049",
+      "file": "tests/test_os049.js",
+      "classification": "experimental",
+      "suite": "browser",
+      "timeoutSeconds": 120,
+      "preflight": "chromium",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "OS049_REPORT",
+        "expectedCount": 14,
+        "complianceField": "compliant",
+        "expectedValue": true
+      }
+    },
+    {
+      "id": "os049-e2e",
+      "file": "tests/test_os049_e2e.js",
+      "classification": "experimental",
+      "suite": "browser",
+      "timeoutSeconds": 120,
+      "preflight": "chromium",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "OS049E2E_REPORT",
+        "expectedCount": 2,
+        "complianceField": "compliant",
+        "expectedValue": true
+      }
+    }
+  ]
+}
