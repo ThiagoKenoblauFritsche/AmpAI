@@ -39,6 +39,10 @@ Write-Host "[2/3] Convertendo extensoes para .TXT (Exigencia NotebookLM)..." -Fo
 # O Rename-Item no Windows preserva a data original do arquivo.
 Get-ChildItem -Path $TempStaging -Recurse -File | Where-Object { $_.Extension -ne ".txt" } | ForEach-Object {
     $newName = [io.path]::ChangeExtension($_.Name, ".txt")
+    $newPath = Join-Path $_.DirectoryName $newName
+    if (Test-Path -LiteralPath $newPath) {
+        Remove-Item -LiteralPath $newPath -Force
+    }
     Rename-Item -Path $_.FullName -NewName $newName -Force
 }
 
