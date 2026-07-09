@@ -21,19 +21,47 @@ const Result = {
 
 class CurtoCircuitoIEC60909 {
     /**
-     * Valida os limites físicos dos parâmetros de entrada (Metodologia ZOMBIES).
-     * @returns {Object|null} Result.fail(...) se inválido, ou null se os parâmetros estão OK.
+     * Fábrica de erro no formato Problem Details (RFC 7807) do contrato M16 (INC-001).
+     * Emite SOMENTE code + params (agnóstico de idioma); status fixo 422; severity 'error'.
+     * @returns {Object} { type, title, status, code, params, severity }
+     */
+    static _problemaM16(code, params) {
+        return {
+            type: `https://ampai.dev/problems/${code}`,
+            title: code,
+            status: 422,
+            code,
+            params,
+            severity: 'error',
+        };
+    }
+
+    /**
+     * Valida as entradas de I''k conforme o contrato científico M16 (IEC 60909).
+     * Ordem obrigatória: finitude(Un) → finitude(Zk) → finitude(c) → Un>0 → Zk>0 →
+     * c ∈ {0.90, 0.95, 1.00, 1.05, 1.10}. Retorna um Problem Details, ou null se válido.
+     * Number.isFinite bloqueia ausência, texto não numérico, NaN e ±Infinity sem coerção.
+     * @returns {Object|null}
      */
     static _validarLimitesFisicos(Un, Zk, c) {
-        if (typeof Un !== 'number' || Un <= 0) {
-            return Result.fail('[IEC 60909] Violação Física: A tensão nominal (Un) deve ser maior que 0 Volts.');
+        const cPermitidos = [0.90, 0.95, 1.00, 1.05, 1.10];
+
+        // 1-3. Estrutura/finitude (ausente, texto não numérico, NaN, ±Infinity).
+        if (!Number.isFinite(Un)) return this._problemaM16('IEC60909-M16-001', { field: 'Un', reason: 'not_finite' });
+        if (!Number.isFinite(Zk)) return this._problemaM16('IEC60909-M16-001', { field: 'Zk', reason: 'not_finite' });
+        if (!Number.isFinite(c))  return this._problemaM16('IEC60909-M16-001', { field: 'c',  reason: 'not_finite' });
+
+        // 4. Tensão nominal estritamente positiva.
+        if (Un <= 0) return this._problemaM16('IEC60909-M16-002', { field: 'Un', reason: 'non_positive' });
+
+        // 5. Impedância equivalente estritamente positiva.
+        if (Zk <= 0) return this._problemaM16('IEC60909-M16-003', { field: 'Zk', reason: 'non_positive' });
+
+        // 6. Fator de tensão c pertence exatamente ao conjunto permitido pela IEC 60909.
+        if (!cPermitidos.some((valor) => valor === c)) {
+            return this._problemaM16('IEC60909-M16-004', { field: 'c', reason: 'not_in_allowed_set', allowed: cPermitidos });
         }
-        if (typeof Zk !== 'number' || Zk <= 0) {
-            return Result.fail('[IEC 60909] Violação Física: A impedância equivalente (Zk) deve ser maior que 0 Ohms.');
-        }
-        if (typeof c !== 'number' || c <= 0 || c > 1.1) {
-            return Result.fail('[IEC 60909] Violação Física: O fator de tensão (c) deve estar no intervalo (0, 1.1].');
-        }
+
         return null;
     }
 
@@ -45,8 +73,8 @@ class CurtoCircuitoIEC60909 {
      * @returns {Object} Result Pattern: { isSuccess, value, error }.
      */
     static calcularCorrenteInicialSimetrica(Un, Zk, c) {
-        const erro = this._validarLimitesFisicos(Un, Zk, c);
-        if (erro) return erro;
+        const problema = this._validarLimitesFisicos(Un, Zk, c);
+        if (problema) return Result.fail(problema);
 
         // Ik'' = (c * Un) / (sqrt(3) * Zk)
         const raizDeTres = Math.sqrt(3);
