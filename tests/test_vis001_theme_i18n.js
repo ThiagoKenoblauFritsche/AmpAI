@@ -70,6 +70,25 @@ async function waitForApp(page) {
   ), { timeout: 15000 });
 }
 
+async function prepareApp(page, { theme = 'dark', language = 'en' } = {}) {
+  await page.goto(page.__vis001Url, { waitUntil: 'domcontentloaded', timeout: 30000 });
+  await page.evaluate(({ nextTheme, nextLanguage }) => {
+    localStorage.setItem('ampai-theme', nextTheme);
+    localStorage.setItem('ampai-lang', nextLanguage);
+  }, { nextTheme: theme, nextLanguage: language });
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 30000 });
+  await page.waitForFunction(() => (
+    document.querySelector('#theme-toggle')
+    && document.querySelector('#theme-icon')
+    && typeof window.setLanguage === 'function'
+    && typeof window.switchModule === 'function'
+    && typeof window.switchCablingCard === 'function'
+    && typeof window.calculateCablingMT === 'function'
+    && typeof window.renderCardMT === 'function'
+    && document.querySelector('#btn-mt')
+  ), { timeout: 15000 });
+}
+
 function normalizeText(value) {
   return String(value || '')
     .normalize('NFD')
@@ -80,11 +99,7 @@ function normalizeText(value) {
 }
 
 async function collectThemeReport(page) {
-  await page.evaluate(() => {
-    localStorage.setItem('ampai-theme', 'dark');
-    localStorage.setItem('ampai-lang', 'en');
-  });
-  await waitForApp(page);
+  await prepareApp(page, { theme: 'dark', language: 'en' });
   await page.waitForFunction(() => !document.documentElement.hasAttribute('data-theme'), { timeout: 10000 });
 
   return page.evaluate(() => {
@@ -124,11 +139,7 @@ async function collectThemeReport(page) {
 }
 
 async function collectCriteriaTranslationReport(page) {
-  await page.evaluate(() => {
-    localStorage.setItem('ampai-theme', 'dark');
-    localStorage.setItem('ampai-lang', 'en');
-  });
-  await waitForApp(page);
+  await prepareApp(page, { theme: 'dark', language: 'en' });
 
   return page.evaluate(async () => {
     const waitFrames = (count) => new Promise((resolve) => {
