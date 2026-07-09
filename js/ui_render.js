@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ═══════════════════════════════════════════════════════════════════════════
  * AmpAI — ui_render.js  (O.S. #006-TDD + O.S. #012)
  * Renderizador Modular: BT e MT
@@ -22,7 +22,7 @@ window.isRendering = false; // Flag Global Anti-Loop
 window.AmpAI_State = window.AmpAI_State || {}; // Estado global dos seletores
 
 const _ok  = () => '<span style="color:var(--success);font-weight:700;">✓ OK</span>';
-const _dom = () => '<span style="color:var(--accent);font-weight:700;">★ Dominante</span>';
+const _dom = () => `<span style="color:var(--accent);font-weight:700;">★ ${_tbt('mt.tbl.statusDominant')}</span>`;
 const _err = () => '<span style="color:var(--danger);font-weight:700;">✗ Excedido</span>';
 const _fmt = (v, d = 2) => {
     const n = Number(v);
@@ -453,6 +453,7 @@ const _btI18n = {
         'mt.tbl.criterion':    'Critério',
         'mt.tbl.calculated':   'Seção Calculada',
         'mt.tbl.status':       'Status',
+        'mt.tbl.statusDominant': 'Dominante',
         'mt.tbl.ampacS1':      'Ampacidade (S₁)',
         'mt.tbl.voltdropS2':   'Queda de Tensão (S₂)',
         'mt.tbl.shortcircS3':  'Curto-Circuito Condutor (S₃)',
@@ -512,6 +513,7 @@ const _btI18n = {
         'mt.tbl.criterion':    'Criterion',
         'mt.tbl.calculated':   'Calculated Section',
         'mt.tbl.status':       'Status',
+        'mt.tbl.statusDominant': 'Dominant',
         'mt.tbl.ampacS1':      'Ampacity (S₁)',
         'mt.tbl.voltdropS2':   'Voltage Drop (S₂)',
         'mt.tbl.shortcircS3':  'Conductor Short-Circuit (S₃)',
@@ -571,6 +573,7 @@ const _btI18n = {
         'mt.tbl.criterion':    'Criterio',
         'mt.tbl.calculated':   'Sección Calculada',
         'mt.tbl.status':       'Estado',
+        'mt.tbl.statusDominant': 'Dominante',
         'mt.tbl.ampacS1':      'Amperaje (S₁)',
         'mt.tbl.voltdropS2':   'Caída de Tensión (S₂)',
         'mt.tbl.shortcircS3':  'Cortocircuito Conductor (S₃)',
@@ -1357,8 +1360,8 @@ window.renderCardMT = function(r) {
             </div>
 
             <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1rem; margin-bottom:1rem;">
-                <div style="font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">${_tbt('mt.criteria.title')}</div>
                 <table class="tech-table table-results">
+                    <caption style="text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">${_tbt('mt.criteria.title')}</caption>
                     <thead><tr><th>${_tbt('mt.tbl.criterion')}</th><th>${_tbt('mt.tbl.calculated')}</th><th>${_tbt('mt.tbl.status')}</th></tr></thead>
                     <tbody>
                         <tr><td>${_tbt('mt.tbl.ampacS1')}</td><td>${p.S1} mm²</td><td>${p.dominant === 'AMPACIDADE' ? _dom() : _ok()}</td></tr>
