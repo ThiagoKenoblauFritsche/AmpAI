@@ -3524,19 +3524,28 @@
             if (typeof window.switchModule === 'function') window.switchModule(savedMod);
 
             const themeToggle = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
             const root = document.getElementById('html-root');
-            
+
             // Check saved theme or default to dark
             const savedTheme = localStorage.getItem('ampai-theme') || 'dark';
-            
+
+            // O.S. VIS-006 — lucide.createIcons() SUBSTITUI o elemento <i data-lucide>
+            // pelo <svg> renderizado (preservando id/class). Cachear themeIcon fora
+            // desta função captura só o elemento original: após a 1ª substituição a
+            // referência fica órfã, e cliques seguintes mutam um nó desconectado do
+            // DOM sem efeito visual. Buscar o elemento vivo a cada chamada corrige isso.
+            // Reprocessar um <svg> já convertido faz o Lucide mesclar a classe
+            // "lucide-<icone-anterior>" residual na nova — removê-la antes de
+            // cada chamada garante que só a classe do ícone atual permaneça.
             const applyTheme = (theme) => {
+                const themeIcon = document.getElementById('theme-icon');
+                if (themeIcon) themeIcon.removeAttribute('class');
                 if (theme === 'light') {
                     root.setAttribute('data-theme', 'light');
-                    themeIcon.setAttribute('data-lucide', 'moon');
+                    if (themeIcon) themeIcon.setAttribute('data-lucide', 'moon');
                 } else {
                     root.removeAttribute('data-theme');
-                    themeIcon.setAttribute('data-lucide', 'sun');
+                    if (themeIcon) themeIcon.setAttribute('data-lucide', 'sun');
                 }
                 if (window.lucide) {
                     lucide.createIcons();
