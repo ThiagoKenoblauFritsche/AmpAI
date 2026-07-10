@@ -1,18 +1,19 @@
 ---
 tags: [engenharia, rnc-c, canonico, iec60909, fundacao]
-versao: 1.2.1
+versao: 1.2.2
 status: ratificado
 autor: "@Engenheiro_Eletricista (AmpAI Governança v7.0)"
 data: 2026-07-06
 data_ratificacao: 2026-07-07
 autoridade_ratificacao: "@Arquiteto_Chefe_e_Governanca"
 baseline_ratificacao: 641d8ab9705630da5180eae7764b272f6a2e3867
+baseline_m16_green: 433b311fd7bd529d4785e95a146a5c09099a33d4
 rnc_classe: RNC-C (canônico — ratificado)
 motores: [M00, M01, M02a, M02b, M03, M04, M15]
-revisao: "v1.1 devolvida (11 bloqueios); v1.2 encerrou os 11; v1.2.1 aplica os 5 ajustes residuais da 2ª auditoria (F14 sem l, denominador só IDs Mxx, M01 [0,90;1,10] vs M16 (0;1,10], natureza dos bloqueios M15/θe, testes M16 c<0,90 e c=0,93, KT mín 6.3.3+7.1.2)"
+revisao: "v1.1 devolvida (11 bloqueios); v1.2 encerrou os 11; v1.2.1 aplica os 5 ajustes residuais da 2ª auditoria; v1.2.2 registra M16 GREEN pós-INC-001-04-R, sem promoção a stable"
 ---
 
-# RNC-C Canônico — Fundação IEC 60909: M00–M04 e M15 · v1.2.1
+# RNC-C Canônico — Fundação IEC 60909: M00–M04 e M15 · v1.2.2
 
 > **Status:** RATIFICADO como RNC-C canônico pela Governança em 2026-07-07, sobre a baseline `641d8ab9705630da5180eae7764b272f6a2e3867`.
 >
@@ -20,7 +21,9 @@ revisao: "v1.1 devolvida (11 bloqueios); v1.2 encerrou os 11; v1.2.1 aplica os 5
 >
 > **v1.2 — resposta à 1ª auditoria.** Esta versão distingue rigorosamente **o que os 39 testes exercem** do **que é proposto sem teste**, classifica a natureza de cada limite, e alinha cada regra ao comportamento real de `js/core_curto_circuito.js` verificado linha a linha.
 >
-> **Determinações vinculantes da ratificação:** $U_n$ é a tensão nominal do sistema; no perfil IEC atual, $c \in \{0{,}90; 0{,}95; 1{,}00; 1{,}05; 1{,}10\}$; qualquer valor fora desse conjunto deve ser bloqueado. M16 permanece `implementado_sem_validacao` até concluir RED→GREEN independente.
+> **Determinações vinculantes da ratificação:** $U_n$ é a tensão nominal do sistema; no perfil IEC atual, $c \in \{0{,}90; 0{,}95; 1{,}00; 1{,}05; 1{,}10\}$; qualquer valor fora desse conjunto deve ser bloqueado. M16 está `GREEN` por validação independente do INC-001-04-R, mas ainda não está `stable`.
+>
+> **Ressalva obrigatória:** M16 está GREEN por validação independente do INC-001, mas ainda não está stable porque a suíte específica `tests/test_inc001_m16.js` não foi versionada no manifesto do Gate Consolidado. Promoção para stable exige O.S. própria conforme AmpAI_Gate_Regressao.md.
 
 ---
 
@@ -46,8 +49,9 @@ Toda regra deste documento carrega **duas etiquetas**:
 | **TESTADO** | Exercido por um dos 39 testes `stable` (ID do teste indicado). Faz parte do contrato blindado. |
 | **COD** | Codificado em `js/core_curto_circuito.js`, porém **sem teste específico** — não é regressão-protegido. |
 | **PROP** | **Proposto**: nem codificado, nem testado. Requer O.S. + teste RED antes de virar contrato. |
+| **VALIDADO_GREEN** | Exercido por teste específico aprovado no ciclo RED→GREEN independente, mas ainda fora do manifesto `stable`. |
 
-> **Regra de governança desta v1.2:** nenhuma linha `PROP` pode ser tratada como capacidade existente. Os seis motores `stable` são definidos **exclusivamente** pelas linhas `TESTADO`.
+> **Regra de governança desta v1.2.2:** nenhuma linha `PROP` pode ser tratada como capacidade existente. Os seis motores `stable` são definidos **exclusivamente** pelas linhas `TESTADO`. Linhas `VALIDADO_GREEN` comprovam GREEN independente, mas não equivalem a `stable`.
 
 ---
 
@@ -192,7 +196,7 @@ $$R_k = \sum_i R_i, \quad X_k = \sum_i X_i \qquad |\underline{Z}_k| = \sqrt{R_k^
 |---|---|
 | Unidades ANSI/NEC (AWG, kcmil, ft, °F) | Viola Restrição 1 do cérebro do Engenheiro |
 | $K_T$ em trafo de grupo gerador | Dupla correção → $I_k''$ incorreta (bloqueado, TESTADO B·Gov) |
-| $c > 1{,}10$ (em M01/M16) | Fora da Tabela 1 (M01 bloqueia; M16 bloqueia >1,10) |
+| $c \notin \{0{,}90;0{,}95;1{,}00;1{,}05;1{,}10\}$ em M16 | Fora do conjunto discreto da Tabela 1; M16 bloqueia e retorna erro estruturado |
 | $u_{Rr} > u_{kr}$ | $X_T$ imaginário (bloqueado, TESTADO B·E·crit) |
 | Somar $\underline{Z}$ de níveis de tensão distintos | Resultado sem significado físico |
 | $I_{kQ}'' \le 0$; $S_{rT}\le0$; $S_{rG}\le0$; $q_n\le0$ | Divisão por zero (todos bloqueados e TESTADOS) |
@@ -346,28 +350,30 @@ $$R_L = 15{,}43 \cdot [1+0{,}004(90-20)] = 19{,}75\ \text{m}\Omega \quad(\theta_
 **G06 — M15** (TESTADO E·M): $\underline{Z}_{Qt}+\underline{Z}_{TK}+\underline{Z}_L$
 $$R_k=0{,}053+4{,}71+0{,}416=5{,}18\ \text{m}\Omega; \; X_k=0{,}531+15{,}70+0{,}136=16{,}37\ \text{m}\Omega; \; |\underline{Z}_k|=17{,}17\ \text{m}\Omega$$
 
-### 9.3 Testes PROPOSTOS para M16 (`implementado_sem_validacao` — ainda sem teste)
+### 9.3 Testes validados para M16 no INC-001 (`GREEN` — ainda não `stable`)
 
-> ⚠️ **Estes casos são `PROP`.** M16 (`calcularCorrenteInicialSimetrica(Un, Zk, c)`) valida hoje apenas: $U_n>0$, $Z_k>0$, $c\in(0;\,1{,}10]$.
+> **Estado pós-GREEN:** M16 (`calcularCorrenteInicialSimetrica(Un, Zk, c)`) concluiu RED→GREEN independente no INC-001. Evidências mínimas registradas: INC-001-01 / INC-001-01-R (BDD científico e memorial aprovados), PR #22 (motor M16 corrigido), PR #24 (executor M16 versionado), QA independente com `tests/test_inc001_m16.js` **24/24 conformes, exit 0**, regressão `tests/core_curto_circuito.test.js` **39/39, exit 0**, merge `433b311fd7bd529d4785e95a146a5c09099a33d4`, Gate shadow pós-merge #28988541103 **SUCCESS**.
+>
+> **Ressalva obrigatória:** M16 está GREEN por validação independente do INC-001, mas ainda não está stable porque a suíte específica `tests/test_inc001_m16.js` não foi versionada no manifesto do Gate Consolidado. Promoção para stable exige O.S. própria conforme AmpAI_Gate_Regressao.md.
 
-**Contraste explícito de validação de $c$ (não há validação M00 uniforme):**
+**Contraste explícito de validação de $c$ (gap antigo encerrado no INC-001):**
 
-| Motor | Faixa de $c$ aceita hoje | Observação |
+| Motor | Faixa/conjunto de $c$ aceito no estado atual | Observação |
 |---|---|---|
-| **M01** (`calcularImpedanciaRede`) | **$c \in [0{,}90;\ 1{,}10]$** (banda fechada; bloqueia fora) | testado só no topo (A·B2) |
-| **M16** (`calcularCorrenteInicialSimetrica`) | **$c \in (0;\ 1{,}10]$** (aceita, p.ex., $c=0{,}5$ ou $c=0{,}85$) | **não impõe $c \ge 0{,}90$** |
+| **M01** (`calcularImpedanciaRede`) | **$c \in [0{,}90;\ 1{,}10]$** (banda fechada; bloqueia fora) | testado só no topo pelos 39 `stable` (A·B2) |
+| **M16** (`calcularCorrenteInicialSimetrica`) | **$c \in \{0{,}90;\ 0{,}95;\ 1{,}00;\ 1{,}05;\ 1{,}10\}$** | validado no INC-001; valores não tabelados são bloqueados |
 
-> **Perfil IEC do fator $c$ (a impor no M16, `PROP`):** no perfil normativo atual (Tabela 1), $c$ pertence ao **conjunto discreto** $\{0{,}90;\ 0{,}95;\ 1{,}00;\ 1{,}05;\ 1{,}10\}$. Valores fora deste conjunto (mesmo dentro de $[0{,}90;1{,}10]$, como $c=0{,}93$) **não são tabelados e devem ser bloqueados**. Hoje M16 os aceita — gap conhecido e regra `PROP`.
+> **Histórico do gap:** antes do INC-001, M16 aceitava valores como $c=0{,}85$ e $c=0{,}93$. Esse comportamento era um gap conhecido. No estado atual, $c=0{,}85$, $c=0{,}93$ e $c=1{,}15$ retornam erro estruturado Problem Details/RFC 7807.
 
-| Caso | Entrada | Saída esperada | Tipo | Regra no motor atual | Teste específico |
-|---|---|---|---|---|---|
-| TC-M16-01 | $U_n = 400$ V*, $Z_k = 17{,}17$ mΩ, $c = 1{,}05$ | **$I_k'' = 14{,}1227$ kA** | Feliz (gabarito Schneider) | **COD** | **PROP** |
-| TC-M16-02 | $U_n = 0$, $Z_k = 0{,}017$, $c = 1{,}05$ | bloqueio ($U_n \le 0$) | FÍS | **COD** | **PROP** |
-| TC-M16-03 | $U_n = 410$, $Z_k = 0$, $c = 1{,}05$ | bloqueio ($Z_k \le 0$) | FÍS | **COD** | **PROP** |
-| TC-M16-04 | $U_n = 410$, $Z_k = 0{,}017$, $c = 1{,}15$ | bloqueio ($c > 1{,}10$) | NORM (topo Tabela 1) | **COD** | **PROP** |
-| TC-M16-05 | $U_n = 410$ V**, $Z_k = 17{,}0$ mΩ, $c = 0{,}95$ | **$I_k'' = 13{,}2281$ kA** | Feliz (mínima ilustrativa) | **COD** | **PROP** |
-| **TC-M16-06** | $U_n = 410$, $Z_k = 0{,}017$, **$c = 0{,}85$** ($< 0{,}90$) | **bloqueio** (abaixo da Tabela 1) | NORM (base Tabela 1) | **PROP — hoje aceita** | **PROP** |
-| **TC-M16-07** | $U_n = 410$, $Z_k = 0{,}017$, **$c = 0{,}93$** (não tabelado) | **bloqueio** (valor não pertence ao conjunto) | NORM (perfil discreto) | **PROP — hoje aceita** | **PROP** |
+| Caso | Entrada | Saída esperada | Tipo | Estado atual |
+|---|---|---|---|---|
+| TC-M16-01 | $U_n = 400$ V*, $Z_k = 17{,}17$ mΩ, $c = 1{,}05$ | **$I_k'' = 14{,}1227$ kA** | Feliz (gabarito Schneider) | **VALIDADO_GREEN** |
+| TC-M16-02 | $U_n = 0$, $Z_k = 0{,}017$, $c = 1{,}05$ | bloqueio ($U_n \le 0$) com erro estruturado | FÍS | **VALIDADO_GREEN** |
+| TC-M16-03 | $U_n = 410$, $Z_k = 0$, $c = 1{,}05$ | bloqueio ($Z_k \le 0$) com erro estruturado | FÍS | **VALIDADO_GREEN** |
+| TC-M16-04 | $U_n = 410$, $Z_k = 0{,}017$, $c = 1{,}15$ | bloqueio ($c$ fora do conjunto) com erro estruturado | NORM | **VALIDADO_GREEN** |
+| TC-M16-05 | $U_n = 410$ V**, $Z_k = 17{,}0$ mΩ, $c = 0{,}95$ | **$I_k'' = 13{,}2281$ kA** | Feliz (mínima ilustrativa) | **VALIDADO_GREEN** |
+| **TC-M16-06** | $U_n = 410$, $Z_k = 0{,}017$, **$c = 0{,}85$** ($< 0{,}90$) | **bloqueio** (abaixo da Tabela 1) com erro estruturado | NORM | **VALIDADO_GREEN** |
+| **TC-M16-07** | $U_n = 410$, $Z_k = 0{,}017$, **$c = 0{,}93$** (não tabelado) | **bloqueio** (valor não pertence ao conjunto) com erro estruturado | NORM | **VALIDADO_GREEN** |
 
 \* **TC-M16-01:** $U_n = 400$ V (tensão **nominal do sistema**, gabarito Schneider), não 410 V.
 $$I_k'' = \frac{1{,}05 \times 400}{\sqrt3 \times 17{,}17\times10^{-3}} = \frac{420}{0{,}0297393} = 14\,122{,}7\ \text{A} = 14{,}1227\ \text{kA}$$
@@ -375,9 +381,10 @@ $$I_k'' = \frac{1{,}05 \times 400}{\sqrt3 \times 17{,}17\times10^{-3}} = \frac{4
 \*\* **TC-M16-05 (aritmética):** com os dados declarados ($U_n=410$ V ilustrativo, $Z_k=17{,}0$ mΩ):
 $$I_k'' = \frac{0{,}95 \times 410}{\sqrt3 \times 17{,}0\times10^{-3}} = \frac{389{,}5}{0{,}0294449} = 13\,228{,}1\ \text{A} = 13{,}2281\ \text{kA} \quad(\text{v1.1 dizia 13,15 — errado})$$
 
-> **Determinações vinculantes para o QA ao escrever o RED de M16:**
+> **Determinações validadas pelo INC-001:**
 > 1. Usar $U_n$ **nominal do sistema** — 400 V no gabarito Schneider — e não a tensão de placa do enrolamento.
-> 2. Exigir $c \in \{0{,}90;0{,}95;1{,}00;1{,}05;1{,}10\}$. TC-M16-06 e TC-M16-07 devem bloquear. A adequação permanece `PROP` até o RED→GREEN.
+> 2. Exigir $c \in \{0{,}90;0{,}95;1{,}00;1{,}05;1{,}10\}$. TC-M16-06 e TC-M16-07 bloqueiam. $c=1{,}15$ também bloqueia por estar fora do conjunto.
+> 3. Bloquear entradas estruturais inválidas e emitir erro estruturado Problem Details/RFC 7807.
 
 ---
 
@@ -400,13 +407,14 @@ Resposta direta ao ponto 10 da auditoria — cada limite recebe natureza + justi
 
 ---
 
-## Estado Confirmado (alinhado à 2ª auditoria)
+## Estado Confirmado (pós-GREEN INC-001)
 
 - **M01, M02a, M02b, M03, M04, M15:** `stable` dentro do contrato **atualmente testado** (linhas TESTADO). ✔
 - Suíte: **39 verdes, exit 0**. ✔
-- **M16:** `implementado_sem_validacao` — método existe; testes 9.3 são `PROP`. ✔
+- **M16:** `GREEN` — método validado no INC-001 por `tests/test_inc001_m16.js` com **24/24 conformes, exit 0**; TC-M16-01 a TC-M16-07 são `VALIDADO_GREEN`. ✔
+- **M16 não é `stable`:** a suíte específica ainda não está no manifesto do Gate Consolidado; promoção exige O.S. própria conforme `docs/AmpAI_Gate_Regressao.md`. ✔
 - Comentários "FASE RED" no arquivo de teste = **dívida documental** (QA/CTO), não estado funcional. ✔
 
 ---
 
-*RNC-C canônico v1.2.1 — `docs/engenharia/RNC-C_Fundacao_M00_M04_M15.md` — produzido pelo @Engenheiro_Eletricista e ratificado por `@Arquiteto_Chefe_e_Governanca` em 2026-07-07, baseline `641d8ab9705630da5180eae7764b272f6a2e3867`. A classificação de M16 permanece `implementado_sem_validacao`; TC-M16-01 a TC-M16-07 permanecem testes `PROP` até execução formal do INC-001.*
+*RNC-C canônico v1.2.2 — `docs/engenharia/RNC-C_Fundacao_M00_M04_M15.md` — produzido pelo @Engenheiro_Eletricista e ratificado por `@Arquiteto_Chefe_e_Governanca` em 2026-07-07, baseline `641d8ab9705630da5180eae7764b272f6a2e3867`. Atualização documental INC-001-04-R em 2026-07-09 sobre `main@433b311fd7bd529d4785e95a146a5c09099a33d4`: M16 = `GREEN`, não `stable`; TC-M16-01 a TC-M16-07 = `VALIDADO_GREEN`; PR #24 versionou `tests/test_inc001_m16.js`; Gate shadow pós-merge #28988541103 SUCCESS.*

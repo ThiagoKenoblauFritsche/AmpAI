@@ -1,16 +1,18 @@
 ---
 tags: [engenharia, normas, iec60909, cobertura, governanca]
-versao: 1.2.1
+versao: 1.2.2
 status: ratificado
 autor: "@Engenheiro_Eletricista (AmpAI Governança v7.0)"
 data: 2026-07-06
 data_ratificacao: 2026-07-07
 autoridade_ratificacao: "@Arquiteto_Chefe_e_Governanca"
 baseline_ratificacao: 641d8ab9705630da5180eae7764b272f6a2e3867
-revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditoria) — denominador só IDs Mxx e contraste M01 [0,90;1,10] vs M16 (0;1,10]"
+baseline_m16_green: 433b311fd7bd529d4785e95a146a5c09099a33d4
+data_atualizacao_m16_green: 2026-07-09
+revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditoria) — denominador só IDs Mxx e contraste M01 [0,90;1,10] vs M16 (0;1,10]; v1.2.2 registra M16 GREEN pós-INC-001-04-R, sem promoção a stable"
 ---
 
-# Matriz de Cobertura Normativa — Família IEC 60909 · v1.2.1
+# Matriz de Cobertura Normativa — Família IEC 60909 · v1.2.2
 
 > **Fonte primária:** IEC 60909-0:2016 — *Short-circuit currents in three-phase a.c. systems — Part 0: Calculation of currents*
 > **Classificação da fonte:** RNC-P (`docs/normas/IEC_60909_Short_Circuit/IEC 60909-0-2016.md`)
@@ -19,6 +21,8 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 > ⚠️ **Aviso de Governança:** Esta matriz descreve o domínio computacional da norma e o estado de implementação no AmpAI. Ela própria é um documento de rastreabilidade, **não um RNC-C**. Candidatos RNC-C para cada motor devem ser produzidos, auditados e ratificados separadamente antes de qualquer nova implementação.
 >
 > **Selo documental:** ratificada para circulação operacional em 2026-07-07 por `@Arquiteto_Chefe_e_Governanca`, sobre a baseline `641d8ab9705630da5180eae7764b272f6a2e3867`. O RNC-C canônico da fundação é `docs/engenharia/RNC-C_Fundacao_M00_M04_M15.md`.
+>
+> **Atualização INC-001-04-R / M16:** em 2026-07-09, sobre `main@433b311fd7bd529d4785e95a146a5c09099a33d4`, M16 passou de `implementado_sem_validacao` para `GREEN` por validação independente do INC-001. **M16 não está `stable`**: a suíte específica `tests/test_inc001_m16.js` ainda não foi promovida ao manifesto do Gate Consolidado.
 
 ---
 
@@ -43,9 +47,10 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 |---------|--------|-----------|
 | `js/core_curto_circuito.js` | **Existe** (264 linhas, ~13 KB) | Lido e auditado |
 | `tests/core_curto_circuito.test.js` | 39 testes, exit 0 | Manifesto `stable`; 39 verdes |
+| `tests/test_inc001_m16.js` | 24 testes, exit 0 | GREEN independente INC-001; ainda fora do manifesto `stable` |
 | `qa/test-manifest.json` | Correto | Exige 39; protocolo `legacy-zombies` |
 | Métodos testados pelos 39 | `calcularImpedanciaRede`, `calcularImpedanciaTransformador`, `calcularImpedanciaGerador`, `calcularImpedanciaCabo`, `agregarImpedanciaCurto` | Auditoria de código |
-| Método sem teste específico | `calcularCorrenteInicialSimetrica(Un, Zk, c)` | Existe em `js/`; não referenciado nos 39 testes |
+| Método validado no INC-001 | `calcularCorrenteInicialSimetrica(Un, Zk, c)` | `tests/test_inc001_m16.js`: 24/24 conformes; ainda não `stable` |
 
 ---
 
@@ -88,7 +93,7 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 | IEC 60909-0:2016 | 7.1.1 | Visão geral: topologia da falta, tabela de importância (Tabela 2), critério de seleção do tipo de falta | Orientação para todos os cálculos; seleção da falta dominante | Tipo de falta, diagrama topológico do sistema | Corrente dominante identificada; tipo de curto selecionado | Todos M01–M11 | `não estudado` | Figura 7 e Tabela 2 da norma | Requer conhecimento completo das impedâncias de sequência antes da seleção |
 | IEC 60909-0:2016 | 7.1.2 | $I_{k,\max}''$ e $I_{k,\min}''$: critérios de escolha de $c$ e de temperatura | Dimensionamento de proteções (máx) e verificação de sensibilidade (mín) | $c_{\max}$/$c_{\min}$; temperatura de resistências para mínima | $I_{k,\max}''$ (A), $I_{k,\min}''$ (A) | M00, M01–M04, M15 | `não estudado` | Seção 7.1.2 | Corrente mínima exige correção de temperatura em todas as resistências do circuito |
 | IEC 60909-0:2016 | 7.1.3 | Contribuição de motores assíncronos a $I_k''$ (threshold de inclusão) | Redes industriais com carga motora significativa | $\sum P_{rM}$ (W), $U_n$ (V), comparação com threshold | Correção aditiva de $I_k''$ por contribuição motora (A) | M09, M16 | `não estudado` | Seção 7.1.3 | Threshold de inclusão ($\ge 1\%$ de $S_{kQ}$) deve ser premissa declarada explicitamente |
-| IEC 60909-0:2016 | 7.2.1 | **[M16]** $I_k''$ trifásico simétrico — alimentação simples e múltipla em redes radiais | Falta trifásica (caso de maior corrente em sistemas equilibrados sem geradores próximos) | $\lvert\underline{Z}_k\rvert$ (Ω), $c$, $U_n$ (V) | $I_k''$ (A) — corrente simétrica inicial trifásica | M00, M15 (e M01–M04 ou subconjunto aplicável ao perfil) | `implementado_sem_validacao` — método `calcularCorrenteInicialSimetrica(Un, Zk, c)` existe em `js/core_curto_circuito.js`; sem teste específico aprovado pelo QA | CT-158 Schneider; Exemplo Anexo B da norma | Interface atual usa args posicionais $(U_n, Z_k, c)$; não integrada ao pipeline de objeto da M15; nenhum teste de caminho triste específico |
+| IEC 60909-0:2016 | 7.2.1 | **[M16]** $I_k''$ trifásico simétrico — alimentação simples e múltipla em redes radiais | Falta trifásica (caso de maior corrente em sistemas equilibrados sem geradores próximos) | $\lvert\underline{Z}_k\rvert$ (Ω), $c$, $U_n$ (V) | $I_k''$ (A) — corrente simétrica inicial trifásica | M00, M15 (e M01–M04 ou subconjunto aplicável ao perfil) | `GREEN` — método `calcularCorrenteInicialSimetrica(Un, Zk, c)` validado no INC-001 por `tests/test_inc001_m16.js` (24/24 conformes, exit 0); conjunto discreto de $c$ imposto $\{0{,}90;0{,}95;1{,}00;1{,}05;1{,}10\}$; TC-M16-01 a TC-M16-07 exercidos; entradas estruturais inválidas bloqueadas; erro estruturado Problem Details/RFC 7807 validado; **ainda não `stable`** | CT-158 Schneider; Exemplo Anexo B da norma; INC-001-01/01-R, PR #22, PR #24, QA independente | Interface atual usa args posicionais $(U_n, Z_k, c)$; promoção a `stable` pendente de O.S. própria e inclusão no manifesto do Gate Consolidado |
 | IEC 60909-0:2016 | 7.2.2 | **[M17a]** $I_k''$ trifásico dentro do grupo gerador **com** OLTC | Falta entre gerador e trafo de bloco com comutador | Análogo a M16 + dados de tap | $I_k''$ local (A) | M07, M15 | `não estudado` | Figura 11 da norma | Curto interno ao grupo gerador; raramente exigido em projetos MT/BT |
 | IEC 60909-0:2016 | 7.2.3 | **[M17b]** $I_k''$ trifásico dentro do grupo gerador **sem** OLTC | Análogo a M17a para transformadores fixos | Análogo a M08 | $I_k''$ local (A) | M08, M15 | `não estudado` | Figura 11 da norma | Idem M17a |
 | IEC 60909-0:2016 | 7.3 | **[M19]** $I_k''$ bifásico sem terra | Falta fase-fase sem envolvimento do condutor de terra | $\underline{Z}_{(1)}$, $\underline{Z}_{(2)}$ dos componentes | $I_k''$ bifásico (A) | 5.3.2, M12–M14 | `não estudado` | Seção 7.3 da norma | Exige $\underline{Z}_{(2)}$ de todos os equipamentos no caminho da falta |
@@ -164,9 +169,9 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 NÍVEL 0 — Fundação normativa
 │
 ├── [M00] Fator c — Tabela 1 (5.3.1)
-│   NÃO há validação M00 uniforme. Contraste das faixas de c aceitas hoje:
+│   NÃO há validação M00 uniforme. Contraste das regras de c aceitas no estado atual:
 │     M01 (calcularImpedanciaRede): c ∈ [0,90; 1,10] (banda fechada; testada só no topo, c=1,20 → A·B2);
-│     M16 (calcularCorrenteInicialSimetrica): c ∈ (0; 1,10] — NÃO impõe c ≥ 0,90 (aceita c=0,85).
+│     M16 (calcularCorrenteInicialSimetrica): c ∈ {0,90; 0,95; 1,00; 1,05; 1,10} — validado no INC-001.
 │     M02/M03 recebem cMax mas NÃO validam a banda; M04 não usa c;
 │     M15 valida apenas o dielétrico c_max·Un ≤ Um (não a banda de c).
 │   Seleção completa por Un/regime: especificado (não implementada separadamente)
@@ -199,7 +204,7 @@ NÍVEL 3 — Agregação e corrente inicial
 ├── [M15] Agregação Zk (subconjunto aplicável)
 │   dep: subconjunto de M01–M11 conforme perfil ─────────── stable ✓
 ├── [M16] I''k trifásico (7.2.1)
-│   dep: M00, M15 ────────────────────────────── implementado_sem_validacao ⚠
+│   dep: M00, M15 ────────────────────────────── GREEN ✓ (não stable)
 ├── [M17a] I''k trifásico em grupo gerador OLTC (7.2.2) ─ dep: M07, M15 ─ não estudado
 ├── [M17b] I''k trifásico em grupo gerador fixo (7.2.3) ─ dep: M08, M15 ─ não estudado
 ├── [M18] Contribuição motora a I''k (7.1.3) ─ dep: M09, M16 ─ não estudado
@@ -250,12 +255,12 @@ NÍVEL 9 — Redes malhadas (avançado / informativo)
 |--------|---------|------|--------------|
 | `stable` | M01, M02a, M02b, M03, M04, M15 | 6 | 12,5% |
 | `especificado` (parcial) | M00 — validação de banda de $c$ embutida só em M01; seletor Tabela 1 não implementado | 1 | 2,1% |
-| `implementado_sem_validacao` | M16 — método existe; sem teste específico | 1 | 2,1% |
+| `implementado_sem_validacao` | — | 0 | 0% |
 | `não estudado` | demais capacidades da §3 | 40 | 83,3% |
-| `GREEN` / `RED` (estado explícito) | — | 0 | 0% |
+| `GREEN` / `RED` (estado explícito) | M16 GREEN — validado no INC-001; não `stable` | 1 | 2,1% |
 | **Total** | | **48** | **100%** |
 
-> **Verificação:** 6 + 1 + 1 + 40 = 48. ✓
+> **Verificação:** 6 + 1 + 0 + 40 + 1 = 48. ✓
 
 ---
 
@@ -263,7 +268,7 @@ NÍVEL 9 — Redes malhadas (avançado / informativo)
 
 | Incremento | Motor | Ação necessária | Pré-condição |
 |---|---|---|---|
-| **INC-001** | M16: $I_k''$ trifásico (7.2.1) | **Não criar** `js/core_curto_circuito.js` (existe). 1) RNC-C da fundação M00–M04/M15 ratificado. 2) Engenheiro produz BDD específico para `calcularCorrenteInicialSimetrica`. 3) QA escreve teste RED específico para M16. 4) Backend valida ou corrige a interface existente. 5) Os 39 testes existentes permanecem como regressão `stable`. | **Satisfeita documentalmente** pelo RNC-C v1.2.1 ratificado |
+| **INC-001** | M16: $I_k''$ trifásico (7.2.1) | Ciclo RED→GREEN concluído: INC-001-01/01-R (BDD científico e memorial), PR #22 (motor M16 corrigido), PR #24 (executor M16 versionado), QA independente (`tests/test_inc001_m16.js` 24/24, exit 0; `tests/core_curto_circuito.test.js` 39/39, exit 0), merge `433b311fd7bd529d4785e95a146a5c09099a33d4`, Gate shadow pós-merge #28988541103 SUCCESS. **Não promover a `stable` nesta etapa.** | Promoção a `stable` exige O.S. própria conforme `docs/AmpAI_Gate_Regressao.md` |
 | **INC-002** | M22: Fator κ e $i_p$ (8.1.1) | BDD → candidato RNC-C → RED → GREEN | M16 stable |
 | **INC-003** | M09: Motor assíncrono $\underline{Z}_M$ (6.10) | BDD → candidato RNC-C → RED → GREEN | M00 seletor completo stable |
 | **INC-004** | M18: Contribuição motora a $I_k''$ (7.1.3) | BDD → candidato RNC-C → RED → GREEN | M09, M16 stable |

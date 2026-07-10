@@ -2,18 +2,21 @@
 tags: [engenharia, memorial, iec60909, m16, inc-001, bdd]
 os: INC-001-01
 capacidade: M16 — corrente inicial simétrica trifásica I''k
-estado_obrigatorio: implementado_sem_validacao
+estado_obrigatorio: GREEN_nao_stable
 autor: "@Engenheiro_Eletricista (AmpAI Governança v7.0)"
 data: 2026-07-07
 baseline_os: bf0d592a215353d3f5382ed4f7234d85340bbb18
-status: candidato_cientifico (PROP — pré-RED)
+baseline_green: 433b311fd7bd529d4785e95a146a5c09099a33d4
+status: memorial_cientifico_validado_GREEN_nao_stable
 ---
 
 # Memorial de Cálculo Contestável — M16 (I''k trifásico) · O.S. INC-001-01
 
-> **Escopo deste memorial:** contrato científico do motor M16 **antes** do teste RED e de qualquer adequação do backend. Não implementa, não cria teste, não define Result Pattern/códigos de erro (fora de escopo por O.S.). Acompanha `INC001_M16_BDD.feature`.
+> **Escopo original deste memorial:** contrato científico do motor M16 produzido antes do teste RED e da adequação Backend. Acompanha `INC001_M16_BDD.feature`.
 >
-> **Estado obrigatório:** M16 = `implementado_sem_validacao`. Nada aqui promove M16 a `stable`.
+> **Atualização documental pós-GREEN:** o ciclo INC-001 concluiu RED→GREEN independente. M16 = `GREEN`, **não `stable`**. Nada aqui promove M16 ao manifesto do Gate Consolidado.
+>
+> **Evidências de rastreabilidade:** INC-001-01 / INC-001-01-R (BDD científico e memorial aprovados); PR #22 (motor M16 corrigido); PR #24 (executor M16 versionado); QA independente com `tests/test_inc001_m16.js` 24/24, exit 0, e `tests/core_curto_circuito.test.js` 39/39, exit 0; merge `433b311fd7bd529d4785e95a146a5c09099a33d4`; Gate shadow pós-merge #28988541103 SUCCESS.
 
 ---
 
@@ -176,24 +179,24 @@ Não tratados neste memorial (competência do CTO/SDD e O.S. sequenciais): alter
 
 ---
 
-## 11. Distinção COD vs PROP (comportamento atual × proposto)
+## 11. Estado pós-GREEN e histórico do gap encerrado
 
-Verificado contra `js/core_curto_circuito.js` na baseline de ratificação (`641d8ab`): `calcularCorrenteInicialSimetrica(Un, Zk, c)` valida hoje $U_n>0$, $Z_k>0$ e $c\in(0;\,1{,}10]$ (via `typeof` + `≤0` + `>1,1`).
+Na baseline de ratificação original (`641d8ab`), `calcularCorrenteInicialSimetrica(Un, Zk, c)` validava $U_n>0$, $Z_k>0$ e $c\in(0;\,1{,}10]$ (via `typeof` + `≤0` + `>1,1`). O INC-001 encerrou esse gap: no estado atual pós-merge `main@433b311fd7bd529d4785e95a146a5c09099a33d4`, M16 impõe o conjunto discreto de $c$ e bloqueia entradas estruturais inválidas com erro estruturado Problem Details/RFC 7807.
 
-| Caso | Comportamento HOJE (COD) | Comportamento PROPOSTO (PROP) |
+| Caso | Comportamento pré-INC-001 | Comportamento pós-GREEN |
 |---|---|---|
-| TC-M16-01 | calcula 14,1227206 kA (COD) | idem — apenas falta teste específico |
-| TC-M16-02 ($U_n=0$) | **bloqueia** (COD) | idem |
-| TC-M16-03 ($Z_k=0$) | **bloqueia** (COD) | idem |
-| TC-M16-04 ($c=1{,}15$) | **bloqueia** (COD, $>1{,}10$) | idem |
-| TC-M16-05 | calcula 13,2281135 kA (COD) | idem — apenas falta teste específico |
-| **TC-M16-06 ($c=0{,}85$)** | ⚠️ **ACEITA e calcula** (gap) | **deve bloquear** (normativo) |
-| **TC-M16-07 ($c=0{,}93$)** | ⚠️ **ACEITA e calcula** (gap) | **deve bloquear** (normativo) |
-| B6 — $U_n$/$Z_k$/$c$ = NaN | ⚠️ passa (`typeof NaN === 'number'`; gap) | deve bloquear (estrutural — exigir finitude via `Number.isFinite`) |
-| B6 — $U_n$/$Z_k$/$c$ = ±Infinity | ⚠️ +∞ passa em ≤0; -∞ bloqueia por sinal; c=+∞ bloqueia por >1,10 (comportamento parcial/acidental) | deve bloquear explicitamente (estrutural — finitude) |
-| Unidades SI | não detectável em runtime (número cru) — **precondição, não bloqueio** | normalização antes da chamada; DTO tipado no SDD |
+| TC-M16-01 | calculava 14,1227206 kA sem teste específico | **VALIDADO_GREEN** |
+| TC-M16-02 ($U_n=0$) | bloqueava sem teste específico | **VALIDADO_GREEN** com erro estruturado |
+| TC-M16-03 ($Z_k=0$) | bloqueava sem teste específico | **VALIDADO_GREEN** com erro estruturado |
+| TC-M16-04 ($c=1{,}15$) | bloqueava por $>1{,}10$ sem teste específico | **VALIDADO_GREEN** com erro estruturado |
+| TC-M16-05 | calculava 13,2281135 kA sem teste específico | **VALIDADO_GREEN** |
+| **TC-M16-06 ($c=0{,}85$)** | ⚠️ aceitava e calculava (gap) | **VALIDADO_GREEN**: bloqueia por fora do conjunto |
+| **TC-M16-07 ($c=0{,}93$)** | ⚠️ aceitava e calculava (gap) | **VALIDADO_GREEN**: bloqueia por valor não tabelado |
+| $c=1{,}15$ | bloqueio parcial por teto $>1{,}10$ | **VALIDADO_GREEN**: bloqueia como valor fora do conjunto discreto |
+| B6 — $U_n$/$Z_k$/$c$ = NaN/±Infinity | comportamento incompleto ou acidental | **VALIDADO_GREEN**: bloqueio estrutural |
+| Unidades SI | não detectável em runtime (número cru) — **precondição, não bloqueio** | permanece precondição; normalização antes da chamada; DTO tipado futuro se necessário |
 
-> **Conclusão de estado:** M16 permanece `implementado_sem_validacao`. Os sete casos são **`PROP`** (candidatos experimental) até o ciclo RED→GREEN independente do QA/Backend. **Nenhuma regra nova foi criada sem fonte ou ressalva.**
+> **Conclusão de estado:** M16 está `GREEN` por validação independente do INC-001. TC-M16-01 a TC-M16-07 são **`VALIDADO_GREEN`**. M16 ainda **não está `stable`**, pois `tests/test_inc001_m16.js` não foi versionado no manifesto do Gate Consolidado. Promoção para `stable` exige O.S. própria conforme `docs/AmpAI_Gate_Regressao.md`.
 
 ---
 
@@ -205,4 +208,4 @@ A O.S. fixa a baseline `bf0d592…`, que **contém** `RNC-C_Fundacao_M00_M04_M15
 
 ---
 
-*Memorial produzido pelo @Engenheiro_Eletricista (AmpAI Governança v7.0) para a O.S. INC-001-01. Material científico `PROP` — retorna ao CTO para consolidação do SDD e emissão da INC-001-02. Não iniciar QA RED nem Backend. Nenhum commit/push/PR/merge.*
+*Memorial produzido pelo @Engenheiro_Eletricista (AmpAI Governança v7.0) para a O.S. INC-001-01 e atualizado documentalmente após GREEN independente do INC-001 sobre `main@433b311fd7bd529d4785e95a146a5c09099a33d4`. M16 = `GREEN`, não `stable`. Nenhum commit/push/PR/merge nesta etapa sem autorização do CEO.*
