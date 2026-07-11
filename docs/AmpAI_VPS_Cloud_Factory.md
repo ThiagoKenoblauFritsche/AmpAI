@@ -4,9 +4,11 @@
 > **Segurança:** credenciais nunca devem ser registradas neste documento. Use o cofre de segredos aprovado, GitHub Secrets ou variáveis de ambiente não versionadas.
 
 > [!WARNING]
-> **Atenção:** Este documento descreve a **Fase 2 (Expansão)** do AmpAI. Atualmente operamos na **Fase 1 (v7.0)**, onde a Fábrica roda estritamente no terminal local via Claude Code. A implementação descrita abaixo será executada apenas quando as validações matemáticas locais estiverem perfeitas.
+> **Atenção:** Este documento descreve uma expansão futura do AmpAI. Atualmente operamos na **Governança v7.1**, onde a Fábrica roda no terminal local e o Gate opera em shadow mode. A implementação descrita abaixo só poderá ser executada após ratificação e ativação de `@Engenheiro_DevOps_SRE`.
 
 Este documento descreve os passos operacionais futuros para configurar a VPS Hetzner como um "Headless Orchestrator". A VPS passará a ter a responsabilidade de ouvir comandos via Telegram e instanciar o Claude Code de forma autônoma (Air Gap via Firecracker).
+
+`@Engenheiro_Plataforma_CI` não possui autorização para executar este guia: seu escopo termina na infraestrutura de CI dentro do repositório. VPS, credenciais de ambiente, deploy, observabilidade, backup e rollback pertencerão ao futuro `@Engenheiro_DevOps_SRE`, após O.S. e ratificação próprias.
 
 ---
 ## 0. Credenciais de Acesso Mestre (Root)

@@ -3,7 +3,7 @@ tags:
   - infraestrutura/vps
   - devops/backlog
   - ampai/core
-versao: 7
+versao: 7.1
 status: ativo
 ---
 
@@ -60,7 +60,9 @@ ___
 
 ___
 
-### 🐇 FASE 7: Governança v7.0 (Separação de Poderes e Tribunal Codex) (ATIVA)
+### 🐇 FASE 7: Governança v7.1 (Separação de Poderes, Plataforma e Tribunal Codex) (ATIVA)
+- [x] **TOPOLOGIA v7.1** | `[GOVERNANÇA]` `@Conselho_de_Arquitetura_e_Governanca` sucede a denominação histórica do Arquiteto-Chefe; `@Engenheiro_Plataforma_CI` passa a executar infraestrutura do Gate sem testes, classificação ou veredito. Não constitui O.S. técnica.
+- [x] **GOV-MUDANCAS-PROPORCIONAIS** | `[GOVERNANÇA]` CTO instituído como Torre de Controle universal; O.S. `CHG-0 Expressa`, `CHG-1 Adaptativa`, `CHG-2 Padrão` e `CHG-3 Crítica` ratificadas em `docs/AmpAI_Classificacao_Mudancas.md`. Não constitui O.S. técnica.
 - [x] **O.S. #INF-022** | `[ATUALIZADA]` CodeRabbit configurado como revisão complementar no GitHub.
 - [x] **O.S. #INF-023** | `[ATUALIZADA]` Estúdio 2 local unificado: Claude Opus 4.8 para ciência normativa/BDD e Backend; Claude Sonnet 4.6 para Frontend. O @Engenheiro_Eletricista consome RNC-P/RNC-C em Markdown, não PDFs massivos.
 - [x] **O.S. #INF-026** | `[CRÍTICA]` Tribunal migrado para @Senior_QA_Security no Codex, com execução isolada e evidência de `exit code`.
@@ -82,16 +84,24 @@ ___
 - [ ] **GATE-OBSERVATION** | Intake para **O.S. própria do CTO**: mínimo de sete dias, três execuções independentes no mesmo SHA, novo ciclo PR→merge→push, comparação legada, auditoria de artifacts e parecer QA. Evidência apenas; proibido alterar branch protection.
 - [ ] **GATE-REQUIRED** | **O.S. futura e separada**, bloqueada até aceite da observação. Ativação manual do required check somente após veredito QA e autorização explícita do CEO; nenhuma ativação automática.
 - [ ] **GATE-PROMOTION-049** | Promover os dois testes O.S. 049/050 somente após `navigationErrors=[]` e toda a evidência exigida.
+- [ ] **GATE-PATH-AWARE** | Intake futuro: após estabilização do gate, separar check documental `CHG-0` de regressão funcional por roteamento validado, preservando status agregado e proibindo skip definido pela própria PR.
+
+> Evoluções de workflows, executores, schemas, comandos, manifesto e artifacts devem ser decompostas pelo CTO para `@Engenheiro_Plataforma_CI`. Alteração de `qa/test-manifest.json` exige decisão explícita anterior do QA; a Plataforma não pode mudar `tests/**` nem julgar a própria implementação.
 
 ___
 
 ### 🚦 FASE 8: CD Staging (FUTURO — NÃO ATIVO)
+- [ ] **GOV-DEVOPS-SRE** | `[PRÉ-CONDIÇÃO]` Ratificar `@Engenheiro_DevOps_SRE` antes de qualquer O.S. com VPS, IaC, deploy, observabilidade, backup, rollback ou credenciais de ambiente.
 - [ ] **O.S. #INF-030** | `[ALTA]` Criar deploy automático para ambiente de staging somente após estabilização de CI + PR + CodeRabbit + artifacts.
 
 ___
 
 ### 🚀 FASE 9: CD Produção (FUTURO — NÃO ATIVO)
 - [ ] **O.S. #INF-031** | `[CRÍTICA]` Avaliar CD para produção apenas depois de staging validado, contratos de erro estabilizados, testes visuais in-browser maduros e aprovação explícita do CEO.
+
+### 🧩 CADEIRAS FUTURAS DE APLICAÇÃO E SEGURANÇA (PLANEJADAS — NÃO ATIVAS)
+- [ ] **GOV-BACKEND-SAAS** | Ratificar `@Senior_Backend_SaaS` antes de BaaS, Auth, persistência, sessões, banco ou integrações externas.
+- [ ] **GOV-SEC-PRIVACY** | Ratificar `@Arquiteto_Seguranca_Privacidade` antes de autenticação, dados pessoais ou pagamentos. A cadeira será consultiva e não substituirá o QA nem implementará a correção auditada.
 
 ___
 

@@ -11,18 +11,18 @@ SaaS de missão crítica para cálculos e memoriais de engenharia elétrica de b
 - **TDD/CI:** o @Senior_QA_Security usa Codex em terminal isolado para produzir e executar ZOMBIES, registrar RED → GREEN e atestar o `exit code`. Quando a entrega exige navegador real ou reprodutibilidade externa, GitHub Actions é o braço de CI do Tribunal e deve publicar artifact de evidência.
 - **Regressão cumulativa:** a arquitetura ratificada separa testes `stable`, `experimental`, `flaky`, `archived` e `utility`. Quando ativado após shadow mode, `regression-gate` executará toda a suíte stable em cada PR para `main`.
 
-## Matriz operacional v7.0
+## Matriz operacional v7.1
 
 | Camada | Papel | Ambiente |
 | --- | --- | --- |
 | Memória | NotebookLM, RAG e estratégia | Google NotebookLM / `sync.ps1` |
-| Legislativo | @Arquiteto_Chefe_e_Governanca | ChatGPT Plus (GPT-5.5) |
+| Conselho independente | @Conselho_de_Arquitetura_e_Governanca | ChatGPT Plus (GPT-5.5) |
 | Executivo | @CTO e @Negocios_e_Estrategia | ChatGPT Plus (GPT-5.5 / GPT-5.4) |
 | Ciência | @Engenheiro_Eletricista | Claude Opus 4.8 (Extended Thinking) |
-| Fábrica | @Senior_Backend_Dev e @Senior_Frontend_Dev | Claude Code Pro (Opus 4.8 / Sonnet 4.6) |
+| Fábrica | @Senior_Backend_Dev, @Senior_Frontend_Dev e @Engenheiro_Plataforma_CI | Claude Code Pro (Opus 4.8 / Sonnet 4.6) |
 | Tribunal | @Senior_QA_Security | Codex CLI/API (GPT-5.5) |
 
-Cada persona opera em chat/thread isolado. O CTO é o único emissor de Ordens de Serviço; Governança mantém as leis e não sofre a pressão da execução. O CEO é a única autoridade de merge.
+Cada persona opera em chat/thread isolado. Toda decisão, alteração, auditoria ou incidente passa pelo CTO, que registra, classifica de `CHG-0` a `CHG-3`, roteia e encerra. O Conselho mantém as leis; QA mantém o veredito; o CEO concentra estratégia, produto, prioridade e merge.
 
 ## Gate de regressão para `main`
 
@@ -33,6 +33,10 @@ A arquitetura permanente de entrega é:
 O novo gate ainda passará por implantação e shadow mode; até sua ativação, os workflows vigentes permanecem oficiais. Testes novos começam como experimentais e só protegem PRs futuros depois da promoção formal. A decisão completa está em `docs/AmpAI_Gate_Regressao.md`.
 
 O CI é evidência de Tribunal, não CD. Deploy automático para staging e produção permanece fora do fluxo ativo até a consolidação de PR, artifacts e revisão independente.
+
+## Mudanças proporcionais
+
+O AmpAI usa quatro classes: `CHG-0 Expressa`, `CHG-1 Adaptativa`, `CHG-2 Padrão` e `CHG-3 Crítica`. Tudo passa pela Torre de Controle do CTO, mas somente mudanças comportamentais ou críticas percorrem RED→GREEN completo. Código executável preserva a suíte `stable`; documentação editorial recebe checks documentais. Política em `docs/AmpAI_Classificacao_Mudancas.md` e estado em `docs/AmpAI_Registro_Mudancas.md`.
 
 ### Gate local de regressão
 
@@ -66,3 +70,5 @@ Definição completa: `docs/AmpAI_RNC_Taxonomia.md`.
 ## Evolução de infraestrutura
 
 O fluxo atual usa ambientes locais, terminais isolados e GitHub Actions para CI reprodutível quando necessário. A execução do Tribunal em VPS com sandbox/Firecracker é uma expansão planejada; não deve ser tratada como infraestrutura já disponível. CodeRabbit pode revisar PRs de modo complementar, mas não substitui QA/Codex nem a aprovação humana. CD para staging e CD para produção são fases futuras e separadas.
+
+As cadeiras `@Engenheiro_DevOps_SRE`, `@Senior_Backend_SaaS` e `@Arquiteto_Seguranca_Privacidade` estão planejadas, mas inativas. Elas só poderão receber O.S. após ratificação própria nas fases de staging, BaaS/Auth e tratamento de dados pessoais/pagamentos, respectivamente.
