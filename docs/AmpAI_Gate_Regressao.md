@@ -1,6 +1,6 @@
 ---
 tags: [governanca, qa, ci, regressao]
-versao: 1.1
+versao: 1.2
 status: ratificado
 data: 2026-07-04
 baseline_decisao: c2565332367abfbbadea7da849fc90fff3fdfffc
@@ -20,8 +20,9 @@ O gate reduz regressões conhecidas e acumula proteção sobre comportamentos ap
 
 ## 2. Autoridades e separação de poderes
 
-- Governança define esta lei e sua taxonomia.
+- @Conselho_de_Arquitetura_e_Governanca define esta lei e sua taxonomia.
 - CTO decompõe a implantação e cada evolução em O.S. isoladas; não atesta o próprio fluxo.
+- @Engenheiro_Plataforma_CI implementa workflows, executores, schemas, comandos, manifesto e artifacts somente dentro da O.S.; não escreve testes, não decide classificações e não atesta a própria correção.
 - QA é a autoridade técnica de classificação, promoção e veredito dos testes; não implementa a correção avaliada.
 - GitHub Actions executa o gate reprodutível, mas não substitui o julgamento do QA.
 - CodeRabbit permanece revisão complementar de PR.
@@ -72,7 +73,7 @@ Nos dois candidatos, `navigationErrors=[]` é requisito bloqueante. Enquanto nã
 4. PR A integra teste experimental e implementação, protegido pela suíte `stable` vigente.
 5. Após o merge, o candidato executa em modo de observação sobre `main`.
 6. QA reúne a evidência de promoção.
-7. PR B altera somente a classificação e o registro de promoção.
+7. Após decisão explícita do QA, PR B materializa somente a classificação e o registro de promoção; a implementação técnica pode ser atribuída ao @Engenheiro_Plataforma_CI.
 8. Após o merge da PR B, o teste passa a integrar todos os gates futuros.
 
 ### Critérios mínimos de promoção
@@ -112,6 +113,8 @@ npm run test:regression
 
 Os scripts npm serão aliases finos para o mesmo executor; lógica de classificação não deve ser duplicada no `package.json` ou no YAML.
 
+A implementação desta arquitetura pertence ao @Engenheiro_Plataforma_CI. Alterações em `qa/test-manifest.json` exigem que a O.S. reproduza decisão anterior e explícita do QA sobre classificação, contrato e contagem esperada. A Plataforma não pode editar `tests/**`, alterar branch protection, ativar required check ou emitir veredito.
+
 ### Jobs mínimos
 
 1. `manifest-validation`: valida schema, semântica, arquivos, IDs e contratos.
@@ -130,6 +133,8 @@ O gate consolidado deve executar:
 - manualmente, quando autorizado, para diagnóstico e promoção.
 
 Na v1 não haverá exceção por caminhos. Essa política poderá ser reavaliada após 30 execuções completas, desde que o status agregado continue sempre emitido.
+
+Conforme `docs/AmpAI_Classificacao_Mudancas.md`, documentação editorial `CHG-0` não exige metodologicamente regressão funcional. Até existir O.S. própria, implementação path-aware, testes de roteamento e parecer QA, a execução completa da v1 permanece inalterada. Nenhuma PR pode escolher localmente pular jobs.
 
 O required check `regression-gate` só poderá ser ativado depois de:
 
@@ -211,7 +216,7 @@ Esse GREEN comprova a implantação do shadow mode; **não ativa nem autoriza re
 
 ## 14. State lock de observação e promoção futura
 
-A Governança define dois pacotes separados. Eles são intake para decomposição do CTO e **não constituem O.S. emitidas por este documento**.
+O Conselho de Arquitetura e Governança define dois pacotes separados. Eles são intake para decomposição do CTO e **não constituem O.S. emitidas por este documento**.
 
 ### 14.1 Período de observação — O.S. própria do CTO
 

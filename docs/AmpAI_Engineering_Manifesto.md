@@ -3,7 +3,7 @@ tags:
   - arquitetura/engenharia
   - padroes/codigo
   - governanca/ia
-versao: 1.0
+versao: 1.1
 status: mandatorio
 ---
 
@@ -88,7 +88,10 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 *   **RNC-P não é RNC-C:** RNC-P é Markdown processado de norma, livro ou guia técnico; RNC-C é documento curado pelo AmpAI com fonte, escopo, equações conferidas, unidades SI, premissas, limites físicos e regras QA. A IA não pode transformar RNC-P em regra de produção sem declarar a promoção para RNC-C.
 *   **Caixa Preta de Testes:** Peça primeiro para a IA criar os testes com o objetivo explícito de **tentar quebrar a aplicação** com entradas inválidas, sobrecargas elétricas e limites estourados.
 *   **Air Gap Epistemológico:** Fábrica e Tribunal são agentes distintos. A Fábrica não atesta o próprio código; o Tribunal executa testes isoladamente, valida artifacts de CI quando aplicável e devolve a evidência ao CTO. O ciclo encerra apenas com GREEN verificável, PR validado e aprovação humana para merge.
+*   **Plataforma não é Tribunal:** o @Engenheiro_Plataforma_CI implementa o mecanismo de CI conforme contrato do CTO e decisão explícita do QA. Não escreve ou flexibiliza testes, não decide classificações do manifesto e não atesta a própria infraestrutura.
 *   **CI não é CD:** GitHub Actions integra o Tribunal QA para gerar logs, artifacts e `exit code` reprodutível. Deploy para staging e produção são etapas futuras, separadas e dependentes de decisão explícita do CEO.
+*   **Torre de Controle:** toda decisão, alteração, auditoria ou incidente passa pelo CTO para registro, classificação, roteamento e encerramento. Essa centralização não transfere ao CTO a lei do Conselho, o veredito do QA ou o merge do CEO.
+*   **Rigor proporcional:** O.S. são classificadas de `CHG-0` a `CHG-3`. Documentação editorial não simula TDD funcional; refatoração coberta não cria RED artificial; comportamento novo exige RED→GREEN; mudanças críticas recebem todos os controles relevantes.
 
 ## 4. Gate Consolidado e Proteção Cumulativa
 
@@ -97,7 +100,7 @@ O AmpAI adota uma suíte de regressão cumulativa para features, correções, re
 *   **Manifesto explícito:** somente testes declarados e classificados podem compor o gate; `tests/*.js` não é fonte automática.
 *   **Classes distintas:** `stable` bloqueia PR; `experimental` está em validação; `flaky` permanece em quarentena; `archived` preserva história; `utility` não é teste.
 *   **Promoção em duas PRs:** teste novo nasce experimental, demonstra RED→GREEN, passa por repetibilidade e execução pós-merge, e só então é promovido para `stable`.
-*   **Regressão completa:** todo PR para `main` executará a suíte `stable` integral quando o `regression-gate` for ativado, inclusive PR documental na primeira versão.
+*   **Regressão completa para executáveis:** todo PR com código executável preserva a suíte `stable` integral. Na v1 transitória o workflow também executa em PR documental; futura otimização por caminhos exige O.S. de Plataforma, status agregado e validação independente.
 *   **Taxonomia rigorosa:** `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` bloqueiam a entrega, mas somente falha com contrato exercido é funcional.
 *   **Cobertura responsável:** a meta é rastrear todos os contratos críticos conhecidos, não prometer ausência absoluta de falhas nem maximizar porcentagem de linhas sem significado.
 *   **Imutabilidade do Tribunal:** nenhuma IA pode flexibilizar, silenciar ou remover teste aprovado para produzir GREEN.
