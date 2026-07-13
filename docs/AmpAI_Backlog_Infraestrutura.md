@@ -3,7 +3,7 @@ tags:
   - infraestrutura/vps
   - devops/backlog
   - ampai/core
-versao: 7.1
+versao: 7.1.1
 status: ativo
 ---
 
@@ -63,6 +63,7 @@ ___
 ### 🐇 FASE 7: Governança v7.1 (Separação de Poderes, Plataforma e Tribunal Codex) (ATIVA)
 - [x] **TOPOLOGIA v7.1** | `[GOVERNANÇA]` `@Conselho_de_Arquitetura_e_Governanca` sucede a denominação histórica do Arquiteto-Chefe; `@Engenheiro_Plataforma_CI` passa a executar infraestrutura do Gate sem testes, classificação ou veredito. Não constitui O.S. técnica.
 - [x] **GOV-MUDANCAS-PROPORCIONAIS** | `[GOVERNANÇA]` CTO instituído como Torre de Controle universal; O.S. `CHG-0 Expressa`, `CHG-1 Adaptativa`, `CHG-2 Padrão` e `CHG-3 Crítica` ratificadas em `docs/AmpAI_Classificacao_Mudancas.md`. Não constitui O.S. técnica.
+- [x] **GOV-OPERACAO-EXECUTIVA-V711** | `[GOVERNANÇA]` Roteamento obrigatório de O.S., declaração `TESTE DO CEO`, visão executiva e encerramento pós-merge definidos em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`. Não constitui O.S. técnica.
 - [x] **O.S. #INF-022** | `[ATUALIZADA]` CodeRabbit configurado como revisão complementar no GitHub.
 - [x] **O.S. #INF-023** | `[ATUALIZADA]` Estúdio 2 local unificado: Claude Opus 4.8 para ciência normativa/BDD e Backend; Claude Sonnet 4.6 para Frontend. O @Engenheiro_Eletricista consome RNC-P/RNC-C em Markdown, não PDFs massivos.
 - [x] **O.S. #INF-026** | `[CRÍTICA]` Tribunal migrado para @Senior_QA_Security no Codex, com execução isolada e evidência de `exit code`.
@@ -72,6 +73,12 @@ ___
 - [x] **O.S. #INF-028** | `[CRÍTICA]` Gate Consolidado v1 implantado em shadow mode por INF-028-A/B/C e integrado pela PR #17. GREEN pós-merge em `main@dd83008`; run `28910574756` com manifest, core, três browsers, agregador e artifacts verdes. **Não é required check.**
 - [ ] **O.S. #INF-029** | `[ALTA]` Padronizar artifacts individuais e consolidado: ambiente, lockfile, comando, preflight, relatórios, categoria `PASS/FUNCTIONAL_FAILURE/INFRA_BLOCKED/CONFIG_ERROR`, `exit code`, hashes e referência à O.S.
 - [ ] **O.S. #INF-032** | `[ALTA]` Padronizar taxonomia RNC: classificar arquivos de `docs/normas/` como RNC-P, promover regras críticas para RNC-C em `docs/engenharia/` e impedir uso de RNC-P como base direta de implementação sem prova de cálculo contestável.
+
+#### Intake operacional ratificado — não constitui O.S.
+
+- [ ] **OPS-SYNC-MAIN** | O CTO deverá decompor uma rotina fail-closed para verificar `origin/main`, atualizar somente por fast-forward uma `main` local limpa, executar `sync.ps1` quando aplicável, validar hashes e emitir relatório processável. Proibidos descarte automático, `reset --hard` e alteração de worktrees.
+- [ ] **OPS-PAINEL-EXECUTIVO** | O CTO deverá decompor uma projeção executiva do Registro Mestre com responsável atual, próximo destinatário, bloqueio, teste/ação do CEO, PR/artifact e estado das baselines remota, local e Drive. O painel não poderá ser uma segunda fonte de verdade.
+- [ ] **GOV-DEVOPS-OPS** | Avaliar a ativação de `@Engenheiro_DevOps_SRE` antes de automação operacional persistente. Até a ratificação, rotinas locais são coordenadas pelo CTO e executadas apenas por operador Git autorizado pelo CEO.
 
 #### Intake ratificado: Gate Consolidado v1 — não constitui O.S.
 

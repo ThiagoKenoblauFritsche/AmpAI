@@ -3,11 +3,11 @@ tags:
   - planejamento/saas
   - ampai/business
   - ampai/arquitetura
-versao: 7.1
+versao: 7.1.1
 status: ativo
 ---
 
-# 🚀 Master Roadmap: Do Protótipo ao SaaS Profissional (AmpAI v7.1+)
+# 🚀 Master Roadmap: Do Protótipo ao SaaS Profissional (AmpAI v7.1.1+)
 
 Com base na governança v6.0 ("Air Gap Epistemológico") e nas ambições de expansão comercial, este documento mapeia as fases oficiais para transformarmos o AmpAI de uma ferramenta local em um **SaaS mundial, seguro, rentável e 100% automatizado**.
 
@@ -22,6 +22,8 @@ As fases abaixo devem ser executadas sequencialmente para garantir a integridade
 *   [x] **Conselho e Executivo isolados:** @Conselho_de_Arquitetura_e_Governanca e @CTO operam em chats separados no ChatGPT Plus; o Conselho sucede a denominação histórica `@Arquiteto_Chefe_e_Governanca`.
 *   [x] **Fábrica de Plataforma CI:** @Engenheiro_Plataforma_CI possui o escopo de workflows, executores, schemas, comandos e artifacts, sem escrever testes, decidir classificações ou emitir veredito.
 *   [x] **CTO como Torre de Controle:** toda decisão, alteração, auditoria e incidente recebe registro, classificação `CHG-0` a `CHG-3`, O.S. proporcional e encerramento pós-merge conforme `docs/AmpAI_Classificacao_Mudancas.md`.
+*   [x] **Operação executiva explícita:** toda O.S. declara executor, próximo destinatário e necessidade de teste do CEO; o encerramento distingue `origin/main`, `main` local e Drive conforme `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
+*   [ ] **Sincronização e painel operacional:** o CTO deverá decompor, sem implementação direta pela Governança, a rotina fail-closed de sincronização e a projeção executiva do Registro Mestre. Automação persistente exige avaliar a ativação de DevOps/SRE.
 *   [x] **Estúdio 2 unificado em Claude:** @Engenheiro_Eletricista usa Claude Opus 4.8 com Extended Thinking para ciência/BDD sobre RNC-P/RNC-C Markdown; Backend usa Claude Opus 4.8 e Frontend usa Claude Sonnet 4.6 dentro de seus escopos.
 *   [ ] **Curadoria RNC:** promover os RNC-P críticos de `docs/normas/` para RNC-C em `docs/engenharia/`, com equações, unidades, premissas, limites e regras QA auditáveis.
 *   [x] **Tribunal independente:** Codex QA registra RED → GREEN e `exit code` em terminal isolado.
@@ -39,7 +41,7 @@ As fases abaixo devem ser executadas sequencialmente para garantir a integridade
 ## 🏗️ Fase 8: CD Staging e Topologia Remota (ROADMAP VPS/TELEGRAM)
 *Colocação da aplicação em ambiente de testes público/controlado, depois da consolidação de CI, PR e artifacts.*
 
-*   [ ] **Ratificação de @Engenheiro_DevOps_SRE:** ativar a cadeira antes de conceder acesso a VPS, IaC, deploy, observabilidade, backup ou rollback. Planejamento atual não concede permissão.
+*   [ ] **Ratificação de @Engenheiro_DevOps_SRE:** ativar a cadeira antes de conceder acesso a VPS, automação operacional persistente, IaC, deploy, observabilidade, backup ou rollback. Planejamento atual não concede permissão.
 *   [ ] **Alocação da VPS (Fábrica/Tribunal):** provisionar ambientes separados para Claude Code e Codex QA, sem cruzamento de permissões.
 *   [ ] **Hospedagem Web Segura de Staging:** instalar Nginx em ambiente de entrega que sirva somente artefatos aprovados pelo PR/CI.
 *   [ ] **Muralha da Cloudflare:** Configuração de domínio próprio apontando para a Cloudflare (Proxy reverso, mitigação DDoS e certificados HTTPS grátis).

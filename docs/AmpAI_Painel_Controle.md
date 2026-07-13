@@ -1,6 +1,6 @@
 ---
 tags: [gestao/painel, ampai/governanca]
-versao: 7.1
+versao: 7.1.1
 status: ativo
 ---
 
@@ -24,7 +24,9 @@ status: ativo
 
 ## Fluxo de controle
 
-`origem/CEO/Conselho/QA → CTO (registro + CHG-0 a CHG-3) → especialistas necessários → CTO (consolidação) → PR/gates → CEO (merge) → CTO (encerramento)`
+`origem/CEO/Conselho/QA → CTO (registro + CHG-0 a CHG-3) → especialista atual → CTO (novo encaminhamento) → PR/gates → CEO (aceite quando aplicável + merge) → pós-merge/sincronização → CTO (encerramento)`
+
+Toda O.S. declara responsável atual, próximo destinatário, autoridade do veredito e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`. Todo resultado retorna ao CTO; o executor não escolhe a próxima persona. O protocolo canônico está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 
 Uma entrega elegível para PR possui BDD/SDD aplicável, teste RED registrado, implementação GREEN, regressões relacionadas preservadas, `exit code` bem-sucedido e documentação atualizada. O Gate Consolidado v1 está ratificado, mas deve passar por shadow mode antes de se tornar required check. Depois de ativado, todo PR para `main` executará a suíte `stable` completa e publicará artifact consolidado validado pelo QA.
 
@@ -44,6 +46,7 @@ O fluxo completo RED→GREEN é obrigatório para `CHG-2`/`CHG-3` comportamental
 - Lei do gate cumulativo: `docs/AmpAI_Gate_Regressao.md`
 - Controle futuro do gate: `qa/` (manifesto, schema e promoções, após implementação por O.S.)
 - Registro operacional do CTO: `docs/AmpAI_Registro_Mudancas.md`
+- Protocolo de roteamento, aceite e sincronização: `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`
 - CI de Tribunal: `.github/workflows/`
 - Governança: `docs/AmpAI_Engineering_Manifesto.md`, `docs/AmpAI_OS_Workflow.md` e `.github/workflows/AGENTS.md`
 
@@ -51,8 +54,18 @@ O fluxo completo RED→GREEN é obrigatório para `CHG-2`/`CHG-3` comportamental
 
 | Gatilho | Persona futura | Escopo previsto |
 | --- | --- | --- |
-| Antes de CD staging | @Engenheiro_DevOps_SRE | ambientes, IaC, deploy, observabilidade, backup e rollback |
+| Antes de CD staging ou de automação operacional persistente | @Engenheiro_DevOps_SRE | ambientes, sincronização operacional, IaC, deploy, observabilidade, backup e rollback |
 | Antes de BaaS/Auth | @Senior_Backend_SaaS | APIs de aplicação, persistência, sessões, banco e integrações |
 | Antes de Auth/PII/Stripe | @Arquiteto_Seguranca_Privacidade | threat modeling, IAM, segredos e LGPD/GDPR |
 
 Planejamento não concede permissão: cada cadeira exige ratificação documental própria antes de receber O.S. ou credenciais.
+
+## Visão executiva mínima
+
+O CEO deve receber do CTO uma visão única, derivada do Registro Mestre, contendo:
+
+| Mudança/O.S. | Estado | Responsável atual | Próximo destinatário | Bloqueio | Teste CEO | Ação CEO | PR/artifact |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<ID>` | `<estado>` | `<persona>` | `<persona>` | `nenhum` ou condição | `sim/não/a definir` | `nenhuma/decisão/aceite/merge` | `<evidência>` |
+
+O cabeçalho do painel deve informar também a baseline canônica da `origin/main`, a baseline da `main` local designada e o estado da sincronização do Google Drive. O painel não substitui o Registro Mestre e não pode divergir dele.

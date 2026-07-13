@@ -1,6 +1,6 @@
 ---
 tags: [operacao, mudancas, cto, rastreabilidade]
-versao: 1.0
+versao: 1.1
 status: ativo_apos_integracao
 responsavel: "@CTO"
 ---
@@ -13,9 +13,11 @@ Este registro fornece ao `@CTO` a visão consolidada de toda decisão, alteraç�
 
 O registro não substitui BDD, SDD, teste, artifact, PR ou histórico Git. Ele aponta para essas evidências.
 
+O Painel de Controle é uma projeção executiva deste registro. Não deve manter estados concorrentes ou divergentes.
+
 ## Estados
 
-`intake → classificada → especificacao → RED → implementacao → QA → PR → mergeada → pos_merge → encerrada`
+`intake → classificada → especificacao → RED → implementacao → QA → PR → aceite_ceo → mergeada → pos_merge → sincronizacao → encerrada`
 
 Estados não aplicáveis à classe podem ser omitidos, desde que a justificativa esteja registrada.
 
@@ -29,12 +31,18 @@ Estados não aplicáveis à classe podem ser omitidos, desde que a justificativa
 | Domínio | docs, governança, ciência, core, UI, QA, CI, segurança, dados ou infraestrutura |
 | Objetivo | resultado verificável |
 | Responsável | persona destinatária atual |
+| Próximo destinatário | persona que receberá o próximo encaminhamento do CTO |
 | Estado | estado corrente |
+| Teste CEO | `sim`, `não` ou `a_definir_apos_QA` |
+| Ação CEO | `nenhuma`, `decisão`, `aceite` ou `merge` |
 | Evidência | BDD/SDD, comando, artifact, parecer, PR ou SHA |
+| Baseline/sincronização | SHA remoto, SHA local e estado do Drive quando aplicável |
 | Pendência | próxima ação ou `nenhuma` |
 | Encerramento | data e resultado final |
 
 ## Registro inicial da Governança v7.1
+
+A linha histórica abaixo conserva o schema vigente quando foi criada. Novas entradas e atualizações materiais devem usar também os campos adicionados na versão 1.1.
 
 | ID | Classe | Origem | Domínio | Objetivo | Responsável | Estado | Evidência | Pendência | Encerramento |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -42,4 +50,4 @@ Estados não aplicáveis à classe podem ser omitidos, desde que a justificativa
 
 ## Regra contra recursão
 
-A atualização de estado desta tabela faz parte do encerramento da mudança original e não cria uma nova O.S. Alteração do schema, das classes ou das autoridades é uma nova mudança `CHG-3` de Governança.
+A atualização de estado desta tabela, o fast-forward seguro da `main` local e a sincronização documental prevista no encerramento fazem parte da mudança original e não criam nova O.S. Alteração do schema, das classes, das autoridades ou da automação operacional é uma nova mudança classificada pelo CTO; mudança de lei permanece `CHG-3` de Governança.
