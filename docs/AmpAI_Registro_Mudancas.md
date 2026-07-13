@@ -48,6 +48,12 @@ A linha histórica abaixo conserva o schema vigente quando foi criada. Novas ent
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GOV-TOPOLOGIA-V71` | `CHG-3` institucional | CEO + Conselho | governança/docs | instituir Conselho, Plataforma CI, cadeiras futuras e O.S. proporcionais com intake universal do CTO | @Conselho_de_Arquitetura_e_Governanca | `classificada` | decisão de 2026-07-11; branch `codex/governanca-topologia-v71`; baseline `b104ae3c` | CTO registrar ciência, avaliar impacto e acompanhar PR/merge | pendente |
 
+## Encerramentos sob Governança v7.2
+
+| ID | Classe | Origem | Domínio | Objetivo | Responsável | Próximo destinatário | Estado | Teste CEO | Ação CEO | Evidência | Baseline/sincronização | Pendência | Encerramento |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `GOV-ROTEAMENTO-MULTIPROVEDOR-V72` | `CHG-3` institucional | CEO + Conselho | governança/docs/operação | instituir contexto enxuto, roteamento multiprovedor e cadeira `@Engenheiro_DevOps_SRE` sob controle do CTO | `@CTO` | nenhum | `encerrada` | não | merge concluído | PR [#30](https://github.com/ThiagoKenoblauFritsche/AmpAI/pull/30); merge `b30ee49dd14c8e03d8022f79dea4f9dbfde61dcc`; shadow gate pós-merge [#29220731215](https://github.com/ThiagoKenoblauFritsche/AmpAI/actions/runs/29220731215) `SUCCESS`; CodeRabbit da PR `SUCCESS`; `OPS-MAIN-SYNC-001` `PASS` | `origin/main`, `main` local no worktree `tmp/worktrees/main-sync` e `HEAD` alinhados em `b30ee49dd14c8e03d8022f79dea4f9dbfde61dcc`; Google Drive/NotebookLM sincronizado; hashes essenciais `MATCH` | nenhuma; saneamento do diretório principal e dos worktrees permanece fora desta mudança | 2026-07-13 — encerrada com pós-merge, fast-forward local e sincronização documental comprovados |
+
 ## Regra contra recursão
 
 A atualização de estado desta tabela, o fast-forward seguro da `main` local e a sincronização documental prevista no encerramento fazem parte da mudança original e não criam nova O.S. Alteração do schema, das classes, das autoridades ou da automação operacional é uma nova mudança classificada pelo CTO; mudança de lei permanece `CHG-3` de Governança.
