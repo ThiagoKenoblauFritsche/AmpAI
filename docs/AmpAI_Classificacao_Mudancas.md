@@ -1,9 +1,9 @@
 ---
 tags: [governanca, operacao, risco, mudancas]
-versao: 1.1
+versao: 1.2
 status: ratificado
-data_decisao: 2026-07-12
-baseline_decisao: 6fbff041914ce62483401d4e8f6c1f804a26fc20
+data_decisao: 2026-07-13
+baseline_decisao: d8dce04f45bb0ed2c82e7bab5877fc056f924c89
 autoridade: CEO + @Conselho_de_Arquitetura_e_Governanca
 ---
 
@@ -80,8 +80,11 @@ Gatilhos automáticos:
 - Gate, workflow, manifesto, executor, artifact ou branch protection;
 - VPS, IaC, staging, produção, deploy, backup ou rollback;
 - lei de Governança, topologia de agentes ou mudança arquitetural ampla.
+- política de retenção, catálogo canônico ou regra global de contexto/RAG.
 
 `CHG-3` convoca todos os controles relevantes, não todas as personas. CI não chama o Eletricista sem impacto científico; fórmula IEC não chama DevOps sem impacto de ambiente.
+
+Saneamento comprovadamente não comportamental pode ser `CHG-1` mesmo com diff grande: retirar do índice dependências regeneráveis, caches, configurações locais ou artifacts já ignorados não se torna crítico pela quantidade de arquivos. Exige inventário, dry-run, lockfile preservado, instalação limpa, regressão `stable`, QA proporcional e rollback. Rewrite de histórico, force-push, segredo, branch protection ou exclusão sem substituto permanece `CHG-3`.
 
 ## 4. Matriz de testes
 
@@ -136,3 +139,5 @@ Emergência comprime a sequência; não elimina evidência. O CEO declara o inci
 8. Nenhuma IA flexibiliza teste para adequar a mudança à classe escolhida.
 9. Toda O.S. declara responsável atual, retorno obrigatório ao CTO e necessidade de teste manual do CEO.
 10. Merge não é encerramento: baseline remota, cópia local e espelho de consulta devem possuir estado explícito.
+11. Arquivo novo exige consumidor, autoridade, classe documental e justificativa para não atualizar fonte existente.
+12. Histórico é preservado, mas não integra contexto padrão sem vínculo explícito.

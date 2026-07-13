@@ -1,4 +1,14 @@
-# Manual de Onboarding Executivo — AmpAI v7.1
+---
+tags: [governanca, onboarding, ceo]
+versao: 7.2
+status: ativo
+classe_documental: canonical
+responsavel: "@CTO"
+canonical_for: onboarding_executivo
+review_trigger: mudanca_de_topologia_ou_fluxo_executivo
+---
+
+# Manual de Onboarding Executivo — AmpAI v7.2
 
 O CEO dirige estratégia, produto, prioridade e é a autoridade exclusiva de merge. Não precisa escrever código, decidir rotas operacionais ou redigir prompts de fábrica.
 
@@ -8,7 +18,7 @@ O CEO dirige estratégia, produto, prioridade e é a autoridade exclusiva de mer
 | --- | --- | --- |
 | NotebookLM | Contexto, fontes, normas e brainstorming | Camada 0 — sem produção |
 | ChatGPT Plus | Conselho, O.S. e negócio em abas independentes | @Conselho_de_Arquitetura_e_Governanca, @CTO, @Negocios_e_Estrategia |
-| Claude Code Pro | Ciência normativa, implementação local e Fábrica de Plataforma | @Engenheiro_Eletricista, @Senior_Backend_Dev, @Senior_Frontend_Dev, @Engenheiro_Plataforma_CI |
+| Claude Code Pro | Ciência, implementação, Plataforma CI e operação DevOps/SRE em contextos separados | @Engenheiro_Eletricista, @Senior_Backend_Dev, @Senior_Frontend_Dev, @Engenheiro_Plataforma_CI, @Engenheiro_DevOps_SRE |
 | Codex CLI/API + GitHub Actions | Tribunal: testes locais, CI reprodutível e artifacts de evidência | @Senior_QA_Security |
 
 ## Regra de isolamento
@@ -29,10 +39,12 @@ Abra uma aba limpa por persona e cole o respectivo arquivo em `.github/chat_cont
 
 Quando uma O.S. alterar workflows, executores, schemas, comandos, manifesto ou artifacts, envie-a ao @Engenheiro_Plataforma_CI. Ele não pode escrever testes, decidir classificações ou julgar a própria implementação; a candidata retorna obrigatoriamente ao QA.
 
+Quando uma O.S. envolver higiene do repositório, sincronização, worktrees/branches ou ambientes, envie-a ao @Engenheiro_DevOps_SRE. Ele começa por inventário e dry-run, não descarta estado local e devolve a candidata ao CTO. A classificação de testes continua com QA; documentos canônicos continuam com o Conselho.
+
 Todo resultado volta ao CTO. Você recebe dele um resumo executivo com classe, risco, pareceres, testes, PR/SHA e recomendação. Após o merge, devolva o resultado ao CTO para encerramento no Registro Mestre.
 
 Se um `push` pós-merge em `main` falhar, congele novos merges, peça classificação ao QA e proposta de correção/reversão ao CTO. Somente o CEO decide o tratamento.
 
 CodeRabbit pode acrescentar comentários à PR, mas não substitui o veredito de QA/Codex, o artifact de CI nem sua decisão de merge. CD staging e CD produção não fazem parte do fluxo ativo.
 
-As cadeiras @Engenheiro_DevOps_SRE, @Senior_Backend_SaaS e @Arquiteto_Seguranca_Privacidade permanecem planejadas e inativas até ratificação específica nas fases correspondentes.
+O @Engenheiro_DevOps_SRE está ativo sob O.S. do CTO. As cadeiras @Senior_Backend_SaaS e @Arquiteto_Seguranca_Privacidade permanecem planejadas e inativas até ratificação específica.

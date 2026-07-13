@@ -1,10 +1,20 @@
+---
+tags: [infraestrutura, vps, roadmap]
+versao: 7.2
+status: futuro_bloqueado
+classe_documental: active
+responsavel: "@CTO"
+canonical_for: hipotese_de_cloud_factory_vps
+review_trigger: autorizacao_de_staging_ou_revisao_da_topologia_remota
+---
+
 # AmpAI ROADMAP (Fase 2): Guia de Deploy na VPS e Telegram
 
 > [!CAUTION]
 > **Segurança:** credenciais nunca devem ser registradas neste documento. Use o cofre de segredos aprovado, GitHub Secrets ou variáveis de ambiente não versionadas.
 
 > [!WARNING]
-> **Atenção:** Este documento descreve uma expansão futura do AmpAI. Atualmente operamos na **Governança v7.1**, onde a Fábrica roda no terminal local e o Gate opera em shadow mode. A implementação descrita abaixo só poderá ser executada após ratificação e ativação de `@Engenheiro_DevOps_SRE`.
+> **Atenção:** Este documento descreve uma expansão futura do AmpAI. Atualmente operamos na **Governança v7.2**, onde a Fábrica roda no terminal local e o Gate opera em shadow mode. `@Engenheiro_DevOps_SRE` está ratificado, mas VPS, credenciais, staging e deploy continuam bloqueados até O.S. e autorização específicas do CEO.
 
 Este documento descreve os passos operacionais futuros para configurar a VPS Hetzner como um "Headless Orchestrator". A VPS passará a ter a responsabilidade de ouvir comandos via Telegram e instanciar o Claude Code de forma autônoma (Air Gap via Firecracker).
 

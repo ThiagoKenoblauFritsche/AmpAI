@@ -1,6 +1,6 @@
 ---
 tags: [arquitetura/ia, ampai/consciencia]
-versao: 7.1.1
+versao: 7.2
 status: ativo
 ---
 
@@ -21,6 +21,7 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 7. **@Senior_Frontend_Dev — Claude Sonnet 4.6:** `index.html` e `js/ui_render.js` com reatividade segura.
 8. **@Engenheiro_Plataforma_CI — Claude Opus 4.8:** Fábrica de infraestrutura do Gate; workflows, executores, schemas, comandos e artifacts, sem escrever testes nem decidir classificações.
 9. **@Senior_QA_Security — Codex/GPT-5.5 + GitHub Actions:** Tribunal de terminal isolado; ZOMBIES, mutation testing aplicável, artifacts de CI e evidências de execução.
+10. **@Engenheiro_DevOps_SRE — Claude Opus 4.8:** operação fail-closed de repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback; sem autoridade sobre produto, testes, leis, veredito ou merge.
 
 ## Leis operacionais
 
@@ -37,6 +38,8 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 - O CEO define estratégia, produto, prioridade e merge. O CTO determina a rota operacional e recebe de volta cada artefato, parecer e resultado pós-merge.
 - Toda O.S. declara responsável atual, retorno ao CTO, próximo destinatário e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`; o formato está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 - Merge não encerra a mudança: `origin/main`, a `main` local designada e o Google Drive, quando aplicável, devem possuir estado explícito e evidência de sincronização.
+- Atualizar precede criar. Documento novo exige classe, autoridade, consumidor e ciclo de vida; histórico não entra no contexto padrão.
+- Dependências, caches, screenshots de execução, artifacts e configurações locais são regeneráveis e não pertencem à árvore versionada sem contrato explícito.
 
 ## Estado de infraestrutura
 
@@ -44,7 +47,6 @@ A fábrica Claude e o Tribunal Codex operam atualmente nos ambientes locais/isol
 
 ## Cadeiras futuras e gatilhos de ativação
 
-- **@Engenheiro_DevOps_SRE:** antes de CD para staging ou automação operacional persistente, com escopo de ambientes, sincronização operacional, IaC, deploy, observabilidade, backup e rollback.
 - **@Senior_Backend_SaaS:** antes de BaaS/Auth, com escopo de APIs de aplicação, persistência, sessões, banco e integrações, sem alterar motores IEC.
 - **@Arquiteto_Seguranca_Privacidade:** antes de autenticação, dados pessoais ou pagamentos, com escopo consultivo de threat modeling, IAM, segredos e LGPD/GDPR; não implementa nem substitui QA.
 

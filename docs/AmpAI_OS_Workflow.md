@@ -1,6 +1,6 @@
 ---
 tags: [governanca, operacao, os, tdd]
-versao: 7.1.1
+versao: 7.2
 status: ativo
 ---
 
@@ -44,6 +44,7 @@ sequenceDiagram
         participant BE as Backend<br/>(Claude Opus)
         participant FE as Frontend<br/>(Claude Sonnet)
         participant PCI as Plataforma CI<br/>(Claude Opus)
+        participant OPS as DevOps/SRE<br/>(Claude Opus)
     end
     box rgb(255, 239, 224) Tribunal e entrega
         participant QA as QA/Security<br/>(Codex)
@@ -102,6 +103,15 @@ sequenceDiagram
         QA-->>CEO: Classificação e veredito de infraestrutura
     end
 
+    opt A entrega altera repositório, sincronização ou ambiente
+        CEO->>CTO: Encaminha objetivo operacional aprovado
+        CTO-->>CEO: O.S. isolada de DevOps/SRE com dry-run e rollback
+        CEO->>OPS: Transporta somente a O.S. operacional
+        OPS-->>CEO: Inventário, candidata e evidência fail-closed
+        CEO->>CTO: Devolve resultado operacional
+        CTO-->>CEO: Encaminhamento para QA/PR quando aplicável
+    end
+
     QA-->>CEO: Pacote final de evidências locais
     CEO->>GH: Autoriza commit e PR pelo executor permitido
     GH->>GH: Executa suíte stable consolidada e publica artifact
@@ -134,6 +144,7 @@ sequenceDiagram
 | Ciência | @Engenheiro_Eletricista | BDD, classificação RNC-P/RNC-C, memorial, prova de cálculo contestável, premissas IEC e faixas físicas | implementar o código final |
 | Fábrica | @Senior_Backend_Dev / @Senior_Frontend_Dev | core DDD ou UI, cada qual no próprio escopo | julgar a própria entrega |
 | Fábrica de Plataforma | @Engenheiro_Plataforma_CI | workflows, executores, schemas, comandos e artifacts conforme O.S. | escrever testes, decidir classificações, emitir veredito ou operar CD |
+| Operação | @Engenheiro_DevOps_SRE | higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback | alterar produto/testes/leis, descartar estado local, julgar a própria operação ou fazer merge |
 | Tribunal | @Senior_QA_Security | testes ZOMBIES, resultado da execução local/CI, artifacts, mutation testing aplicável e `exit code` | implementar a correção avaliada |
 | Soberania | CEO | direção, autorização de PR e merge | delegar o merge a uma IA |
 
@@ -210,6 +221,14 @@ O agente de Plataforma não edita `tests/**`. `qa/test-manifest.json` só pode s
 
 **Gate para seguir:** o QA confirma que o contrato foi exercido, que testes e classificações não foram flexibilizados e que o resultado foi corretamente separado entre `PASS`, `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR`.
 
+### 5.2 DevOps/SRE, quando necessário
+
+Mudança em higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup ou rollback é executada pelo `@Engenheiro_DevOps_SRE` sob O.S. exclusiva do CTO. A O.S. deve exigir inventário, dry-run, allowlist, precondições, comandos exatos, evidência anterior/posterior e rollback.
+
+DevOps/SRE não decide se documento é canônico nem se teste é removível. Governança define ciclo de vida documental; QA classifica testes; CTO roteia; CEO autoriza merge e qualquer operação destrutiva excepcional. Dirty tree, conflito, divergência, segredo ou referência não encerrada interrompe a operação.
+
+**Gate para seguir:** escopo exato preservado, nenhuma alteração fora do allowlist, comandos e exit codes registrados, instalação/regressão aplicável aprovada e candidata devolvida ao CTO. Rewrite, force-push, branch protection, CD e produção exigem autorização específica do CEO.
+
 ### 6. PR, CI, revisão complementar e merge
 
 O CEO só autoriza commit/PR após receber o pacote final de evidências locais. O executor de Git utilizado deve ser autorizado pelo CEO e respeitar as permissões do ambiente.
@@ -271,3 +290,5 @@ Veredito: BLOQUEADO | APROVADO PARA A PR
 8. **Teste aprovado não é moeda de troca.** Nenhuma IA pode removê-lo, arquivá-lo ou enfraquecê-lo para liberar implementação.
 9. **Plataforma materializa; QA decide.** O executor do CI não escreve o teste avaliado, não escolhe sua classificação e não atesta a própria correção.
 10. **Tudo passa pelo CTO; nem tudo passa pela cadeia máxima.** Toda mudança é registrada e classificada antes da execução, com controles proporcionais ao risco.
+11. **Contexto também é superfície de risco.** Histórico, cache e arquivo sem autoridade não entram automaticamente no boot ou no RAG.
+12. **Operação é fail-closed.** DevOps/SRE não descarta estado local, não remove referência sem prova e não julga a própria execução.

@@ -3,7 +3,7 @@ tags:
   - arquitetura/engenharia
   - padroes/codigo
   - governanca/ia
-versao: 1.2
+versao: 1.3
 status: mandatorio
 ---
 
@@ -94,6 +94,9 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 *   **Rigor proporcional:** O.S. são classificadas de `CHG-0` a `CHG-3`. Documentação editorial não simula TDD funcional; refatoração coberta não cria RED artificial; comportamento novo exige RED→GREEN; mudanças críticas recebem todos os controles relevantes.
 *   **Rota e aceite explícitos:** toda O.S. declara executor, retorno ao CTO, próximo encaminhamento controlado pela Torre de Controle e necessidade de teste manual do CEO. O CEO não reconstrói a cadeia operacional a partir de conversas.
 *   **Merge não é encerramento:** PR/SHA, validação pós-merge, alinhamento seguro da `main` local e sincronização do espelho documental, quando aplicável, integram a evidência de encerramento.
+*   **Repositório enxuto:** dependência instalável, cache, screenshot de execução, log, artifact e estado local não são conhecimento canônico e não devem ser versionados sem contrato explícito.
+*   **Atualizar antes de criar:** novo documento só nasce quando possui autoridade, audiência ou ciclo de vida distinto. Caso contrário, atualiza-se a fonte canônica existente.
+*   **Contexto mínimo suficiente:** nenhum agente ou RAG recebe todo o repositório por padrão. Cada persona consome apenas leis, contratos, fontes e evidências necessários à tarefa.
 
 ## 4. Gate Consolidado e Proteção Cumulativa
 
@@ -106,3 +109,35 @@ O AmpAI adota uma suíte de regressão cumulativa para features, correções, re
 *   **Taxonomia rigorosa:** `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` bloqueiam a entrega, mas somente falha com contrato exercido é funcional.
 *   **Cobertura responsável:** a meta é rastrear todos os contratos críticos conhecidos, não prometer ausência absoluta de falhas nem maximizar porcentagem de linhas sem significado.
 *   **Imutabilidade do Tribunal:** nenhuma IA pode flexibilizar, silenciar ou remover teste aprovado para produzir GREEN.
+
+## 5. Higiene, ciclo de vida e densidade de contexto
+
+### 5.1 Classes documentais
+
+Todo documento deve ser classificável como:
+
+- `canonical`: lei, contrato ou referência vigente;
+- `active`: especificação ou entrega em execução;
+- `source`: norma, RNC-P ou referência de origem;
+- `historical`: auditoria, evidência ou especificação substituída.
+
+Documentos canônicos e ativos declaram status, autoridade/responsável, assunto canônico, relação de substituição quando houver e gatilho de revisão. Famílias homogêneas, como features Gherkin, podem herdar esses campos de um catálogo processável.
+
+Documento `historical` permanece no Git para rastreabilidade, mas fica fora do boot padrão dos agentes e da sincronização ordinária do NotebookLM. Histórico só entra no contexto por solicitação ou vínculo explícito da O.S.
+
+### 5.2 Fontes únicas e projeções
+
+- `qa/test-manifest.json` é a fonte processável de inventário e classificação dos testes após auditoria do QA;
+- o Registro Mestre é a fonte do estado operacional; Painel e relatórios são projeções;
+- leis devem residir no documento canônico do domínio; README, onboarding e personas resumem e apontam, sem manter cópias concorrentes;
+- decisão arquitetural relevante deve ser curta, factual e vinculada às especificações, não duplicá-las.
+
+### 5.3 Regra de criação e retenção
+
+Antes de criar arquivo, a O.S. informa por que atualizar um existente é insuficiente, sua classe documental, responsável, consumidores e regra de substituição/arquivamento. Arquivo sem consumidor, autoridade ou ciclo de vida é dívida documental.
+
+Artifacts de CI permanecem na infraestrutura de artifacts conforme retenção. Screenshot só entra no Git quando for baseline visual deliberada, consumida por teste, com proprietário e critério de atualização. Dependências são reproduzidas por lockfile e instalação determinística; não são copiadas para a árvore versionada.
+
+### 5.4 Contexto por allowlist
+
+`sync.ps1`, boot de agentes e pacotes de handoff devem operar por allowlist de fontes ratificadas. Configurações locais, `.obsidian/workspace.json`, documentos históricos, caches, artifacts e conteúdo não relacionado ficam fora do contexto padrão. A implementação dessa filtragem exige O.S. técnica própria e validação de completude para evitar omissão de fonte necessária.

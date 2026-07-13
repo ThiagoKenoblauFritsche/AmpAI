@@ -1,4 +1,4 @@
-# Catálogo de Agentes do AmpAI (v7.1.1 — topologia canônica vigente)
+# Catálogo de Agentes do AmpAI (v7.2 — topologia canônica vigente)
 
 > **Lei de isolamento:** uma persona por chat/thread. Nenhum agente acumula duas cadeiras, e contexto de uma cadeira não é reutilizado por outra.
 
@@ -13,6 +13,7 @@
 | Fábrica — Anthropic Claude Code Pro | **@Senior_Backend_Dev.** Implementa `js/core_*.js` em DDD/Result Pattern, sem DOM. | Claude Opus 4.8, IDE/terminal local |
 | Fábrica — Anthropic Claude Code Pro | **@Senior_Frontend_Dev.** Implementa UI e reatividade em `index.html`/`js/ui_render.js`, sem alterar a matemática. | Claude Sonnet 4.6, IDE/terminal local |
 | Fábrica de Plataforma — Anthropic Claude Code Pro | **@Engenheiro_Plataforma_CI.** Implementa workflows, executores, schemas, comandos e artifacts do Gate dentro da O.S. Não escreve testes do QA, não decide classificações e não emite veredito. | Claude Opus 4.8, IDE/terminal local |
+| Operação — Anthropic Claude Code Pro | **@Engenheiro_DevOps_SRE.** Executa higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback em modo fail-closed. Não altera produto, testes, leis, veredito ou merge. | Claude Opus 4.8, terminal/worktree isolado |
 
 > **Sucessão nominal:** `@Conselho_de_Arquitetura_e_Governanca` sucede a denominação histórica `@Arquiteto_Chefe_e_Governanca`. Selos e evidências anteriores conservam o nome existente no momento da ratificação.
 
@@ -21,7 +22,7 @@
 1. NotebookLM informa a estratégia; o CEO decide a direção.
 2. O Conselho de Arquitetura e Governança valida a aderência às leis e atualiza a documentação raiz.
 3. Toda decisão, alteração, auditoria ou incidente passa pelo CTO, que registra, classifica e transforma a entrada em O.S. proporcional.
-4. Eletricista, Backend, Frontend e Plataforma CI produzem artefatos dentro do próprio escopo.
+4. Eletricista, Backend, Frontend, Plataforma CI e DevOps/SRE produzem artefatos dentro do próprio escopo.
 5. Plataforma CI implementa a decisão técnica recebida; não define o contrato do teste nem julga o resultado.
 6. QA/Codex julga por evidência executável e governa tecnicamente a classificação dos testes. Teste novo nasce `experimental`; somente promoção formal o torna `stable`.
 7. Quando a infraestrutura ratificada for ativada, todo PR para `main` exigirá `regression-gate` com a suíte `stable` completa, artifact consolidado e validação do @Senior_QA_Security. Durante o shadow mode, os workflows vigentes continuam oficiais.
@@ -40,6 +41,14 @@ Tudo retorna ao CTO, inclusive decisões do Conselho e vereditos do QA, sem tran
 
 Toda O.S. declara executor, autoridade do veredito, retorno obrigatório ao CTO, próximo destinatário controlado pelo CTO e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`. Merge não encerra a mudança: a cadeia `origin/main → main local → Google Drive`, quando aplicável, deve possuir estado explícito conforme `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 
+## Repositório enxuto e contexto mínimo
+
+- atualizar documento existente é a regra; arquivo novo exige autoridade, consumidor e ciclo de vida distintos;
+- dependência, cache, artifact, log, screenshot gerado e configuração local não são versionados sem contrato explícito;
+- documento histórico permanece rastreável, mas fica fora do boot e do RAG padrão;
+- testes e utilities devem possuir classificação processável após auditoria do QA;
+- DevOps/SRE materializa saneamento e sincronização; não decide o que é canônico, não classifica teste e não julga a própria operação.
+
 `CodeRabbit`, quando habilitado, é uma revisão complementar de PR; não substitui o julgamento do @Senior_QA_Security, o artifact de CI nem a aprovação humana. CD staging e CD produção são fases futuras, não parte do fluxo ativo.
 
 ## Gate Consolidado de Regressão
@@ -57,6 +66,5 @@ Regra de precedência: RNC-C e norma primária prevalecem sobre RNC-P, guia secu
 
 As cadeiras abaixo existem apenas como previsão arquitetural. Não recebem O.S. nem credenciais antes de ratificação própria:
 
-- **@Engenheiro_DevOps_SRE:** ativação prevista antes de CD para staging ou automação operacional persistente; ambientes, sincronização operacional, IaC, deploy, observabilidade, backup e rollback.
 - **@Senior_Backend_SaaS:** ativação prevista antes de BaaS/Auth; APIs de aplicação, persistência, sessões, banco de dados e integrações externas, sem alterar motores IEC.
 - **@Arquiteto_Seguranca_Privacidade:** ativação obrigatória antes de autenticação, dados pessoais ou pagamentos; threat modeling, IAM, segredos e LGPD/GDPR, sem implementar a correção nem substituir o QA.

@@ -1,9 +1,9 @@
 ---
 tags: [governanca, operacao, cto, ceo, pos-merge, sincronizacao]
-versao: 1.0
-status: ratificado_aguardando_integracao
-data_decisao: 2026-07-12
-baseline_decisao: 6fbff041914ce62483401d4e8f6c1f804a26fc20
+versao: 1.1
+status: ratificado
+data_decisao: 2026-07-13
+baseline_decisao: d8dce04f45bb0ed2c82e7bab5877fc056f924c89
 autoridade: CEO + @Conselho_de_Arquitetura_e_Governanca
 ---
 
@@ -56,10 +56,10 @@ O executor não escolhe o agente seguinte. Parecer do Conselho, veredito do QA, 
 | motores `js/core_*.js` | `@Senior_Backend_Dev` |
 | interface e renderização | `@Senior_Frontend_Dev` |
 | workflows, manifestos, executores e artifacts de CI | `@Engenheiro_Plataforma_CI` |
-| ambientes, sincronização operacional, deploy e observabilidade | `@Engenheiro_DevOps_SRE`, somente após ativação formal |
+| higiene do repositório, ambientes, sincronização operacional, deploy e observabilidade | `@Engenheiro_DevOps_SRE` |
 | produto, prioridade, aceite de experiência e merge | CEO |
 
-Enquanto `@Engenheiro_DevOps_SRE` permanecer inativo, a sincronização pós-merge será rotina operacional preautorizada, coordenada pelo CTO e executada por operador Git expressamente autorizado pelo CEO. Essa autorização não inclui resolver conflitos, sobrescrever arquivos, executar `reset --hard` ou alterar branches de trabalho.
+O `@Engenheiro_DevOps_SRE` opera somente por O.S. do CTO. Sincronização pós-merge estritamente preautorizada pode ser executada como rotina vinculada à mudança original; saneamento, alteração de script, remoção de referência, deploy e automação persistente exigem escopo próprio. Nenhuma autorização inclui resolver conflitos por descarte, sobrescrever estado local, executar `reset --hard` ou fazer merge.
 
 ## 4. Aceite manual do CEO
 
@@ -138,6 +138,8 @@ O merge não encerra sozinho uma mudança. A cadeia canônica é:
 A rotina deve parar e devolver evidência ao CTO se encontrar working tree suja, branch incorreta, divergência sem fast-forward, conflito, falha de rede/Git/sincronização, hash divergente ou gate obrigatório inconclusivo.
 
 É proibido usar `git reset --hard`, descartar ou incorporar alteração local, resolver conflito automaticamente, alterar worktrees de agentes ou declarar sucesso parcial como sincronização concluída.
+
+Worktree ou branch encerrada só pode ser removida individualmente depois de inventário, comprovação de estado limpo, identificação do SHA/PR, confirmação de merge ou decisão formal de abandono e ausência de trabalho exclusivo. A existência do commit no histórico não autoriza apagar uma working tree suja.
 
 ### 5.3 Estrutura local recomendada
 
