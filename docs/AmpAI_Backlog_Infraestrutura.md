@@ -10,7 +10,7 @@ status: ativo
 # 📈 Backlog de Infraestrutura — Governança e Implementação v7.2
 
 > [!todo] **Diretriz de Execução (State Lock)**
-> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) permanece no roadmap futuro. **O foco oficial é a FASE 7:** separação de poderes, fábrica Claude especializada, Tribunal Codex e implantação do Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md`. CodeRabbit é revisão complementar, QA mantém o veredito, CEO mantém o merge e CD permanece separado.
+> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) permanece no roadmap futuro. **O foco oficial é a FASE 7:** separação de poderes, fábrica de produto Claude, fábrica operacional Antigravity, Tribunal Codex e implantação do Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md`. CodeRabbit é revisão complementar, QA mantém o veredito, CEO mantém o merge e CD permanece separado.
 
 ---
 
@@ -66,6 +66,9 @@ ___
 - [x] **GOV-OPERACAO-EXECUTIVA-V711** | `[GOVERNANÇA]` Roteamento obrigatório de O.S., declaração `TESTE DO CEO`, visão executiva e encerramento pós-merge definidos em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`. Não constitui O.S. técnica.
 - [x] **GOV-CONTEXTO-ENXUTO-V72** | `[GOVERNANÇA]` Atualizar antes de criar, classes documentais, fonte única por domínio, allowlist de contexto e exclusão de regeneráveis do versionamento ratificadas no Manifesto. Não constitui O.S. técnica.
 - [x] **GOV-DEVOPS-OPS** | `[GOVERNANÇA]` `@Engenheiro_DevOps_SRE` ativado para higiene, sincronização, worktrees/branches e ambientes em modo fail-closed, sem autoridade de teste, veredito ou merge.
+- [x] **GOV-ROTEAMENTO-MULTIPROVEDOR-V72** | `[GOVERNANÇA]` Plataforma CI e DevOps/SRE alocados em projetos Antigravity independentes, com Gemini 3.5 Flash padrão e 3.1 Pro High escalonado; Claude preserva produto e Codex preserva o Tribunal. O.S. em andamento não muda de executor.
+- [ ] **GOV-QUALIFICACAO-ANTIGRAVITY-PCI** | `[PRÉ-CONDIÇÃO]` CTO registrar piloto read-only/dry-run da Plataforma CI antes da primeira O.S. mutável no novo habitat.
+- [ ] **GOV-QUALIFICACAO-ANTIGRAVITY-SRE** | `[PRÉ-CONDIÇÃO]` CTO registrar piloto read-only/dry-run do DevOps/SRE antes da primeira O.S. mutável no novo habitat.
 - [x] **O.S. #INF-022** | `[ATUALIZADA]` CodeRabbit configurado como revisão complementar no GitHub.
 - [x] **O.S. #INF-023** | `[ATUALIZADA]` Estúdio 2 local unificado: Claude Opus 4.8 para ciência normativa/BDD e Backend; Claude Sonnet 4.6 para Frontend. O @Engenheiro_Eletricista consome RNC-P/RNC-C em Markdown, não PDFs massivos.
 - [x] **O.S. #INF-026** | `[CRÍTICA]` Tribunal migrado para @Senior_QA_Security no Codex, com execução isolada e evidência de `exit code`.

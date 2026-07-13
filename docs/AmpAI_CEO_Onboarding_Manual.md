@@ -18,7 +18,8 @@ O CEO dirige estratégia, produto, prioridade e é a autoridade exclusiva de mer
 | --- | --- | --- |
 | NotebookLM | Contexto, fontes, normas e brainstorming | Camada 0 — sem produção |
 | ChatGPT Plus | Conselho, O.S. e negócio em abas independentes | @Conselho_de_Arquitetura_e_Governanca, @CTO, @Negocios_e_Estrategia |
-| Claude Code Pro | Ciência, implementação, Plataforma CI e operação DevOps/SRE em contextos separados | @Engenheiro_Eletricista, @Senior_Backend_Dev, @Senior_Frontend_Dev, @Engenheiro_Plataforma_CI, @Engenheiro_DevOps_SRE |
+| Claude Code Pro | Ciência e implementação do produto em contextos separados | @Engenheiro_Eletricista, @Senior_Backend_Dev, @Senior_Frontend_Dev |
+| Google AI Pro / Antigravity | Plataforma CI e operação DevOps/SRE em projetos/worktrees separados | @Engenheiro_Plataforma_CI, @Engenheiro_DevOps_SRE |
 | Codex CLI/API + GitHub Actions | Tribunal: testes locais, CI reprodutível e artifacts de evidência | @Senior_QA_Security |
 
 ## Regra de isolamento
@@ -40,6 +41,8 @@ Abra uma aba limpa por persona e cole o respectivo arquivo em `.github/chat_cont
 Quando uma O.S. alterar workflows, executores, schemas, comandos, manifesto ou artifacts, envie-a ao @Engenheiro_Plataforma_CI. Ele não pode escrever testes, decidir classificações ou julgar a própria implementação; a candidata retorna obrigatoriamente ao QA.
 
 Quando uma O.S. envolver higiene do repositório, sincronização, worktrees/branches ou ambientes, envie-a ao @Engenheiro_DevOps_SRE. Ele começa por inventário e dry-run, não descarta estado local e devolve a candidata ao CTO. A classificação de testes continua com QA; documentos canônicos continuam com o Conselho.
+
+Para Plataforma CI e DevOps/SRE, abra projetos Antigravity separados, mantenha permissões restritas ao projeto e aprovação interativa ativa. Use Gemini 3.5 Flash como padrão; Gemini 3.1 Pro High somente quando o CTO registrar escalonamento por complexidade. Antes da primeira mutação, execute a qualificação read-only/dry-run da cadeira. Nunca troque o executor de uma O.S. em andamento.
 
 Todo resultado volta ao CTO. Você recebe dele um resumo executivo com classe, risco, pareceres, testes, PR/SHA e recomendação. Após o merge, devolva o resultado ao CTO para encerramento no Registro Mestre.
 

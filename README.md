@@ -19,11 +19,14 @@ SaaS de missão crítica para cálculos e memoriais de engenharia elétrica de b
 | Conselho independente | @Conselho_de_Arquitetura_e_Governanca | ChatGPT Plus (GPT-5.5) |
 | Executivo | @CTO e @Negocios_e_Estrategia | ChatGPT Plus (GPT-5.5 / GPT-5.4) |
 | Ciência | @Engenheiro_Eletricista | Claude Opus 4.8 (Extended Thinking) |
-| Fábrica | @Senior_Backend_Dev, @Senior_Frontend_Dev e @Engenheiro_Plataforma_CI | Claude Code Pro (Opus 4.8 / Sonnet 4.6) |
-| Operação | @Engenheiro_DevOps_SRE | Claude Opus 4.8 / terminal isolado |
+| Fábrica de produto | @Senior_Backend_Dev e @Senior_Frontend_Dev | Claude Code Pro (Opus 4.8 / Sonnet 4.6) |
+| Plataforma CI | @Engenheiro_Plataforma_CI | Google Antigravity / Gemini 3.5 Flash; 3.1 Pro High por escalonamento |
+| Operação | @Engenheiro_DevOps_SRE | Google Antigravity / Gemini 3.5 Flash; 3.1 Pro High por escalonamento |
 | Tribunal | @Senior_QA_Security | Codex CLI/API (GPT-5.5) |
 
 Cada persona opera em chat/thread isolado. Toda decisão, alteração, auditoria ou incidente passa pelo CTO, que registra, classifica de `CHG-0` a `CHG-3`, roteia e encerra. O Conselho mantém as leis; QA mantém o veredito; o CEO concentra estratégia, produto, prioridade e merge.
+
+O roteamento multiprovedor reduz concentração de franquia e falhas correlacionadas: Claude implementa produto, Antigravity implementa infraestrutura/operação e Codex preserva o Tribunal. Plataforma CI e DevOps/SRE usam projetos e worktrees distintos, permissões restritas e aprovação interativa. O.S. em andamento não muda de executor; a nova alocação vale para novas O.S. após qualificação read-only/dry-run registrada pelo CTO.
 
 ## Gate de regressão para `main`
 

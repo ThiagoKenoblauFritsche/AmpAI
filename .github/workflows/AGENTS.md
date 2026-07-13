@@ -12,8 +12,8 @@
 | Ciência — Anthropic Claude Code Pro | **@Engenheiro_Eletricista.** Consome RNC-P/RNC-C em Markdown, produz BDD, memorial em LaTeX, prova de cálculo contestável e limites físicos. Não implementa o código final. | Claude Opus 4.8 (Extended Thinking), chat/IDE isolado |
 | Fábrica — Anthropic Claude Code Pro | **@Senior_Backend_Dev.** Implementa `js/core_*.js` em DDD/Result Pattern, sem DOM. | Claude Opus 4.8, IDE/terminal local |
 | Fábrica — Anthropic Claude Code Pro | **@Senior_Frontend_Dev.** Implementa UI e reatividade em `index.html`/`js/ui_render.js`, sem alterar a matemática. | Claude Sonnet 4.6, IDE/terminal local |
-| Fábrica de Plataforma — Anthropic Claude Code Pro | **@Engenheiro_Plataforma_CI.** Implementa workflows, executores, schemas, comandos e artifacts do Gate dentro da O.S. Não escreve testes do QA, não decide classificações e não emite veredito. | Claude Opus 4.8, IDE/terminal local |
-| Operação — Anthropic Claude Code Pro | **@Engenheiro_DevOps_SRE.** Executa higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback em modo fail-closed. Não altera produto, testes, leis, veredito ou merge. | Claude Opus 4.8, terminal/worktree isolado |
+| Fábrica de Plataforma — Google AI Pro | **@Engenheiro_Plataforma_CI.** Implementa workflows, executores, schemas, comandos e artifacts do Gate dentro da O.S. Não escreve testes do QA, não decide classificações e não emite veredito. | Google Antigravity em projeto/worktree isolado; Gemini 3.5 Flash padrão; Gemini 3.1 Pro High somente por escalonamento |
+| Operação — Google AI Pro | **@Engenheiro_DevOps_SRE.** Executa higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback em modo fail-closed. Não altera produto, testes, leis, veredito ou merge. | Google Antigravity em projeto/worktree isolado; Gemini 3.5 Flash padrão; Gemini 3.1 Pro High somente por escalonamento |
 
 > **Sucessão nominal:** `@Conselho_de_Arquitetura_e_Governanca` sucede a denominação histórica `@Arquiteto_Chefe_e_Governanca`. Selos e evidências anteriores conservam o nome existente no momento da ratificação.
 
@@ -38,6 +38,17 @@ A lei completa está em `docs/AmpAI_Classificacao_Mudancas.md`; o estado consoli
 - `CHG-3 Crítica`: ciência, segurança, dados, Plataforma, infraestrutura ou Governança; controles completos dos especialistas relevantes.
 
 Tudo retorna ao CTO, inclusive decisões do Conselho e vereditos do QA, sem transferir a ele essas autoridades. O CEO define estratégia, produto, prioridade e merge; não precisa orquestrar rotas ou redigir instruções técnicas.
+
+## Roteamento multiprovedor e qualificação
+
+- OpenAI/Codex preserva Conselho, CTO, Estratégia e Tribunal; a franquia agentic do Codex deve ser priorizada para QA, auditoria e investigação, não para a implementação que o próprio Tribunal julgará.
+- Anthropic Claude Code preserva Ciência, Backend IEC e Frontend. Opus atende ciência e motores críticos; Sonnet atende UI e tarefas proporcionais ao risco.
+- Google Antigravity executa Plataforma CI e DevOps/SRE em projetos, threads e worktrees distintos. Gemini 3.5 Flash é o executor padrão; Gemini 3.1 Pro High é escalonamento para diagnóstico ou planejamento complexo, nunca autorização autônoma.
+- Mudança de modelo dentro do perfil aprovado exige registro do CTO e qualificação proporcional; mudança de provedor, habitat, autoridade ou fronteira de escopo é `CHG-3` e exige Governança/CEO.
+- Antes da primeira mutação por uma cadeira migrada, o CTO conduz qualificação AmpAI em tarefa read-only/dry-run. Escrita fora do escopo, falso sucesso, ausência de rollback ou violação de Air Gap reprova a qualificação.
+- O.S. já iniciada conserva executor, modelo e baseline originais até o encerramento. A redistribuição não troca executor no meio de uma cadeia RED→GREEN.
+
+No Antigravity, instruções operacionais devem ser fornecidas em inglês e solicitar devolutiva em português do Brasil. O preset deve permanecer restrito ao projeto, com aprovação interativa ativa, sem `Full machine`, `Unrestricted`, wildcard de MCP, tarefa agendada ou consumo automático de créditos. Plataforma e DevOps não compartilham projeto, thread, worktree ou credenciais.
 
 Toda O.S. declara executor, autoridade do veredito, retorno obrigatório ao CTO, próximo destinatário controlado pelo CTO e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`. Merge não encerra a mudança: a cadeia `origin/main → main local → Google Drive`, quando aplicável, deve possuir estado explícito conforme `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 

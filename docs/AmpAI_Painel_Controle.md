@@ -17,8 +17,8 @@ status: ativo
 | Ciência | @Engenheiro_Eletricista | RNC-P/RNC-C, IEC, BDD, memorial, prova de cálculo contestável e limites físicos | Claude Opus 4.8 Extended Thinking / Claude Code Pro isolado |
 | Fábrica | @Senior_Backend_Dev | DDD e `js/core_*.js`; zero DOM | Claude Opus 4.8 / Claude Code local |
 | Fábrica | @Senior_Frontend_Dev | `index.html`, Tailwind e `js/ui_render.js` | Claude Sonnet 4.6 / Claude Code local |
-| Fábrica de Plataforma | @Engenheiro_Plataforma_CI | workflows, executores, schemas, comandos e artifacts; sem testes ou veredito | Claude Opus 4.8 / Claude Code local |
-| Operação | @Engenheiro_DevOps_SRE | higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback | Claude Opus 4.8 / terminal/worktree isolado |
+| Fábrica de Plataforma | @Engenheiro_Plataforma_CI | workflows, executores, schemas, comandos e artifacts; sem testes ou veredito | Antigravity isolado; Gemini 3.5 Flash padrão / 3.1 Pro High escalonado |
+| Operação | @Engenheiro_DevOps_SRE | higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback | Antigravity isolado; Gemini 3.5 Flash padrão / 3.1 Pro High escalonado |
 | Tribunal | @Senior_QA_Security | RED/GREEN, ZOMBIES, mutation testing, artifacts CI e evidências | GPT-5.5 / Codex em terminal isolado + GitHub Actions CI |
 
 **Regra:** uma persona por chat/thread. Toda entrada passa pelo CTO; o CEO aprova direção e merge; o Conselho não emite O.S. e não executa a fábrica. A denominação histórica `@Arquiteto_Chefe_e_Governanca` permanece apenas em selos anteriores à v7.1.

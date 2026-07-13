@@ -24,6 +24,8 @@ O.S.: <identificador>
 Classe: CHG-0 | CHG-1 | CHG-2 | CHG-3
 Domínio: <domínio>
 Responsável executor: <persona>
+Habitat/modelo: <provedor, ambiente isolado e modelo padrão/escalonado>
+Qualificação da cadeira: NÃO APLICÁVEL | PENDENTE | APROVADA <evidência>
 Consultados: <personas ou nenhum>
 Autoridade do veredito: <persona ou não aplicável>
 Autoridade de merge: CEO
@@ -44,6 +46,8 @@ O @CTO registrará a evidência e emitirá o próximo encaminhamento.
 ```
 
 O executor não escolhe o agente seguinte. Parecer do Conselho, veredito do QA, comentário do CodeRabbit, falha de CI e entrega da Fábrica retornam ao CTO antes de nova ação.
+
+Para `@Engenheiro_Plataforma_CI` e `@Engenheiro_DevOps_SRE`, o envelope deve indicar projeto/worktree Antigravity exclusivo, Gemini 3.5 Flash padrão ou escalonamento explícito para Gemini 3.1 Pro High, e qualificação read-only/dry-run aprovada antes da primeira mutação. As duas cadeiras não compartilham projeto, thread, worktree ou credenciais. O.S. em andamento mantém executor, habitat e modelo originais até o encerramento.
 
 ## 3. Roteamento por domínio
 

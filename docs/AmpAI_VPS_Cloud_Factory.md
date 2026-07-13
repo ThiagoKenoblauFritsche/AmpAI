@@ -16,9 +16,9 @@ review_trigger: autorizacao_de_staging_ou_revisao_da_topologia_remota
 > [!WARNING]
 > **Atenção:** Este documento descreve uma expansão futura do AmpAI. Atualmente operamos na **Governança v7.2**, onde a Fábrica roda no terminal local e o Gate opera em shadow mode. `@Engenheiro_DevOps_SRE` está ratificado, mas VPS, credenciais, staging e deploy continuam bloqueados até O.S. e autorização específicas do CEO.
 
-Este documento descreve os passos operacionais futuros para configurar a VPS Hetzner como um "Headless Orchestrator". A VPS passará a ter a responsabilidade de ouvir comandos via Telegram e instanciar o Claude Code de forma autônoma (Air Gap via Firecracker).
+Este documento descreve os passos operacionais futuros para configurar a VPS Hetzner como um "Headless Orchestrator". A futura arquitetura deverá separar a fábrica de produto Claude, o plano operacional Antigravity e o Tribunal Codex; nenhuma automação autônoma aqui descrita está autorizada pela v7.2.
 
-`@Engenheiro_Plataforma_CI` não possui autorização para executar este guia: seu escopo termina na infraestrutura de CI dentro do repositório. VPS, credenciais de ambiente, deploy, observabilidade, backup e rollback pertencerão ao futuro `@Engenheiro_DevOps_SRE`, após O.S. e ratificação próprias.
+`@Engenheiro_Plataforma_CI` não possui autorização para executar este guia: seu escopo termina na infraestrutura de CI dentro do repositório. VPS, credenciais de ambiente, deploy, observabilidade, backup e rollback pertencem ao `@Engenheiro_DevOps_SRE`, mas continuam bloqueados até O.S. e autorização específicas do CEO. A alocação no Antigravity não concede acesso à VPS nem amplia permissões.
 
 ---
 ## 0. Credenciais de Acesso Mestre (Root)

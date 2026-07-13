@@ -43,8 +43,8 @@ sequenceDiagram
         participant ELE as Eletricista<br/>(Claude Opus)
         participant BE as Backend<br/>(Claude Opus)
         participant FE as Frontend<br/>(Claude Sonnet)
-        participant PCI as Plataforma CI<br/>(Claude Opus)
-        participant OPS as DevOps/SRE<br/>(Claude Opus)
+        participant PCI as Plataforma CI<br/>(Antigravity / Gemini)
+        participant OPS as DevOps/SRE<br/>(Antigravity / Gemini)
     end
     box rgb(255, 239, 224) Tribunal e entrega
         participant QA as QA/Security<br/>(Codex)
@@ -217,6 +217,8 @@ Somente após o core estar GREEN o CTO emite O.S. de interface. O @Senior_Fronte
 
 Quando a entrega exigir alteração em `.github/workflows/**`, `scripts/qa/**`, infraestrutura em `qa/**`, scripts npm do Gate ou artifacts, o CTO emite O.S. exclusiva para o @Engenheiro_Plataforma_CI. A entrada deve conter o contrato de infraestrutura e a evidência do QA; `CONFIG_ERROR` esperado pode representar RED de infraestrutura, mas nunca RED funcional.
 
+A cadeira opera em projeto/worktree Antigravity exclusivo, com Gemini 3.5 Flash por padrão e Gemini 3.1 Pro High somente por escalonamento registrado pelo CTO. Antes da primeira mutação após a migração, deve concluir qualificação read-only/dry-run. O.S. já iniciada conserva o executor original até o encerramento.
+
 O agente de Plataforma não edita `tests/**`. `qa/test-manifest.json` só pode ser materializado quando a O.S. reproduzir decisão explícita do QA sobre classificação, contrato e contagem. A candidata sempre retorna ao QA independente.
 
 **Gate para seguir:** o QA confirma que o contrato foi exercido, que testes e classificações não foram flexibilizados e que o resultado foi corretamente separado entre `PASS`, `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR`.
@@ -224,6 +226,8 @@ O agente de Plataforma não edita `tests/**`. `qa/test-manifest.json` só pode s
 ### 5.2 DevOps/SRE, quando necessário
 
 Mudança em higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup ou rollback é executada pelo `@Engenheiro_DevOps_SRE` sob O.S. exclusiva do CTO. A O.S. deve exigir inventário, dry-run, allowlist, precondições, comandos exatos, evidência anterior/posterior e rollback.
+
+A cadeira usa projeto/worktree Antigravity diferente da Plataforma CI, Gemini 3.5 Flash por padrão e Gemini 3.1 Pro High somente por escalonamento registrado. Permissões ficam restritas ao projeto e aprovações interativas permanecem ativas; `Full machine`, `Unrestricted`, wildcard MCP, tarefas agendadas e créditos automáticos são proibidos sem nova decisão de Governança/CEO.
 
 DevOps/SRE não decide se documento é canônico nem se teste é removível. Governança define ciclo de vida documental; QA classifica testes; CTO roteia; CEO autoriza merge e qualquer operação destrutiva excepcional. Dirty tree, conflito, divergência, segredo ou referência não encerrada interrompe a operação.
 
