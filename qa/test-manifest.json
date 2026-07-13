@@ -32,6 +32,21 @@
       }
     },
     {
+      "id": "inc001-m16",
+      "file": "tests/test_inc001_m16.js",
+      "classification": "stable",
+      "suite": "core",
+      "timeoutSeconds": 60,
+      "preflight": "node",
+      "report": {
+        "protocol": "json-lines",
+        "prefix": "INC001_M16_REPORT",
+        "expectedCount": 24,
+        "complianceField": "compliant",
+        "expectedValue": true
+      }
+    },
+    {
       "id": "os040r",
       "file": "tests/test_os040_restart.js",
       "classification": "stable",

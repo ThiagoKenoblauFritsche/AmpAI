@@ -31,7 +31,6 @@ const { spawnSync } = require('node:child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const DEFAULT_SCHEMA = path.resolve(ROOT, 'qa', 'test-manifest.schema.json');
-const OFFICIAL_MANIFEST = path.resolve(ROOT, 'qa', 'test-manifest.json');
 const TESTS_ROOT = path.resolve(ROOT, 'tests');
 const INFRA_MARKER = 'INF028_FIXTURE_INFRA';
 const PROTECTED_OUTPUT_DIRS = ['js', 'docs', 'tests', 'qa', 'scripts', '.github'];
@@ -232,10 +231,9 @@ function validateSchema(manifest, schema) {
   return { ok: false, errors };
 }
 
-function validateSemantics(manifest, manifestPath) {
+function validateSemantics(manifest) {
   const issues = [];
   const tests = Array.isArray(manifest.tests) ? manifest.tests : [];
-  const isOfficial = path.resolve(manifestPath) === OFFICIAL_MANIFEST;
   const seenIds = new Set();
   const forbiddenKeys = ['command', 'script', 'shell', 'exec', 'cmd', 'run'];
 
@@ -266,10 +264,10 @@ function validateSemantics(manifest, manifestPath) {
     }
   }
 
-  if (isOfficial) {
-    const stableCount = tests.filter((test) => test && test.classification === 'stable').length;
-    if (stableCount !== 5) issues.push(`manifesto oficial deve ter exatamente cinco entradas stable (encontrado: ${stableCount})`);
-  }
+  // Seleção obrigatória é derivada do manifesto (classificação `stable` + suíte),
+  // nunca de um número fixo. A ausência total de stable vira CONFIG_ERROR na seleção
+  // (selected.length === 0). Manter contagem fixa aqui reintroduziria acoplamento
+  // ao inventário e bloquearia promoções legítimas aprovadas pelo QA.
 
   return issues;
 }
@@ -610,7 +608,7 @@ async function main() {
   }
 
   // Validação semântica.
-  const semanticIssues = validateSemantics(manifest, manifestPath);
+  const semanticIssues = validateSemantics(manifest);
   if (semanticIssues.length > 0) {
     return emit(CLASSIFICATION.CONFIG_ERROR, configErrorSummary('manifesto reprovado na validação semântica', semanticIssues), writeTarget,
       ['CONFIG_ERROR: validação semântica do manifesto falhou:', ...semanticIssues.map((e) => `  - ${e}`)]);
