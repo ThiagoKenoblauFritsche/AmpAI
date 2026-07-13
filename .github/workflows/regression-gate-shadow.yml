@@ -54,7 +54,16 @@ jobs:
             > tmp/evidence/manifest-validation/stdout.log \
             2> tmp/evidence/manifest-validation/stderr.log
           c=$?
-          cls=$([ "$c" = "0" ] && echo PASS || echo FUNCTIONAL_FAILURE)
+          # Taxonomia explicita do exit code do contrato (O.S. INC-001-06D):
+          # 0->PASS 1->FUNCTIONAL_FAILURE 2->INFRA_BLOCKED 3->CONFIG_ERROR;
+          # qualquer outro valor -> CONFIG_ERROR normalizado para exit 3.
+          case "$c" in
+            0) cls=PASS ;;
+            1) cls=FUNCTIONAL_FAILURE ;;
+            2) cls=INFRA_BLOCKED ;;
+            3) cls=CONFIG_ERROR ;;
+            *) cls=CONFIG_ERROR; c=3 ;;
+          esac
           node -e 'const fs=require("fs");fs.writeFileSync("tmp/evidence/manifest-validation/status.json",JSON.stringify({schemaVersion:1,component:"manifest-validation",classification:process.argv[1]},null,2))' "$cls"
           echo "code=$c" >> "$GITHUB_OUTPUT"
           exit 0
