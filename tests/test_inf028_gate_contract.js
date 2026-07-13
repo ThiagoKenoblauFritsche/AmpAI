@@ -1,9 +1,10 @@
 /**
- * O.S. INF-028-A / INC-001-06A — contrato executável do Gate Consolidado.
+ * O.S. INF-028-A / INC-001-06A-RF — contrato executável do Gate Consolidado.
  *
  * Este arquivo não implementa manifesto, schema ou executor. Ele descreve o
  * contrato executável futuro, preserva os 18 relatórios INF-028-A e acrescenta
- * as provas RED da promoção controlada do M16 sem implementar o Gate.
+ * as provas RED da promoção controlada do M16 e da taxonomia do workflow sem
+ * implementar o Gate.
  */
 'use strict';
 
@@ -85,6 +86,7 @@ const PROMOTION_CASES = [
   'aggregator-six-stable-pass',
   'aggregator-missing-m16-is-config-error',
   'workflow-core-fallback-includes-m16',
+  'workflow-manifest-validation-exit-taxonomy',
   'operational-contract-declares-six-stable',
 ];
 
@@ -353,7 +355,10 @@ function runSixStableExecutorProbe(tempDir) {
       id,
       file,
       classification: 'stable',
-      suite: index < 3 ? 'core' : 'browser',
+      // Probe de capacidade do executor: seis entradas stable puramente Node.
+      // O inventário real 3 core + 3 browser é protegido separadamente pelo
+      // contrato do manifesto e não deve contaminar esta prova com Chromium.
+      suite: 'core',
       timeoutSeconds: 60,
       preflight: 'node',
       report: {
@@ -453,6 +458,60 @@ function staleOperationalClaims() {
     });
   }
   return matches;
+}
+
+function manifestValidationTaxonomyEvidence(workflowText) {
+  const startMarker = 'node tests/test_inf028_gate_contract.js';
+  const start = workflowText.indexOf(startMarker);
+  const end = start >= 0 ? workflowText.indexOf('echo "code=$c"', start) : -1;
+  const block = start >= 0 && end >= start
+    ? workflowText.slice(start, end + 'echo "code=$c"'.length)
+    : '';
+  const mapping = { 0: null, 1: null, 2: null, 3: null, invalid: null };
+
+  // Forma atual: um binário 0/outros. Registrá-la explicitamente torna visível
+  // que 2 e 3 são indevidamente colapsados em FUNCTIONAL_FAILURE.
+  const binary = /cls=\$\(\[\s*"?\$c"?\s*(?:=|==|-eq)\s*"?(\d+)"?\s*\]\s*&&\s*echo\s+([A-Z_]+)\s*\|\|\s*echo\s+([A-Z_]+)\s*\)/.exec(block);
+  if (binary) {
+    const matchedCode = Number(binary[1]);
+    if (Object.prototype.hasOwnProperty.call(mapping, matchedCode)) mapping[matchedCode] = binary[2];
+    for (const code of [0, 1, 2, 3]) {
+      if (code !== matchedCode) mapping[code] = binary[3];
+    }
+    mapping.invalid = binary[3];
+  }
+
+  // Forma futura recomendada: case explícito. Também aceita if/elif explícito,
+  // sem impor ao workflow uma única sintaxe de implementação.
+  const caseArm = /^\s*(0|1|2|3)\)\s*[^\r\n]*?\b(?:cls|classification)=['"]?([A-Z_]+)['"]?/gm;
+  let match;
+  while ((match = caseArm.exec(block)) !== null) mapping[Number(match[1])] = match[2];
+  const defaultArm = /^\s*\*\)\s*[^\r\n]*?\b(?:cls|classification)=['"]?([A-Z_]+)['"]?/m.exec(block);
+  if (defaultArm) mapping.invalid = defaultArm[1];
+
+  const explicitIf = /\b(?:if|elif)\s+\[\s*"?\$c"?\s*(?:=|==|-eq)\s*"?(0|1|2|3)"?\s*\]\s*;?\s*then[\s;]+(?:cls|classification)=['"]?([A-Z_]+)['"]?/g;
+  while ((match = explicitIf.exec(block)) !== null) mapping[Number(match[1])] = match[2];
+  const explicitElse = /\belse[\s;]+(?:cls|classification)=['"]?([A-Z_]+)['"]?/m.exec(block);
+  if (explicitElse) mapping.invalid = explicitElse[1];
+
+  const expected = {
+    0: 'PASS',
+    1: 'FUNCTIONAL_FAILURE',
+    2: 'INFRA_BLOCKED',
+    3: 'CONFIG_ERROR',
+    invalid: 'CONFIG_ERROR',
+  };
+  const sourceLines = block.split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => /(?:cls|classification|case\s+"?\$c|^[*0-3]\))/.test(line));
+
+  return {
+    blockFound: block.length > 0,
+    expected,
+    observed: mapping,
+    sourceLines,
+    compliant: block.length > 0 && sameJsonValue(mapping, expected),
+  };
 }
 
 function resultFor(execution, testId) {
@@ -800,6 +859,9 @@ async function main() {
         exitCode: sixStableExecution?.exitCode ?? null,
         resultIds: sixStableIds,
         classifications: sixStableExecution?.classifications || [],
+        syntheticSuite: 'core',
+        syntheticPreflight: 'node',
+        chromiumRequired: false,
         stderr: String(sixStableExecution?.stderr || '').trim(),
         stdout: String(sixStableExecution?.stdout || '').trim(),
       }
@@ -889,6 +951,18 @@ async function main() {
       { expectedCoreIds, observedCoreIds: fallbackIds, sourceLine: fallbackLine.trim() }
     ));
 
+    const taxonomy = manifestValidationTaxonomyEvidence(workflowText);
+    promotionReports.push(createReport(
+      'workflow-manifest-validation-exit-taxonomy', 'workflow', workflowPresent, 'PASS',
+      taxonomy.compliant ? 'PASS' : 'CONFIG_ERROR', taxonomy.compliant,
+      {
+        blockFound: taxonomy.blockFound,
+        expectedMapping: taxonomy.expected,
+        observedMapping: taxonomy.observed,
+        sourceLines: taxonomy.sourceLines,
+      }
+    ));
+
     const staleClaims = staleOperationalClaims();
     const operationalContractCompliant = OPERATIONAL_CONTRACT_FILES.every((filePath) => fs.existsSync(filePath))
       && staleClaims.length === 0;
@@ -909,7 +983,7 @@ async function main() {
     assert.equal(reports.length, 18, `INF-028-A exige exatamente 18 relatórios; obtidos: ${reports.length}.`);
     assert.deepEqual(reports.map((report) => report.case), REQUIRED_CASES, 'Ordem/conjunto de casos INF-028-A divergente.');
     assert.equal(reports.every((report) => report.assertionExercised === true), true, 'Todos os 18 casos devem exercer sua asserção.');
-    assert.equal(promotionReports.length, 8, `INC-001-06A exige exatamente 8 relatórios; obtidos: ${promotionReports.length}.`);
+    assert.equal(promotionReports.length, 9, `INC-001-06A/RF exige exatamente 9 relatórios; obtidos: ${promotionReports.length}.`);
     assert.deepEqual(
       promotionReports.map((report) => report.case),
       PROMOTION_CASES,
@@ -918,7 +992,7 @@ async function main() {
     assert.equal(
       promotionReports.every((report) => report.assertionExercised === true),
       true,
-      'Todos os 8 casos INC-001-06A devem exercer sua asserção.'
+      'Todos os 9 casos INC-001-06A/RF devem exercer sua asserção.'
     );
 
     if (fixtureIssues.length > 0) {
@@ -930,7 +1004,7 @@ async function main() {
     const failures = [...reports, ...promotionReports].filter((report) => !report.compliant);
     if (failures.length > 0) {
       const error = new assert.AssertionError({
-        message: `CONFIG_ERROR: promoção M16 ausente/incompleta em ${failures.length}/26 contratos: ${failures.map((report) => report.case).join(', ')}`,
+        message: `CONFIG_ERROR: promoção M16 ausente/incompleta em ${failures.length}/27 contratos: ${failures.map((report) => report.case).join(', ')}`,
         actual: failures.length,
         expected: 0,
         operator: 'strictEqual',
