@@ -79,7 +79,7 @@ jobs:
         shell: bash
         run: exit ${{ steps.run.outputs.code }}
 
-  # ── Suite core stable (sequencial): 39/39 + 8/8 → PASS ───────────────────
+  # ── Suite core stable (sequencial): 39/39 + 8/8 + 24/24 → PASS ───────────
   core:
     runs-on: ubuntu-latest
     steps:
@@ -104,7 +104,7 @@ jobs:
           mkdir -p tmp/qa-results/core
           if [ "${{ steps.boot.outputs.code }}" != "0" ]; then
             echo "Bootstrap (npm ci) falhou -> INFRA_BLOCKED para os testes core"
-            node -e 'const fs=require("fs"),path=require("path");const m=JSON.parse(fs.readFileSync("qa/test-manifest.json","utf8"));const a=process.argv.slice(1);const base=a[0];for(const id of a.slice(1)){const t=(m.tests||[]).find(x=>x.id===id);const exp=t&&t.report?t.report.expectedCount:0;const dir=path.join(base,id);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,"result.json"),JSON.stringify({schemaVersion:1,testId:id,classification:"INFRA_BLOCKED",stages:{configValidated:true,dependenciesReady:false,preflightPassed:false,testStarted:false,assertionExercised:false,reportsValidated:false},preflight:{exitCode:2},process:{exitCode:2},reports:{expected:exp,observed:0,conforming:0,nonConforming:0}},null,2));}' tmp/qa-results/core core-curto-circuito os047
+            node -e 'const fs=require("fs"),path=require("path");const m=JSON.parse(fs.readFileSync("qa/test-manifest.json","utf8"));const a=process.argv.slice(1);const base=a[0];for(const id of a.slice(1)){const t=(m.tests||[]).find(x=>x.id===id);const exp=t&&t.report?t.report.expectedCount:0;const dir=path.join(base,id);fs.mkdirSync(dir,{recursive:true});fs.writeFileSync(path.join(dir,"result.json"),JSON.stringify({schemaVersion:1,testId:id,classification:"INFRA_BLOCKED",stages:{configValidated:true,dependenciesReady:false,preflightPassed:false,testStarted:false,assertionExercised:false,reportsValidated:false},preflight:{exitCode:2},process:{exitCode:2},reports:{expected:exp,observed:0,conforming:0,nonConforming:0}},null,2));}' tmp/qa-results/core core-curto-circuito os047 inc001-m16
             echo "code=2" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -256,6 +256,6 @@ jobs:
             const agg=rd("tmp/consolidated/summary.json");
             const mv=rd("tmp/artifacts/manifest-validation-evidence/status.json");
             const worst=PREC.find(c=>[agg,mv].includes(c));
-            console.log("manifest-validation:",mv,"| aggregator(5 stable):",agg,"| consolidado:",worst);
+            console.log("manifest-validation:",mv,"| aggregator(stable):",agg,"| consolidado:",worst);
             process.exit(MAP[worst]);
           '

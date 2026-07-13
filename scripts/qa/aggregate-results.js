@@ -10,8 +10,9 @@
  *   node scripts/qa/aggregate-results.js --input <dir-com-artifacts> --output <dir-consolidado>
  *
  * Varre os artifacts dos jobs (result.json por teste), VALIDA rigorosamente cada
- * resultado, consolida os cinco stable esperados (2 core + 3 browser, derivados do
- * manifesto canônico) e grava: summary.json · manifest.json · environment.json
+ * resultado, consolida exatamente o inventário stable derivado do manifesto canônico
+ * (contagens core/browser derivadas, jamais fixas) e grava:
+ * summary.json · manifest.json · environment.json
  *
  * Anti-falso-GREEN (precedência CONFIG_ERROR → INFRA_BLOCKED → FUNCTIONAL_FAILURE → PASS):
  *   • classificação fora de {PASS,FUNCTIONAL_FAILURE,INFRA_BLOCKED,CONFIG_ERROR} → CONFIG_ERROR
@@ -23,7 +24,7 @@
  *   • falha ao gravar summary/manifest/environment → CONFIG_ERROR
  *   • qualquer INFRA_BLOCKED → INFRA_BLOCKED (salvo precedência de configuração)
  *   • qualquer falha funcional → FUNCTIONAL_FAILURE
- *   • cinco resultados válidos PASS → PASS
+ *   • todo o inventário stable esperado válido em PASS → PASS
  *
  * RFC 7807 não se aplica (infraestrutura, sem endpoint HTTP nem erro de domínio).
  */
@@ -300,8 +301,8 @@ function main() {
   if (experimentalObserved.length) configIssues.push(`IDs experimentais presentes (proibidos): ${[...new Set(experimentalObserved)].join(', ')}`);
   if (unknownObserved.length) configIssues.push(`IDs desconhecidos: ${[...new Set(unknownObserved)].join(', ')}`);
   if (missing.length) configIssues.push(`artifacts ausentes para: ${missing.join(', ')}`);
-  if (coreCount !== 2) configIssues.push(`esperados 2 resultados core, obtidos ${coreCount}`);
-  if (browserCount !== 3) configIssues.push(`esperados 3 resultados browser, obtidos ${browserCount}`);
+  if (coreCount !== expected.core.length) configIssues.push(`esperados ${expected.core.length} resultados core, obtidos ${coreCount}`);
+  if (browserCount !== expected.browser.length) configIssues.push(`esperados ${expected.browser.length} resultados browser, obtidos ${browserCount}`);
 
   const consolidated = configIssues.length > 0
     ? CLASSIFICATION.CONFIG_ERROR
