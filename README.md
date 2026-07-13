@@ -11,7 +11,7 @@ SaaS de missão crítica para cálculos e memoriais de engenharia elétrica de b
 - **TDD/CI:** o @Senior_QA_Security usa Codex em terminal isolado para produzir e executar ZOMBIES, registrar RED → GREEN e atestar o `exit code`. Quando a entrega exige navegador real ou reprodutibilidade externa, GitHub Actions é o braço de CI do Tribunal e deve publicar artifact de evidência.
 - **Regressão cumulativa:** a arquitetura ratificada separa testes `stable`, `experimental`, `flaky`, `archived` e `utility`. Quando ativado após shadow mode, `regression-gate` executará toda a suíte stable em cada PR para `main`.
 
-## Matriz operacional v7.1
+## Matriz operacional v7.2
 
 | Camada | Papel | Ambiente |
 | --- | --- | --- |
@@ -19,10 +19,14 @@ SaaS de missão crítica para cálculos e memoriais de engenharia elétrica de b
 | Conselho independente | @Conselho_de_Arquitetura_e_Governanca | ChatGPT Plus (GPT-5.5) |
 | Executivo | @CTO e @Negocios_e_Estrategia | ChatGPT Plus (GPT-5.5 / GPT-5.4) |
 | Ciência | @Engenheiro_Eletricista | Claude Opus 4.8 (Extended Thinking) |
-| Fábrica | @Senior_Backend_Dev, @Senior_Frontend_Dev e @Engenheiro_Plataforma_CI | Claude Code Pro (Opus 4.8 / Sonnet 4.6) |
+| Fábrica de produto | @Senior_Backend_Dev e @Senior_Frontend_Dev | Claude Code Pro (Opus 4.8 / Sonnet 4.6) |
+| Plataforma CI | @Engenheiro_Plataforma_CI | Google Antigravity / Gemini 3.5 Flash; 3.1 Pro High por escalonamento |
+| Operação | @Engenheiro_DevOps_SRE | Google Antigravity / Gemini 3.5 Flash; 3.1 Pro High por escalonamento |
 | Tribunal | @Senior_QA_Security | Codex CLI/API (GPT-5.5) |
 
 Cada persona opera em chat/thread isolado. Toda decisão, alteração, auditoria ou incidente passa pelo CTO, que registra, classifica de `CHG-0` a `CHG-3`, roteia e encerra. O Conselho mantém as leis; QA mantém o veredito; o CEO concentra estratégia, produto, prioridade e merge.
+
+O roteamento multiprovedor reduz concentração de franquia e falhas correlacionadas: Claude implementa produto, Antigravity implementa infraestrutura/operação e Codex preserva o Tribunal. Plataforma CI e DevOps/SRE usam projetos e worktrees distintos, permissões restritas e aprovação interativa. O.S. em andamento não muda de executor; a nova alocação vale para novas O.S. após qualificação read-only/dry-run registrada pelo CTO.
 
 ## Gate de regressão para `main`
 
@@ -54,7 +58,7 @@ O workflow `.github/workflows/regression-gate-shadow.yml` executa este mesmo gat
 
 ## Docs as Code
 
-As fontes canônicas vivem em `docs/`. O `sync.ps1` as transforma para consulta no Google Drive/NotebookLM. A documentação e a evidência de teste fazem parte da entrega, não são pós-processamento opcional.
+As fontes canônicas vivem em `docs/`. O sincronismo para Google Drive/NotebookLM deverá operar por allowlist de documentos `canonical`, `active` e `source` pertinentes; histórico e estado local ficam fora do contexto padrão. A documentação e a evidência de teste fazem parte da entrega, não são pós-processamento opcional.
 
 ## Registro Normativo Computável
 
@@ -71,4 +75,4 @@ Definição completa: `docs/AmpAI_RNC_Taxonomia.md`.
 
 O fluxo atual usa ambientes locais, terminais isolados e GitHub Actions para CI reprodutível quando necessário. A execução do Tribunal em VPS com sandbox/Firecracker é uma expansão planejada; não deve ser tratada como infraestrutura já disponível. CodeRabbit pode revisar PRs de modo complementar, mas não substitui QA/Codex nem a aprovação humana. CD para staging e CD para produção são fases futuras e separadas.
 
-As cadeiras `@Engenheiro_DevOps_SRE`, `@Senior_Backend_SaaS` e `@Arquiteto_Seguranca_Privacidade` estão planejadas, mas inativas. Elas só poderão receber O.S. após ratificação própria nas fases de staging, BaaS/Auth e tratamento de dados pessoais/pagamentos, respectivamente.
+`@Engenheiro_DevOps_SRE` está ativo para operação fail-closed sob O.S. do CTO. As cadeiras `@Senior_Backend_SaaS` e `@Arquiteto_Seguranca_Privacidade` permanecem planejadas e inativas até BaaS/Auth e tratamento de dados pessoais/pagamentos, respectivamente.

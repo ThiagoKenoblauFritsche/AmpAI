@@ -1,6 +1,6 @@
 ---
 tags: [governanca, qa, ci, regressao]
-versao: 1.2
+versao: 1.3
 status: ratificado
 data: 2026-07-04
 baseline_decisao: c2565332367abfbbadea7da849fc90fff3fdfffc
@@ -41,6 +41,8 @@ Nenhuma IA pode remover, arquivar, reclassificar, enfraquecer ou ignorar um test
 | `utility` | ferramenta auxiliar sem asserção de contrato | não |
 
 O gate consome somente entradas explícitas do manifesto. É proibido descobrir testes obrigatórios por glob como `tests/*.js`.
+
+Após a auditoria de classificação, nenhum arquivo de teste ou utilitário em `tests/` poderá permanecer sem inventário processável. Entradas `archived`, `utility`, `flaky`, `experimental` ou `quarantine` permanecem fora do gate `stable`, mas conservam responsável, contrato, substituto quando aplicável e estado. Markdown de classificação pode ser projeção gerada; não pode competir com o manifesto como fonte de verdade.
 
 ## 4. Inventário ratificado na baseline
 
@@ -196,7 +198,7 @@ Um teste aprovado só pode sair do gate com:
 5. equivalência de cobertura demonstrada ou retirada formal do requisito;
 6. PR normal e autorização de merge do CEO.
 
-Arquivamento retira o teste do manifesto executável, mas preserva arquivo, decisão, data, substituto e evidência RED→GREEN. Remoção física exige política de retenção específica e nunca pode ser automática.
+Arquivamento retira o teste do conjunto executável `stable`, mas preserva sua entrada de inventário, arquivo, decisão, data, substituto e evidência RED→GREEN. Remoção física exige política de retenção específica e nunca pode ser automática.
 
 ## 12. Migração dos workflows existentes
 

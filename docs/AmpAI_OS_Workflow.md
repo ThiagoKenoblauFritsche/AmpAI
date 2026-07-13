@@ -1,6 +1,6 @@
 ---
 tags: [governanca, operacao, os, tdd]
-versao: 7.1.1
+versao: 7.2
 status: ativo
 ---
 
@@ -43,7 +43,8 @@ sequenceDiagram
         participant ELE as Eletricista<br/>(Claude Opus)
         participant BE as Backend<br/>(Claude Opus)
         participant FE as Frontend<br/>(Claude Sonnet)
-        participant PCI as Plataforma CI<br/>(Claude Opus)
+        participant PCI as Plataforma CI<br/>(Antigravity / Gemini)
+        participant OPS as DevOps/SRE<br/>(Antigravity / Gemini)
     end
     box rgb(255, 239, 224) Tribunal e entrega
         participant QA as QA/Security<br/>(Codex)
@@ -102,6 +103,15 @@ sequenceDiagram
         QA-->>CEO: Classificação e veredito de infraestrutura
     end
 
+    opt A entrega altera repositório, sincronização ou ambiente
+        CEO->>CTO: Encaminha objetivo operacional aprovado
+        CTO-->>CEO: O.S. isolada de DevOps/SRE com dry-run e rollback
+        CEO->>OPS: Transporta somente a O.S. operacional
+        OPS-->>CEO: Inventário, candidata e evidência fail-closed
+        CEO->>CTO: Devolve resultado operacional
+        CTO-->>CEO: Encaminhamento para QA/PR quando aplicável
+    end
+
     QA-->>CEO: Pacote final de evidências locais
     CEO->>GH: Autoriza commit e PR pelo executor permitido
     GH->>GH: Executa suíte stable consolidada e publica artifact
@@ -134,6 +144,7 @@ sequenceDiagram
 | Ciência | @Engenheiro_Eletricista | BDD, classificação RNC-P/RNC-C, memorial, prova de cálculo contestável, premissas IEC e faixas físicas | implementar o código final |
 | Fábrica | @Senior_Backend_Dev / @Senior_Frontend_Dev | core DDD ou UI, cada qual no próprio escopo | julgar a própria entrega |
 | Fábrica de Plataforma | @Engenheiro_Plataforma_CI | workflows, executores, schemas, comandos e artifacts conforme O.S. | escrever testes, decidir classificações, emitir veredito ou operar CD |
+| Operação | @Engenheiro_DevOps_SRE | higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup e rollback | alterar produto/testes/leis, descartar estado local, julgar a própria operação ou fazer merge |
 | Tribunal | @Senior_QA_Security | testes ZOMBIES, resultado da execução local/CI, artifacts, mutation testing aplicável e `exit code` | implementar a correção avaliada |
 | Soberania | CEO | direção, autorização de PR e merge | delegar o merge a uma IA |
 
@@ -206,9 +217,21 @@ Somente após o core estar GREEN o CTO emite O.S. de interface. O @Senior_Fronte
 
 Quando a entrega exigir alteração em `.github/workflows/**`, `scripts/qa/**`, infraestrutura em `qa/**`, scripts npm do Gate ou artifacts, o CTO emite O.S. exclusiva para o @Engenheiro_Plataforma_CI. A entrada deve conter o contrato de infraestrutura e a evidência do QA; `CONFIG_ERROR` esperado pode representar RED de infraestrutura, mas nunca RED funcional.
 
+A cadeira opera em projeto/worktree Antigravity exclusivo, com Gemini 3.5 Flash por padrão e Gemini 3.1 Pro High somente por escalonamento registrado pelo CTO. Antes da primeira mutação após a migração, deve concluir qualificação read-only/dry-run. O.S. já iniciada conserva o executor original até o encerramento.
+
 O agente de Plataforma não edita `tests/**`. `qa/test-manifest.json` só pode ser materializado quando a O.S. reproduzir decisão explícita do QA sobre classificação, contrato e contagem. A candidata sempre retorna ao QA independente.
 
 **Gate para seguir:** o QA confirma que o contrato foi exercido, que testes e classificações não foram flexibilizados e que o resultado foi corretamente separado entre `PASS`, `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR`.
+
+### 5.2 DevOps/SRE, quando necessário
+
+Mudança em higiene do repositório, sincronização, worktrees/branches, ambientes, IaC, deploy, observabilidade, backup ou rollback é executada pelo `@Engenheiro_DevOps_SRE` sob O.S. exclusiva do CTO. A O.S. deve exigir inventário, dry-run, allowlist, precondições, comandos exatos, evidência anterior/posterior e rollback.
+
+A cadeira usa projeto/worktree Antigravity diferente da Plataforma CI, Gemini 3.5 Flash por padrão e Gemini 3.1 Pro High somente por escalonamento registrado. Permissões ficam restritas ao projeto e aprovações interativas permanecem ativas; `Full machine`, `Unrestricted`, wildcard MCP, tarefas agendadas e créditos automáticos são proibidos sem nova decisão de Governança/CEO.
+
+DevOps/SRE não decide se documento é canônico nem se teste é removível. Governança define ciclo de vida documental; QA classifica testes; CTO roteia; CEO autoriza merge e qualquer operação destrutiva excepcional. Dirty tree, conflito, divergência, segredo ou referência não encerrada interrompe a operação.
+
+**Gate para seguir:** escopo exato preservado, nenhuma alteração fora do allowlist, comandos e exit codes registrados, instalação/regressão aplicável aprovada e candidata devolvida ao CTO. Rewrite, force-push, branch protection, CD e produção exigem autorização específica do CEO.
 
 ### 6. PR, CI, revisão complementar e merge
 
@@ -271,3 +294,5 @@ Veredito: BLOQUEADO | APROVADO PARA A PR
 8. **Teste aprovado não é moeda de troca.** Nenhuma IA pode removê-lo, arquivá-lo ou enfraquecê-lo para liberar implementação.
 9. **Plataforma materializa; QA decide.** O executor do CI não escreve o teste avaliado, não escolhe sua classificação e não atesta a própria correção.
 10. **Tudo passa pelo CTO; nem tudo passa pela cadeia máxima.** Toda mudança é registrada e classificada antes da execução, com controles proporcionais ao risco.
+11. **Contexto também é superfície de risco.** Histórico, cache e arquivo sem autoridade não entram automaticamente no boot ou no RAG.
+12. **Operação é fail-closed.** DevOps/SRE não descarta estado local, não remove referência sem prova e não julga a própria execução.

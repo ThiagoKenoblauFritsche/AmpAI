@@ -3,14 +3,14 @@ tags:
   - infraestrutura/vps
   - devops/backlog
   - ampai/core
-versao: 7.1.1
+versao: 7.2
 status: ativo
 ---
 
-# 📈 Backlog de Infraestrutura — Implementação v7.0
+# 📈 Backlog de Infraestrutura — Governança e Implementação v7.2
 
 > [!todo] **Diretriz de Execução (State Lock)**
-> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) permanece no roadmap futuro. **O foco oficial é a FASE 7:** separação de poderes, fábrica Claude especializada, Tribunal Codex e implantação do Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md`. CodeRabbit é revisão complementar, QA mantém o veredito, CEO mantém o merge e CD permanece separado.
+> As Fases de 1 a 5 estabeleceram a fundação do repositório. A Fase 6 (VPS/Telegram) permanece no roadmap futuro. **O foco oficial é a FASE 7:** separação de poderes, fábrica de produto Claude, fábrica operacional Antigravity, Tribunal Codex e implantação do Gate Consolidado ratificado em `docs/AmpAI_Gate_Regressao.md`. CodeRabbit é revisão complementar, QA mantém o veredito, CEO mantém o merge e CD permanece separado.
 
 ---
 
@@ -60,10 +60,15 @@ ___
 
 ___
 
-### 🐇 FASE 7: Governança v7.1 (Separação de Poderes, Plataforma e Tribunal Codex) (ATIVA)
+### 🐇 FASE 7: Governança v7.2 (Separação de Poderes, Contexto Enxuto e Operação) (ATIVA)
 - [x] **TOPOLOGIA v7.1** | `[GOVERNANÇA]` `@Conselho_de_Arquitetura_e_Governanca` sucede a denominação histórica do Arquiteto-Chefe; `@Engenheiro_Plataforma_CI` passa a executar infraestrutura do Gate sem testes, classificação ou veredito. Não constitui O.S. técnica.
 - [x] **GOV-MUDANCAS-PROPORCIONAIS** | `[GOVERNANÇA]` CTO instituído como Torre de Controle universal; O.S. `CHG-0 Expressa`, `CHG-1 Adaptativa`, `CHG-2 Padrão` e `CHG-3 Crítica` ratificadas em `docs/AmpAI_Classificacao_Mudancas.md`. Não constitui O.S. técnica.
 - [x] **GOV-OPERACAO-EXECUTIVA-V711** | `[GOVERNANÇA]` Roteamento obrigatório de O.S., declaração `TESTE DO CEO`, visão executiva e encerramento pós-merge definidos em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`. Não constitui O.S. técnica.
+- [x] **GOV-CONTEXTO-ENXUTO-V72** | `[GOVERNANÇA]` Atualizar antes de criar, classes documentais, fonte única por domínio, allowlist de contexto e exclusão de regeneráveis do versionamento ratificadas no Manifesto. Não constitui O.S. técnica.
+- [x] **GOV-DEVOPS-OPS** | `[GOVERNANÇA]` `@Engenheiro_DevOps_SRE` ativado para higiene, sincronização, worktrees/branches e ambientes em modo fail-closed, sem autoridade de teste, veredito ou merge.
+- [x] **GOV-ROTEAMENTO-MULTIPROVEDOR-V72** | `[GOVERNANÇA]` Plataforma CI e DevOps/SRE alocados em projetos Antigravity independentes, com Gemini 3.5 Flash padrão e 3.1 Pro High escalonado; Claude preserva produto e Codex preserva o Tribunal. O.S. em andamento não muda de executor.
+- [ ] **GOV-QUALIFICACAO-ANTIGRAVITY-PCI** | `[PRÉ-CONDIÇÃO]` CTO registrar piloto read-only/dry-run da Plataforma CI antes da primeira O.S. mutável no novo habitat.
+- [ ] **GOV-QUALIFICACAO-ANTIGRAVITY-SRE** | `[PRÉ-CONDIÇÃO]` CTO registrar piloto read-only/dry-run do DevOps/SRE antes da primeira O.S. mutável no novo habitat.
 - [x] **O.S. #INF-022** | `[ATUALIZADA]` CodeRabbit configurado como revisão complementar no GitHub.
 - [x] **O.S. #INF-023** | `[ATUALIZADA]` Estúdio 2 local unificado: Claude Opus 4.8 para ciência normativa/BDD e Backend; Claude Sonnet 4.6 para Frontend. O @Engenheiro_Eletricista consome RNC-P/RNC-C em Markdown, não PDFs massivos.
 - [x] **O.S. #INF-026** | `[CRÍTICA]` Tribunal migrado para @Senior_QA_Security no Codex, com execução isolada e evidência de `exit code`.
@@ -76,9 +81,14 @@ ___
 
 #### Intake operacional ratificado — não constitui O.S.
 
-- [ ] **OPS-SYNC-MAIN** | O CTO deverá decompor uma rotina fail-closed para verificar `origin/main`, atualizar somente por fast-forward uma `main` local limpa, executar `sync.ps1` quando aplicável, validar hashes e emitir relatório processável. Proibidos descarte automático, `reset --hard` e alteração de worktrees.
+- [ ] **OPS-SYNC-MAIN** | O CTO deverá decompor para DevOps/SRE uma rotina fail-closed para verificar `origin/main`, atualizar somente por fast-forward uma `main` local limpa, executar sincronização por allowlist, validar hashes e emitir relatório processável. Proibidos descarte automático, `reset --hard` e alteração de worktrees não encerradas.
 - [ ] **OPS-PAINEL-EXECUTIVO** | O CTO deverá decompor uma projeção executiva do Registro Mestre com responsável atual, próximo destinatário, bloqueio, teste/ação do CEO, PR/artifact e estado das baselines remota, local e Drive. O painel não poderá ser uma segunda fonte de verdade.
-- [ ] **GOV-DEVOPS-OPS** | Avaliar a ativação de `@Engenheiro_DevOps_SRE` antes de automação operacional persistente. Até a ratificação, rotinas locais são coordenadas pelo CTO e executadas apenas por operador Git autorizado pelo CEO.
+- [ ] **REP-HIGIENE-HEAD** | Intake para DevOps/SRE: inventariar e retirar do índice `node_modules`, configurações locais ignoradas e screenshots regeneráveis confirmados; preservar lockfile; executar instalação limpa, regressão e QA. Sem rewrite de histórico.
+- [ ] **QA-CATALOGO-TESTES** | Intake para QA: classificar individualmente testes/utilities fora do manifesto; nenhum arquivo será removido automaticamente. Plataforma materializa o inventário somente após decisão do QA.
+- [ ] **DOC-CICLO-VIDA** | Intake coordenado pelo CTO: catalogar documentos como `canonical`, `active`, `source` ou `historical`, corrigir fontes concorrentes e excluir histórico do boot/RAG padrão sem apagar rastreabilidade.
+- [ ] **RAG-ALLOWLIST** | Intake para DevOps/SRE: substituir o espelhamento indiscriminado de `docs/.github/js` por pacotes allowlisted e verificáveis para Negócio, Governança e Engenharia. Conselho define canonicidade; QA valida completude quando contratos forem afetados.
+- [ ] **OPS-ENCERRAR-WORKTREES** | Intake para DevOps/SRE: dry-run individual das worktrees/branches, prova de limpeza e merge/abandono formal antes de qualquer remoção. Force-push, limpeza recursiva e descarte são proibidos.
+- [ ] **HYG-GATE** | Intake futuro para Plataforma CI: detectar arquivo ignorado rastreado, artifact proibido, documento sem ciclo de vida e teste sem inventário. Começar em modo informativo; bloqueio exige QA e autorização do CEO.
 
 #### Intake ratificado: Gate Consolidado v1 — não constitui O.S.
 
@@ -98,7 +108,7 @@ ___
 ___
 
 ### 🚦 FASE 8: CD Staging (FUTURO — NÃO ATIVO)
-- [ ] **GOV-DEVOPS-SRE** | `[PRÉ-CONDIÇÃO]` Ratificar `@Engenheiro_DevOps_SRE` antes de qualquer O.S. com VPS, IaC, deploy, observabilidade, backup, rollback ou credenciais de ambiente.
+- [x] **GOV-DEVOPS-SRE** | `[PRÉ-CONDIÇÃO DE PERSONA]` Cadeira ratificada na v7.2. Isso não autoriza staging, credenciais, deploy ou CD sem O.S. e decisão específica do CEO.
 - [ ] **O.S. #INF-030** | `[ALTA]` Criar deploy automático para ambiente de staging somente após estabilização de CI + PR + CodeRabbit + artifacts.
 
 ___
