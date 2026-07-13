@@ -20,7 +20,7 @@ baseline: 8957e77cc8ba2149506621bcc2f1bd37d151b032
 
 | Artefato | Caminho | Papel |
 | --- | --- | --- |
-| Manifesto | `qa/test-manifest.json` | Fonte declarativa e explícita da suíte (7 entradas conhecidas). |
+| Manifesto | `qa/test-manifest.json` | Fonte declarativa e explícita da suíte (8 entradas conhecidas). |
 | Schema | `qa/test-manifest.schema.json` | JSON Schema (draft-07) validado por Ajv. |
 | Executor | `scripts/qa/run-regression.js` | Executor Node único; seleciona, roda, classifica, evidencia. |
 | Aliases npm | `package.json` | `test:core`, `test:browser`, `test:regression` — aliases finos, sem lógica. |
@@ -159,9 +159,9 @@ fixtures da INF-028-A e mapeia para INFRA_BLOCKED. Na execução real, o preflig
 2. **Semântica (executor):** IDs únicos; `file` sob `tests/`, extensão `.js`, existente;
    rejeição de `..`, caminho absoluto, glob (`* ? [ ]`) e chaves de comando
    (`command/script/shell/exec/cmd/run`); teste stable com contrato de relatório;
-   e, **somente no manifesto oficial**, exatamente cinco entradas stable.
+   e, **somente no manifesto oficial**, exatamente seis entradas stable.
 
-Manifestos temporários da suíte QA podem conter subconjuntos válidos (a regra dos cinco
+Manifestos temporários da suíte QA podem conter subconjuntos válidos (a regra dos seis
 stable é exclusiva do manifesto oficial `qa/test-manifest.json`).
 
 ## 10. Segurança do executor
@@ -178,13 +178,14 @@ stable é exclusiva do manifesto oficial `qa/test-manifest.json`).
 
 ## 11. Manifesto oficial (baseline)
 
-Sete entradas conhecidas: cinco `stable` (2 core + 3 browser) e duas `experimental`
+Oito entradas conhecidas: seis `stable` (3 core + 3 browser) e duas `experimental`
 (fora da execução stable).
 
 | id | file | classe | suite | protocolo |
 | --- | --- | --- | --- | --- |
 | core-curto-circuito | tests/core_curto_circuito.test.js | stable | core | legacy-zombies (39) |
 | os047 | tests/test_os047.js | stable | core | json-lines (8, `compliant`) |
+| inc001-m16 | tests/test_inc001_m16.js | stable | core | json-lines (24, `compliant`) |
 | os040r | tests/test_os040_restart.js | stable | browser | json-lines (9, `hasOwnVisualSignal`) |
 | os042r | tests/test_os042_restart.js | stable | browser | json-lines (1, `documentMetrics.hasHorizontalOverflow=false`) |
 | os044r | tests/test_os044_restart.js | stable | browser | json-lines (26, `compliant`) |
@@ -194,7 +195,7 @@ Sete entradas conhecidas: cinco `stable` (2 core + 3 browser) e duas `experiment
 ## 12. Comandos
 
 ```bash
-npm run test:core        # 2 stable core, sequencial
+npm run test:core        # 3 stable core, sequencial
 npm run test:browser     # 3 stable browser (Chromium; INFRA_BLOCKED se indisponível)
-npm run test:regression  # 5 stable (core + browser)
+npm run test:regression  # 6 stable (core + browser)
 ```
