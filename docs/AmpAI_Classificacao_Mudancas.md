@@ -1,9 +1,9 @@
 ---
 tags: [governanca, operacao, risco, mudancas]
-versao: 1.0
+versao: 1.1
 status: ratificado
-data_decisao: 2026-07-11
-baseline_decisao: b104ae3c9f0e8a07e84b8879fa6ea0c8973346c6
+data_decisao: 2026-07-12
+baseline_decisao: 6fbff041914ce62483401d4e8f6c1f804a26fc20
 autoridade: CEO + @Conselho_de_Arquitetura_e_Governanca
 ---
 
@@ -30,6 +30,8 @@ Entradas vindas do CEO, Conselho, Negócios, QA, CodeRabbit, auditorias, Ciênci
 7. testes, evidências e artifacts exigidos;
 8. condição de retorno e encerramento.
 
+O intake também deve declarar `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`, o próximo destinatário e se a ação esperada do CEO é decisão, aceite, merge ou nenhuma. O formato canônico está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
+
 Decisões do Conselho e vereditos do QA não dependem de aprovação técnica do CTO. Eles passam pelo CTO para registro, análise de impacto e decomposição operacional.
 
 ## 3. Classes canônicas
@@ -53,6 +55,8 @@ Não pode ser `CHG-0` qualquer mudança que altere:
 - autenticação, dados, dependência, segredo, ambiente ou proteção de branch.
 
 O.S. Expressa não exige BDD, novo RED, QA funcional ou regressão da aplicação. Documentação pura recebe verificação de Markdown, links, estrutura e diff.
+
+Rotinas de encerramento que apenas consultem estado, façam fast-forward seguro de uma `main` local limpa ou sincronizem um espelho documental sem transformar conteúdo são `CHG-0` vinculadas à mudança original. Herdam seu PR/SHA e não criam O.S., registro ou PR recursivos por execução. Alterar scripts, hooks, tarefas agendadas, credenciais, caminhos ou políticas continua sendo uma nova mudança classificada pelo CTO.
 
 ### 3.2 CHG-1 — O.S. Adaptativa
 
@@ -112,7 +116,9 @@ Todo artefato retorna ao CTO. Antes de recomendar PR ao CEO, o CTO consolida:
 - riscos, rollback e pendências;
 - PR e SHA candidatos.
 
-Após o merge, o resultado e a execução pós-merge retornam ao CTO. A mudança só é encerrada quando o Registro Mestre contiver estado final e evidência suficiente para a classe.
+Antes de recomendar merge, o CTO declara explicitamente se o teste manual do CEO é obrigatório. Mudança observável de produto recebe envelope com ambiente, cenários e resultados esperados; mudança exclusivamente interna recebe justificativa e evidência técnica substitutiva.
+
+Após o merge, o resultado e a execução pós-merge retornam ao CTO. A mudança só é encerrada quando o Registro Mestre contiver estado final e evidência suficiente para a classe, a `main` local designada estiver alinhada à `origin/main` ou possuir exceção formal e, quando aplicável, o espelho do Google Drive estiver sincronizado e validado. O checklist completo está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 
 ## 7. Fluxo emergencial
 
@@ -128,3 +134,5 @@ Emergência comprime a sequência; não elimina evidência. O CEO declara o inci
 6. Quem implementa não julga a própria entrega.
 7. Conselho mantém leis; QA mantém veredito; CEO mantém merge.
 8. Nenhuma IA flexibiliza teste para adequar a mudança à classe escolhida.
+9. Toda O.S. declara responsável atual, retorno obrigatório ao CTO e necessidade de teste manual do CEO.
+10. Merge não é encerramento: baseline remota, cópia local e espelho de consulta devem possuir estado explícito.

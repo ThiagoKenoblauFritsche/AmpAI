@@ -1,6 +1,6 @@
 ---
 tags: [arquitetura/ia, ampai/consciencia]
-versao: 7.1
+versao: 7.1.1
 status: ativo
 ---
 
@@ -14,7 +14,7 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 
 1. **NotebookLM (Camada 0):** memória/RAG e brainstorming. Não escreve produção.
 2. **@Conselho_de_Arquitetura_e_Governanca — GPT-5.5:** conselho independente. Mantém Manifesto, Workflow e documentação raiz; ratifica arquitetura e audita desvios. Não cria O.S. nem executa a Fábrica. Sucede a denominação histórica `@Arquiteto_Chefe_e_Governanca` sem reescrever selos anteriores.
-3. **@CTO — GPT-5.5:** Executivo e Torre de Controle; toda mudança passa por seu Registro Mestre, classificação CHG-0 a CHG-3, roteamento, consolidação de evidências e encerramento pós-merge.
+3. **@CTO — GPT-5.5:** Executivo e Torre de Controle; toda mudança passa por seu Registro Mestre, classificação CHG-0 a CHG-3, roteamento explícito, declaração de teste do CEO, consolidação de evidências e encerramento/sincronização pós-merge.
 4. **@Negocios_e_Estrategia — GPT-5.4:** produto, viabilidade e backlog.
 5. **@Engenheiro_Eletricista — Claude Opus 4.8 (Extended Thinking):** BDD, classificação RNC-P/RNC-C, memorial, prova de cálculo contestável e limites físicos.
 6. **@Senior_Backend_Dev — Claude Opus 4.8:** `js/core_*.js`, DDD e Result Pattern.
@@ -35,6 +35,8 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 - Teste novo nasce experimental; somente promoção formal o torna stable. Falha de infraestrutura bloqueia, mas não constitui RED/GREEN funcional.
 - CodeRabbit é revisor complementar, não autoridade final. CD staging e CD produção são fases futuras e separadas.
 - O CEO define estratégia, produto, prioridade e merge. O CTO determina a rota operacional e recebe de volta cada artefato, parecer e resultado pós-merge.
+- Toda O.S. declara responsável atual, retorno ao CTO, próximo destinatário e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`; o formato está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
+- Merge não encerra a mudança: `origin/main`, a `main` local designada e o Google Drive, quando aplicável, devem possuir estado explícito e evidência de sincronização.
 
 ## Estado de infraestrutura
 
@@ -42,7 +44,7 @@ A fábrica Claude e o Tribunal Codex operam atualmente nos ambientes locais/isol
 
 ## Cadeiras futuras e gatilhos de ativação
 
-- **@Engenheiro_DevOps_SRE:** antes de CD para staging, com escopo de ambientes, IaC, deploy, observabilidade, backup e rollback.
+- **@Engenheiro_DevOps_SRE:** antes de CD para staging ou automação operacional persistente, com escopo de ambientes, sincronização operacional, IaC, deploy, observabilidade, backup e rollback.
 - **@Senior_Backend_SaaS:** antes de BaaS/Auth, com escopo de APIs de aplicação, persistência, sessões, banco e integrações, sem alterar motores IEC.
 - **@Arquiteto_Seguranca_Privacidade:** antes de autenticação, dados pessoais ou pagamentos, com escopo consultivo de threat modeling, IAM, segredos e LGPD/GDPR; não implementa nem substitui QA.
 

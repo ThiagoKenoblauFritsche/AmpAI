@@ -1,6 +1,6 @@
 ---
 tags: [governanca, operacao, os, tdd]
-versao: 7.1
+versao: 7.1.1
 status: ativo
 ---
 
@@ -23,8 +23,9 @@ flowchart LR
     C1 --> RET
     C2 --> RET
     C3 --> RET
-    RET --> CEO["CEO decide PR/merge"]
-    CEO --> CLOSE["Pós-merge retorna ao CTO para encerramento"]
+    RET --> CEO["CEO recebe indicação explícita de teste e decide merge"]
+    CEO --> SYNC["Pós-merge: origin/main, main local e Drive quando aplicável"]
+    SYNC --> CLOSE["CTO registra evidência e encerra"]
 ```
 
 O diagrama sequencial abaixo representa a cadeia completa típica de `CHG-2`/`CHG-3`. `CHG-0` e `CHG-1` usam apenas os participantes e controles exigidos pela classe e pelo domínio.
@@ -110,8 +111,14 @@ sequenceDiagram
         GH-->>CEO: Comentários complementares de PR
         CEO->>CTO: Encaminha evidência relevante para O.S. corretiva
     end
-    CEO->>CEO: Aceite manual e merge humano
-    CEO->>CTO: Devolve PR, SHA e resultado pós-merge
+    CTO-->>CEO: Declara TESTE DO CEO: SIM/NÃO e fornece envelope aplicável
+    opt Teste manual obrigatório
+        CEO->>CEO: Executa cenários de produto sobre SHA imutável
+    end
+    CEO->>CEO: Decide e realiza merge humano
+    CEO->>CTO: Devolve PR e SHA mergeado
+    CTO->>CTO: Coordena gate/smoke e sincronização pós-merge
+    CTO->>CTO: Confirma origin/main, main local e Drive quando aplicável
     CTO->>CTO: Atualiza Registro Mestre e encerra a mudança
 ```
 
@@ -159,6 +166,11 @@ Cada O.S. deve conter:
 6. regra explícita de retorno ao CTO em caso de falha.
 7. teste novo classificado inicialmente como `experimental`, vínculo com o contrato e regressões `stable` que devem permanecer verdes.
 8. classe da mudança, domínio e justificativa de proporcionalidade.
+9. responsável executor, consultados, autoridade do veredito e próximo destinatário.
+10. `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`, impacto no merge e ação esperada do CEO.
+11. bloco final de handoff que obriga o retorno ao CTO e proíbe encaminhamento direto a outra persona.
+
+O envelope integral está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`. O executor entrega ao CTO; somente o CTO registra e define o próximo encaminhamento.
 
 ### 2. Ciência e especificação (BDD + SDD)
 
@@ -210,9 +222,24 @@ GitHub Actions é parte oficial do Tribunal: captura logs, publica artifacts e d
 
 O CodeRabbit, se habilitado, adiciona revisão complementar no PR: comentários técnicos relevantes retornam ao CTO como evidência para uma O.S. corretiva. Ele não substitui o Tribunal Codex, o artifact de CI nem o CEO.
 
-O merge é exclusivamente humano, depois de aceite funcional/manual e revisão das evidências.
+O merge é exclusivamente humano. Aceite manual do CEO é obrigatório quando houver comportamento de produto que demande julgamento humano; mudanças exclusivamente internas devem declarar `TESTE DO CEO: NÃO NECESSÁRIO` e apontar a evidência técnica substitutiva. Ausência dessa declaração bloqueia a recomendação de merge.
 
 Documentação editorial `CHG-0` não exige regressão funcional. Durante a implementação transitória atual, o workflow shadow pode executar a suíte completa também em PR documental; otimização por caminhos depende de O.S. específica para Plataforma CI e validação independente.
+
+### 7. Encerramento e sincronização pós-merge
+
+Merge não equivale a encerramento. O CTO coordena a rotina fail-closed definida em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`:
+
+1. confirmar PR e SHA da `origin/main`;
+2. executar a validação pós-merge exigida pela classe;
+3. alinhar por fast-forward a `main` local designada, desde que esteja limpa;
+4. sincronizar o Google Drive quando a mudança afetar fontes do NotebookLM;
+5. validar hashes aplicáveis;
+6. atualizar o Registro Mestre e a visão executiva.
+
+Working tree suja, divergência, conflito, hash inconsistente ou falha de sincronização interrompe a rotina e retorna evidência ao CTO. É proibido resolver automaticamente por descarte, sobrescrita ou `reset --hard`.
+
+Fast-forward e sincronização documental sem transformação são rotina `CHG-0` vinculada à mudança original. Alterar scripts, hooks, tarefas agendadas, credenciais, caminhos ou automação exige classificação e O.S. próprias.
 
 ---
 

@@ -3,7 +3,7 @@ tags:
   - arquitetura/engenharia
   - padroes/codigo
   - governanca/ia
-versao: 1.1
+versao: 1.2
 status: mandatorio
 ---
 
@@ -92,6 +92,8 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 *   **CI não é CD:** GitHub Actions integra o Tribunal QA para gerar logs, artifacts e `exit code` reprodutível. Deploy para staging e produção são etapas futuras, separadas e dependentes de decisão explícita do CEO.
 *   **Torre de Controle:** toda decisão, alteração, auditoria ou incidente passa pelo CTO para registro, classificação, roteamento e encerramento. Essa centralização não transfere ao CTO a lei do Conselho, o veredito do QA ou o merge do CEO.
 *   **Rigor proporcional:** O.S. são classificadas de `CHG-0` a `CHG-3`. Documentação editorial não simula TDD funcional; refatoração coberta não cria RED artificial; comportamento novo exige RED→GREEN; mudanças críticas recebem todos os controles relevantes.
+*   **Rota e aceite explícitos:** toda O.S. declara executor, retorno ao CTO, próximo encaminhamento controlado pela Torre de Controle e necessidade de teste manual do CEO. O CEO não reconstrói a cadeia operacional a partir de conversas.
+*   **Merge não é encerramento:** PR/SHA, validação pós-merge, alinhamento seguro da `main` local e sincronização do espelho documental, quando aplicável, integram a evidência de encerramento.
 
 ## 4. Gate Consolidado e Proteção Cumulativa
 
