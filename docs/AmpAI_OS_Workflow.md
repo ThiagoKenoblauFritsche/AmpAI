@@ -1,6 +1,6 @@
 ---
 tags: [governanca, operacao, os, tdd]
-versao: 7.2
+versao: 7.3
 status: ativo
 ---
 
@@ -24,8 +24,9 @@ flowchart LR
     C2 --> RET
     C3 --> RET
     RET --> CEO["CEO recebe indicação explícita de teste e decide merge"]
-    CEO --> SYNC["Pós-merge: origin/main, main local e Drive quando aplicável"]
-    SYNC --> CLOSE["CTO registra evidência e encerra"]
+    CEO --> REMOTE["MERGE_VALIDADO: PR, SHA e Gate remoto"]
+    REMOTE --> OPS["DevOps: raiz main, Drive e worktrees"]
+    OPS --> CLOSE["ENCERRAMENTO_OPERACIONAL no Registro"]
 ```
 
 O diagrama sequencial abaixo representa a cadeia completa típica de `CHG-2`/`CHG-3`. `CHG-0` e `CHG-1` usam apenas os participantes e controles exigidos pela classe e pelo domínio.
@@ -127,9 +128,10 @@ sequenceDiagram
     end
     CEO->>CEO: Decide e realiza merge humano
     CEO->>CTO: Devolve PR e SHA mergeado
-    CTO->>CTO: Coordena gate/smoke e sincronização pós-merge
-    CTO->>CTO: Confirma origin/main, main local e Drive quando aplicável
-    CTO->>CTO: Atualiza Registro Mestre e encerra a mudança
+    CTO->>CTO: Registra MERGE_VALIDADO após gate/smoke remoto
+    CTO-->>OPS: Encaminha rotina/O.S. de encerramento operacional
+    OPS-->>CTO: Raiz main, Drive, hashes e worktrees classificados
+    CTO->>CTO: Registra ENCERRAMENTO_OPERACIONAL ou BLOQUEIO_OPERACIONAL
 ```
 
 ---
@@ -251,18 +253,22 @@ Documentação editorial `CHG-0` não exige regressão funcional. Durante a impl
 
 ### 7. Encerramento e sincronização pós-merge
 
-Merge não equivale a encerramento. O CTO coordena a rotina fail-closed definida em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`:
+Merge não equivale a encerramento. O CTO coordena, e o DevOps/SRE executa, a rotina fail-closed definida em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`:
 
 1. confirmar PR e SHA da `origin/main`;
-2. executar a validação pós-merge exigida pela classe;
-3. alinhar por fast-forward a `main` local designada, desde que esteja limpa;
-4. sincronizar o Google Drive quando a mudança afetar fontes do NotebookLM;
-5. validar hashes aplicáveis;
-6. atualizar o Registro Mestre e a visão executiva.
+2. executar a validação pós-merge exigida pela classe e registrar `MERGE_VALIDADO`;
+3. confirmar que o diretório principal `AmpAI/` é a `main` local limpa;
+4. alinhar exclusivamente por fast-forward ao merge SHA esperado;
+5. classificar worktrees como ativos, preservados, elegíveis ou bloqueados por conteúdo exclusivo;
+6. sincronizar o Google Drive quando a mudança afetar fontes do NotebookLM;
+7. validar hashes aplicáveis;
+8. registrar `ENCERRAMENTO_OPERACIONAL` ou `BLOQUEIO_OPERACIONAL` no Registro Mestre.
 
-Working tree suja, divergência, conflito, hash inconsistente ou falha de sincronização interrompe a rotina e retorna evidência ao CTO. É proibido resolver automaticamente por descarte, sobrescrita ou `reset --hard`.
+Working tree suja, `main` presa em worktree secundário, baseline divergente, conflito, conteúdo exclusivo, hash inconsistente ou falha de sincronização interrompe a rotina e retorna evidência ao CTO. O bloqueio local não invalida o merge remoto ou a canonização científica já efetiva, mas impede teste local do CEO e encerramento operacional. É proibido resolver automaticamente por descarte, sobrescrita, força ou `reset --hard`.
 
-Fast-forward e sincronização documental sem transformação são rotina `CHG-0` vinculada à mudança original. Alterar scripts, hooks, tarefas agendadas, credenciais, caminhos ou automação exige classificação e O.S. próprias.
+Fast-forward e sincronização documental sem transformação são rotina `CHG-0` vinculada à mudança original. Remoção de worktree exige inventário, ausência de conteúdo exclusivo e autorização nominal do CEO. Alterar scripts, hooks, tarefas agendadas, credenciais, caminhos, retenção, quarentena ou automação exige classificação e O.S. próprias.
+
+RNC-C ratificado usa `vigencia: EFETIVA_QUANDO_INTEGRADO_A_MAIN`; a integração do mesmo blob à `main` o torna canônico sem PR posterior de troca de status. SHA, Gate e sincronização pertencem ao Registro Mestre, não ao contrato científico.
 
 ---
 
