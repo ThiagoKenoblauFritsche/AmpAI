@@ -7,7 +7,9 @@ estado: não estudado (pré-BDD/SDD; nada implementado)
 autor: "@Engenheiro_Eletricista (AmpAI Governança v7.2)"
 data: 2026-07-13
 baseline_os: e7bf237e73c96f20be8a6c63da399e5c57d44417
-worktree: "isolado sobre baseline limpa e7bf237 (INC-002-01-R4); 3 entregáveis M22 untracked + Matriz tracked-modificada"
+baseline_cientifica: e7bf237e73c96f20be8a6c63da399e5c57d44417
+integração_canonica: "main@65579b2f7155c55096a9d794ca45251ce88ff22d (PR #33, 2026-07-14)"
+vigência: CANÔNICO
 fonte_primaria: "IEC 60909-0:2016.pdf (norma primária selada; 154 págs.; NÃO versionado)"
 sha256_fonte: "425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0"
 status: "memorial de suporte ao RNC-C ratificado; estado_m22: não estudado"
@@ -241,8 +243,8 @@ Com $I_k''=20\,000$ A: $i_p = \kappa\sqrt2\,I_k'' = 1{,}51154\times1{,}414213562
 
 ## 11. Estado COD vs PROP
 
-M22 = **`não estudado`**. O **núcleo científico foi ratificado** pelo Conselho (`RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`), porém **nenhum código/teste existe** e M22 **não** é implementado/RED/GREEN/stable. Fluxo restante: integração documental na `main` (`vigência PENDENTE_DE_INTEGRAÇÃO_NA_MAIN`) → SDD (CTO) → RED (QA) → GREEN (Backend).
+M22 = **`não estudado`**. O **núcleo científico foi ratificado** pelo Conselho (`RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`) e **integrado à `main@65579b2f`** (PR #33, 2026-07-14; gate pós-merge #29295637686 — PASS; `vigência CANÔNICO`), porém **nenhum código/teste existe** e M22 **não** é implementado/RED/GREEN/stable (**state lock até a emissão formal do SDD**). Fluxo restante: **SDD (CTO) → RED experimental (QA) → GREEN (Backend) → QA independente**.
 
 ---
 
-*Memorial (v-R4) — @Engenheiro_Eletricista (AmpAI Governança v7.2) para a O.S. INC-002-01-R4 (CHG-3 científica/documental), em worktree isolado sobre a baseline limpa `origin/main@e7bf237`, com verificação primária contra o PDF selado (SHA-256 `425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0`). Suporte do RNC-C `RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`; `estado_m22: não estudado`. Nenhum commit/push/PR/merge; sem SDD/QA/Backend.*
+*Memorial — @Engenheiro_Eletricista (AmpAI Governança v7.2). Ciência de INC-002-01-R4 (**baseline científica `e7bf237`**), verificada contra o PDF selado (SHA-256 `425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0`); canonizada por INC-002-CANON-001 e **integrada à `main@65579b2f`** (PR #33, 2026-07-14). Suporte do RNC-C **canônico**; `estado_m22: não estudado`. Fluxo restante: SDD (CTO) → RED (QA) → GREEN (Backend) → QA independente.*

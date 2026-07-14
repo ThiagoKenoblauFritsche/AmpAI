@@ -1,25 +1,31 @@
 ---
 tags: [engenharia, rnc-c, iec60909, m22, inc-002]
-os: INC-002-01-R4
-classe: CHG-3 (científica/documental)
-versao: "1.4"
+os: INC-002-CANON-001 (canonização de INC-002-01-R4)
+classe: CHG-0 (documental)
+versao: "1.5"
 ratificação: RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS
-vigência: PENDENTE_DE_INTEGRAÇÃO_NA_MAIN
+vigência: CANÔNICO
 estado_m22: não estudado
 autor: "@Engenheiro_Eletricista (AmpAI Governança v7.2)"
-data: 2026-07-13
-baseline_os: e7bf237e73c96f20be8a6c63da399e5c57d44417
-worktree: "isolado sobre baseline limpa e7bf237 (INC-002-01-R4); 3 entregáveis M22 untracked + Matriz tracked-modificada"
+data: 2026-07-14
+baseline_cientifica: e7bf237e73c96f20be8a6c63da399e5c57d44417
+integração_canonica: main@65579b2f7155c55096a9d794ca45251ce88ff22d
+pr_integracao: "#33"
+gate_pos_merge: "#29295637686 — PASS"
+data_integracao: 2026-07-14
 fonte_primaria: "IEC 60909-0:2016.pdf (norma primária selada; SHA-256 425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0; NÃO versionado)"
 rnc_classe: RNC-C (ratificado com condições documentais)
 capacidade: M22 — fator κ e corrente de crista i_p (IEC 60909-0:2016, §8.1.1)
 ---
 
-# RNC-C — M22: fator κ e corrente de crista $i_p$ · INC-002-01-R4 (RATIFICADO com condições documentais)
+# RNC-C — M22: fator κ e corrente de crista $i_p$ · **CANÔNICO** (INC-002, condições documentais atendidas)
 
-> **Status documental:** `RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`; **vigência** `PENDENTE_DE_INTEGRAÇÃO_NA_MAIN`. Núcleo científico ratificado pelo Conselho. **`estado_m22: não estudado`** — M22 **não** está implementado, RED, GREEN nem stable. Especificação científica ratificada (**não** é evidência executável). Acompanha `INC002_M22_Memorial.md` e `INC002_M22_BDD.feature`.
+> **Status documental:** `RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`; **vigência `CANÔNICO`** — **integrado à `main@65579b2f7155c55096a9d794ca45251ce88ff22d` pelo PR #33 em 2026-07-14** (gate pós-merge **#29295637686 — PASS**). Núcleo científico ratificado pelo Conselho. **`estado_m22: não estudado`** — M22 **não** está implementado, RED, GREEN nem stable. Especificação científica **canônica** (**não** é evidência executável). Acompanha `INC002_M22_Memorial.md` e `INC002_M22_BDD.feature`.
 >
-> **v1.4 (INC-002-01-R4):** materialização documental final — pré-condição canônica do M15 (referência/normalização antes da soma); X=0 por **limite unilateral $X \to 0^+$**; identificação harmonizada (R4 / v7.2); estado de ratificação. Preserva SHA-256 integral, Provas A–E, $R_{Gf}$ exclusivo da crista, $R_G$ real no $i_{DC}$, inconsistência editorial (76)×(81), `TOLERÂNCIA_QA_ENV_AMPAI`, distinção máquina isolada × ramo completo, exclusões M23/conversores.
+> **Proveniência:** **baseline científica `e7bf237e73c96f20be8a6c63da399e5c57d44417`** (O.S. INC-002-01-R4) · **integração canônica `main@65579b2f7155c55096a9d794ca45251ce88ff22d`** (INC-002-CANON-001).
+>
+> **v1.5 (INC-002-CANON-001, 2026-07-14):** canonização pós-integração — `vigência` → **CANÔNICO**; proveniência (baseline científica × integração canônica) e ratificação do Conselho preservadas.
+> **v1.4 (INC-002-01-R4):** materialização documental — pré-condição canônica do M15 (referência/normalização antes da soma); X=0 por **limite unilateral $X \to 0^+$**; identificação harmonizada (v7.2). Preserva SHA-256 integral, Provas A–E, $R_{Gf}$ exclusivo da crista, $R_G$ real no $i_{DC}$, inconsistência editorial (76)×(81), `TOLERÂNCIA_QA_ENV_AMPAI`, distinção máquina isolada × ramo completo, exclusões M23/conversores.
 
 ---
 
@@ -170,10 +176,11 @@ $I_k''$ [A]; $R_{eq}, X_{eq}, X_d'', R_{Gf}, R_L, X_L$ [Ω]; $U_{rG}$ [V]; $S_{r
 ## Estado
 
 - **ratificação:** `RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`
-- **vigência:** `PENDENTE_DE_INTEGRAÇÃO_NA_MAIN`
-- **estado_m22:** `não estudado` (state lock do Conselho — M22 **não** é implementado/RED/GREEN/stable; nenhum código/teste criado)
-- **fluxo restante:** integração na `main` → SDD → RED → GREEN
+- **vigência:** `CANÔNICO` — integrado à `main@65579b2f` pelo **PR #33** em **2026-07-14**; gate pós-merge **#29295637686 — PASS**
+- **proveniência:** baseline científica `e7bf237e73c96f20be8a6c63da399e5c57d44417` (INC-002-01-R4) · integração canônica `main@65579b2f7155c55096a9d794ca45251ce88ff22d` (INC-002-CANON-001)
+- **estado_m22:** `não estudado` (state lock do Conselho **até a emissão formal do SDD** — M22 **não** é implementado/RED/GREEN/stable; nenhum código/teste criado)
+- **fluxo restante:** **SDD (CTO) → RED experimental (QA) → GREEN (Backend) → QA independente**
 
 ---
 
-*RNC-C v1.4 — @Engenheiro_Eletricista (AmpAI Governança v7.2) para a O.S. INC-002-01-R4 (CHG-3 científica/documental), em worktree isolado sobre a baseline limpa `origin/main@e7bf237`, com verificação primária contra o PDF selado (SHA-256 `425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0`). Estado: `RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`, `vigência PENDENTE_DE_INTEGRAÇÃO_NA_MAIN`, `estado_m22: não estudado`. Nenhum commit/push/PR/merge; sem SDD/QA/Backend.*
+*RNC-C v1.5 **CANÔNICO** — @Engenheiro_Eletricista (AmpAI Governança v7.2). Ciência de INC-002-01-R4 (**baseline científica `e7bf237`**), verificada contra o PDF selado (SHA-256 `425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0`); canonizada por INC-002-CANON-001 e **integrada à `main@65579b2f`** (PR #33, 2026-07-14; gate pós-merge #29295637686 — PASS). Estado: `RATIFICADO_COM_CONDIÇÕES_DOCUMENTAIS_ATENDIDAS`, `vigência CANÔNICO`, `estado_m22: não estudado`. Fluxo restante: SDD (CTO) → RED (QA) → GREEN (Backend) → QA independente.*
