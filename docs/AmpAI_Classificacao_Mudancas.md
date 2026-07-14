@@ -1,9 +1,9 @@
 ---
 tags: [governanca, operacao, risco, mudancas]
-versao: 1.2
+versao: 1.3
 status: ratificado
 data_decisao: 2026-07-13
-baseline_decisao: d8dce04f45bb0ed2c82e7bab5877fc056f924c89
+baseline_decisao: 4caf528407f7bb1dc4572c9e13232527d597a6f3
 autoridade: CEO + @Conselho_de_Arquitetura_e_Governanca
 ---
 
@@ -56,7 +56,7 @@ Não pode ser `CHG-0` qualquer mudança que altere:
 
 O.S. Expressa não exige BDD, novo RED, QA funcional ou regressão da aplicação. Documentação pura recebe verificação de Markdown, links, estrutura e diff.
 
-Rotinas de encerramento que apenas consultem estado, façam fast-forward seguro de uma `main` local limpa ou sincronizem um espelho documental sem transformar conteúdo são `CHG-0` vinculadas à mudança original. Herdam seu PR/SHA e não criam O.S., registro ou PR recursivos por execução. Alterar scripts, hooks, tarefas agendadas, credenciais, caminhos ou políticas continua sendo uma nova mudança classificada pelo CTO.
+Rotinas de encerramento que apenas consultem estado, façam fast-forward seguro da raiz `AmpAI/` limpa em `main` ou sincronizem um espelho documental sem transformar conteúdo são `CHG-0` vinculadas à mudança original. Herdam seu PR/SHA e não criam O.S., registro ou PR recursivos por execução. Alterar scripts, hooks, tarefas agendadas, credenciais, caminhos, retenção, quarentena ou remoção continua sendo uma nova mudança classificada pelo CTO.
 
 ### 3.2 CHG-1 — O.S. Adaptativa
 
@@ -81,10 +81,11 @@ Gatilhos automáticos:
 - VPS, IaC, staging, produção, deploy, backup ou rollback;
 - lei de Governança, topologia de agentes ou mudança arquitetural ampla.
 - política de retenção, catálogo canônico ou regra global de contexto/RAG.
+- automação capaz de mover/remover worktree, referência Git, conteúdo local ou evidência.
 
 `CHG-3` convoca todos os controles relevantes, não todas as personas. CI não chama o Eletricista sem impacto científico; fórmula IEC não chama DevOps sem impacto de ambiente.
 
-Saneamento comprovadamente não comportamental pode ser `CHG-1` mesmo com diff grande: retirar do índice dependências regeneráveis, caches, configurações locais ou artifacts já ignorados não se torna crítico pela quantidade de arquivos. Exige inventário, dry-run, lockfile preservado, instalação limpa, regressão `stable`, QA proporcional e rollback. Rewrite de histórico, force-push, segredo, branch protection ou exclusão sem substituto permanece `CHG-3`.
+Saneamento comprovadamente não comportamental pode ser `CHG-1` mesmo com diff grande: retirar do índice dependências regeneráveis, caches, configurações locais ou artifacts já ignorados não se torna crítico pela quantidade de arquivos. Exige inventário, dry-run, lockfile preservado, instalação limpa, regressão `stable`, QA proporcional e rollback. Rewrite de histórico, force-push, segredo, branch protection ou exclusão sem substituto permanece `CHG-3`. O saneamento inicial da estrutura local v7.3 é `CHG-3 operacional` porque combina worktrees externos, arquivos untracked e possível conteúdo exclusivo; depois de normalizado, o encerramento ordinário segue a classe da mudança original.
 
 ## 4. Matriz de testes
 
@@ -121,7 +122,7 @@ Todo artefato retorna ao CTO. Antes de recomendar PR ao CEO, o CTO consolida:
 
 Antes de recomendar merge, o CTO declara explicitamente se o teste manual do CEO é obrigatório. Mudança observável de produto recebe envelope com ambiente, cenários e resultados esperados; mudança exclusivamente interna recebe justificativa e evidência técnica substitutiva.
 
-Após o merge, o resultado e a execução pós-merge retornam ao CTO. A mudança só é encerrada quando o Registro Mestre contiver estado final e evidência suficiente para a classe, a `main` local designada estiver alinhada à `origin/main` ou possuir exceção formal e, quando aplicável, o espelho do Google Drive estiver sincronizado e validado. O checklist completo está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
+Após o merge, o resultado e a execução pós-merge retornam ao CTO. PR, SHA e Gate remoto satisfazem `MERGE_VALIDADO`; a mudança só é encerrada quando o Registro Mestre também contiver `ENCERRAMENTO_OPERACIONAL`, com a raiz `AmpAI/` limpa em `main`, alinhada à `origin/main`, worktrees classificados e, quando aplicável, Google Drive sincronizado e validado. Falha local recebe `BLOQUEIO_OPERACIONAL`: não invalida o merge remoto, mas impede encerramento e teste local do CEO. O checklist completo está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 
 ## 7. Fluxo emergencial
 
@@ -138,6 +139,7 @@ Emergência comprime a sequência; não elimina evidência. O CEO declara o inci
 7. Conselho mantém leis; QA mantém veredito; CEO mantém merge.
 8. Nenhuma IA flexibiliza teste para adequar a mudança à classe escolhida.
 9. Toda O.S. declara responsável atual, retorno obrigatório ao CTO e necessidade de teste manual do CEO.
-10. Merge não é encerramento: baseline remota, cópia local e espelho de consulta devem possuir estado explícito.
+10. Merge validado não é encerramento operacional: baseline remota, raiz local, worktrees e espelho de consulta devem possuir estado explícito.
 11. Arquivo novo exige consumidor, autoridade, classe documental e justificativa para não atualizar fonte existente.
 12. Histórico é preservado, mas não integra contexto padrão sem vínculo explícito.
+13. RNC-C ratificado torna-se canônico pela integração do mesmo blob à `main`; evidência operacional vive no Registro Mestre e não exige PR científica recursiva.

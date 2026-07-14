@@ -1,7 +1,10 @@
 ---
 tags: [governanca, normas, rnc]
-versao: 1.0
+versao: 1.1
 status: ativo
+data_decisao: 2026-07-13
+baseline_decisao: 4caf528407f7bb1dc4572c9e13232527d597a6f3
+autoridade: CEO + @Conselho_de_Arquitetura_e_Governanca
 ---
 
 # Taxonomia RNC — Registro Normativo Computável
@@ -30,6 +33,29 @@ Um documento só pode ser tratado como RNC-C quando declarar:
 7. condições de bloqueio e avisos de engenharia;
 8. rastreabilidade para seção, tabela, equação ou anexo de origem quando disponível;
 9. critérios de QA/BDD associados.
+
+## Estado científico e vigência
+
+Todo novo RNC-C ratificado deve separar a decisão científica de sua integração operacional:
+
+```yaml
+status_cientifico: RATIFICADO
+vigencia: EFETIVA_QUANDO_INTEGRADO_A_MAIN
+estado_do_motor: <estado real da capacidade>
+```
+
+`RATIFICADO` significa que o conteúdo científico passou pela autoridade competente. `EFETIVA_QUANDO_INTEGRADO_A_MAIN` significa que o mesmo blob se torna canônico objetivamente quando ingressa na branch `main`; não é necessária segunda PR para substituir a vigência por `CANÔNICO`.
+
+O documento científico permanente não deve registrar:
+
+- merge SHA ou Gate que ainda não existiam na sua produção;
+- afirmações temporárias como “sem commit, push ou PR”;
+- caminho ou estado do worktree usado para elaborá-lo;
+- sincronização futura do Google Drive.
+
+PR, merge SHA, Gate pós-merge, sincronização e encerramento pertencem ao GitHub e ao `docs/AmpAI_Registro_Mudancas.md`. A presença do documento ratificado em `main` é a prova objetiva de vigência; o Registro Mestre preserva como ele chegou lá.
+
+Nova PR sobre o RNC-C só é necessária quando houver mudança real de fórmula, premissa, fonte, escopo, rastreabilidade, prova, condição científica ou estado do motor. Documentos históricos que já usam `vigencia: CANÔNICO` continuam válidos e não precisam ser reescritos.
 
 ## Regras de precedência
 

@@ -1,6 +1,6 @@
 ---
 tags: [operacao, mudancas, cto, rastreabilidade]
-versao: 1.1
+versao: 1.2
 status: ativo_apos_integracao
 responsavel: "@CTO"
 ---
@@ -17,9 +17,9 @@ O Painel de Controle é uma projeção executiva deste registro. Não deve mante
 
 ## Estados
 
-`intake → classificada → especificacao → RED → implementacao → QA → PR → aceite_ceo → mergeada → pos_merge → sincronizacao → encerrada`
+`intake → classificada → especificacao → RED → implementacao → QA → PR → aceite_ceo → mergeada → MERGE_VALIDADO → pos_merge → ENCERRAMENTO_OPERACIONAL → encerrada`
 
-Estados não aplicáveis à classe podem ser omitidos, desde que a justificativa esteja registrada.
+Estados não aplicáveis à classe podem ser omitidos, desde que a justificativa esteja registrada. `BLOQUEIO_OPERACIONAL` é estado transversal: preserva o `MERGE_VALIDADO`, registra a pendência local e impede `encerrada` até correção.
 
 ## Campos obrigatórios
 
@@ -36,7 +36,10 @@ Estados não aplicáveis à classe podem ser omitidos, desde que a justificativa
 | Teste CEO | `sim`, `não` ou `a_definir_apos_QA` |
 | Ação CEO | `nenhuma`, `decisão`, `aceite` ou `merge` |
 | Evidência | BDD/SDD, comando, artifact, parecer, PR ou SHA |
-| Baseline/sincronização | SHA remoto, SHA local e estado do Drive quando aplicável |
+| Baseline/sincronização | merge SHA remoto, SHA da raiz `AmpAI/` em `main` e estado do Drive quando aplicável |
+| Marco remoto | pendente ou `MERGE_VALIDADO`, com PR, SHA e Gate/smoke aplicável |
+| Marco operacional | pendente, `BLOQUEIO_OPERACIONAL` ou `ENCERRAMENTO_OPERACIONAL` |
+| Worktrees | contagem/classificação e referência do inventário operacional |
 | Pendência | próxima ação ou `nenhuma` |
 | Encerramento | data e resultado final |
 
@@ -54,6 +57,8 @@ A linha histórica abaixo conserva o schema vigente quando foi criada. Novas ent
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `GOV-ROTEAMENTO-MULTIPROVEDOR-V72` | `CHG-3` institucional | CEO + Conselho | governança/docs/operação | instituir contexto enxuto, roteamento multiprovedor e cadeira `@Engenheiro_DevOps_SRE` sob controle do CTO | `@CTO` | nenhum | `encerrada` | não | merge concluído | PR [#30](https://github.com/ThiagoKenoblauFritsche/AmpAI/pull/30); merge `b30ee49dd14c8e03d8022f79dea4f9dbfde61dcc`; shadow gate pós-merge [#29220731215](https://github.com/ThiagoKenoblauFritsche/AmpAI/actions/runs/29220731215) `SUCCESS`; CodeRabbit da PR `SUCCESS`; `OPS-MAIN-SYNC-001` `PASS` | `origin/main`, `main` local no worktree `tmp/worktrees/main-sync` e `HEAD` alinhados em `b30ee49dd14c8e03d8022f79dea4f9dbfde61dcc`; Google Drive/NotebookLM sincronizado; hashes essenciais `MATCH` | nenhuma; saneamento do diretório principal e dos worktrees permanece fora desta mudança | 2026-07-13 — encerrada com pós-merge, fast-forward local e sincronização documental comprovados |
 
+> A linha v7.2 acima preserva a evidência histórica do mecanismo `main-sync`; não o autoriza como arquitetura permanente após a v7.3. Novos encerramentos devem usar a raiz `AmpAI/` como checkout canônico de `main`.
+
 ## Regra contra recursão
 
-A atualização de estado desta tabela, o fast-forward seguro da `main` local e a sincronização documental prevista no encerramento fazem parte da mudança original e não criam nova O.S. Alteração do schema, das classes, das autoridades ou da automação operacional é uma nova mudança classificada pelo CTO; mudança de lei permanece `CHG-3` de Governança.
+A atualização de estado desta tabela, o fast-forward seguro da raiz local e a sincronização documental prevista no encerramento fazem parte da mudança original e não criam nova O.S. Documento científico ratificado com `vigencia: EFETIVA_QUANDO_INTEGRADO_A_MAIN` torna-se canônico pela integração; PR, merge SHA e Gate são registrados aqui sem reabrir o documento científico. Alteração do schema, das classes, das autoridades ou da automação operacional é uma nova mudança classificada pelo CTO; mudança de lei permanece `CHG-3` de Governança.

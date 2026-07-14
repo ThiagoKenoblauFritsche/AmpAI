@@ -1,6 +1,6 @@
 ---
 tags: [gestao/painel, ampai/governanca]
-versao: 7.2
+versao: 7.3
 status: ativo
 ---
 
@@ -25,7 +25,7 @@ status: ativo
 
 ## Fluxo de controle
 
-`origem/CEO/Conselho/QA → CTO (registro + CHG-0 a CHG-3) → especialista atual → CTO (novo encaminhamento) → PR/gates → CEO (aceite quando aplicável + merge) → pós-merge/sincronização → CTO (encerramento)`
+`origem/CEO/Conselho/QA → CTO (registro + CHG-0 a CHG-3) → especialista atual → CTO (novo encaminhamento) → PR/gates → CEO (aceite quando aplicável + merge) → MERGE_VALIDADO → DevOps/SRE (raiz/Drive/worktrees) → ENCERRAMENTO_OPERACIONAL`
 
 Toda O.S. declara responsável atual, próximo destinatário, autoridade do veredito e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`. Todo resultado retorna ao CTO; o executor não escolhe a próxima persona. O protocolo canônico está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
 
@@ -52,6 +52,13 @@ O fluxo completo RED→GREEN é obrigatório para `CHG-2`/`CHG-3` comportamental
 - CI de Tribunal: `.github/workflows/`
 - Governança: `docs/AmpAI_Engineering_Manifesto.md`, `docs/AmpAI_OS_Workflow.md` e `.github/workflows/AGENTS.md`
 
+Estrutura operacional local:
+
+- `AmpAI/`: único checkout local canônico, sempre `main` limpa;
+- `tmp/worktrees/<ID>`: trabalho isolado e temporário das O.S.;
+- `../AmpAI-Quarantine/`: preservação temporária fora do Git e do Drive;
+- worktree não é backup nem fonte canônica.
+
 ## Cadeiras planejadas, ainda inativas
 
 | Gatilho | Persona futura | Escopo previsto |
@@ -69,8 +76,10 @@ O CEO deve receber do CTO uma visão única, derivada do Registro Mestre, conten
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | `<ID>` | `<estado>` | `<persona>` | `<persona>` | `nenhum` ou condição | `sim/não/a definir` | `nenhuma/decisão/aceite/merge` | `<evidência>` |
 
-O cabeçalho do painel deve informar também a baseline canônica da `origin/main`, a baseline da `main` local designada e o estado da sincronização do Google Drive. O painel não substitui o Registro Mestre e não pode divergir dele.
+O cabeçalho do painel deve informar também a baseline canônica da `origin/main`, o SHA da raiz `AmpAI/` em `main`, `MERGE_VALIDADO`, `ENCERRAMENTO_OPERACIONAL` ou `BLOQUEIO_OPERACIONAL`, o estado do Google Drive e a contagem de worktrees por classificação. O painel não substitui o Registro Mestre e não pode divergir dele.
 
 ## Densidade documental
 
 O Painel aponta para as fontes canônicas; não replica integralmente suas leis. Documentos usam as classes `canonical`, `active`, `source` e `historical`. Conteúdo histórico e configurações locais ficam fora do contexto padrão. O CTO deve exigir justificativa antes de criar novo arquivo e registrar qual fonte ele substitui ou complementa.
+
+RNC-C futuro não recebe PR recursiva de canonização: `status_cientifico: RATIFICADO` mais `vigencia: EFETIVA_QUANDO_INTEGRADO_A_MAIN` tornam-se efetivos pela presença do blob na `main`; evidência de PR/SHA/Gate permanece no Registro Mestre.

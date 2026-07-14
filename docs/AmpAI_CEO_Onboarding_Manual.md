@@ -1,6 +1,6 @@
 ---
 tags: [governanca, onboarding, ceo]
-versao: 7.2
+versao: 7.3
 status: ativo
 classe_documental: canonical
 responsavel: "@CTO"
@@ -8,7 +8,7 @@ canonical_for: onboarding_executivo
 review_trigger: mudanca_de_topologia_ou_fluxo_executivo
 ---
 
-# Manual de Onboarding Executivo — AmpAI v7.2
+# Manual de Onboarding Executivo — AmpAI v7.3
 
 O CEO dirige estratégia, produto, prioridade e é a autoridade exclusiva de merge. Não precisa escrever código, decidir rotas operacionais ou redigir prompts de fábrica.
 
@@ -44,9 +44,13 @@ Quando uma O.S. envolver higiene do repositório, sincronização, worktrees/bra
 
 Para Plataforma CI e DevOps/SRE, abra projetos Antigravity separados, mantenha permissões restritas ao projeto e aprovação interativa ativa. Use Gemini 3.5 Flash como padrão; Gemini 3.1 Pro High somente quando o CTO registrar escalonamento por complexidade. Antes da primeira mutação, execute a qualificação read-only/dry-run da cadeira. Nunca troque o executor de uma O.S. em andamento.
 
-Todo resultado volta ao CTO. Você recebe dele um resumo executivo com classe, risco, pareceres, testes, PR/SHA e recomendação. Após o merge, devolva o resultado ao CTO para encerramento no Registro Mestre.
+Todo resultado volta ao CTO. Você recebe dele um resumo executivo com classe, risco, pareceres, testes, PR/SHA e recomendação. Se houver teste manual, o CTO deve fornecer SHA, caminho/URL, comando e cenários; se não houver, deve declarar `TESTE DO CEO: NÃO NECESSÁRIO`. Após o merge, devolva o resultado ao CTO: primeiro ele registra `MERGE_VALIDADO`; depois o DevOps/SRE regulariza a raiz, o Drive e os worktrees para `ENCERRAMENTO_OPERACIONAL`.
 
-Se um `push` pós-merge em `main` falhar, congele novos merges, peça classificação ao QA e proposta de correção/reversão ao CTO. Somente o CEO decide o tratamento.
+O diretório principal `AmpAI/` é sua cópia local canônica e deve ficar sempre em `main`, limpa e alinhada a `origin/main`. Não teste o produto nessa pasta se o CTO indicar `BLOQUEIO_OPERACIONAL`. Implementações pertencem a `tmp/worktrees/<ID>`; uma `main` permanente em `main-sync` ou outro worktree secundário não é o desenho vigente.
+
+Se o alinhamento local, o Gate pós-merge, a sincronização ou um hash falhar, não descarte arquivos nem tente “forçar” a atualização. O merge remoto permanece identificado, mas o encerramento operacional fica bloqueado. Encaminhe a evidência ao CTO; o DevOps/SRE executa inventário e dry-run, e somente o CEO autoriza a remoção nominal de worktrees ou branches.
+
+RNC-C ratificado com `vigencia: EFETIVA_QUANDO_INTEGRADO_A_MAIN` torna-se canônico quando entra na `main`. Você não precisa aprovar uma segunda PR apenas para trocar o texto de vigência; PR, SHA, Gate e sincronização ficam no Registro Mestre.
 
 CodeRabbit pode acrescentar comentários à PR, mas não substitui o veredito de QA/Codex, o artifact de CI nem sua decisão de merge. CD staging e CD produção não fazem parte do fluxo ativo.
 

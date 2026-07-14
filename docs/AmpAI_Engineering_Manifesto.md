@@ -3,7 +3,7 @@ tags:
   - arquitetura/engenharia
   - padroes/codigo
   - governanca/ia
-versao: 1.3
+versao: 1.4
 status: mandatorio
 ---
 
@@ -85,7 +85,7 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 
 *   **Verdade Única:** Se o comportamento não está especificado no BDD ou nos contratos SDD, a IA está terminantemente **proibida de codificá-lo**. Invenções ("Hallucinations") são consideradas infrações graves de governança.
 *   **RNC antes de dedução:** O Engenheiro Eletricista deve usar Registros Normativos Computáveis em Markdown como fonte operacional. PDF bruto é material de origem, não o formato preferencial de execução.
-*   **RNC-P não é RNC-C:** RNC-P é Markdown processado de norma, livro ou guia técnico; RNC-C é documento curado pelo AmpAI com fonte, escopo, equações conferidas, unidades SI, premissas, limites físicos e regras QA. A IA não pode transformar RNC-P em regra de produção sem declarar a promoção para RNC-C.
+*   **RNC-P não é RNC-C:** RNC-P é Markdown processado de norma, livro ou guia técnico; RNC-C é documento curado pelo AmpAI com fonte, escopo, equações conferidas, unidades SI, premissas, limites físicos e regras QA. A IA não pode transformar RNC-P em regra de produção sem declarar a promoção para RNC-C. RNC-C ratificado torna-se canônico pela integração do mesmo blob à `main`; evidência operacional não reescreve o contrato científico.
 *   **Caixa Preta de Testes:** Peça primeiro para a IA criar os testes com o objetivo explícito de **tentar quebrar a aplicação** com entradas inválidas, sobrecargas elétricas e limites estourados.
 *   **Air Gap Epistemológico:** Fábrica e Tribunal são agentes distintos. A Fábrica não atesta o próprio código; o Tribunal executa testes isoladamente, valida artifacts de CI quando aplicável e devolve a evidência ao CTO. O ciclo encerra apenas com GREEN verificável, PR validado e aprovação humana para merge.
 *   **Plataforma não é Tribunal:** o @Engenheiro_Plataforma_CI implementa o mecanismo de CI conforme contrato do CTO e decisão explícita do QA. Não escreve ou flexibiliza testes, não decide classificações do manifesto e não atesta a própria infraestrutura.
@@ -95,7 +95,7 @@ O fluxo de desenvolvimento automatizado impede que a IA pule etapas ou foque ape
 *   **Torre de Controle:** toda decisão, alteração, auditoria ou incidente passa pelo CTO para registro, classificação, roteamento e encerramento. Essa centralização não transfere ao CTO a lei do Conselho, o veredito do QA ou o merge do CEO.
 *   **Rigor proporcional:** O.S. são classificadas de `CHG-0` a `CHG-3`. Documentação editorial não simula TDD funcional; refatoração coberta não cria RED artificial; comportamento novo exige RED→GREEN; mudanças críticas recebem todos os controles relevantes.
 *   **Rota e aceite explícitos:** toda O.S. declara executor, retorno ao CTO, próximo encaminhamento controlado pela Torre de Controle e necessidade de teste manual do CEO. O CEO não reconstrói a cadeia operacional a partir de conversas.
-*   **Merge não é encerramento:** PR/SHA, validação pós-merge, alinhamento seguro da `main` local e sincronização do espelho documental, quando aplicável, integram a evidência de encerramento.
+*   **Merge validado não é encerramento operacional:** PR/SHA e Gate remoto estabelecem `MERGE_VALIDADO`; a raiz `AmpAI/` limpa em `main`, os worktrees classificados e o espelho documental sincronizado, quando aplicável, estabelecem `ENCERRAMENTO_OPERACIONAL`. Bloqueio local não invalida o merge, mas impede encerramento e teste local do CEO.
 *   **Repositório enxuto:** dependência instalável, cache, screenshot de execução, log, artifact e estado local não são conhecimento canônico e não devem ser versionados sem contrato explícito.
 *   **Atualizar antes de criar:** novo documento só nasce quando possui autoridade, audiência ou ciclo de vida distinto. Caso contrário, atualiza-se a fonte canônica existente.
 *   **Contexto mínimo suficiente:** nenhum agente ou RAG recebe todo o repositório por padrão. Cada persona consome apenas leis, contratos, fontes e evidências necessários à tarefa.

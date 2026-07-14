@@ -1,6 +1,6 @@
 ---
 tags: [arquitetura/ia, ampai/consciencia]
-versao: 7.2
+versao: 7.3
 status: ativo
 ---
 
@@ -32,14 +32,14 @@ AmpAI é um SaaS de engenharia elétrica IEC. Sua operação evita monólitos de
 - Plataforma CI e DevOps/SRE operam em projetos, threads e worktrees separados no Antigravity, com escopo de projeto, aprovação interativa, sem acesso `Full machine`/`Unrestricted`, wildcard MCP, tarefa agendada ou créditos automáticos. O prompt operacional é em inglês e a devolutiva em pt-BR.
 - Antes da primeira mutação após a migração, cada cadeira Google deve passar por qualificação AmpAI read-only/dry-run registrada pelo CTO. O.S. em andamento preserva o executor e a baseline originais até o encerramento.
 - O código só nasce de BDD e SDD; erros seguem RFC 7807 e o core nunca toca o DOM.
-- RNC-P é fonte normativa processada; RNC-C é fonte canônica curada. Um `.md` em `docs/normas/` não vira canônico automaticamente.
+- RNC-P é fonte normativa processada; RNC-C é fonte canônica curada. Um `.md` em `docs/normas/` não vira canônico automaticamente. RNC-C ratificado com `vigencia: EFETIVA_QUANDO_INTEGRADO_A_MAIN` torna-se efetivo pela presença do mesmo blob na `main`, sem PR operacional recursiva.
 - `sync.ps1` mantém a base Docs as Code disponível ao NotebookLM.
 - O CEO é o gatekeeper final de merge. O Gate Consolidado foi implantado em shadow mode em `main@dd83008` e obteve GREEN pós-merge no run `28910574756`; permanece informativo. Só protegerá obrigatoriamente `main` depois da O.S. de observação, parecer QA, O.S. futura de promoção e ativação explícita autorizada pelo CEO.
 - Teste novo nasce experimental; somente promoção formal o torna stable. Falha de infraestrutura bloqueia, mas não constitui RED/GREEN funcional.
 - CodeRabbit é revisor complementar, não autoridade final. CD staging e CD produção são fases futuras e separadas.
 - O CEO define estratégia, produto, prioridade e merge. O CTO determina a rota operacional e recebe de volta cada artefato, parecer e resultado pós-merge.
 - Toda O.S. declara responsável atual, retorno ao CTO, próximo destinatário e `TESTE DO CEO: SIM | NÃO | A DEFINIR APÓS QA`; o formato está em `docs/AmpAI_Protocolo_Operacional_CTO_CEO.md`.
-- Merge não encerra a mudança: `origin/main`, a `main` local designada e o Google Drive, quando aplicável, devem possuir estado explícito e evidência de sincronização.
+- `MERGE_VALIDADO` não é `ENCERRAMENTO_OPERACIONAL`: `origin/main`, a raiz `AmpAI/` limpa em `main`, os worktrees e o Google Drive, quando aplicável, devem possuir estado explícito. Implementações nunca usam a raiz canônica.
 - Atualizar precede criar. Documento novo exige classe, autoridade, consumidor e ciclo de vida; histórico não entra no contexto padrão.
 - Dependências, caches, screenshots de execução, artifacts e configurações locais são regeneráveis e não pertencem à árvore versionada sem contrato explícito.
 
