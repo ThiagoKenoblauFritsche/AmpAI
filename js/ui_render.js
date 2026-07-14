@@ -491,6 +491,20 @@ const _btI18n = {
         'bt.tbl.pf':      'Fator de Potência',
         'bt.tbl.method':  'Método de Instalação',
         'bt.tbl.tamb':    'Temperatura Ambiente',
+        // BT criteria table (O.S. CAB-BT-CRITERIA-001)
+        'bt.crit.caption':      'Verificação de Critérios — IEC 60364-5-52 / IEC 60364-4-43',
+        'bt.crit.criterion':    'Critério',
+        'bt.crit.calculated':   'Seção Calculada',
+        'bt.crit.status':       'Status',
+        'bt.crit.statusDominant': 'Dominante',
+        'bt.crit.ampacS1':      'Ampacidade (S₁)',
+        'bt.crit.voltdropS2':   'Queda de Tensão (S₂)',
+        'bt.crit.shortcircS3':  'Curto-Circuito do Condutor (S₃)',
+        'bt.crit.finalSection': 'Seção Final Adotada',
+        'bt.crit.factors':      'Fatores de Correção (FCT · FCA)',
+        'bt.crit.realVoltdrop': 'Queda de Tensão Real',
+        'bt.crit.discrete':     'discreta',
+        'bt.crit.continuous':   'contínua',
         // BT memorial paragraph texts (placeholders: {cond}, {ins}, {duMax}, {t_s})
         'mem.bt.step1.p': 'Cálculo dos fatores de correção e corrente corrigida do condutor de {cond} isolado em {ins}:',
         'mem.bt.step2.p': 'Calculada com base na máxima queda admissível de {duMax}% e constante de resistividade operacional (ρ):',
@@ -551,6 +565,20 @@ const _btI18n = {
         'bt.tbl.pf':      'Power Factor',
         'bt.tbl.method':  'Installation Method',
         'bt.tbl.tamb':    'Ambient Temperature',
+        // BT criteria table (O.S. CAB-BT-CRITERIA-001)
+        'bt.crit.caption':      'Criteria Verification — IEC 60364-5-52 / IEC 60364-4-43',
+        'bt.crit.criterion':    'Criterion',
+        'bt.crit.calculated':   'Calculated Section',
+        'bt.crit.status':       'Status',
+        'bt.crit.statusDominant': 'Dominant',
+        'bt.crit.ampacS1':      'Ampacity (S₁)',
+        'bt.crit.voltdropS2':   'Voltage Drop (S₂)',
+        'bt.crit.shortcircS3':  'Conductor Short-Circuit (S₃)',
+        'bt.crit.finalSection': 'Final Adopted Section',
+        'bt.crit.factors':      'Correction Factors (FCT · FCA)',
+        'bt.crit.realVoltdrop': 'Actual Voltage Drop',
+        'bt.crit.discrete':     'discrete',
+        'bt.crit.continuous':   'continuous',
         // BT memorial paragraph texts
         'mem.bt.step1.p': 'Calculation of correction factors and corrected current for the {cond} conductor insulated in {ins}:',
         'mem.bt.step2.p': 'Calculated based on the maximum allowable voltage drop of {duMax}% and operational resistivity constant (ρ):',
@@ -611,6 +639,20 @@ const _btI18n = {
         'bt.tbl.pf':      'Factor de Potencia',
         'bt.tbl.method':  'Método de Instalación',
         'bt.tbl.tamb':    'Temperatura Ambiente',
+        // BT criteria table (O.S. CAB-BT-CRITERIA-001)
+        'bt.crit.caption':      'Verificación de Criterios — IEC 60364-5-52 / IEC 60364-4-43',
+        'bt.crit.criterion':    'Criterio',
+        'bt.crit.calculated':   'Sección Calculada',
+        'bt.crit.status':       'Estado',
+        'bt.crit.statusDominant': 'Dominante',
+        'bt.crit.ampacS1':      'Amperaje (S₁)',
+        'bt.crit.voltdropS2':   'Caída de Tensión (S₂)',
+        'bt.crit.shortcircS3':  'Cortocircuito del Conductor (S₃)',
+        'bt.crit.finalSection': 'Sección Final Adoptada',
+        'bt.crit.factors':      'Factores de Corrección (FCT · FCA)',
+        'bt.crit.realVoltdrop': 'Caída de Tensión Real',
+        'bt.crit.discrete':     'discreta',
+        'bt.crit.continuous':   'continua',
         // BT memorial paragraph texts
         'mem.bt.step1.p': 'Cálculo de los factores de corrección y corriente corregida del conductor {cond} aislado en {ins}:',
         'mem.bt.step2.p': 'Calculada con base en la caída máxima admisible de {duMax}% y la constante de resistividad operacional (ρ):',
@@ -1096,6 +1138,13 @@ function injectWithRetry(id, renderFunction, payload, retries = 5) {
     }
 
     if (window.isRendering) {
+        // O.S. CAB-BT-CRITERIA-001: não descartar silenciosamente um re-render
+        // pedido durante o lock anti-loop. Isso congelava o card num render
+        // obsoleto quando "trocar de card + Calcular" aconteciam em <100ms (o
+        // segundo render, com o envelope recém-calculado, era perdido). Guardamos
+        // o pedido mais recente por container e o aplicamos quando o lock é
+        // liberado (last-write-wins), preservando a proteção anti-reentrância.
+        (window._pendingInject = window._pendingInject || {})[id] = { renderFunction, payload };
         return;
     }
     window.isRendering = true;
@@ -1104,7 +1153,14 @@ function injectWithRetry(id, renderFunction, payload, retries = 5) {
     container.style.display = 'block';
     container.style.visibility = 'visible';
 
-    setTimeout(() => { window.isRendering = false; }, 100);
+    setTimeout(() => {
+        window.isRendering = false;
+        const pending = window._pendingInject;
+        if (pending) {
+            window._pendingInject = null;
+            Object.keys(pending).forEach((pid) => injectWithRetry(pid, pending[pid].renderFunction, pending[pid].payload));
+        }
+    }, 100);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1120,6 +1176,22 @@ window.renderCardBT = function(r) {
         const p = data;
         const i = data.input || {};
         const duOver = p.duPct_final > p.duMax;
+
+        // O.S. CAB-BT-CRITERIA-001 — Dominância por INCLUSÃO no envelope p.dominant.
+        // O motor emite dominant = ['AMPACIDADE','QUEDA DE TENSÃO','CURTO-CIRCUITO']
+        // unidos por ' + ' em caso de empate. Igualdade exclusiva
+        // (p.dominant === 'AMPACIDADE') falharia para o valor composto
+        // "AMPACIDADE + QUEDA DE TENSÃO + CURTO-CIRCUITO"; por isso testamos inclusão
+        // de cada token exatamente como o motor o produz (mesma fonte que o QA normaliza).
+        const _dominant = String(p.dominant ?? '');
+        const domAmp = _dominant.includes('AMPACIDADE');
+        const domVd  = _dominant.includes('QUEDA DE TENSÃO');
+        const domSc  = _dominant.includes('CURTO-CIRCUITO');
+        // Status dominante da tabela BT consome chave PRÓPRIA bt.crit.statusDominant
+        // (nunca mt.tbl.statusDominant): mantém o BT desacoplado do i18n do MT.
+        // _dom()/comportamento MT permanecem intactos.
+        const _domBT = () => `<span style="color:var(--accent);font-weight:700;">★ ${_tbt('bt.crit.statusDominant')}</span>`;
+        const critStatus = (isDom) => (isDom ? _domBT() : _ok());
 
         return `
             <!-- Cabeçalho Corporativo Embutido para Impressão -->
@@ -1164,6 +1236,50 @@ window.renderCardBT = function(r) {
                     <div class="result-value">${_fmt(p.S3_cont, 2)} <span class="result-unit">mm²</span></div>
                     <div class="result-desc">Icc = ${(p.Icc||0)/1000} kA | t = ${_fmt(p.tProt, 2)} s</div>
                 </div>
+            </div>
+
+            <!-- O.S. CAB-BT-CRITERIA-001 — Tabela auditável de critérios de seleção -->
+            <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1rem; margin:0 0 1rem 0;">
+                <table class="tech-table table-results">
+                    <caption style="text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">${_tbt('bt.crit.caption')}</caption>
+                    <thead>
+                        <tr>
+                            <th>${_tbt('bt.crit.criterion')}</th>
+                            <th>${_tbt('bt.crit.calculated')}</th>
+                            <th>${_tbt('bt.crit.status')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${_tbt('bt.crit.ampacS1')}</td>
+                            <td>${p.S1} mm²</td>
+                            <td>${critStatus(domAmp)}</td>
+                        </tr>
+                        <tr>
+                            <td>${_tbt('bt.crit.voltdropS2')}</td>
+                            <td>${_tbt('bt.crit.discrete')}: ${p.S2} mm² · ${_tbt('bt.crit.continuous')}: ${_fmt(p.S2_cont, 2)} mm²</td>
+                            <td>${critStatus(domVd)}</td>
+                        </tr>
+                        <tr>
+                            <td>${_tbt('bt.crit.shortcircS3')}</td>
+                            <td>${_tbt('bt.crit.discrete')}: ${p.S3} mm² · ${_tbt('bt.crit.continuous')}: ${_fmt(p.S3_cont, 2)} mm²</td>
+                            <td>${critStatus(domSc)}</td>
+                        </tr>
+                        <tr style="font-weight:700;">
+                            <td>${_tbt('bt.crit.finalSection')}</td>
+                            <td>${p.sFinal} mm²</td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td>${_tbt('bt.crit.factors')}</td>
+                            <td colspan="2">FCT = ${_fmt(p.FCT, 4)} · FCA = ${_fmt(p.FCA, 4)}</td>
+                        </tr>
+                        <tr>
+                            <td>${_tbt('bt.crit.realVoltdrop')}</td>
+                            <td colspan="2">${_fmt(p.duPct_final, 2)} % ${p.duPct_final <= p.duMax ? '✓' : '✗'}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
             <!-- Tabs Navigation -->
