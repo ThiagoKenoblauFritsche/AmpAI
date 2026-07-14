@@ -2,8 +2,9 @@
 # ─────────────────────────────────────────────────────────────────────────────
 # O.S.: INC-002-01-R4  ·  Classe: CHG-3 (científica)  ·  Capacidade: M22 — κ e crista i_p
 # IEC 60909-0:2016, §8.1.1  ·  Autor: @Engenheiro_Eletricista (Governança v7.2)
-# Baseline: origin/main@e7bf237e73c96f20be8a6c63da399e5c57d44417
-#   (worktree isolado sobre baseline limpa, contendo exatamente três entregáveis untracked)
+# Baseline científica: e7bf237e73c96f20be8a6c63da399e5c57d44417 (INC-002-01-R4)
+# Integração canônica: main@65579b2f7155c55096a9d794ca45251ce88ff22d (INC-002-CANON-001,
+#   PR #33, 2026-07-14; gate pós-merge #29295637686 — PASS). vigência CANÔNICO; estado_m22: não estudado.
 #
 # FONTE PRIMÁRIA (selada, verificada): IEC 60909-0-2016.pdf — SHA-256 425250C7CA547C3110E4C1702BA83DE1DFA97C90A3DC0EA33BDE3F4F6F7C61E0
 #   (154 págs.; fora do repo, NÃO versionado). Conferido nas págs. físicas 51–53 e 58–60.
