@@ -1,6 +1,6 @@
 ---
 tags: [engenharia, normas, iec60909, cobertura, governanca]
-versao: 1.2.2
+versao: 1.2.3
 status: ratificado
 autor: "@Engenheiro_Eletricista (AmpAI Governança v7.0)"
 data: 2026-07-06
@@ -9,10 +9,10 @@ autoridade_ratificacao: "@Arquiteto_Chefe_e_Governanca"
 baseline_ratificacao: 641d8ab9705630da5180eae7764b272f6a2e3867
 baseline_m16_green: 433b311fd7bd529d4785e95a146a5c09099a33d4
 data_atualizacao_m16_green: 2026-07-09
-revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditoria) — denominador só IDs Mxx e contraste M01 [0,90;1,10] vs M16 (0;1,10]; v1.2.2 registra M16 GREEN pós-INC-001-04-R, sem promoção a stable"
+revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditoria) — denominador só IDs Mxx e contraste M01 [0,90;1,10] vs M16 (0;1,10]; v1.2.2 registra M16 GREEN pós-INC-001-04-R, sem promoção a stable; v1.2.3 (INC-002-01-R4/R4-F): corrige a linha M22 (Fórmulas 52–54 → (56)/(57)/(59)/(60), (58) conversor fora, M22 permanece não estudado, RNC-C/BDD como spec ratificada); corrige a linha M23 para §8.1.2/Fórmula (61) (remove 55–58); sincroniza M16 = stable/core (tests/test_inc001_m16.js 24/24, promoção pelo PR #28), contagem stable=7 (14,6%)"
 ---
 
-# Matriz de Cobertura Normativa — Família IEC 60909 · v1.2.2
+# Matriz de Cobertura Normativa — Família IEC 60909 · v1.2.3
 
 > **Fonte primária:** IEC 60909-0:2016 — *Short-circuit currents in three-phase a.c. systems — Part 0: Calculation of currents*
 > **Classificação da fonte:** RNC-P (`docs/normas/IEC_60909_Short_Circuit/IEC 60909-0-2016.md`)
@@ -22,7 +22,7 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 >
 > **Selo documental:** ratificada para circulação operacional em 2026-07-07 por `@Arquiteto_Chefe_e_Governanca`, sobre a baseline `641d8ab9705630da5180eae7764b272f6a2e3867`. O RNC-C canônico da fundação é `docs/engenharia/RNC-C_Fundacao_M00_M04_M15.md`.
 >
-> **Atualização INC-001-04-R / M16:** em 2026-07-09, sobre `main@433b311fd7bd529d4785e95a146a5c09099a33d4`, M16 passou de `implementado_sem_validacao` para `GREEN` por validação independente do INC-001. **M16 não está `stable`**: a suíte específica `tests/test_inc001_m16.js` ainda não foi promovida ao manifesto do Gate Consolidado.
+> **Estado do M16 (sincronizado com a `main`):** M16 é **`stable` (core)** — `tests/test_inc001_m16.js` (**24/24**, exit 0) **promovido ao manifesto do Gate Consolidado pelo PR #28**. (Histórico: `implementado_sem_validacao` → `GREEN` no INC-001-04-R sobre `main@433b311`; promoção a `stable` integrada em seguida pelo PR #28.)
 
 ---
 
@@ -47,10 +47,10 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 |---------|--------|-----------|
 | `js/core_curto_circuito.js` | **Existe** (264 linhas, ~13 KB) | Lido e auditado |
 | `tests/core_curto_circuito.test.js` | 39 testes, exit 0 | Manifesto `stable`; 39 verdes |
-| `tests/test_inc001_m16.js` | 24 testes, exit 0 | GREEN independente INC-001; ainda fora do manifesto `stable` |
-| `qa/test-manifest.json` | Correto | Exige 39; protocolo `legacy-zombies` |
+| `tests/test_inc001_m16.js` | 24/24 relatórios, exit 0 | **`stable`/`core`**, promovido ao manifesto pelo **PR #28** |
+| `qa/test-manifest.json` | **6 entradas `stable`** | **Core:** core-curto-circuito (`legacy-zombies`, 39), os047 (`json-lines`, 8), inc001-m16 (`json-lines`, 24). **Browser:** os040r (9), os042r (1), os044r (26). O protocolo legado de core-curto-circuito permanece 39; M16 registrado adicionalmente |
 | Métodos testados pelos 39 | `calcularImpedanciaRede`, `calcularImpedanciaTransformador`, `calcularImpedanciaGerador`, `calcularImpedanciaCabo`, `agregarImpedanciaCurto` | Auditoria de código |
-| Método validado no INC-001 | `calcularCorrenteInicialSimetrica(Un, Zk, c)` | `tests/test_inc001_m16.js`: 24/24 conformes; ainda não `stable` |
+| Método validado no INC-001 | `calcularCorrenteInicialSimetrica(Un, Zk, c)` | `tests/test_inc001_m16.js`: 24/24 conformes; **`stable`/`core`, promovido ao manifesto do Gate pelo PR #28** |
 
 ---
 
@@ -93,7 +93,7 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 | IEC 60909-0:2016 | 7.1.1 | Visão geral: topologia da falta, tabela de importância (Tabela 2), critério de seleção do tipo de falta | Orientação para todos os cálculos; seleção da falta dominante | Tipo de falta, diagrama topológico do sistema | Corrente dominante identificada; tipo de curto selecionado | Todos M01–M11 | `não estudado` | Figura 7 e Tabela 2 da norma | Requer conhecimento completo das impedâncias de sequência antes da seleção |
 | IEC 60909-0:2016 | 7.1.2 | $I_{k,\max}''$ e $I_{k,\min}''$: critérios de escolha de $c$ e de temperatura | Dimensionamento de proteções (máx) e verificação de sensibilidade (mín) | $c_{\max}$/$c_{\min}$; temperatura de resistências para mínima | $I_{k,\max}''$ (A), $I_{k,\min}''$ (A) | M00, M01–M04, M15 | `não estudado` | Seção 7.1.2 | Corrente mínima exige correção de temperatura em todas as resistências do circuito |
 | IEC 60909-0:2016 | 7.1.3 | Contribuição de motores assíncronos a $I_k''$ (threshold de inclusão) | Redes industriais com carga motora significativa | $\sum P_{rM}$ (W), $U_n$ (V), comparação com threshold | Correção aditiva de $I_k''$ por contribuição motora (A) | M09, M16 | `não estudado` | Seção 7.1.3 | Threshold de inclusão ($\ge 1\%$ de $S_{kQ}$) deve ser premissa declarada explicitamente |
-| IEC 60909-0:2016 | 7.2.1 | **[M16]** $I_k''$ trifásico simétrico — alimentação simples e múltipla em redes radiais | Falta trifásica (caso de maior corrente em sistemas equilibrados sem geradores próximos) | $\lvert\underline{Z}_k\rvert$ (Ω), $c$, $U_n$ (V) | $I_k''$ (A) — corrente simétrica inicial trifásica | M00, M15 (e M01–M04 ou subconjunto aplicável ao perfil) | `GREEN` — método `calcularCorrenteInicialSimetrica(Un, Zk, c)` validado no INC-001 por `tests/test_inc001_m16.js` (24/24 conformes, exit 0); conjunto discreto de $c$ imposto $\{0{,}90;0{,}95;1{,}00;1{,}05;1{,}10\}$; TC-M16-01 a TC-M16-07 exercidos; entradas estruturais inválidas bloqueadas; erro estruturado Problem Details/RFC 7807 validado; **ainda não `stable`** | CT-158 Schneider; Exemplo Anexo B da norma; INC-001-01/01-R, PR #22, PR #24, QA independente | Interface atual usa args posicionais $(U_n, Z_k, c)$; promoção a `stable` pendente de O.S. própria e inclusão no manifesto do Gate Consolidado |
+| IEC 60909-0:2016 | 7.2.1 | **[M16]** $I_k''$ trifásico simétrico — alimentação simples e múltipla em redes radiais | Falta trifásica (caso de maior corrente em sistemas equilibrados sem geradores próximos) | $\lvert\underline{Z}_k\rvert$ (Ω), $c$, $U_n$ (V) | $I_k''$ (A) — corrente simétrica inicial trifásica | M00, M15 (e M01–M04 ou subconjunto aplicável ao perfil) | `stable` (**core**) — método `calcularCorrenteInicialSimetrica(Un, Zk, c)` validado no INC-001 por `tests/test_inc001_m16.js` (**24/24** conformes, exit 0); conjunto discreto de $c$ imposto $\{0{,}90;0{,}95;1{,}00;1{,}05;1{,}10\}$; TC-M16-01 a TC-M16-07 exercidos; entradas estruturais inválidas bloqueadas; erro estruturado Problem Details/RFC 7807 validado; **promovido ao manifesto do Gate pelo PR #28** | CT-158 Schneider; Exemplo Anexo B da norma; INC-001-01/01-R, PR #22, PR #24, PR #28 (promoção), QA independente | Interface atual usa args posicionais $(U_n, Z_k, c)$; promoção a `stable` **concluída** (manifesto do Gate, PR #28) |
 | IEC 60909-0:2016 | 7.2.2 | **[M17a]** $I_k''$ trifásico dentro do grupo gerador **com** OLTC | Falta entre gerador e trafo de bloco com comutador | Análogo a M16 + dados de tap | $I_k''$ local (A) | M07, M15 | `não estudado` | Figura 11 da norma | Curto interno ao grupo gerador; raramente exigido em projetos MT/BT |
 | IEC 60909-0:2016 | 7.2.3 | **[M17b]** $I_k''$ trifásico dentro do grupo gerador **sem** OLTC | Análogo a M17a para transformadores fixos | Análogo a M08 | $I_k''$ local (A) | M08, M15 | `não estudado` | Figura 11 da norma | Idem M17a |
 | IEC 60909-0:2016 | 7.3 | **[M19]** $I_k''$ bifásico sem terra | Falta fase-fase sem envolvimento do condutor de terra | $\underline{Z}_{(1)}$, $\underline{Z}_{(2)}$ dos componentes | $I_k''$ bifásico (A) | 5.3.2, M12–M14 | `não estudado` | Seção 7.3 da norma | Exige $\underline{Z}_{(2)}$ de todos os equipamentos no caminho da falta |
@@ -104,8 +104,8 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 
 | Norma/Edição | Cláusula | Capacidade | Aplicabilidade | Entradas | Saídas | Dependências | Estado | Gabarito | Limitações |
 |---|---|---|---|---|---|---|---|---|---|
-| IEC 60909-0:2016 | 8.1.1 | **[M22]** Fator $\kappa$ e corrente de crista $i_p$ — alimentação simples (Fórmulas 52–54; Figura 12) | Dimensionamento eletrodinâmico de barramentos, disjuntores e condutores | $R_k/X_k$ (ou $X_k/R_k$), $I_k''$ (A) | $\kappa$ (adimensional), $i_p = \kappa\sqrt{2} \cdot I_k''$ (A pico) | M16, M03 ($R_{Gf}$ para gerador) | `não estudado` | Figura 12 da norma (tabela ou equação necessária) | $R_{Gf}$ (6.6.1, resistência fictícia do gerador) necessária para calcular $\kappa$ correto de geradores |
-| IEC 60909-0:2016 | 8.1.2 | **[M23]** $i_p$ — alimentação múltipla (Fórmulas 55–58) | Barramentos com múltiplas fontes em paralelo | $\kappa_i$, $I_{k,i}''$ por fonte; topologia da rede | $i_p$ combinado (A pico) | M22, M17 | `não estudado` | Seção 8.1.2 | Critério de seleção entre Fórmulas 55, 56 e 58 deve ser declarado explicitamente como premissa |
+| IEC 60909-0:2016 | 8.1.1 | **[M22]** Fator $\kappa$ e corrente de crista $i_p$ — alimentação simples e múltiplas alimentações simples (**Fórmulas (56), (57), (59), (60)**; Figura 12). **(58)** = conversor full-size (**fora do M22**); **§8.1.2/(61)** = multiple-fed (**reservado ao M23**) | Dimensionamento eletrodinâmico de barramentos, disjuntores e condutores | $R_{eq}/X_{eq}$ do **ramo completo**, $I_k''$ (A) | $\kappa$ (adimensional), $i_p = \kappa\sqrt{2} \cdot I_k''$ (A pico) | M16 ($I_k''$), M03 ($R_{Gf}$), M15 (agregação/referência) | `não estudado` | **Especificação científica RATIFICADA** (RNC-C `RNC-C_INC002_M22.md` + BDD `INC002_M22_BDD.feature`) — **não é evidência executável** | $R_{Gf}$ exclusivo da crista; ramo completo usa $R_{eq}/X_{eq}$ (não razão fixa 0,05/0,07/0,15); $X<0$ = `FORA_DO_PERFIL_M22_V1` |
+| IEC 60909-0:2016 | 8.1.2 | **[M23]** $i_p$ — alimentação múltipla (**§8.1.2 / Fórmula (61)**) | Barramentos com múltiplas fontes em paralelo | $\kappa$ único no ponto de falta, $I_{kmaxPFO}''$, topologia da rede | $i_p$ combinado (A pico) | M22, M17 | `não estudado` | §8.1.2 (Fórmula (61)) | $\kappa$ único via métodos a/b/c; fator 1,15; tetos 1,8 BT / 2,0 AT |
 | IEC 60909-0:2016 | 8.2–8.4 | **[M24]** $i_p$ para faltas assimétricas (bifásico, bifásico-terra, fase-terra) | Dimensionamento eletrodinâmico com faltas assimétricas | $\kappa$ calculado com $\underline{Z}_{(1)}$ do lado da falta; $I_k''$ assimétrico | $i_p$ (A pico) | M19–M21, M22 | `não estudado` | Seções 8.2–8.4 | Depende das correntes assimétricas das cláusulas 7.3–7.5 |
 
 ### 3.5 Corrente de Interrupção $I_b$ (Cláusula 9)
@@ -123,7 +123,7 @@ revisao: "v1.1 devolvida; v1.2 base 48 + embutimento de M00; v1.2.1 (2ª auditor
 
 | Norma/Edição | Cláusula | Capacidade | Aplicabilidade | Entradas | Saídas | Dependências | Estado | Gabarito | Limitações |
 |---|---|---|---|---|---|---|---|---|---|
-| IEC 60909-0:2016 | 10 | **[M27]** Componente CC $i_{DC}(t)$ (Fórmula 64) | Proteção diferencial, relés de distância; verificação de solicitação CC em disjuntores | $I_k''$ (A), $R_k/X_k$, $t$ (s), $f$ (Hz) | $i_{DC}(t)$ (A) | M15, M16 | `não estudado` | Seção 10 da norma | Aproximação de primeiro grau; assume $R/X$ constante ao longo do transitório |
+| IEC 60909-0:2016 | 10 | **[M27]** Componente CC $i_{DC}(t)$ (**Fórmula (81)**) | Proteção diferencial, relés de distância; verificação de solicitação CC em disjuntores | $I_k''$ (A), $R_k/X_k$, $t$ (s), $f$ (Hz) | $i_{DC}(t)$ (A) | M15, M16 | `não estudado` | §10 da norma (**Fórmula (81)**) | Aproximação de primeiro grau; assume $R/X$ constante; usa $R_G$ **real** (§10), **não** $R_{Gf}$ (exclusiva da crista M22) |
 | IEC 60909-0:2016 | 11.2.1 | **[M28]** $I_k$ em regime — gerador síncrono; fatores $\lambda_{\max}$, $\lambda_{\min}$ (Figuras 15–16) | Coordenação de proteção de longa duração; verificação de limites térmicos | $I_{rG}$ (A), $x_d$, $x_{dsat}$, condição de excitação | $I_{k,\max}$ e $I_{k,\min}$ em regime (A) | M03, M16 | `não estudado` | Figuras 15 e 16 da norma | $\lambda$ são funções gráficas → necessitam tabela ou equação analítica |
 | IEC 60909-0:2016 | 11.2.2 | **[M29]** $I_k$ regime — motor/gerador assíncrono | Proteção de máquinas rotativas; corrente de longa duração | Análogo; dados do motor assíncrono | $I_k$ regime (A) | M09 | `não estudado` | Seção 11.2.2 | Contribuição decai para zero em motores sem excitação própria |
 | IEC 60909-0:2016 | 11.2.3–11.2.4 | **[M29b]** $I_k$ regime — DFIG e conversor full-size | Parques eólicos/fotovoltaicos | Análogo; limitação do conversor | $I_k$ regime (A) | M10b, M11 | `não estudado` | Seções 11.2.3–11.2.4 | |
@@ -204,7 +204,7 @@ NÍVEL 3 — Agregação e corrente inicial
 ├── [M15] Agregação Zk (subconjunto aplicável)
 │   dep: subconjunto de M01–M11 conforme perfil ─────────── stable ✓
 ├── [M16] I''k trifásico (7.2.1)
-│   dep: M00, M15 ────────────────────────────── GREEN ✓ (não stable)
+│   dep: M00, M15 ──────────────────────── stable ✓ (core, 24/24, PR #28)
 ├── [M17a] I''k trifásico em grupo gerador OLTC (7.2.2) ─ dep: M07, M15 ─ não estudado
 ├── [M17b] I''k trifásico em grupo gerador fixo (7.2.3) ─ dep: M08, M15 ─ não estudado
 ├── [M18] Contribuição motora a I''k (7.1.3) ─ dep: M09, M16 ─ não estudado
@@ -217,7 +217,7 @@ NÍVEL 4 — Faltas assimétricas
 │
 NÍVEL 5 — Corrente de crista
 │
-├── [M22] Fator κ e ip (8.1.1) ─────── dep: M16 ─────────── não estudado
+├── [M22] Fator κ e ip (8.1.1; Fórmulas 56/57/59/60) ─ dep: M16, M03, M15 ─ não estudado (spec científica ratificada)
 ├── [M23] ip múltipla alimentação (8.1.2) ─ dep: M22, M17a/b ─ não estudado
 ├── [M24] ip faltas assimétricas (8.2–8.4) ─ dep: M19–M21, M22 ─ não estudado
 │
@@ -253,14 +253,15 @@ NÍVEL 9 — Redes malhadas (avançado / informativo)
 
 | Estado | Motores | Qtd. | % (sobre 48) |
 |--------|---------|------|--------------|
-| `stable` | M01, M02a, M02b, M03, M04, M15 | 6 | 12,5% |
+| `stable` | M01, M02a, M02b, M03, M04, M15, **M16** | 7 | 14,6% |
 | `especificado` (parcial) | M00 — validação de banda de $c$ embutida só em M01; seletor Tabela 1 não implementado | 1 | 2,1% |
 | `implementado_sem_validacao` | — | 0 | 0% |
 | `não estudado` | demais capacidades da §3 | 40 | 83,3% |
-| `GREEN` / `RED` (estado explícito) | M16 GREEN — validado no INC-001; não `stable` | 1 | 2,1% |
+| `GREEN` / `RED` (estado explícito) | — (M16 promovido a `stable`, PR #28) | 0 | 0% |
 | **Total** | | **48** | **100%** |
 
-> **Verificação:** 6 + 1 + 0 + 40 + 1 = 48. ✓
+> **Verificação:** 7 `stable` + 1 `especificado` (M00) + 0 `GREEN` + 40 `não estudado` = 48. ✓
+> **Sincronização INC-002-01-R4-F:** M16 migrou de `GREEN` → `stable` (core, `tests/test_inc001_m16.js` 24/24, promoção integrada pelo PR #28), conforme a `main`.
 
 ---
 
@@ -268,7 +269,7 @@ NÍVEL 9 — Redes malhadas (avançado / informativo)
 
 | Incremento | Motor | Ação necessária | Pré-condição |
 |---|---|---|---|
-| **INC-001** | M16: $I_k''$ trifásico (7.2.1) | Ciclo RED→GREEN concluído: INC-001-01/01-R (BDD científico e memorial), PR #22 (motor M16 corrigido), PR #24 (executor M16 versionado), QA independente (`tests/test_inc001_m16.js` 24/24, exit 0; `tests/core_curto_circuito.test.js` 39/39, exit 0), merge `433b311fd7bd529d4785e95a146a5c09099a33d4`, Gate shadow pós-merge #28988541103 SUCCESS. **Não promover a `stable` nesta etapa.** | Promoção a `stable` exige O.S. própria conforme `docs/AmpAI_Gate_Regressao.md` |
+| **INC-001** | M16: $I_k''$ trifásico (7.2.1) | Ciclo RED→GREEN→**`stable`** concluído: INC-001-01/01-R (BDD científico e memorial), PR #22 (motor M16 corrigido), PR #24 (executor M16 versionado), QA independente (`tests/test_inc001_m16.js` 24/24, exit 0; `tests/core_curto_circuito.test.js` 39/39, exit 0). **Promoção a `stable` concluída pelo PR #28**, merge `6fbff041914ce62483401d4e8f6c1f804a26fc20`, execução pós-merge `#29217484959`, **Gate consolidado pós-merge `PASS`**. | **Concluída** — M16 `stable`/`core`, 24/24 |
 | **INC-002** | M22: Fator κ e $i_p$ (8.1.1) | BDD → candidato RNC-C → RED → GREEN | M16 stable |
 | **INC-003** | M09: Motor assíncrono $\underline{Z}_M$ (6.10) | BDD → candidato RNC-C → RED → GREEN | M00 seletor completo stable |
 | **INC-004** | M18: Contribuição motora a $I_k''$ (7.1.3) | BDD → candidato RNC-C → RED → GREEN | M09, M16 stable |
@@ -278,4 +279,4 @@ NÍVEL 9 — Redes malhadas (avançado / informativo)
 
 ---
 
-*Documento gerado pelo @Engenheiro_Eletricista (AmpAI Governança v7.0) · v1.2.1 · 2026-07-06. Fonte: RNC-P auditada contra baseline executável. **Este documento é de rastreabilidade — não é RNC-C.** Ratificado para circulação operacional pela Governança em 2026-07-07.*
+*Rodapé operacional — **AmpAI Governança v7.2** · **Matriz v1.2.3** · **Atualização documental INC-002-01-R4-F2**. Fonte: RNC-P auditada contra baseline executável e conferida contra o PDF primário selado. **Este documento é de rastreabilidade — não é RNC-C.** Autoria histórica preservada no frontmatter (`@Engenheiro_Eletricista`, Governança v7.0); ratificada para circulação operacional pela Governança em 2026-07-07.*
