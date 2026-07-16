@@ -501,10 +501,8 @@ const _btI18n = {
         'bt.crit.voltdropS2':   'Queda de Tensão (S₂)',
         'bt.crit.shortcircS3':  'Curto-Circuito do Condutor (S₃)',
         'bt.crit.finalSection': 'Seção Final Adotada',
-        'bt.crit.factors':      'Fatores de Correção (FCT · FCA)',
+        'bt.crit.factors':      'FCT / FCA',
         'bt.crit.realVoltdrop': 'Queda de Tensão Real',
-        'bt.crit.discrete':     'discreta',
-        'bt.crit.continuous':   'contínua',
         // BT memorial paragraph texts (placeholders: {cond}, {ins}, {duMax}, {t_s})
         'mem.bt.step1.p': 'Cálculo dos fatores de correção e corrente corrigida do condutor de {cond} isolado em {ins}:',
         'mem.bt.step2.p': 'Calculada com base na máxima queda admissível de {duMax}% e constante de resistividade operacional (ρ):',
@@ -575,10 +573,8 @@ const _btI18n = {
         'bt.crit.voltdropS2':   'Voltage Drop (S₂)',
         'bt.crit.shortcircS3':  'Conductor Short-Circuit (S₃)',
         'bt.crit.finalSection': 'Final Adopted Section',
-        'bt.crit.factors':      'Correction Factors (FCT · FCA)',
+        'bt.crit.factors':      'FCT / FCA',
         'bt.crit.realVoltdrop': 'Actual Voltage Drop',
-        'bt.crit.discrete':     'discrete',
-        'bt.crit.continuous':   'continuous',
         // BT memorial paragraph texts
         'mem.bt.step1.p': 'Calculation of correction factors and corrected current for the {cond} conductor insulated in {ins}:',
         'mem.bt.step2.p': 'Calculated based on the maximum allowable voltage drop of {duMax}% and operational resistivity constant (ρ):',
@@ -649,10 +645,8 @@ const _btI18n = {
         'bt.crit.voltdropS2':   'Caída de Tensión (S₂)',
         'bt.crit.shortcircS3':  'Cortocircuito del Conductor (S₃)',
         'bt.crit.finalSection': 'Sección Final Adoptada',
-        'bt.crit.factors':      'Factores de Corrección (FCT · FCA)',
+        'bt.crit.factors':      'FCT / FCA',
         'bt.crit.realVoltdrop': 'Caída de Tensión Real',
-        'bt.crit.discrete':     'discreta',
-        'bt.crit.continuous':   'continua',
         // BT memorial paragraph texts
         'mem.bt.step1.p': 'Cálculo de los factores de corrección y corriente corregida del conductor {cond} aislado en {ins}:',
         'mem.bt.step2.p': 'Calculada con base en la caída máxima admisible de {duMax}% y la constante de resistividad operacional (ρ):',
@@ -1240,6 +1234,17 @@ window.renderCardBT = function(r) {
 
             <!-- O.S. CAB-BT-CRITERIA-001 — Tabela auditável de critérios de seleção -->
             <div style="background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1rem; margin:0 0 1rem 0;">
+                <!-- O.S. CAB-BT-CRITERIA-001-UX-R1 — quebra controlada, sem nowrap global.
+                     .bt-crit-frag: fragmento atômico ("16 mm²", "(cont.: 15,73 mm²)",
+                     "★ Dominante", "FCT / FCA") — nunca é partido no meio.
+                     .bt-crit-val: em desktop mantém o valor completo numa única linha;
+                     até 480px volta a normal, permitindo quebra APENAS entre fragmentos.
+                     Nada é truncado nem ocultado; o texto integral permanece legível. -->
+                <style>
+                    .bt-crit-frag { white-space: nowrap; }
+                    .bt-crit-val { white-space: nowrap; }
+                    @media (max-width: 480px) { .bt-crit-val { white-space: normal; } }
+                </style>
                 <table class="tech-table table-results">
                     <caption style="text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; color:var(--text-muted); margin-bottom:0.75rem;">${_tbt('bt.crit.caption')}</caption>
                     <thead>
@@ -1252,31 +1257,31 @@ window.renderCardBT = function(r) {
                     <tbody>
                         <tr>
                             <td>${_tbt('bt.crit.ampacS1')}</td>
-                            <td>${p.S1} mm²</td>
-                            <td>${critStatus(domAmp)}</td>
+                            <td class="bt-crit-val"><span class="bt-crit-frag">${p.S1} mm²</span></td>
+                            <td class="bt-crit-frag">${critStatus(domAmp)}</td>
                         </tr>
                         <tr>
                             <td>${_tbt('bt.crit.voltdropS2')}</td>
-                            <td>${_tbt('bt.crit.discrete')}: ${p.S2} mm² · ${_tbt('bt.crit.continuous')}: ${_fmt(p.S2_cont, 2)} mm²</td>
-                            <td>${critStatus(domVd)}</td>
+                            <td class="bt-crit-val"><span class="bt-crit-frag">${p.S2} mm²</span> <span class="bt-crit-frag">(cont.: ${_fmt(p.S2_cont, 2)} mm²)</span></td>
+                            <td class="bt-crit-frag">${critStatus(domVd)}</td>
                         </tr>
                         <tr>
                             <td>${_tbt('bt.crit.shortcircS3')}</td>
-                            <td>${_tbt('bt.crit.discrete')}: ${p.S3} mm² · ${_tbt('bt.crit.continuous')}: ${_fmt(p.S3_cont, 2)} mm²</td>
-                            <td>${critStatus(domSc)}</td>
+                            <td class="bt-crit-val"><span class="bt-crit-frag">${p.S3} mm²</span> <span class="bt-crit-frag">(cont.: ${_fmt(p.S3_cont, 2)} mm²)</span></td>
+                            <td class="bt-crit-frag">${critStatus(domSc)}</td>
                         </tr>
                         <tr style="font-weight:700;">
                             <td>${_tbt('bt.crit.finalSection')}</td>
-                            <td>${p.sFinal} mm²</td>
+                            <td class="bt-crit-val"><span class="bt-crit-frag">${p.sFinal} mm²</span></td>
                             <td>—</td>
                         </tr>
                         <tr>
-                            <td>${_tbt('bt.crit.factors')}</td>
-                            <td colspan="2">FCT = ${_fmt(p.FCT, 4)} · FCA = ${_fmt(p.FCA, 4)}</td>
+                            <td class="bt-crit-frag">${_tbt('bt.crit.factors')}</td>
+                            <td colspan="2" class="bt-crit-val"><span class="bt-crit-frag">FCT = ${_fmt(p.FCT, 4)}</span> · <span class="bt-crit-frag">FCA = ${_fmt(p.FCA, 4)}</span></td>
                         </tr>
                         <tr>
                             <td>${_tbt('bt.crit.realVoltdrop')}</td>
-                            <td colspan="2">${_fmt(p.duPct_final, 2)} % ${p.duPct_final <= p.duMax ? '✓' : '✗'}</td>
+                            <td colspan="2" class="bt-crit-val"><span class="bt-crit-frag">${_fmt(p.duPct_final, 2)} % ${p.duPct_final <= p.duMax ? '✓' : '✗'}</span></td>
                         </tr>
                     </tbody>
                 </table>
