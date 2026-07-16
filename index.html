@@ -3160,7 +3160,17 @@
         // ─────────────────────────────────────────────
         // Lucide Icons initialization
         // ─────────────────────────────────────────────
-        requestAnimationFrame(() => { lucide.createIcons(); });
+        // O.S. UI-LUCIDE-BOOT-001 — O Lucide é decorativo e chega por CDN com
+        // `defer`. Se o pacote não estiver disponível, o identificador `lucide`
+        // não existe e a chamada direta lançava ReferenceError, abortando o resto
+        // deste script de boot. O capability check explícito (window.lucide +
+        // createIcons) mantém o boot, os módulos e o cálculo funcionais; sem a
+        // biblioteca os <i data-lucide> apenas permanecem sem o SVG decorativo.
+        requestAnimationFrame(() => {
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+                window.lucide.createIcons();
+            }
+        });
 
         let currentGridMode = 'scc';
         let activeTabId = 'tab-results';
