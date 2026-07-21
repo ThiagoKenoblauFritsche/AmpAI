@@ -1924,6 +1924,78 @@
                         <section id="card-bt" aria-label="LV Results" data-i18n-aria-label="cabling.bt.resultsLabel">
                             <!-- O conteúdo dinâmico (Clonagem Curto-Circuito) será injetado via js/ui_render.js -->
                         </section>
+
+                        <!-- ═══════════════════════════════════════════════════════════════
+                             O.S. CAB-BT-PARALLEL-001-UI — Laboratório experimental (painel
+                             isolado). Irmão persistente de #card-bt (coluna 2 do grid), fora
+                             do renderCardBT/injectWithRetry e de #cb-mem-bt-container. Estado
+                             vinculante: EXPERIMENTAL_PRELIMINAR_NAO_CANONICO.
+                             ═══════════════════════════════════════════════════════════════ -->
+                        <style>
+                            #cab-bt-par-exp-section { grid-column: 2; min-width: 0; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 12px; padding: 1rem; }
+                            @media (max-width: 900px) { #cab-bt-par-exp-section { grid-column: auto; } }
+                            .cab-bt-par-exp-toggle { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; background: transparent; border: 0; color: var(--text-primary); font-weight: 700; font-size: 0.95rem; cursor: pointer; padding: 0.25rem 0; text-align: left; }
+                            .cab-bt-par-exp-toggle .chev { transition: transform .15s; }
+                            .cab-bt-par-exp-toggle[aria-expanded="true"] .chev { transform: rotate(90deg); }
+                            #cab-bt-par-exp-panel { color: var(--text-primary); background: var(--bg-secondary); margin-top: 0.75rem; min-width: 0; }
+                            .cab-bt-par-exp-title { font-size: 0.9rem; font-weight: 700; margin: 0 0 0.5rem 0; color: var(--text-primary); }
+                            #cab-bt-par-exp-notice { margin: 0 0 0.75rem 0; padding: 0.5rem 0.6rem; border: 1px solid var(--warning); border-radius: 8px; color: var(--text-primary); background: transparent; font-weight: 700; font-size: 0.72rem; letter-spacing: 0.01em; white-space: normal; overflow-wrap: anywhere; }
+                            .cab-bt-par-exp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 0.6rem; }
+                            @media (max-width: 480px) { .cab-bt-par-exp-grid { grid-template-columns: 1fr; } }
+                            .cab-bt-par-exp-field { display: flex; flex-direction: column; gap: 0.2rem; font-size: 0.72rem; color: var(--text-secondary); min-width: 0; }
+                            .cab-bt-par-exp-field input, .cab-bt-par-exp-field select { width: 100%; box-sizing: border-box; min-width: 0; padding: 0.35rem 0.4rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.8rem; }
+                            .cab-bt-par-exp-branches-title { font-size: 0.72rem; font-weight: 700; color: var(--text-muted); margin: 0.75rem 0 0.4rem 0; }
+                            #cab-bt-par-exp-branches { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 0.5rem; }
+                            @media (max-width: 480px) { #cab-bt-par-exp-branches { grid-template-columns: 1fr; } }
+                            .parexp-branch { display: grid; grid-template-columns: auto 1fr 1fr; align-items: center; gap: 0.4rem; border: 1px solid var(--border); border-radius: 8px; padding: 0.4rem; min-width: 0; }
+                            .parexp-branch > label { display: flex; flex-direction: column; gap: 0.15rem; font-size: 0.66rem; color: var(--text-secondary); min-width: 0; }
+                            .parexp-branch input { width: 100%; box-sizing: border-box; min-width: 0; padding: 0.3rem; border: 1px solid var(--border); border-radius: 6px; background: var(--bg-primary); color: var(--text-primary); font-size: 0.78rem; }
+                            .parexp-branch-label { font-weight: 700; color: var(--text-primary); font-size: 0.78rem; }
+                            #cab-bt-par-exp-calculate { margin-top: 0.75rem; }
+                            #cab-bt-par-exp-error { margin-top: 0.75rem; padding: 0.6rem; border: 1px solid var(--danger); border-radius: 8px; color: var(--text-primary); background: transparent; font-size: 0.75rem; overflow-wrap: anywhere; }
+                            #cab-bt-par-exp-result { margin-top: 0.75rem; color: var(--text-primary); min-width: 0; }
+                            #cab-bt-par-exp-governance { border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; font-size: 0.74rem; overflow-wrap: anywhere; }
+                            #cab-bt-par-exp-governance .parexp-gline { padding: 0.06rem 0; }
+                            #cab-bt-par-exp-numbers { margin-top: 0.6rem; border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem; font-size: 0.72rem; overflow-wrap: anywhere; word-break: break-word; }
+                            .parexp-num { padding: 0.05rem 0; }
+                            .parexp-num-k { color: var(--text-muted); }
+                            .parexp-num-v { color: var(--text-primary); font-weight: 600; }
+                        </style>
+                        <section id="cab-bt-par-exp-section" aria-label="Laboratório experimental de paralelismo BT">
+                            <button type="button" id="cab-bt-par-exp-toggle" class="cab-bt-par-exp-toggle" data-action="par-exp-toggle" aria-controls="cab-bt-par-exp-panel" aria-expanded="false">
+                                <span data-i18n="parexp.toggle">Laboratório experimental — condutores em paralelo</span>
+                                <span class="chev" aria-hidden="true">▸</span>
+                            </button>
+                            <div id="cab-bt-par-exp-panel" role="region" aria-labelledby="cab-bt-par-exp-title" hidden>
+                                <h3 id="cab-bt-par-exp-title" class="cab-bt-par-exp-title" data-i18n="parexp.title">Laboratório experimental — condutores em paralelo</h3>
+                                <p id="cab-bt-par-exp-notice">PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO</p>
+                                <form id="cab-bt-par-exp-form" novalidate autocomplete="off">
+                                    <div class="cab-bt-par-exp-grid">
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.total">Corrente total (A)</span><input type="number" step="any" id="parexp-total" data-field-path="totalLoadCurrent_A" value="900"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.pf">Fator de potência</span><input type="number" step="any" id="parexp-pf" data-field-path="powerFactor" value="0.9"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.nparallel">Ramos em paralelo por fase</span><input type="number" step="1" min="1" id="parexp-nparallel" data-field-path="nParallel" value="3"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.ncircuits">Circuitos agrupados</span><input type="number" step="1" min="1" id="parexp-ncircuits" data-field-path="nCircuits" value="1"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.geomStatus">Geometria</span><select id="parexp-geom-status" data-field-path="geometry.status"><option value="NOT_PROVIDED" selected>NOT_PROVIDED</option><option value="DESCRIBED">DESCRIBED</option></select></label>
+                                        <label class="cab-bt-par-exp-field" id="parexp-geom-desc-field" hidden><span data-i18n="parexp.f.geomDesc">Descrição da geometria</span><input type="text" id="parexp-geom-desc" data-field-path="geometry.description" aria-label="geometry description" value=""></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.kg">Fator de agrupamento</span><input type="number" step="any" id="parexp-kg" data-field-path="capacityProxy.groupingFactor.value" value="0.7"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.iz">Ampacidade tabelada por condutor (A)</span><input type="number" step="any" id="parexp-iz" data-field-path="capacityProxy.tabulatedAmpacityPerConductor_A.value" value="344"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.ifault">Corrente de falta total (A)</span><input type="number" step="any" id="parexp-ifault" data-field-path="fault.totalFaultCurrent_A" value="20000"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.time">Tempo de eliminação (s)</span><input type="number" step="any" id="parexp-time" data-field-path="fault.clearingTime_s" value="0.2"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.k">Constante adiabática k (A·√s/mm²)</span><input type="number" step="any" id="parexp-k" data-field-path="fault.adiabaticK_A_sqrt_s_per_mm2.value" value="115"></label>
+                                        <label class="cab-bt-par-exp-field"><span data-i18n="parexp.f.mode">Modo de desbalanço de falta</span><select id="parexp-mode" data-field-path="fault.imbalance.mode"><option value="EXPLICIT_ASSUMPTION" selected>EXPLICIT_ASSUMPTION</option><option value="CONSERVATIVE_SINGLE_BRANCH">CONSERVATIVE_SINGLE_BRANCH</option><option value="BLOCK">BLOCK</option></select></label>
+                                        <label class="cab-bt-par-exp-field" id="parexp-delta-field"><span data-i18n="parexp.f.delta">Desbalanço de falta (deltaFault)</span><input type="number" step="any" id="parexp-delta" data-field-path="fault.imbalance.deltaFault" aria-label="deltaFault" value="1.1"></label>
+                                    </div>
+                                    <p class="cab-bt-par-exp-branches-title" data-i18n="parexp.branchesTitle">Ramos P1…Pn — impedância R/X (Ω)</p>
+                                    <div id="cab-bt-par-exp-branches"></div>
+                                    <button type="button" id="cab-bt-par-exp-calculate" class="btn-action btn-secondary" data-action="par-exp-calculate" data-i18n="parexp.calculate">Calcular estudo experimental</button>
+                                </form>
+                                <div id="cab-bt-par-exp-error" role="alert" hidden></div>
+                                <div id="cab-bt-par-exp-result" role="status" aria-live="polite" hidden>
+                                    <div id="cab-bt-par-exp-governance"></div>
+                                    <div id="cab-bt-par-exp-numbers"></div>
+                                </div>
+                            </div>
+                        </section>
                     </div>
                 </div>
 
@@ -2419,6 +2491,23 @@
             pt: {
                 'theme.toggle.toLight': 'Mudar para tema claro',
                 'theme.toggle.toDark': 'Mudar para tema escuro',
+                'parexp.toggle': 'Laboratório experimental — condutores em paralelo',
+                'parexp.title': 'Laboratório experimental — condutores em paralelo',
+                'parexp.calculate': 'Calcular estudo experimental',
+                'parexp.branchesTitle': 'Ramos P1…Pn — impedância R/X (Ω)',
+                'parexp.f.total': 'Corrente total (A)',
+                'parexp.f.pf': 'Fator de potência',
+                'parexp.f.nparallel': 'Ramos em paralelo por fase',
+                'parexp.f.ncircuits': 'Circuitos agrupados',
+                'parexp.f.geomStatus': 'Geometria',
+                'parexp.f.geomDesc': 'Descrição da geometria',
+                'parexp.f.kg': 'Fator de agrupamento',
+                'parexp.f.iz': 'Ampacidade tabelada por condutor (A)',
+                'parexp.f.ifault': 'Corrente de falta total (A)',
+                'parexp.f.time': 'Tempo de eliminação (s)',
+                'parexp.f.k': 'Constante adiabática k (A·√s/mm²)',
+                'parexp.f.mode': 'Modo de desbalanço de falta',
+                'parexp.f.delta': 'Desbalanço de falta (deltaFault)',
                 'header.title': 'Assistente de Engenharia Elétrica',
                 'header.subtitle': 'Soluções em Engenharia Elétrica',
                 'header.method': 'Método das Impedâncias Percentuais',
@@ -2640,6 +2729,23 @@
             en: {
                 'theme.toggle.toLight': 'Switch to light theme',
                 'theme.toggle.toDark': 'Switch to dark theme',
+                'parexp.toggle': 'Experimental laboratory — parallel conductors',
+                'parexp.title': 'Experimental laboratory — parallel conductors',
+                'parexp.calculate': 'Run experimental study',
+                'parexp.branchesTitle': 'Branches P1…Pn — impedance R/X (Ω)',
+                'parexp.f.total': 'Total current (A)',
+                'parexp.f.pf': 'Power factor',
+                'parexp.f.nparallel': 'Parallel branches per phase',
+                'parexp.f.ncircuits': 'Grouped circuits',
+                'parexp.f.geomStatus': 'Geometry',
+                'parexp.f.geomDesc': 'Geometry description',
+                'parexp.f.kg': 'Grouping factor',
+                'parexp.f.iz': 'Tabulated ampacity per conductor (A)',
+                'parexp.f.ifault': 'Total fault current (A)',
+                'parexp.f.time': 'Clearing time (s)',
+                'parexp.f.k': 'Adiabatic constant k (A·√s/mm²)',
+                'parexp.f.mode': 'Fault imbalance mode',
+                'parexp.f.delta': 'Fault imbalance (deltaFault)',
                 'header.title': 'Electrical Engineering Assistant',
                 'header.subtitle': 'Electrical Engineering Solutions',
                 'header.method': 'Percentage Impedance Method',
@@ -2860,6 +2966,23 @@
             es: {
                 'theme.toggle.toLight': 'Cambiar a tema claro',
                 'theme.toggle.toDark': 'Cambiar a tema oscuro',
+                'parexp.toggle': 'Laboratorio experimental — conductores en paralelo',
+                'parexp.title': 'Laboratorio experimental — conductores en paralelo',
+                'parexp.calculate': 'Calcular estudio experimental',
+                'parexp.branchesTitle': 'Ramas P1…Pn — impedancia R/X (Ω)',
+                'parexp.f.total': 'Corriente total (A)',
+                'parexp.f.pf': 'Factor de potencia',
+                'parexp.f.nparallel': 'Ramas en paralelo por fase',
+                'parexp.f.ncircuits': 'Circuitos agrupados',
+                'parexp.f.geomStatus': 'Geometría',
+                'parexp.f.geomDesc': 'Descripción de la geometría',
+                'parexp.f.kg': 'Factor de agrupamiento',
+                'parexp.f.iz': 'Amperaje tabulado por conductor (A)',
+                'parexp.f.ifault': 'Corriente de falla total (A)',
+                'parexp.f.time': 'Tiempo de despeje (s)',
+                'parexp.f.k': 'Constante adiabática k (A·√s/mm²)',
+                'parexp.f.mode': 'Modo de desequilibrio de falla',
+                'parexp.f.delta': 'Desequilibrio de falla (deltaFault)',
                 'header.title': 'Asistente de Ingeniería Eléctrica',
                 'header.subtitle': 'Soluciones en Ingeniería Eléctrica',
                 'header.method': 'Método de las Impedancias Porcentuales',
@@ -3583,6 +3706,8 @@
     <script src="js/core_cabos_bt.js" defer></script>
     <script src="js/core_cabos_mt.js" defer></script>
     <script src="js/core_curto_circuito.js" defer></script>
+    <!-- O.S. CAB-BT-PARALLEL-001-UI — motor experimental (LABORATORIO) carregado antes do renderer -->
+    <script src="js/core_cabos_bt_parallel_experimental.js" defer></script>
     <script src="js/ui_render.js" defer></script>
 </body>
 </html>

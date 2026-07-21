@@ -1007,6 +1007,12 @@ document.addEventListener('click', function(e) {
                 consumeCablingEnvelope('MT', window.calculateCablingMT(input));
             }
             break;
+        case 'par-exp-toggle':
+            if (typeof window.parExpToggle === 'function') window.parExpToggle();
+            break;
+        case 'par-exp-calculate':
+            if (typeof window.parExpCalculate === 'function') window.parExpCalculate();
+            break;
         case 'calc-icc-rede':
             if (typeof window.calcIccRede === 'function') window.calcIccRede();
             break;
@@ -1813,4 +1819,265 @@ window.calcIccAgr = function() {
     
     window.showIccToaster("Cálculo de Agregação concluído com sucesso.");
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// O.S. CAB-BT-PARALLEL-001-UI — Laboratório experimental de condutores em paralelo.
+// UI puramente apresentacional: lê o formulário, monta o DTO do contrato
+// CAB-BT-PARALLEL-EXP-1, aciona o motor experimental exatamente uma vez por
+// clique e projeta o envelope DIRETAMENTE, sem alias, adaptador, recálculo,
+// arredondamento ou regra IEC. Estado vinculante: EXPERIMENTAL_PRELIMINAR_NAO_
+// CANONICO; productionAllowed permanece false; B-01..B-06 vigentes. O painel é
+// irmão persistente de #card-bt e nunca toca no dimensionamento BT produtivo.
+// ─────────────────────────────────────────────────────────────────────────────
+(function parExpLab() {
+    'use strict';
+
+    // Impedâncias do exemplo de laboratório (SDD 12.3 / 4.1): fonte única dos
+    // defaults de cada ramo. A UI não deriva impedância de nenhum outro campo.
+    const BRANCH_DEFAULTS = [
+        { re: '0.02', im: '0.03' },
+        { re: '0.02', im: '0.024' },
+        { re: '0.02', im: '0.018' },
+    ];
+    const BRANCH_FALLBACK = { re: '0.02', im: '0.02' };
+    const BLOCKED_SELECTION = {
+        pt: 'Seleção instalável bloqueada',
+        en: 'Installable selection blocked',
+        es: 'Selección instalable bloqueada',
+    };
+
+    function el(id) { return document.getElementById(id); }
+    function curLang() {
+        const lang = (document.documentElement.lang || 'pt').toLowerCase();
+        if (lang.indexOf('en') === 0) return 'en';
+        if (lang.indexOf('es') === 0) return 'es';
+        return 'pt';
+    }
+    function esc(value) {
+        return String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    // Projeção fiel: número exato (sem recálculo/arredondamento), null/boolean/string literais.
+    function showScalar(value) {
+        if (value === null) return 'null';
+        return esc(String(value));
+    }
+
+    // Reconstrói exatamente n ramos P1..Pn preservando valores já digitados; ramos
+    // novos recebem o default do exemplo. Nunca altera nCircuits (SDD 12.3).
+    function renderBranches(n) {
+        const container = el('cab-bt-par-exp-branches');
+        if (!container) return;
+        let count = parseInt(n, 10);
+        if (!Number.isFinite(count) || count < 1) count = 1;
+        if (count > 24) count = 24;
+        const existing = [];
+        container.querySelectorAll('[data-branch-id]').forEach(function (row) {
+            const reEl = row.querySelector('[data-branch-re]');
+            const imEl = row.querySelector('[data-branch-im]');
+            existing.push({ re: reEl ? reEl.value : '', im: imEl ? imEl.value : '' });
+        });
+        let html = '';
+        for (let i = 0; i < count; i += 1) {
+            const id = 'P' + (i + 1);
+            const def = BRANCH_DEFAULTS[i] || BRANCH_FALLBACK;
+            const re = (existing[i] && existing[i].re !== '' && existing[i].re != null) ? existing[i].re : def.re;
+            const im = (existing[i] && existing[i].im !== '' && existing[i].im != null) ? existing[i].im : def.im;
+            html += '<div class="parexp-branch" data-branch-id="' + id + '" data-branch-index="' + i + '">'
+                + '<span class="parexp-branch-label" aria-hidden="true">' + id + '</span>'
+                + '<label><span>' + id + ' · R (Ω)</span>'
+                + '<input type="number" step="any" data-branch-re data-field-path="branches[' + i + '].impedance_ohm.re" id="parexp-branch-' + i + '-re" aria-label="' + id + ' R ohm" value="' + esc(re) + '"></label>'
+                + '<label><span>' + id + ' · X (Ω)</span>'
+                + '<input type="number" step="any" data-branch-im data-field-path="branches[' + i + '].impedance_ohm.im" id="parexp-branch-' + i + '-im" aria-label="' + id + ' X ohm" value="' + esc(im) + '"></label>'
+                + '</div>';
+        }
+        container.innerHTML = html;
+    }
+
+    // Visibilidade condicional (SDD 12.3): deltaFault só no modo explícito;
+    // descrição de geometria só em DESCRIBED. Não afeta o DTO enviado.
+    function syncConditionalFields() {
+        const modeEl = el('parexp-mode');
+        const deltaField = el('parexp-delta-field');
+        if (deltaField && modeEl) {
+            if (modeEl.value === 'EXPLICIT_ASSUMPTION') deltaField.removeAttribute('hidden');
+            else deltaField.setAttribute('hidden', '');
+        }
+        const geomEl = el('parexp-geom-status');
+        const descField = el('parexp-geom-desc-field');
+        if (descField && geomEl) {
+            if (geomEl.value === 'DESCRIBED') descField.removeAttribute('hidden');
+            else descField.setAttribute('hidden', '');
+        }
+    }
+
+    // Monta o DTO exato do contrato (SDD 12.3). deltaFault e provenance existem
+    // FISICAMENTE somente no modo explícito.
+    function buildInput() {
+        const numOf = function (id) { return parseFloat((el(id) || {}).value); };
+        const intOf = function (id) { return parseInt((el(id) || {}).value, 10); };
+        const geomStatus = (el('parexp-geom-status') || {}).value;
+        const geometry = geomStatus === 'DESCRIBED'
+            ? { status: 'DESCRIBED', description: (el('parexp-geom-desc') || {}).value }
+            : { status: 'NOT_PROVIDED', description: null };
+        const branches = [];
+        document.querySelectorAll('#cab-bt-par-exp-branches [data-branch-id]').forEach(function (row) {
+            const reEl = row.querySelector('[data-branch-re]');
+            const imEl = row.querySelector('[data-branch-im]');
+            branches.push({
+                id: row.getAttribute('data-branch-id'),
+                impedance_ohm: { re: parseFloat(reEl ? reEl.value : ''), im: parseFloat(imEl ? imEl.value : '') },
+                provenance: 'ASSUMPTION_ONLY',
+            });
+        });
+        const modeValue = (el('parexp-mode') || {}).value;
+        let imbalance;
+        if (modeValue === 'EXPLICIT_ASSUMPTION') {
+            imbalance = { mode: 'EXPLICIT_ASSUMPTION', deltaFault: numOf('parexp-delta'), provenance: 'ASSUMPTION_ONLY' };
+        } else {
+            imbalance = { mode: modeValue };
+        }
+        return {
+            contractVersion: 'CAB-BT-PARALLEL-EXP-1',
+            totalLoadCurrent_A: numOf('parexp-total'),
+            powerFactor: numOf('parexp-pf'),
+            nParallel: intOf('parexp-nparallel'),
+            nCircuits: intOf('parexp-ncircuits'),
+            geometry: geometry,
+            branches: branches,
+            capacityProxy: {
+                groupingFactor: { value: numOf('parexp-kg'), provenance: 'ASSUMPTION_ONLY' },
+                tabulatedAmpacityPerConductor_A: { value: numOf('parexp-iz'), provenance: 'ASSUMPTION_ONLY' },
+            },
+            fault: {
+                totalFaultCurrent_A: numOf('parexp-ifault'),
+                clearingTime_s: numOf('parexp-time'),
+                adiabaticK_A_sqrt_s_per_mm2: { value: numOf('parexp-k'), provenance: 'ASSUMPTION_ONLY' },
+                imbalance: imbalance,
+            },
+        };
+    }
+
+    // Percorre as folhas escalares de um sub-objeto do envelope e emite linhas
+    // "caminho = valor". Projeção direta; nenhuma fórmula é reproduzida.
+    function projectLeaves(value, path, out) {
+        if (value === null || typeof value !== 'object') {
+            out.push('<div class="parexp-num"><span class="parexp-num-k">' + esc(path) + '</span> = <span class="parexp-num-v">' + showScalar(value) + '</span></div>');
+            return;
+        }
+        if (Array.isArray(value)) {
+            for (let i = 0; i < value.length; i += 1) projectLeaves(value[i], path + '[' + i + ']', out);
+            return;
+        }
+        Object.keys(value).forEach(function (key) { projectLeaves(value[key], path + '.' + key, out); });
+    }
+
+    function governanceHtml(envelope) {
+        const src = envelope.sourceStatus || {};
+        const lines = [];
+        lines.push('<div class="parexp-gline"><strong>' + esc(envelope.classification) + '</strong></div>');
+        lines.push('<div class="parexp-gline">productionAllowed = ' + showScalar(envelope.productionAllowed) + '</div>');
+        lines.push('<div class="parexp-gline">primarySourceComplete = ' + showScalar(src.primarySourceComplete) + ' · iecConformity = ' + showScalar(src.iecConformity) + '</div>');
+        const assumptions = (envelope.assumptions || []).map(function (a) {
+            const value = (a && Object.prototype.hasOwnProperty.call(a, 'value')) ? ' = ' + showScalar(a.value) : '';
+            return esc(a.id) + ' · ' + esc(a.field) + value + ' · ' + esc(a.provenance);
+        });
+        lines.push('<div class="parexp-gline">assumptions:</div><div>' + (assumptions.join('<br>') || '—') + '</div>');
+        const blockers = (envelope.blockers || []).map(function (b) {
+            const params = (b && b.params) ? ' (' + esc(JSON.stringify(b.params)) + ')' : '';
+            return esc(b.code) + params;
+        });
+        lines.push('<div class="parexp-gline">blockers:</div><div>' + (blockers.join('<br>') || '—') + '</div>');
+        const warnings = (envelope.warnings || []).map(function (w) { return esc(w.code || JSON.stringify(w)); });
+        lines.push('<div class="parexp-gline">warnings: ' + (warnings.join('<br>') || '—') + '</div>');
+        return lines.join('');
+    }
+
+    function numbersHtml(envelope) {
+        const d = envelope.data || {};
+        const share = d.loadSharing || {};
+        const out = [];
+        out.push('<div class="parexp-gline"><strong>' + esc(BLOCKED_SELECTION[curLang()]) + '</strong></div>');
+        projectLeaves(share.branchCurrents, 'data.loadSharing.branchCurrents', out);
+        projectLeaves(share.mostLoadedBranchId, 'data.loadSharing.mostLoadedBranchId', out);
+        projectLeaves(share.tiedMostLoadedBranchIds, 'data.loadSharing.tiedMostLoadedBranchIds', out);
+        projectLeaves(share.deltaLoad, 'data.loadSharing.deltaLoad', out);
+        projectLeaves(share.deratingFactor, 'data.loadSharing.deratingFactor', out);
+        projectLeaves(share.equivalentImpedance_ohm, 'data.loadSharing.equivalentImpedance_ohm', out);
+        projectLeaves(d.capacityProxy, 'data.capacityProxy', out);
+        projectLeaves(d.voltageDrop, 'data.voltageDrop', out);
+        projectLeaves(d.faultAdiabatic, 'data.faultAdiabatic', out);
+        return out.join('');
+    }
+
+    function errorHtml(envelope) {
+        const problem = (envelope && envelope.error) || {};
+        const lines = [];
+        lines.push('<div class="parexp-gline">productionAllowed = ' + showScalar(envelope && envelope.productionAllowed) + '</div>');
+        lines.push('<div class="parexp-gline">code = ' + esc(problem.code) + '</div>');
+        lines.push('<div class="parexp-gline">title = ' + esc(problem.title) + '</div>');
+        lines.push('<div class="parexp-gline">status = ' + esc(problem.status) + '</div>');
+        lines.push('<div class="parexp-gline">params = ' + esc(JSON.stringify(problem.params || {})) + '</div>');
+        return lines.join('');
+    }
+
+    window.parExpToggle = function parExpToggle() {
+        const panel = el('cab-bt-par-exp-panel');
+        const toggle = el('cab-bt-par-exp-toggle');
+        if (!panel || !toggle) return;
+        const willOpen = panel.hasAttribute('hidden');
+        if (willOpen) panel.removeAttribute('hidden'); else panel.setAttribute('hidden', '');
+        toggle.setAttribute('aria-expanded', String(willOpen));
+    };
+
+    window.parExpCalculate = function parExpCalculate() {
+        const resultEl = el('cab-bt-par-exp-result');
+        const errorEl = el('cab-bt-par-exp-error');
+        const govEl = el('cab-bt-par-exp-governance');
+        const numEl = el('cab-bt-par-exp-numbers');
+        if (!resultEl || !errorEl) return;
+        // Limpa SOMENTE o resultado experimental anterior (SDD 12.1/12.5).
+        if (govEl) govEl.innerHTML = '';
+        if (numEl) numEl.innerHTML = '';
+        errorEl.innerHTML = '';
+        errorEl.setAttribute('hidden', '');
+        resultEl.setAttribute('hidden', '');
+        try {
+            const envelope = window.calculateCablingBTParallelExperimental(buildInput());
+            if (envelope && envelope.ok === true) {
+                if (govEl) govEl.innerHTML = governanceHtml(envelope);
+                if (numEl) numEl.innerHTML = numbersHtml(envelope);
+                resultEl.removeAttribute('hidden');
+            } else {
+                errorEl.innerHTML = errorHtml(envelope || {});
+                errorEl.removeAttribute('hidden');
+            }
+        } catch (failure) {
+            errorEl.innerHTML = '<div class="parexp-gline">productionAllowed = false</div>'
+                + '<div class="parexp-gline">code = UI_UNEXPECTED</div>'
+                + '<div class="parexp-gline">title = UI_UNEXPECTED</div>'
+                + '<div class="parexp-gline">status = 500</div>'
+                + '<div class="parexp-gline">params = ' + esc(JSON.stringify({ message: String((failure && failure.message) || failure) })) + '</div>';
+            errorEl.removeAttribute('hidden');
+        }
+    };
+
+    function onFieldEvent(event) {
+        const target = event.target;
+        if (!target || !target.id) return;
+        if (target.id === 'parexp-nparallel') renderBranches(target.value);
+        if (target.id === 'parexp-mode' || target.id === 'parexp-geom-status') syncConditionalFields();
+    }
+
+    function init() {
+        if (!el('cab-bt-par-exp-branches')) return;
+        const nEl = el('parexp-nparallel');
+        renderBranches(nEl ? nEl.value : 3);
+        syncConditionalFields();
+    }
+
+    document.addEventListener('input', onFieldEvent);
+    document.addEventListener('change', onFieldEvent);
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+    else init();
+})();
 
