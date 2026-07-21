@@ -3,14 +3,17 @@ title: SDD experimental — Condutores BT em paralelo por fase
 id: CAB-BT-PARALLEL-001-SDD-EXP
 classe: CHG-3 científica experimental
 governanca: v7.3
-status: candidato_para_auditoria_do_conselho
+status: motor_green_integrado_ui_sdd_candidato_para_auditoria
 autoridade: "@CTO"
 consumidores: ["@Senior_QA_Security", "@Senior_Backend_Dev", "@Senior_Frontend_Dev"]
 baseline_cientifica: 18627dd02c94265984aa953d35f47c2745cab61d
+baseline_ui: 83e24131c0cc09813be65a5fa269961b9cc80c5c
+motor_green_sha: b6466f768bf60dc2d010d9a87d85f7edd10e9c60
 fonte_cientifica: RNC-P experimental não canônico
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
 teste_do_ceo_nesta_etapa: NÃO
+teste_do_ceo_ui_futura: SIM
 ---
 
 # SDD experimental — Condutores BT em paralelo por fase
@@ -79,7 +82,7 @@ protótipo deve falhar fechado. Este SDD não promove hipótese a regra normativ
 
 ### 3.1 Módulo futuro
 
-Arquivo reservado para uma futura implementação Backend:
+Arquivo do motor integrado pela PR #39:
 
 ```text
 js/core_cabos_bt_parallel_experimental.js
@@ -965,49 +968,338 @@ npm.cmd run test:core
 e os seis testes `stable` do Gate vigente quando houver execução remota aplicável.
 Nenhuma promoção para `stable` faz parte desta cadeia experimental.
 
-## 11. Diretrizes para o Backend futuro
+## 11. Backend integrado — registro histórico
 
-Executor previsto: `@Senior_Backend_Dev` em Claude Code Pro, modelo Opus aprovado
-para motores críticos, worktree isolado e baseline imutável do RED.
-
-Allowlist máxima da fase Backend:
+O `@Senior_Backend_Dev` implementou o motor em worktree isolado sobre o RED
+imutável. O QA independente confirmou 40/40 relatórios em três processos, e a
+cadeia foi integrada pela PR #39. A allowlist executada foi:
 
 ```text
 js/core_cabos_bt_parallel_experimental.js
 ```
 
-O Backend não altera o teste do QA, os documentos científicos, este SDD, UI,
-manifesto, workflow ou package. A candidata retorna ao CTO e depois ao QA
-independente. O implementador não emite veredito.
+O commit Backend `b6466f768bf60dc2d010d9a87d85f7edd10e9c60` adicionou somente esse
+arquivo. O teste do QA, documentos científicos, SDD, UI, manifesto, workflow e
+package permaneceram fora do commit. Esse histórico não autoriza nova mutação do
+motor durante a fase de UI.
 
-## 12. Diretrizes para uma UI experimental futura
+## 12. Contrato da UI experimental de laboratório
 
-A UI somente poderá ser especificada após GREEN independente do motor. Ela deverá:
+Esta seção autoriza **somente a esteira TDD da UI experimental**, condicionada à
+auditoria documental do Conselho. O motor recebeu GREEN independente e foi
+integrado pela PR #39 em `main@83e24131c0cc09813be65a5fa269961b9cc80c5c`.
+Essa integração não promoveu o RNC-P, não resolveu B-01 a B-06 e não autorizou
+uso produtivo.
 
-- permanecer em branch experimental;
-- consumir o envelope sem reproduzir fórmulas;
-- exibir o aviso vinculante permanentemente;
-- exibir `MATHEMATICAL_ONLY`, assumptions e blockers antes dos números;
-- impedir exportação como memorial final;
-- não oferecer botão ou rótulo de conformidade;
-- não converter o proxy contínuo em quantidade de cabos;
-- não substituir o dimensionamento BT vigente.
+### 12.1 Arquitetura, habitat e isolamento
 
-Essa fase terá `TESTE DO CEO: SIM` e QA visual independente. Não está autorizada
-por este SDD.
+A UI deve:
+
+- permanecer no módulo Cabos, cartão BT, em painel separado denominado
+  **Laboratório experimental — condutores em paralelo**;
+- iniciar recolhida e ser aberta por controle explícito do usuário;
+- coexistir com o dimensionamento BT vigente sem substituir, preencher, limpar,
+  disparar ou reinterpretar seus controles e resultados;
+- consumir exclusivamente
+  `window.calculateCablingBTParallelExperimental(input)`;
+- não reproduzir fórmula, tabela normativa, arredondamento de seleção ou regra de
+  domínio em `index.html` ou `js/ui_render.js`;
+- chamar o motor exatamente uma vez por acionamento válido de **Calcular estudo
+  experimental**;
+- limpar resultado experimental anterior antes de apresentar novo sucesso ou
+  erro, sem tocar no resultado BT produtivo;
+- manter o teste novo como `experimental`, fora do manifesto `stable`.
+
+Allowlist futura do Frontend:
+
+```text
+index.html
+js/ui_render.js
+```
+
+O Frontend não altera `js/core_cabos_bt_parallel_experimental.js`, `tests/**`,
+documentação, manifesto, workflow ou package. Um novo arquivo de UI não é
+autorizado nesta fase.
+
+### 12.2 Contrato DOM mínimo e estável
+
+Os identificadores abaixo são públicos para QA e não podem ser renomeados sem
+nova revisão do contrato:
+
+| ID | Papel |
+| --- | --- |
+| `cab-bt-par-exp-toggle` | abre/fecha o painel e mantém `aria-expanded` |
+| `cab-bt-par-exp-panel` | região experimental isolada |
+| `cab-bt-par-exp-notice` | aviso vinculante permanentemente visível no painel |
+| `cab-bt-par-exp-form` | formulário de hipóteses laboratoriais |
+| `cab-bt-par-exp-branches` | linhas dinâmicas de impedância dos ramos |
+| `cab-bt-par-exp-calculate` | único acionador do motor |
+| `cab-bt-par-exp-error` | Problem Details e governança de falha |
+| `cab-bt-par-exp-result` | envelope de sucesso, sem memorial final |
+| `cab-bt-par-exp-governance` | classificação, fonte, produção, assumptions e blockers |
+| `cab-bt-par-exp-numbers` | resultados numéricos exibidos depois da governança |
+
+O aviso em `cab-bt-par-exp-notice` deve usar o valor literal, integral e sem
+tradução:
+
+```text
+PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO
+```
+
+Ele permanece visível desde a abertura do painel, antes do cálculo e depois de
+sucesso ou falha. Tooltip, modal, rodapé recolhido ou texto abreviado não
+satisfazem o contrato.
+
+### 12.3 Entradas da UI
+
+A UI materializa, sem reinterpretar, o contrato da seção 4:
+
+| Campo visual | Campo do motor | Valor inicial do exemplo de laboratório |
+| --- | --- | --- |
+| Corrente total | `totalLoadCurrent_A` | `900 A` |
+| Fator de potência | `powerFactor` | `0.9` |
+| Ramos em paralelo por fase | `nParallel` | `3` |
+| Circuitos agrupados | `nCircuits` | `1` |
+| Estado/descrição da geometria | `geometry` | `NOT_PROVIDED` / `null` |
+| Ramos P1…Pn | `branches` | impedâncias da seção 4.1 |
+| Fator de agrupamento | `capacityProxy.groupingFactor.value` | `0.7` |
+| Ampacidade tabelada por condutor | `capacityProxy.tabulatedAmpacityPerConductor_A.value` | `344 A` |
+| Corrente de falta total | `fault.totalFaultCurrent_A` | `20000 A` |
+| Tempo de eliminação | `fault.clearingTime_s` | `0.2 s` |
+| Constante adiabática | `fault.adiabaticK_A_sqrt_s_per_mm2.value` | `115 A·√s/mm²` |
+| Modo de desbalanço de falta | `fault.imbalance.mode` | `EXPLICIT_ASSUMPTION` |
+| Desbalanço de falta | `fault.imbalance.deltaFault` | `1.1` |
+
+`contractVersion` é fixo em `CAB-BT-PARALLEL-EXP-1`; todas as proveniências são
+fixas e visíveis como `ASSUMPTION_ONLY`. Alterar `nParallel` reconstrói exatamente
+`nParallel` linhas P1…Pn. A UI não copia esse valor para `nCircuits` e não infere
+um campo do outro.
+
+DTOs condicionais vinculantes de geometria:
+
+```json
+{ "status": "NOT_PROVIDED", "description": null }
+```
+
+```json
+{ "status": "DESCRIBED", "description": "descrição não vazia informada pelo usuário" }
+```
+
+`NOT_PROVIDED` sempre envia `description:null`. `DESCRIBED` sempre envia uma
+string não vazia. A descrição não gera nem substitui `branches[].impedance_ohm`.
+
+DTOs condicionais vinculantes de falta:
+
+```json
+{
+  "mode": "EXPLICIT_ASSUMPTION",
+  "deltaFault": 1.1,
+  "provenance": "ASSUMPTION_ONLY"
+}
+```
+
+```json
+{ "mode": "CONSERVATIVE_SINGLE_BRANCH" }
+```
+
+```json
+{ "mode": "BLOCK" }
+```
+
+`deltaFault` e `provenance` existem **somente** em `EXPLICIT_ASSUMPTION`. Nos
+modos `CONSERVATIVE_SINGLE_BRANCH` e `BLOCK`, a UI deve omitir fisicamente essas
+duas propriedades do objeto enviado. Esconder campos no DOM sem removê-los do DTO
+não satisfaz o contrato e pode produzir `INPUT_STRUCTURE_INVALID`. O modo `BLOCK`
+é uma contraprova fail-closed esperada e retorna `FAULT_IMBALANCE_MISSING`.
+
+Os campos numéricos preservam o valor informado para o motor. Restrições HTML
+podem orientar o usuário, mas não substituem o Result Pattern nem inventam uma
+segunda validação de domínio.
+
+### 12.4 Ordem e conteúdo da saída
+
+Em sucesso, a ordem visual vinculante é:
+
+1. aviso permanente;
+2. `MATHEMATICAL_ONLY`, `productionAllowed=false`, fonte primária ausente e
+   `iecConformity=false`;
+3. `assumptions` completas;
+4. `blockers` completos, incluindo B-01 a B-06;
+5. `warnings`;
+6. somente então os números do envelope.
+
+Os números devem ser projeções diretas dos caminhos reais do envelope, sem
+adaptador, alias ou recálculo:
+
+- `data.loadSharing.branchCurrents`;
+- `data.loadSharing.mostLoadedBranchId`;
+- `data.loadSharing.tiedMostLoadedBranchIds`;
+- `data.loadSharing.deltaLoad` e `data.loadSharing.deratingFactor`;
+- `data.loadSharing.equivalentImpedance_ohm`;
+- `data.capacityProxy`, incluindo `nParallelContinuousProxy`,
+  `providedParallelCount` e `providedCountMeetsContinuousProxy`;
+- `data.voltageDrop.threePhase_V`, mantendo `voltageDropPercent` e
+  `normativeVoltageDropLimit` como `null`;
+- `data.faultAdiabatic`, inclusive modo, `deltaFaultEffective`, corrente por ramo
+  e seção contínua matemática.
+
+`nParallelContinuousProxy` nunca recebe `ceil`, arredondamento ou rótulo de
+quantidade recomendada. `installableSelection` e `installableSection` permanecem
+`null`; a UI deve apresentar **seleção instalável bloqueada**.
+
+### 12.5 Falha e proibições observáveis
+
+Em `ok:false`, a UI deve:
+
+- manter aviso, `productionAllowed=false` e fonte não canônica visíveis;
+- apresentar `error.code`, `title`, `status` e `params` do Problem Details;
+- não lançar exceção, não deixar número de execução anterior e não converter a
+  falha em alerta de conformidade.
+
+São proibidos:
+
+- botão, link ou ação de exportar memorial final, projeto, compra ou instalação;
+- botão ou rótulo `conforme IEC`, `PASS_IEC`, `COMPLIANT` ou equivalente;
+- inclusão do painel dentro de `#cb-mem-bt-container` ou acionamento de
+  `#btn-memorial-bt`;
+- preenchimento automático dos campos do dimensionamento BT vigente;
+- recomendação de seção comercial, quantidade instalável, terminal ou busway;
+- ocultação de assumption, blocker, aviso ou `productionAllowed=false`.
+
+### 12.6 i18n, acessibilidade e responsividade
+
+- rótulos e explicações da UI devem existir em PT, EN e ES;
+- tokens contratuais, códigos, unidades e o aviso literal não são traduzidos;
+- controles devem possuir `label`, foco por teclado e estados ARIA coerentes;
+- erro usa região `role="alert"`; resultado usa região anunciável não assertiva;
+- em 1280 px e 375 px não pode haver overflow horizontal do documento ou do
+  cartão, truncamento de aviso, sobreposição ou perda de controles;
+- temas claro e escuro devem preservar contraste e legibilidade;
+- nenhum `console.error`, `pageerror`, `undefined`, `NaN` ou `--` é aceito.
+
+### 12.7 RED visual experimental processável
+
+Arquivo futuro exclusivo do QA:
+
+```text
+tests/test_cab_bt_parallel_ui_experimental.js
+```
+
+Classificação inicial: `experimental`. Protocolo JSON-lines:
+
+```text
+CAB_BT_PARALLEL_UI_EXP_REPORT {JSON}
+CAB_BT_PARALLEL_UI_EXP_SUMMARY {JSON}
+```
+
+Cada relatório deve conter, no mínimo:
+
+```json
+{
+  "id": "UI-01",
+  "classification": "PASS|FUNCTIONAL_FAILURE|INFRA_BLOCKED|CONFIG_ERROR",
+  "compliant": false,
+  "assertionExercised": true,
+  "expected": {},
+  "observed": {}
+}
+```
+
+Devem existir exatamente **15 relatórios**, com IDs únicos e nesta matriz:
+
+| ID | Contrato |
+| --- | --- |
+| `UI-01` | painel experimental existe, inicia recolhido e não substitui BT |
+| `UI-02` | aviso literal permanece visível antes/depois de sucesso e falha |
+| `UI-03` | formulário materializa o exemplo completo e proveniências |
+| `UI-04` | `nParallel` cria ramos exatos e não altera `nCircuits` |
+| `UI-05` | clique chama o motor real exatamente uma vez, sem fórmula na UI |
+| `UI-06` | governança aparece antes de qualquer número |
+| `UI-07` | projeção numérica coincide diretamente com o envelope real |
+| `UI-08` | Problem Details fail-closed limpa resultado anterior |
+| `UI-09` | proxy não vira seleção discreta ou recomendação instalável |
+| `UI-10` | nenhuma ação/rótulo de memorial final ou conformidade existe |
+| `UI-11` | PT/EN/ES sem traduzir tokens nem o aviso vinculante |
+| `UI-12` | desktop 1280 px sem overflow, truncamento ou sobreposição |
+| `UI-13` | mobile 375 px e temas claro/escuro sem overflow ou perda |
+| `UI-14` | teclado, labels, ARIA e regiões de anúncio conformes |
+| `UI-15` | memorial BT, motor BT vigente e resultados existentes intactos |
+
+Resumo obrigatório:
+
+```json
+{
+  "classification": "PASS|FUNCTIONAL_FAILURE|INFRA_BLOCKED|CONFIG_ERROR",
+  "reports": 15,
+  "expectedReports": 15,
+  "compliant": 0,
+  "nonCompliant": 15,
+  "assertionsExercised": 15,
+  "processExitCode": 1
+}
+```
+
+Mapeamento de processo: `0=PASS`, `1=FUNCTIONAL_FAILURE`, `2=INFRA_BLOCKED`,
+`3=CONFIG_ERROR`. Relatório ausente, duplicado, incompleto ou summary não
+reconciliado é `CONFIG_ERROR`. O RED válido exige preflight Chromium `0`, UI
+ausente ou não conforme, assertions exercidas, 15 relatórios completos e exit `1`.
+
+Regressões obrigatórias para o futuro GREEN, com comandos e resultados
+determinísticos:
+
+| Execução | Comando exato | Resultado esperado |
+| --- | --- | --- |
+| UI visual 1 | `node tests/test_cab_bt_parallel_ui_experimental.js` | exit `0`; 15/15 PASS |
+| UI visual 2 | novo processo com o mesmo comando | exit `0`; 15/15 PASS |
+| UI visual 3 | novo processo com o mesmo comando | exit `0`; 15/15 PASS |
+| Motor experimental | `node tests/test_cab_bt_parallel_experimental.js` | exit `0`; 40/40 PASS |
+| Critérios BT | `node tests/test_cab_bt_criteria_001.js` | exit `0`; 6/6 PASS |
+| Resiliência Lucide | `node tests/test_ui_lucide_boot_001.js` | exit `0`; 3/3 PASS |
+| Gate stable completo | `npm run test:regression` | exit `0`; seis stable, 3 core + 3 browser |
+| Whitespace | `git diff --check <baseline>...HEAD` | exit `0` |
+
+Em Windows, o executor pode invocar `npm.cmd run test:regression`, preservando o
+mesmo script npm e contrato. A execução remota funcional obrigatória usa
+`.github/workflows/qa-visual.yml`, `workflow_dispatch`, input
+`test_file=tests/test_cab_bt_parallel_ui_experimental.js`, SHA imutável, attempt 1
+e sem rerun. O artifact `qa-visual-evidence` deve conter exatamente os 15
+relatórios, o summary reconciliado, preflight/processo `0/0` e stderr funcional
+vazio. A futura PR também executa o Regression Gate shadow vigente; esse Gate
+prova ausência de regressão stable, não substitui o GREEN visual experimental.
+
+### 12.8 Handoff e aceite
+
+Sequência autorizável após auditoria desta seção:
+
+```text
+Conselho → CTO → QA RED → CTO → Frontend GREEN → CTO → QA independente
+→ CTO → TESTE DO CEO → PR → merge humano → pós-merge/encerramento
+```
+
+O Frontend devolve a candidata ao CTO e não contata o QA diretamente. O QA não
+implementa correção. O CEO testa somente SHA imutável após GREEN independente e
+remoto.
+
+`TESTE DO CEO: SIM`. Cenário mínimo: abrir o painel no cartão BT, confirmar o
+aviso antes dos resultados, executar o exemplo de 900 A/3 ramos e verificar que
+`MATHEMATICAL_ONLY`, assumptions, blockers e `productionAllowed=false` precedem
+os números e que nenhuma recomendação instalável ou memorial final é oferecido.
 
 ## 13. Evidência, Git e ciclo de vida
 
-Este documento é uma candidata arquitetural no working tree. Nesta fase:
+O motor e sua cadeia científica experimental foram integrados pela PR #39, com
+GREEN independente e Gate pós-merge. Nesta revisão:
 
-- não há implementação, teste, PR, merge ou promoção;
-- o Conselho audita o contrato antes de qualquer RED;
-- eventual commit/push exige autorização posterior do CEO;
-- PR para `main` permanece proibida enquanto o pacote for não canônico e os
-  bloqueios B-01 a B-06 persistirem;
-- CodeRabbit não substitui Conselho ou QA e não é aplicável sem PR;
+- somente o contrato da UI e o Registro Mestre podem mudar;
+- não há teste visual ou implementação de UI autorizados antes da auditoria do
+  Conselho;
+- eventual commit/push documental exige autorização posterior do CEO;
+- a implementação futura permanece experimental e somente pode chegar a PR após
+  RED, GREEN, QA independente, CI remoto e teste manual do CEO;
+- CodeRabbit não substitui Conselho, QA ou artifact;
 - qualquer CI futura deve publicar artifact processável e preservar a taxonomia
-  `PASS`, `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR`.
+  `PASS`, `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR`;
+- integração em `main` não promove o conteúdo a RNC-C, `stable` ou produção.
 
 Condição de arquivamento ou promoção: somente nova decisão científica, fonte
 primária completa, promoção formal a RNC-C e resolução rastreável dos bloqueios
@@ -1037,11 +1329,13 @@ Domínio: arquitetura de motor matemático BT em laboratório
 Responsável pelo contrato: @CTO
 Consultados: @Engenheiro_Eletricista; @Conselho_de_Arquitetura_e_Governanca
 Baseline científica: 18627dd02c94265984aa953d35f47c2745cab61d
-Estado: SDD_CANDIDATO_PARA_AUDITORIA
 Produção: BLOQUEADA
-PR/SHA do SDD: inexistentes
-Condição para RED: auditoria do Conselho + commit/push autorizado + O.S. do CTO
-Condição de encerramento desta etapa: parecer documental do Conselho
+Motor/teste/SDD integrados: PR #39; merge 83e24131c0cc09813be65a5fa269961b9cc80c5c
+Motor GREEN: b6466f768bf60dc2d010d9a87d85f7edd10e9c60; QA 40/40 em três processos
+Gate pós-merge: #29789874074 — SUCCESS
+Estado atual: MOTOR_GREEN_INTEGRADO; UI_SDD_CANDIDATO_PARA_AUDITORIA
+Condição para RED visual: auditoria focalizada do Conselho + commit/push documental autorizado + O.S. do CTO
+Condição de encerramento desta etapa: parecer documental do Conselho sobre a UI
 ```
 
 ## 16. Roteamento e autoridade

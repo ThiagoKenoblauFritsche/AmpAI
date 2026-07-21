@@ -66,6 +66,27 @@ A linha histórica abaixo conserva o schema vigente quando foi criada. Novas ent
 | `GOV-ENCERRAMENTO-CANONICO-V73` | `CHG-3` institucional/operacional | CEO + Conselho + CTO | governança/docs/operação | separar `MERGE_VALIDADO` de `ENCERRAMENTO_OPERACIONAL`, tornar `AmpAI/` a raiz local canônica e eliminar canonização científica recursiva | `@CTO` | nenhum | `encerrada` | não | merge e autorizações concluídos | PR [#35](https://github.com/ThiagoKenoblauFritsche/AmpAI/pull/35); merge `7d8af92e7978e963edebd2c04e305a2e6cac910a`; Gate pós-merge [#29299322595](https://github.com/ThiagoKenoblauFritsche/AmpAI/actions/runs/29299322595) `SUCCESS`; `GOV-ENCERRAMENTO-CANONICO-V73-OPS-02` `PASS`; manifesto externo da quarentena SHA-256 `EF622E39DC08D19418B43326AFAAC658127D91E92576D82278E42BDD732EC988` | `HEAD == main == origin/main == 7d8af92e7978e963edebd2c04e305a2e6cac910a`; raiz limpa; Drive `18/18 MATCH`; `main-sync` removido; três documentos M22 antigos preservados; 36 worktrees remanescentes preservados | nenhuma nesta mudança; limpeza dos worktrees e `GOV-AUTOPROCEED-001` seguem como intakes independentes; CTO liberado exclusivamente para o SDD M22 | 2026-07-13 — `MERGE_VALIDADO` e `ENCERRAMENTO_OPERACIONAL` aprovados |
 | `GOV-AUTOPROCEED-001` | `CHG-3` institucional/segurança/plataforma | auditoria CTO da OPS-02 | governança/segurança/CI/operação | impedir que aprovação automática de artifact ultrapasse hold explícito ou autorização formal de mutação | `@CTO` | `@Conselho_de_Arquitetura_e_Governanca` | `intake` | não | decisão futura | achado operacional transferido da `GOV-ENCERRAMENTO-CANONICO-V73-OPS-02`; requisitos mínimos: autorização formal do CTO antes de mutações `CHG-2`/`CHG-3`, manifesto externo para hashes, proibição de autorreferência de hash e declaração explícita do domínio de bytes/normalização | baseline de origem `7d8af92e7978e963edebd2c04e305a2e6cac910a`; nenhuma alteração de Gate ou automação autorizada | CTO consolidar evidência e devolver consulta institucional; implementação permanece bloqueada | pendente |
 | `OPS-WORKTREE-CLEANUP-V73` | `CHG-3` operacional | auditoria CTO da OPS-02 | infraestrutura/repositório | classificar e tratar os 36 worktrees preservados sem perda de conteúdo exclusivo | `@CTO` | `@Engenheiro_DevOps_SRE` após autorização do CEO | `intake` | não | decisão futura | OPS-02 confirmou preservação dos 36 worktrees e ausência de perda identificada; nenhuma elegibilidade implica autorização automática | raiz canônica `main@7d8af92e7978e963edebd2c04e305a2e6cac910a`; Drive sincronizado | inventário nominal, classificação, allowlist e autorização do CEO antes de qualquer remoção; `--force` proibido sem decisão específica | pendente |
+| `CAB-BT-PARALLEL-001-UI-EXP` | `CHG-3` científica experimental/UI | CEO após GREEN independente do motor | arquitetura/UI/QA | disponibilizar painel de laboratório para o CEO experimentar o motor de paralelismo BT sem criar seleção instalável ou conformidade IEC | `@CTO` | `@Conselho_de_Arquitetura_e_Governanca` | `especificacao` | sim | aceite futuro e merge humano | motor QA 40/40 PASS; PR [#39](https://github.com/ThiagoKenoblauFritsche/AmpAI/pull/39); merge `83e24131c0cc09813be65a5fa269961b9cc80c5c`; Gate pós-merge [#29789874074](https://github.com/ThiagoKenoblauFritsche/AmpAI/actions/runs/29789874074) `SUCCESS`; [hashes pós-merge](#evidencia-pos-merge-do-motor-experimental-pr-39); revisão da seção 12 de `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.md` | baseline da UI `83e24131c0cc09813be65a5fa269961b9cc80c5c`; raiz canônica limpa e Drive sincronizado; **Marco remoto (UI):** `pendente`; **Marco operacional (UI):** `pendente`; **Worktrees:** `tmp/worktrees/cab-bt-parallel-ui-sdd-exp` ativo, demais fora do escopo e preservados | Conselho auditar SDD da UI; depois CTO emitir RED visual experimental ao QA; produção e conformidade permanecem bloqueadas | pendente |
+
+### Evidência pós-merge do motor experimental — PR #39
+
+O marco do **motor experimental**, pré-requisito desta UI, está em
+`MERGE_VALIDADO` e `ENCERRAMENTO_OPERACIONAL`. Isso não antecipa os marcos da UI,
+que permanecem pendentes. Evidência verificável da rotina CHG-0:
+
+| Origem em `main@83e24131` | Destino no Drive | SHA-256 local/Drive | Estado |
+| --- | --- | --- | --- |
+| `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.md` | `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.txt` | `3F2A3A48FD858C822C504952CB4DD1F8C9998D6DE5E2D3FD84DA8E76149971A0` | `MATCH` |
+| `docs/engenharia/CAB_BT_PARALLEL_PRELIM_BDD.feature` | `docs/engenharia/CAB_BT_PARALLEL_PRELIM_BDD.txt` | `C130B7ACF7810133C64C1660C818FABAE00C96DC1FBB80636D52A95C828194D6` | `MATCH` |
+| `docs/engenharia/CAB_BT_PARALLEL_PRELIM_Memorial.md` | `docs/engenharia/CAB_BT_PARALLEL_PRELIM_Memorial.txt` | `AB3C8D2BF27C3B442856C004387E2B1970277976CF7D840EABB66423B1B1BF00` | `MATCH` |
+| `docs/engenharia/RNC-P_CAB_BT_PARALLEL_PRELIM.md` | `docs/engenharia/RNC-P_CAB_BT_PARALLEL_PRELIM.txt` | `0270398DD45E5EC341E240FCFB33E69DBD06019663349E67E71BA528A33FCB1A` | `MATCH` |
+| `js/core_cabos_bt_parallel_experimental.js` | `js/core_cabos_bt_parallel_experimental.txt` | `8AA5EAAEDF1FB72BB23ED7C871F2A3FC11A8B3FF8F2EE4671BF7D9173963C67F` | `MATCH` |
+
+`tests/test_cab_bt_parallel_experimental.js` permanece fora da allowlist do Drive.
+Seu hash físico Windows/CRLF validado foi
+`2297315458E1968CE33DB0A66E282946B4C92A622E099A936B416B65D5F942AE`;
+o blob Git canônico UTF-8/LF permanece
+`D45C693AC1DA9FDFB6E2EB7A239CC8BCAD4A9FD2890CF009FA1D4A1B3904043F`.
 
 ### Evidência externa da OPS-02
 
