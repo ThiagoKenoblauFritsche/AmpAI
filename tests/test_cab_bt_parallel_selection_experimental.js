@@ -389,7 +389,10 @@ function buildCaseFixture(id, item, caseIndex) {
     delete input.catalog.candidates[0][expected.removedField];
   }
   if (id === 'SCH-02') singleCandidate(input, 150);
-  if (id === 'SCH-03') singleCandidate(input, 120);
+  if (id === 'SCH-03') {
+    singleCandidate(input, 120);
+    input.providedCombination = null;
+  }
   if (id === 'SCH-04' || id === 'SCH-05') {
     singleCandidate(input);
     const candidate = input.catalog.candidates[0];
@@ -477,6 +480,7 @@ function buildCaseFixture(id, item, caseIndex) {
   if (id === 'CAL-02') {
     singleCandidate(input, 240);
     input.maxParallelCount = 2;
+    input.providedCombination = null;
   }
   if (id === 'CAL-03') {
     if (expected.scenario === 'base_600A_1.6percent') input.maximumVoltageDrop_percent = 1.6;
@@ -589,7 +593,10 @@ function buildCaseFixture(id, item, caseIndex) {
     if (expected.defect === 'branch_provenance_invalid') entry.branches[0].provenance = 'UNKNOWN';
   }
   if (id === 'TECH-18') {
-    if (expected.defect === 'section_absent') input.providedCombination.section_mm2 = 999;
+    if (expected.defect === 'section_absent') {
+      singleCandidate(input, 240);
+      input.providedCombination = { section_mm2: 150, nParallel: 3 };
+    }
     if (expected.defect === 'quantity_invalid') input.providedCombination.nParallel = 0;
     if (expected.defect === 'outside_universe') input.providedCombination.nParallel = 5;
   }
