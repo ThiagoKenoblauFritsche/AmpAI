@@ -156,63 +156,129 @@ function hasOwn(object, key) {
   return Object.prototype.hasOwnProperty.call(object, key);
 }
 
-function recursivelyContains(value, sought) {
-  if (value === sought) return true;
-  if (Array.isArray(value)) return value.some((item) => recursivelyContains(item, sought));
-  if (isPlainObject(value)) return Object.values(value).some((item) => recursivelyContains(item, sought));
-  return false;
+function deepEqual(actual, expected) {
+  return JSON.stringify(actual, jsonReplacer) === JSON.stringify(expected, jsonReplacer);
 }
 
-function recursivelyContainsAll(value, soughtValues) {
-  return soughtValues.every((sought) => recursivelyContains(value, sought));
+function sameKeys(object, keys) {
+  return isPlainObject(object)
+    && deepEqual(Object.keys(object).sort(), [...keys].sort());
 }
 
-function resultEnvelopeInvariant(result) {
-  return isPlainObject(result)
-    && typeof result.ok === 'boolean'
-    && ['MATHEMATICAL_ONLY', 'BLOCKED'].includes(result.classification)
+function hasDeepProperty(value, property) {
+  if (isPlainObject(value)) {
+    if (hasOwn(value, property)) return true;
+    return Object.values(value).some((item) => hasDeepProperty(item, property));
+  }
+  return Array.isArray(value) && value.some((item) => hasDeepProperty(item, property));
+}
+
+function sourceStatusExact(sourceStatus) {
+  return sameKeys(sourceStatus, [
+    'classification', 'scientificBaselineSha', 'l0ScientificBaselineSha',
+    'l0IntegrationMainSha', 'primarySourceComplete', 'iecConformity',
+  ])
+    && sourceStatus.classification === 'RNC-P_EXPERIMENTAL_NON_CANONICAL'
+    && sourceStatus.scientificBaselineSha === '2b61627d8640fce91eb229ca522ae33a143671df'
+    && sourceStatus.l0ScientificBaselineSha === '18627dd02c94265984aa953d35f47c2745cab61d'
+    && sourceStatus.l0IntegrationMainSha === '83e24131c0cc09813be65a5fa269961b9cc80c5c'
+    && sourceStatus.primarySourceComplete === false
+    && sourceStatus.iecConformity === false;
+}
+
+function blockerExact(blocker, code, params) {
+  return sameKeys(blocker, ['code', 'params', 'severity'])
+    && blocker.code === code
+    && blocker.severity === 'blocker'
+    && isPlainObject(blocker.params)
+    && (params === undefined || deepEqual(blocker.params, params));
+}
+
+function permanentBlockersExact(blockers) {
+  if (!Array.isArray(blockers) || blockers.length < 10) return false;
+  const params = [{}, {}, {}, {}, {}, {}, { reason: 'normative_source_incomplete' }, {}, {}, {}];
+  return PERMANENT_GUARDS.every((code, index) => blockerExact(blockers[index], code, params[index]));
+}
+
+function warningExact(warning) {
+  return sameKeys(warning, [
+    'code', 'candidateId', 'continuousProxy', 'continuousProxyDisplay',
+    'discreteRequired', 'maxParallelCount', 'note', 'normativeThreshold',
+  ])
+    && warning.code === 'EXCESSIVE_COUNT'
+    && typeof warning.candidateId === 'string'
+    && warning.candidateId.length > 0
+    && typeof warning.continuousProxy === 'number'
+    && Number.isFinite(warning.continuousProxy)
+    && warning.continuousProxyDisplay === Math.round(warning.continuousProxy * 1000) / 1000
+    && Number.isInteger(warning.discreteRequired)
+    && warning.discreteRequired >= 1
+    && warning.discreteRequired === Math.ceil(warning.continuousProxy)
+    && Number.isInteger(warning.maxParallelCount)
+    && warning.maxParallelCount >= 1
+    && warning.note === 'evaluate_busway_qualitatively'
+    && warning.normativeThreshold === null;
+}
+
+function envelopeCommonExact(result) {
+  return sameKeys(result, [
+    'ok', 'classification', 'data', 'assumptions', 'blockers', 'warnings',
+    'sourceStatus', 'productionAllowed', 'displayNotice', 'error',
+  ])
     && Array.isArray(result.assumptions)
     && Array.isArray(result.blockers)
     && Array.isArray(result.warnings)
-    && isPlainObject(result.sourceStatus)
-    && result.sourceStatus.classification === 'RNC-P_EXPERIMENTAL_NON_CANONICAL'
-    && result.sourceStatus.scientificBaselineSha === '2b61627d8640fce91eb229ca522ae33a143671df'
-    && result.sourceStatus.l0ScientificBaselineSha === '18627dd02c94265984aa953d35f47c2745cab61d'
-    && result.sourceStatus.l0IntegrationMainSha === '83e24131c0cc09813be65a5fa269961b9cc80c5c'
-    && result.sourceStatus.primarySourceComplete === false
-    && result.sourceStatus.iecConformity === false
+    && sourceStatusExact(result.sourceStatus)
     && result.productionAllowed === false
     && result.displayNotice === NOTICE
-    && PERMANENT_GUARDS.every((code) => result.blockers.some((item) => item?.code === code));
+    && permanentBlockersExact(result.blockers)
+    && !hasDeepProperty(result, 'relatedCodes');
 }
 
 function successEnvelope(result) {
-  return resultEnvelopeInvariant(result)
+  const dataKeys = [
+    'contractVersion', 'analysisMode', 'objective', 'universe', 'evaluatedCandidates',
+    'candidateAlternatives', 'rejectedCandidates', 'nonDominatedAlternatives',
+    'presentationOrder', 'firstInPresentationOrder', 'objectiveDisposition',
+    'providedCombination', 'installableSelection', 'discreteSelectionBlocked',
+    'installationAuthorized', 'presentationModel',
+  ];
+  return envelopeCommonExact(result)
     && result.ok === true
     && result.classification === 'MATHEMATICAL_ONLY'
-    && isPlainObject(result.data)
+    && sameKeys(result.data, dataKeys)
+    && result.data.contractVersion === CONTRACT_VERSION
+    && Array.isArray(result.data.evaluatedCandidates)
+    && Array.isArray(result.data.candidateAlternatives)
+    && Array.isArray(result.data.rejectedCandidates)
+    && Array.isArray(result.data.nonDominatedAlternatives)
+    && Array.isArray(result.data.presentationOrder)
+    && result.blockers.length === 10
     && result.data.installableSelection === null
     && result.data.discreteSelectionBlocked === true
     && result.data.installationAuthorized === false
+    && isPlainObject(result.data.presentationModel)
+    && result.warnings.every(warningExact)
     && result.error === null;
 }
 
-function failureEnvelope(result, code) {
-  if (!resultEnvelopeInvariant(result)
+function failureEnvelope(result, code, params) {
+  if (!envelopeCommonExact(result)
       || result.ok !== false
       || result.classification !== 'BLOCKED'
       || result.data !== null
-      || !isPlainObject(result.error)
+      || result.warnings.length !== 0
+      || !sameKeys(result.error, ['type', 'title', 'status', 'code', 'params', 'severity'])
       || result.error.code !== code
       || result.error.title !== code
       || result.error.status !== 422
       || result.error.severity !== 'error'
       || result.error.type !== `https://ampai.dev/problems/${code}`
+      || !isPlainObject(result.error.params)
+      || (params !== undefined && !deepEqual(result.error.params, params))
       || result.blockers.length !== 11) return false;
-  const specific = result.blockers[10];
-  return specific?.code === code
-    && JSON.stringify(specific.params) === JSON.stringify(result.error.params)
-    && result.blockers.slice(0, 10).every((item, index) => item?.code === PERMANENT_GUARDS[index]);
+  return blockerExact(result.blockers[10], code, result.error.params)
+    && (params === undefined || deepEqual(result.blockers[10].params, params));
 }
 
 function allFiniteJsonNumbers(value) {
@@ -237,7 +303,7 @@ function buildAdvancedBranches(input) {
         im: candidate.reactance_ohm,
       };
       input.advancedBranchesByCombination.push({
-        candidateId: `${nParallel} x ${candidate.section_mm2}`,
+        candidateId: `${nParallel}x${candidate.section_mm2}`,
         geometryDescription: 'Laboratory branch geometry only',
         branches: Array.from({ length: nParallel }, (_unused, index) => ({
           id: `P${index + 1}`,
@@ -293,7 +359,7 @@ function groupingEntries(input) {
   return input.catalog.candidates.flatMap((candidate) => Array.from(
     { length: input.maxParallelCount },
     (_unused, index) => ({
-      candidateId: `${index + 1} x ${candidate.section_mm2}`,
+      candidateId: `${index + 1}x${candidate.section_mm2}`,
       value: 0.8,
       source: 'laboratory sensitivity',
       sourceVersion: 'PRELIM-1',
@@ -510,12 +576,15 @@ function buildCaseFixture(id, item, caseIndex) {
   if (id === 'TECH-16') buildAdvancedBranches(input);
   if (id === 'TECH-17') {
     buildAdvancedBranches(input);
-    const entry = input.advancedBranchesByCombination[0];
+    let entry = input.advancedBranchesByCombination[0];
     if (expected.defect === 'map_not_array') input.advancedBranchesByCombination = {};
     if (expected.defect === 'combination_missing') input.advancedBranchesByCombination.shift();
-    if (expected.defect === 'description_missing') delete entry.geometryDescription;
+    if (expected.defect === 'description_missing') input.advancedBranchesByCombination.forEach((item) => delete item.geometryDescription);
     if (expected.defect === 'branch_count_mismatch') entry.branches.pop();
-    if (expected.defect === 'branch_id_duplicate' && entry.branches.length > 1) entry.branches[1].id = entry.branches[0].id;
+    if (expected.defect === 'branch_id_duplicate') {
+      entry = input.advancedBranchesByCombination.find((item) => item.candidateId === '2x95');
+      entry.branches[1].id = entry.branches[0].id;
+    }
     if (expected.defect === 'branch_impedance_invalid') entry.branches[0].impedance_ohm.re = NaN;
     if (expected.defect === 'branch_provenance_invalid') entry.branches[0].provenance = 'UNKNOWN';
   }
@@ -542,19 +611,10 @@ function buildCaseFixture(id, item, caseIndex) {
     if (expected.path === 'frontierComparator') input.maximumVoltageDrop_percent = Number.MIN_VALUE;
   }
   if (id === 'TECH-24') input.fault.totalFaultCurrent_A = 0;
+  if (id === 'TECH-25' && expected.schemaArea === 'warning_raw_display_schema') input.totalLoadCurrent_A = 1500;
   if (id === 'TECH-26') delete input.lineVoltage_V;
 
   return fixture;
-}
-
-function findObject(value, predicate) {
-  if (isPlainObject(value) && predicate(value)) return value;
-  const children = Array.isArray(value) ? value : (isPlainObject(value) ? Object.values(value) : []);
-  for (const child of children) {
-    const found = findObject(child, predicate);
-    if (found) return found;
-  }
-  return null;
 }
 
 function exactRootKeys(result, success) {
@@ -566,7 +626,123 @@ function exactRootKeys(result, success) {
 
 function prohibitedCandidateFieldsAbsent(result) {
   const forbidden = ['selected', 'recommended', 'finalSizing', 'installationEligible', 'iecCompliant'];
-  return !forbidden.some((field) => findObject(result?.data, (object) => hasOwn(object, field)));
+  return !forbidden.some((field) => hasDeepProperty(result?.data, field));
+}
+
+function codeAtAnyNominalPath(value, code) {
+  if (isPlainObject(value)) {
+    if (value.code === code || value.enforcedRuleCode === code) return true;
+    return Object.values(value).some((item) => codeAtAnyNominalPath(item, code));
+  }
+  return Array.isArray(value) && value.some((item) => codeAtAnyNominalPath(item, code));
+}
+
+function topParamsSchemaExact(code, params) {
+  const schemas = {
+    INPUT_STRUCTURE_INVALID: ['path', 'reason'],
+    CONTRACT_VERSION_UNSUPPORTED: ['received', 'allowed'],
+    GLOBAL_METADATA_MISSING: ['paths'],
+    GLOBAL_METADATA_INVALID: ['path', 'reason'],
+    ANALYSIS_MODE_INVALID: ['received', 'allowed'],
+    OBJECTIVE_INVALID: ['received', 'allowed'],
+    SUGGESTION_UNCONFIRMED: ['path'],
+    CATALOG_MODE_INVALID: ['received'],
+    CATALOG_TRACEABILITY_MISSING: ['paths'],
+    CATALOG_CONFIRMATION_MISSING: ['path'],
+    CATALOG_NO_EVALUABLE_CANDIDATE: ['catalogEntryCount', 'errors'],
+    GROUPING_MODE_INVALID: ['received'],
+    GROUPING_CONFIRMATION_MISSING: ['path'],
+    GUIDED_HYPOTHESIS_UNCONFIRMED: ['missing'],
+    ADVANCED_BRANCHES_INVALID: ['reason'],
+    PROVIDED_COMBINATION_INVALID: ['section_mm2', 'nParallel'],
+    NO_EVALUABLE_COMBINATION: ['evaluatedCount', 'blockersByCandidate'],
+    NUMERIC_RESULT_NON_FINITE: ['stage', 'field'],
+  };
+  const keys = schemas[code];
+  return Array.isArray(keys) && sameKeys(params, keys);
+}
+
+function topFailureExact(result, code, expectedParams) {
+  return failureEnvelope(result, code, expectedParams)
+    && topParamsSchemaExact(code, result.error.params)
+    && !hasDeepProperty(result, 'relatedCodes');
+}
+
+function catalogErrorsExact(result) {
+  if (!failureEnvelope(result, 'CATALOG_NO_EVALUABLE_CANDIDATE')
+      || !sameKeys(result.error.params, ['catalogEntryCount', 'errors'])
+      || !Number.isInteger(result.error.params.catalogEntryCount)
+      || !Array.isArray(result.error.params.errors)) return null;
+  return result.error.params.errors;
+}
+
+function catalogIssueExact(result, code, expected) {
+  const errors = catalogErrorsExact(result);
+  if (!errors || errors.length !== 1) return false;
+  const issue = errors[0];
+  if (!isPlainObject(issue) || issue.code !== code || hasDeepProperty(issue, 'relatedCodes')) return false;
+  if (code === 'CANDIDATE_INCOMPLETE') {
+    return sameKeys(issue, ['code', 'catalogEntryId', 'missingFields', 'mode', 'provenance'])
+      && deepEqual(issue.missingFields, expected.missingFields)
+      && issue.mode === 'CATALOGO_LAB_ASSUMPTION_ONLY'
+      && issue.provenance === 'ASSUMPTION_ONLY';
+  }
+  if (code === 'CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT') {
+    return sameKeys(issue, ['code', 'catalogEntryId', 'presentFields'])
+      && Array.isArray(issue.presentFields)
+      && deepEqual(issue.presentFields, expected.presentFields);
+  }
+  if (code === 'CANDIDATE_IMPEDANCE_VALUE_INVALID') {
+    return sameKeys(issue, ['code', 'catalogEntryId', 'invalidFields', 'mode'])
+      && issue.mode === 'CATALOGO_LAB_ASSUMPTION_ONLY'
+      && deepEqual(issue.invalidFields, expected.invalidFields);
+  }
+  if (code === 'CANDIDATE_STRUCTURE_INVALID') {
+    const allowed = ['code', 'catalogEntryId', 'catalogEntryIndex', 'reason'];
+    if (expected.path !== undefined) allowed.push('path');
+    if (expected.field !== undefined) allowed.push('field');
+    if (expected.conflictingEntryIds !== undefined) allowed.push('conflictingEntryIds');
+    return sameKeys(issue, allowed)
+      && Object.entries(expected).every(([key, value]) => deepEqual(issue[key], value));
+  }
+  return false;
+}
+
+function candidateBlockerExact(result, candidateId, code, params) {
+  if (!successEnvelope(result)) return false;
+  const candidate = evaluated(result, candidateId);
+  if (!candidate || !Array.isArray(candidate.blockers)) return false;
+  const matches = candidate.blockers.filter((blocker) => blocker?.code === code);
+  return matches.length === 1 && blockerExact(matches[0], code, params);
+}
+
+function candidateBlockersByCodeExact(result, code) {
+  if (!successEnvelope(result)) return [];
+  const matches = [];
+  for (const candidate of result.data.evaluatedCandidates) {
+    if (!Array.isArray(candidate.blockers)) return [];
+    for (const blocker of candidate.blockers) {
+      if (blocker?.code === code) {
+        if (!blockerExact(blocker, code)) return [];
+        matches.push({ candidateId: candidate.candidateId, blocker });
+      }
+    }
+  }
+  return matches;
+}
+
+function noEvaluableBlockersExact(result, requiredCode, requiredReason) {
+  if (!topFailureExact(result, 'NO_EVALUABLE_COMBINATION')) return false;
+  const params = result.error.params;
+  if (params.evaluatedCount !== 0 || params.blockersByCandidate.length === 0) return false;
+  return params.blockersByCandidate.every((item) => sameKeys(item, ['candidateId', 'blockers'])
+    && typeof item.candidateId === 'string'
+    && Array.isArray(item.blockers)
+    && item.blockers.some((blocker) => blockerExact(
+      blocker,
+      requiredCode,
+      requiredReason === undefined ? undefined : { candidateId: item.candidateId, reason: requiredReason },
+    )));
 }
 
 function expectedErrorCode(id, expected) {
@@ -591,63 +767,152 @@ function expectedErrorCode(id, expected) {
   if (id === 'TECH-15') return 'GROUPING_FACTOR_INVALID';
   if (id === 'TECH-17') return 'ADVANCED_BRANCHES_INVALID';
   if (id === 'TECH-18') return 'PROVIDED_COMBINATION_INVALID';
-  if (id === 'TECH-19') return expected.condition === 'all_calculated_rejected' ? 'NO_VALID_CANDIDATE' : 'NO_EVALUABLE_COMBINATION';
+  if (id === 'TECH-19') return expected.condition === 'all_calculated_rejected' ? null : 'NO_EVALUABLE_COMBINATION';
   if (id === 'TECH-23') return 'NUMERIC_RESULT_NON_FINITE';
   return null;
 }
 
+function expectedTopParamsFor(id, expected) {
+  if (id === 'KG-04') return { path: '$.grouping.confirmed' };
+  if (id === 'STR-01') return { paths: [`$.${expected.removedField}`] };
+  if (id === 'TECH-01') return { path: '$', reason: 'root_not_plain_object' };
+  if (id === 'TECH-02') {
+    const paths = {
+      root: '$.unexpected',
+      catalog: '$.catalog.unexpected',
+      grouping: '$.grouping.unexpected',
+      fault: '$.fault.unexpected',
+      'advancedBranchesByCombination[]': '$.advancedBranchesByCombination[0].unexpected',
+    };
+    return { path: paths[expected.scope], reason: 'unexpected_property' };
+  }
+  if (id === 'TECH-03') return {
+    received: expected.state === 'missing' ? null : 'UNSUPPORTED',
+    allowed: [CONTRACT_VERSION],
+  };
+  if (id === 'TECH-04') {
+    const pathName = expected.field.startsWith('fault.') ? `$.${expected.field}` : `$.${expected.field}`;
+    const reason = ['maxParallelCount', 'nCircuits'].includes(expected.field)
+      ? 'not_positive_integer'
+      : (expected.field.startsWith('fault.') ? 'negative_or_non_finite' : 'not_positive_finite');
+    return { path: pathName, reason };
+  }
+  if (id === 'TECH-05') return { received: expected.value, allowed: expected.allowed };
+  if (id === 'TECH-06') return { received: expected.value, allowed: expected.allowed };
+  if (id === 'TECH-07') return { received: expected.invalidMode };
+  if (id === 'TECH-08') return { received: expected.invalidMode };
+  if (id === 'TECH-09') return { paths: [`$.catalog.${expected.removedField}`] };
+  if (id === 'TECH-10') return {
+    catalog_lab_confirmation: { path: '$.catalog.confirmed' },
+    grouping_lab_confirmation: { path: '$.grouping.confirmed' },
+    guided_hypothesis_confirmation: { missing: ['confirmed'] },
+    suggested_power_factor_confirmation: { path: '$.powerFactor.confirmed' },
+    suggested_reference_temperature_confirmation: { path: '$.catalog.confirmed' },
+  }[expected.confirmation];
+  if (id === 'TECH-12') return { path: '$.pruning.confirmed' };
+  if (id === 'TECH-23') return { stage: 'L1-L3', field: expected.path };
+  return undefined;
+}
+
 function verifyActualCase(id, expected, context) {
-  const { result, threw, inputMutated, resultMutated, repeatedResult, comparisonResult } = context;
-  if (threw || inputMutated || resultMutated || !resultEnvelopeInvariant(result)) return false;
+  const { result, threw, inputMutated, resultMutated, repeatedResult, comparisonResult, inputBefore } = context;
+  if (threw || inputMutated || resultMutated || !envelopeCommonExact(result)) return false;
 
   const errorCode = expectedErrorCode(id, expected);
   const detailedCandidateValidation = [
     'SCH-01', 'SCH-04', 'SCH-05', 'SCH-06', 'SCH-07', 'SCH-08', 'SCH-09',
     'SCH-10', 'SCH-11', 'SCH-12', 'SCH-13',
   ].includes(id);
-  if (errorCode && !detailedCandidateValidation) return recursivelyContains(result, errorCode);
+  const exactTopErrorIds = [
+    'KG-04', 'CAT-01', 'STR-01', 'HYP-02', 'TECH-01', 'TECH-02', 'TECH-03',
+    'TECH-04', 'TECH-05', 'TECH-06', 'TECH-07', 'TECH-08', 'TECH-09', 'TECH-10',
+    'TECH-12', 'TECH-23',
+  ];
+  if (id === 'TECH-02' && expected.scope === 'catalog.candidates[]') {
+    const matches = candidateBlockersByCodeExact(result, 'CANDIDATE_STRUCTURE_INVALID');
+    return matches.length > 0
+      && matches.every((item) => item.blocker.params.reason === 'unknown_property')
+      && !codeAtAnyNominalPath(result, 'INPUT_STRUCTURE_INVALID');
+  }
+  if (errorCode && !detailedCandidateValidation && exactTopErrorIds.includes(id)) {
+    return topFailureExact(result, errorCode, expectedTopParamsFor(id, expected));
+  }
+
+  if (id === 'KG-02') return noEvaluableBlockersExact(result, 'GROUPING_FACTOR_MISSING');
+  if (id === 'GRD-04') {
+    if (['grouping_missing', 'fault_imbalance_block', 'invalid_provenance'].includes(expected.condition)) {
+      return noEvaluableBlockersExact(result, expected.l0ErrorCode);
+    }
+    const matches = candidateBlockersByCodeExact(result, expected.l0ErrorCode);
+    return matches.length > 0;
+  }
 
   if (['SCH-01', 'SCH-04', 'SCH-05', 'SCH-11', 'SCH-12'].includes(id)) {
     if (id === 'SCH-11' && expected.collection === 'invalidFields') {
-      return findObject(result, (object) => Array.isArray(object.invalidFields)) !== null
-        && recursivelyContains(result, expected.errorCode);
+      const invalid = expected.situation === 'impedance_re_null'
+        ? [{ path: 'impedance_ohm.re', reason: 'NOT_NUMBER', observedType: 'null' }]
+        : [{ path: 'resistance_ohm', reason: 'NOT_NUMBER', observedType: 'string' }];
+      return catalogIssueExact(result, 'CANDIDATE_IMPEDANCE_VALUE_INVALID', { invalidFields: invalid });
     }
-    const error = findObject(result, (object) => Array.isArray(object.missingFields));
-    const wanted = expected.missingFields;
-    return error !== null && (!wanted || JSON.stringify(error.missingFields) === JSON.stringify(wanted));
+    const missingFields = expected.missingFields || {
+      impedance_without_re: ['impedance_ohm.re'],
+      resistance_without_reactance: ['reactance_ohm'],
+    }[expected.situation];
+    return catalogIssueExact(result, 'CANDIDATE_INCOMPLETE', { missingFields });
   }
-  if (['SCH-06', 'SCH-07'].includes(id)) return recursivelyContains(result, 'CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT');
+  if (['SCH-06', 'SCH-07'].includes(id)) {
+    const candidate = context.inputBefore.catalog.candidates[0];
+    const fields = ['impedance_ohm', 'resistance_ohm', 'reactance_ohm'].filter((field) => hasOwn(candidate, field));
+    return catalogIssueExact(result, 'CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT', { presentFields: fields });
+  }
   if (['SCH-08', 'SCH-09', 'SCH-10'].includes(id)) {
-    const error = findObject(result, (object) => Array.isArray(object.invalidFields));
-    if (!error) return false;
-    const wanted = expected.invalidFields || expected.invalidFieldOrder?.map((pathName) => ({ path: pathName }));
-    return !wanted || wanted.every((item, index) => error.invalidFields[index]?.path === item.path);
+    const wanted = expected.invalidFields || [
+      { path: 'impedance_ohm.re', reason: 'NOT_NUMBER', observedType: 'null' },
+      { path: 'impedance_ohm.im', reason: 'NOT_NUMBER', observedType: 'string' },
+    ];
+    return catalogIssueExact(result, 'CANDIDATE_IMPEDANCE_VALUE_INVALID', { invalidFields: wanted });
   }
   if (id === 'SCH-13') {
     return expected.permutationsEquivalentFor === 'valid'
       ? successEnvelope(result)
-      : recursivelyContainsAll(result, {
-          incomplete: ['CANDIDATE_INCOMPLETE'],
-          conflict: ['CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT'],
-          value_invalid: ['CANDIDATE_IMPEDANCE_VALUE_INVALID'],
-        }[expected.permutationsEquivalentFor]);
+      : {
+          incomplete: () => catalogIssueExact(result, 'CANDIDATE_INCOMPLETE', { missingFields: ['material'] }),
+          conflict: () => catalogIssueExact(result, 'CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT', { presentFields: ['impedance_ohm', 'resistance_ohm'] }),
+          value_invalid: () => catalogIssueExact(result, 'CANDIDATE_IMPEDANCE_VALUE_INVALID', { invalidFields: [{ path: 'impedance_ohm.re', reason: 'NOT_NUMBER', observedType: 'string' }] }),
+        }[expected.permutationsEquivalentFor]();
   }
   if (id === 'SCH-14') {
-    const candidate = evaluated(result, '1 x 150');
-    return successEnvelope(result) && candidate !== null && recursivelyContains(candidate, 0.015) && recursivelyContains(candidate, 0.008);
+    const candidate = evaluated(result, '1x150');
+    return successEnvelope(result) && candidate !== null
+      && candidate.status === 'REJECTED'
+      && candidate.l0CallCount === 1
+      && candidate.blockers.length === 0;
   }
 
   if (id === 'CAL-01' || id === 'CAL-02' || id === 'CAL-03') {
     const candidate = evaluated(result, expected.candidateId);
     if (!candidate) return false;
     if (hasOwn(expected, 'valid') && (candidate.status === 'VALID') !== expected.valid) return false;
-    if (expected.dominant && !recursivelyContainsAll(candidate, expected.dominant.split(','))) return false;
+    if (expected.dominant && !deepEqual(candidate.dominantCriteria, expected.dominant.split(','))) return false;
     if (expected.ampacity_A && !closeTo(candidate.ampacity?.admissibleCurrent_A, expected.ampacity_A)) return false;
     if (expected.voltageDrop_percent && !closeTo(candidate.voltageDrop?.actualPercent, expected.voltageDrop_percent)) return false;
     return true;
   }
-  if (id === 'CAL-04') return recursivelyContainsAll(result, ['EXCESSIVE_COUNT', 4.213]);
-  if (id === 'GRD-02') return recursivelyContains(result, 'B-04') && !recursivelyContains(result, 'recommended_busway');
+  if (id === 'CAL-04') {
+    if (!successEnvelope(result) || result.warnings.length !== 1) return false;
+    const warning = result.warnings[0];
+    return warningExact(warning)
+      && warning.candidateId === '4x240'
+      && closeTo(warning.continuousProxy, expected.continuousProxy)
+      && warning.continuousProxyDisplay === expected.continuousProxyDisplay
+      && warning.discreteRequired === 5
+      && warning.maxParallelCount === 4
+      && warning.continuousProxy !== warning.continuousProxyDisplay;
+  }
+  if (id === 'GRD-02') return successEnvelope(result)
+    && result.warnings.length === 1
+    && result.warnings[0].note === 'evaluate_busway_qualitatively'
+    && result.warnings[0].normativeThreshold === null;
   if (id === 'UNI-01') return successEnvelope(result) && result.data.evaluatedCandidates.length === 20;
   if (id === 'UNI-02') return successEnvelope(result)
     && result.data.evaluatedCandidates.length === 20
@@ -682,23 +947,34 @@ function verifyActualCase(id, expected, context) {
   }
   if (id === 'CAL-05') return successEnvelope(result)
     && result.data.providedCombination !== null
-    && result.data.installableSelection === null;
+    && result.data.providedCombination.section_mm2 === 150
+    && result.data.providedCombination.nParallel === 3
+    && result.data.installableSelection === null
+    && !codeAtAnyNominalPath(result, 'PROVIDED_COMBINATION_INVALID');
   if (id === 'HYP-01') return successEnvelope(result)
-    && result.data.evaluatedCandidates.every((candidate) => candidate.status === 'BLOCKED' || recursivelyContains(candidate, 1));
+    && result.data.evaluatedCandidates.every((candidate) => candidate.status === 'BLOCKED' || candidate.l0CallCount === 1);
   if (id === 'CAL-06') {
-    const candidate = evaluated(result, '2 x 185');
+    const candidate = evaluated(result, '2x185');
     return candidate !== null
       && closeTo(candidate.shortCircuit?.minimumSectionContinuous_mm2, expected.minimumSection_mm2)
       && candidate.shortCircuit?.passes === expected.shortCircuitPass;
   }
   if (id === 'OUT-01') return successEnvelope(result)
-    && isPlainObject(result.data.presentationModel)
-    && recursivelyContains(result.data.presentationModel, NOTICE)
+    && sameKeys(result.data.presentationModel, ['notice', 'objective', 'analysisMode', 'installationAuthorized', 'heading', 'cards'])
+    && result.data.presentationModel.notice === NOTICE
+    && result.data.presentationModel.installationAuthorized === false
+    && Array.isArray(result.data.presentationModel.cards)
     && prohibitedCandidateFieldsAbsent(result);
 
   if (id === 'TECH-11') return successEnvelope(result)
     && result.data.universe?.prunedCatalogEntries?.some((item) => item.section_mm2 === 240)
     && result.data.evaluatedCandidates.length === 16;
+  if (id === 'TECH-13') {
+    const matches = candidateBlockersByCodeExact(result, 'CANDIDATE_STRUCTURE_INVALID');
+    return matches.length > 0
+      && !codeAtAnyNominalPath(result, 'INPUT_STRUCTURE_INVALID')
+      && !hasDeepProperty(result, 'relatedCodes');
+  }
   if (id === 'TECH-14') {
     if (expected.condition === 'candidate_id_uniqueness') {
       const ids = result.data?.evaluatedCandidates?.map((candidate) => candidate.candidateId) || [];
@@ -706,12 +982,60 @@ function verifyActualCase(id, expected, context) {
     }
     if (expected.condition === 'reference_temperature_unit') return successEnvelope(result)
       && result.data.presentationModel
-      && recursivelyContains(result.data.presentationModel, 'degC');
+      && result.data.presentationModel.cards.every((card) => card.catalogMetadata?.referenceTemperatureUnit === 'degC');
+    const matches = candidateBlockersByCodeExact(result, 'CANDIDATE_STRUCTURE_INVALID');
+    if (expected.condition === 'duplicate_section') {
+      const affected = new Set(matches.filter((item) => item.blocker.params.reason === 'duplicate_section').map((item) => item.candidateId));
+      return affected.size === 8;
+    }
+    return matches.length === 4
+      && matches.every((item) => item.blocker.params.reason === 'catalog_heterogeneous');
   }
-  if (id === 'TECH-16') return successEnvelope(result) && result.data.analysisMode === 'MODO_AVANCADO';
+  if (id === 'TECH-15') return noEvaluableBlockersExact(result, 'GROUPING_FACTOR_INVALID');
+  if (id === 'TECH-16') return successEnvelope(result)
+    && result.data.analysisMode === 'MODO_AVANCADO'
+    && !codeAtAnyNominalPath(result, 'ADVANCED_BRANCHES_INVALID')
+    && !hasDeepProperty(result, 'enforcedRuleCode');
+  if (id === 'TECH-17') {
+    if (expected.defect === 'map_not_array') {
+      return topFailureExact(result, 'ADVANCED_BRANCHES_INVALID', { reason: 'map_not_array' });
+    }
+    if (expected.defect === 'description_missing') {
+      return noEvaluableBlockersExact(result, 'ADVANCED_BRANCHES_INVALID', 'description_missing');
+    }
+    const candidateId = expected.defect === 'branch_id_duplicate' ? '2x95' : '1x95';
+    const params = { candidateId, reason: expected.defect };
+    if (expected.defect === 'branch_count_mismatch') {
+      params.expected = 1;
+      params.observed = 0;
+    }
+    if (expected.defect === 'branch_id_duplicate') params.observed = 'P1';
+    if (expected.defect === 'branch_impedance_invalid') params.observed = 'NON_FINITE';
+    if (expected.defect === 'branch_provenance_invalid') params.observed = 'UNKNOWN';
+    return candidateBlockerExact(result, candidateId, 'ADVANCED_BRANCHES_INVALID', params)
+      && !hasDeepProperty(result, 'enforcedRuleCode');
+  }
+  if (id === 'TECH-18') {
+    const params = {
+      section_mm2: inputBefore.providedCombination.section_mm2,
+      nParallel: inputBefore.providedCombination.nParallel,
+    };
+    return topFailureExact(result, 'PROVIDED_COMBINATION_INVALID', params);
+  }
+  if (id === 'TECH-19') {
+    if (expected.condition === 'all_calculated_rejected') return successEnvelope(result)
+      && result.data.candidateAlternatives.length === 0
+      && result.data.rejectedCandidates.length === result.data.evaluatedCandidates.length
+      && result.data.objectiveDisposition === 'NO_VALID_ALTERNATIVE';
+    return noEvaluableBlockersExact(result, 'GROUPING_FACTOR_MISSING');
+  }
   if (id === 'TECH-20') {
     const calls = result.data?.evaluatedCandidates?.map((candidate) => candidate.l0CallCount) || [];
-    if (expected.condition === 'preparation_blocked') return result.ok === false && calls.length === 0;
+    if (expected.condition === 'preparation_blocked') return topFailureExact(
+      result,
+      'CATALOG_CONFIRMATION_MISSING',
+      { path: '$.catalog.confirmed' },
+    ) && calls.length === 0;
     return successEnvelope(result) && calls.length > 0 && calls.every((count) => count === 1)
       && /calculateCablingBTParallelExperimental\s*\(/.test(moduleSource);
   }
@@ -719,7 +1043,7 @@ function verifyActualCase(id, expected, context) {
     if (expected.property === 'same_input_same_output') return JSON.stringify(result, jsonReplacer) === JSON.stringify(repeatedResult, jsonReplacer);
     if (expected.property === 'input_not_mutated') return !inputMutated;
     if (expected.property === 'l0_envelope_not_mutated') return !resultMutated;
-    return !recursivelyContains(result, 'console_side_effect');
+    return context.consoleEvents.length === 0;
   }
   if (id === 'TECH-22') return comparisonResult !== null
     && JSON.stringify(result, jsonReplacer) === JSON.stringify(comparisonResult, jsonReplacer);
@@ -730,11 +1054,20 @@ function verifyActualCase(id, expected, context) {
       && !candidate.dominantCriteria.includes('CURTO')
       && allFiniteJsonNumbers(result);
   }
-  if (id === 'TECH-25') return successEnvelope(result)
-    && exactRootKeys(result, true)
-    && result.data.evaluatedCandidates.length === result.data.candidateAlternatives.length + result.data.rejectedCandidates.length
-    && prohibitedCandidateFieldsAbsent(result);
-  if (id === 'TECH-26') return failureEnvelope(result, 'GLOBAL_METADATA_MISSING')
+  if (id === 'TECH-25') {
+    if (!successEnvelope(result)
+        || !exactRootKeys(result, true)
+        || result.data.evaluatedCandidates.length !== result.data.candidateAlternatives.length + result.data.rejectedCandidates.length
+        || !prohibitedCandidateFieldsAbsent(result)) return false;
+    if (expected.schemaArea === 'warning_raw_display_schema') {
+      return result.warnings.length === 1
+        && warningExact(result.warnings[0])
+        && closeTo(result.warnings[0].continuousProxy, 4.213483146067416)
+        && result.warnings[0].continuousProxyDisplay === 4.213;
+    }
+    return result.warnings.length === 0;
+  }
+  if (id === 'TECH-26') return topFailureExact(result, 'GLOBAL_METADATA_MISSING', { paths: ['$.lineVoltage_V'] })
     && exactRootKeys(result, false);
 
   if (id === 'GRD-01') return successEnvelope(result) && !/2\.25\s*\/\s*[A-Za-z]/.test(moduleSource);
@@ -778,8 +1111,19 @@ function executeReadyCase(id, item, caseIndex) {
     repeatedResult,
     comparisonResult,
     consoleEvents,
+    inputBefore,
   };
-  const compliant = error === null && consoleEvents.length === 0 && item.verify(context) === true;
+  let verificationError = null;
+  let verified = false;
+  try {
+    verified = item.verify(context) === true;
+  } catch (caught) {
+    verificationError = caught;
+  }
+  const compliant = error === null
+    && verificationError === null
+    && consoleEvents.length === 0
+    && verified;
   return {
     caseId: item.caseId,
     classification: compliant ? 'PASS' : 'FUNCTIONAL_FAILURE',
@@ -791,6 +1135,7 @@ function executeReadyCase(id, item, caseIndex) {
       input: inputBefore,
       threw: error !== null,
       error: error ? jsonSafe(error) : null,
+      verificationError: verificationError ? jsonSafe(verificationError) : null,
       result: jsonSafe(result),
       inputMutated: context.inputMutated,
       resultMutated: context.resultMutated,
@@ -889,46 +1234,46 @@ const scientific = [
   contract('GRD-01', 'scientific', 'engineering values are never silently derived', matrix('GRD-01', ['resistance', 'reactance', 'ampacity', 'adiabaticK', 'groupingFactor'], (quantity) => ({ quantity, allowedSources: ['catalog', 'technical_user_input', 'confirmed_ASSUMPTION_ONLY'], silentDerivation: false }))),
 
   contract('CAL-01', 'scientific', 'base fixture enumerates alternatives and ampacity dominance', matrix('CAL-01', [
-    ['2 x 240', true, 'AMPACIDADE', 712, 1.549], ['3 x 150', true, 'AMPACIDADE', 792, 1.471],
-    ['4 x 120', true, 'AMPACIDADE', 912, null], ['2 x 95', false, 'AMPACIDADE,QUEDA', null, null],
+    ['2x240', true, 'AMPACIDADE', 712, 1.549], ['3x150', true, 'AMPACIDADE', 792, 1.471],
+    ['4x120', true, 'AMPACIDADE', 912, null], ['2x95', false, 'AMPACIDADE,QUEDA', null, null],
   ], ([candidateId, valid, dominant, ampacity_A, voltageDrop_percent]) => ({ candidateId, valid, dominant, ampacity_A, voltageDrop_percent, toleranceRelative: 0.005 })), ['real L0 called once per evaluable combination']),
-  contract('CAL-02', 'scientific', 'single valid candidate remains a candidate only', matrix('CAL-02', [['1 x 240', false], ['2 x 240', true]], ([candidateId, valid]) => ({ candidateId, valid, installableSelection: null }))),
+  contract('CAL-02', 'scientific', 'single valid candidate remains a candidate only', matrix('CAL-02', [['1x240', false], ['2x240', true]], ([candidateId, valid]) => ({ candidateId, valid, installableSelection: null }))),
   contract('CAL-03', 'scientific', 'each scientific criterion can dominate', matrix('CAL-03', [
-    ['base_600A_3percent', '3 x 150', 'AMPACIDADE'],
-    ['base_600A_1.6percent', '3 x 150', 'QUEDA'],
-    ['500A_40kA_1s', '2 x 185', 'CURTO'],
+    ['base_600A_3percent', '3x150', 'AMPACIDADE'],
+    ['base_600A_1.6percent', '3x150', 'QUEDA'],
+    ['500A_40kA_1s', '2x185', 'CURTO'],
   ], ([scenario, candidateId, dominant]) => ({ scenario, candidateId, dominant }))),
-  contract('CAL-04', 'scientific', 'excessive parallel count is explicit', one('CAL-04', { totalLoadCurrent_A: 1500, maxParallelCount: 4, candidate: '4 x 240', ampacity_A: 1424, continuousProxy: 4.213, discreteRequired: 5, errorCode: 'EXCESSIVE_COUNT' })),
+  contract('CAL-04', 'scientific', 'excessive parallel count is explicit', one('CAL-04', { totalLoadCurrent_A: 1500, maxParallelCount: 4, candidate: '4x240', ampacity_A: 1424, continuousProxy: 4.213483146067416, continuousProxyDisplay: 4.213, discreteRequired: 5, errorCode: 'EXCESSIVE_COUNT' })),
   contract('GRD-02', 'scientific', 'busway observation is qualitative only', one('GRD-02', { totalLoadCurrent_A: 1500, note: 'evaluate_busway_qualitatively', commercialRecommendation: null, normativeThreshold: null })),
 
   contract('UNI-01', 'scientific', 'the complete Cartesian universe is evaluated', one('UNI-01', { sections_mm2: [95, 120, 150, 185, 240], nParallel: [1, 2, 3, 4], evaluatedCandidates: 20, silentPruning: false })),
   contract('UNI-02', 'scientific', 'universe partitions reconcile exactly', one('UNI-02', { evaluatedCandidates: 20, candidateAlternatives: 11, rejectedCandidates: 9, nonDominatedAlternatives: 11, unionReconciles: true, frontierSubset: true })),
   contract('UNI-03', 'scientific', 'inventory contains all eleven valid alternatives', matrix('UNI-03', [
-    ['2 x 185', 2, 370, 0.013333], ['2 x 240', 2, 480, 0.186667],
-    ['3 x 120', 3, 360, 0.14], ['3 x 150', 3, 450, 0.32],
-    ['3 x 185', 3, 555, 0.52], ['3 x 240', 3, 720, 0.655766],
-    ['4 x 95', 4, 380, 0.28], ['4 x 120', 4, 480, 0.52],
-    ['4 x 150', 4, 600, 0.632218], ['4 x 185', 4, 740, 0.687515],
-    ['4 x 240', 4, 960, 0.741824],
+    ['2x185', 2, 370, 0.013333], ['2x240', 2, 480, 0.186667],
+    ['3x120', 3, 360, 0.14], ['3x150', 3, 450, 0.32],
+    ['3x185', 3, 555, 0.52], ['3x240', 3, 720, 0.655766],
+    ['4x95', 4, 380, 0.28], ['4x120', 4, 480, 0.52],
+    ['4x150', 4, 600, 0.632218], ['4x185', 4, 740, 0.687515],
+    ['4x240', 4, 960, 0.741824],
   ], ([candidateId, nParallel, totalCopper_mm2, minimumMargin]) => ({ candidateId, nParallel, totalCopper_mm2, minimumMargin, toleranceRelative: 0.005 }))),
   contract('UNI-04', 'scientific', 'inventory contains all nine rejected alternatives', matrix('UNI-04', [
-    ['1 x 95', ['AMPACIDADE', 'QUEDA']], ['1 x 120', ['AMPACIDADE', 'QUEDA']],
-    ['1 x 150', ['AMPACIDADE', 'QUEDA']], ['1 x 185', ['AMPACIDADE', 'QUEDA']],
-    ['1 x 240', ['AMPACIDADE', 'QUEDA']], ['2 x 95', ['AMPACIDADE', 'QUEDA']],
-    ['2 x 120', ['AMPACIDADE']], ['2 x 150', ['AMPACIDADE']], ['3 x 95', ['AMPACIDADE']],
+    ['1x95', ['AMPACIDADE', 'QUEDA']], ['1x120', ['AMPACIDADE', 'QUEDA']],
+    ['1x150', ['AMPACIDADE', 'QUEDA']], ['1x185', ['AMPACIDADE', 'QUEDA']],
+    ['1x240', ['AMPACIDADE', 'QUEDA']], ['2x95', ['AMPACIDADE', 'QUEDA']],
+    ['2x120', ['AMPACIDADE']], ['2x150', ['AMPACIDADE']], ['3x95', ['AMPACIDADE']],
   ], ([candidateId, failedCriteria]) => ({ candidateId, failedCriteria, l0Blockers: [] }))),
-  contract('UNI-05', 'scientific', 'formerly omitted combinations remain in the universe', matrix('UNI-05', ['2 x 185', '3 x 120', '3 x 185', '3 x 240', '4 x 95', '4 x 150', '4 x 185', '4 x 240'], (candidateId) => ({ candidateId, present: true, evaluated: true }))),
+  contract('UNI-05', 'scientific', 'formerly omitted combinations remain in the universe', matrix('UNI-05', ['2x185', '3x120', '3x185', '3x240', '4x95', '4x150', '4x185', '4x240'], (candidateId) => ({ candidateId, present: true, evaluated: true }))),
   contract('FRN-01', 'scientific', 'all eleven valid alternatives are nondominated', one('FRN-01', { nonDominatedAlternatives: 11, electedInstallable: false, comparator: ['nParallel:exact:min', 'totalCopper_mm2:exact:min', 'minimumMargin:tolerance:max'] })),
   contract('FRN-02', 'scientific', 'frontier comparator observes tolerance boundary', matrix('FRN-02', [[0.52, 0.520001, true], [0.013333, 0.186667, false]], ([a, b, approximatelyEqual]) => ({ a, b, approximatelyEqual, relativeTolerance: 0.005, epsilon: 1e-12 }))),
 
   contract('OBJ-01', 'scientific', 'each objective has a deterministic first presentation item', matrix('OBJ-01', [
-    ['NONE', '2 x 185'], ['MIN_PARALLEL_COUNT', '2 x 240'],
-    ['MIN_TOTAL_COPPER', '3 x 120'], ['MAX_MINIMUM_MARGIN', '4 x 240'],
+    ['NONE', '2x185'], ['MIN_PARALLEL_COUNT', '2x240'],
+    ['MIN_TOTAL_COPPER', '3x120'], ['MAX_MINIMUM_MARGIN', '4x240'],
   ], ([objective, first]) => ({ objective, first, installable: false }))),
-  contract('OBJ-02', 'scientific', 'minimum parallel count tie uses decreasing margin', one('OBJ-02', { objective: 'MIN_PARALLEL_COUNT', order: ['2 x 240', '2 x 185'], primaryTie: 2, tieBreak: 'minimumMargin_desc' })),
-  contract('OBJ-03', 'scientific', 'minimum total copper starts with 3 x 120', one('OBJ-03', { objective: 'MIN_TOTAL_COPPER', first: '3 x 120', totalCopper_mm2: 360 })),
-  contract('OBJ-04', 'scientific', 'maximum minimum margin starts with 4 x 240', one('OBJ-04', { objective: 'MAX_MINIMUM_MARGIN', first: '4 x 240', minimumMargin: 0.741824 })),
-  contract('OBJ-05', 'scientific', 'NONE uses deterministic presentation order without election', one('OBJ-05', { objective: 'NONE', first: '2 x 185', ordering: ['nParallel_asc', 'section_mm2_asc', 'candidateId_asc'], status: ['NO_CANDIDATE_ELECTED', 'PRESENTATION_ORDER_ONLY'] })),
+  contract('OBJ-02', 'scientific', 'minimum parallel count tie uses decreasing margin', one('OBJ-02', { objective: 'MIN_PARALLEL_COUNT', order: ['2x240', '2x185'], primaryTie: 2, tieBreak: 'minimumMargin_desc' })),
+  contract('OBJ-03', 'scientific', 'minimum total copper starts with 3 x 120', one('OBJ-03', { objective: 'MIN_TOTAL_COPPER', first: '3x120', totalCopper_mm2: 360 })),
+  contract('OBJ-04', 'scientific', 'maximum minimum margin starts with 4 x 240', one('OBJ-04', { objective: 'MAX_MINIMUM_MARGIN', first: '4x240', minimumMargin: 0.741824 })),
+  contract('OBJ-05', 'scientific', 'NONE uses deterministic presentation order without election', one('OBJ-05', { objective: 'NONE', first: '2x185', ordering: ['nParallel_asc', 'section_mm2_asc', 'candidateId_asc'], status: ['NO_CANDIDATE_ELECTED', 'PRESENTATION_ORDER_ONLY'] })),
   contract('OBJ-06', 'scientific', 'no objective creates an installable selection', matrix('OBJ-06', ['NONE', 'MIN_PARALLEL_COUNT', 'MIN_TOTAL_COPPER', 'MAX_MINIMUM_MARGIN'], (objective) => ({ objective, installableSelection: null, installationAuthorized: false, blocker: 'DISCRETE_SELECTION_BLOCKED' }))),
   contract('GRD-03', 'scientific', 'continuous count proxy is never installable', one('GRD-03', { discreteOnly: true, minimumDiscrete: 1, continuousProxyPurpose: 'sensitivity', installableSelection: null, discreteSelectionBlocked: true })),
   contract('CAL-05', 'scientific', 'provided combination is evaluated without promotion', one('CAL-05', { providedCombination: { section_mm2: 150, nParallel: 3 }, returnedAnalysis: true, installableSelection: null })),
@@ -941,22 +1286,22 @@ const scientific = [
   ], ([condition, errorCode]) => ({ condition, l0ErrorCode: errorCode, usableNumberProduced: false }))),
   contract('CAL-06', 'scientific', 'deltaFault remains independent from deltaLoad', matrix('CAL-06', [
     ['EXPLICIT_ASSUMPTION', 1.15, 150, true], ['CONSERVATIVE_SINGLE_BRANCH', null, 260.87, false],
-  ], ([mode, deltaFault, minimumSection_mm2, shortCircuitPass]) => ({ candidateId: '2 x 185', mode, deltaFault, minimumSection_mm2, shortCircuitPass, deltaLoadIndependent: true }))),
+  ], ([mode, deltaFault, minimumSection_mm2, shortCircuitPass]) => ({ candidateId: '2x185', mode, deltaFault, minimumSection_mm2, shortCircuitPass, deltaLoadIndependent: true }))),
   contract('OUT-01', 'scientific', 'human model is explicitly preliminary and noncommercial', one('OUT-01', { heading: 'ALTERNATIVA MATEMÁTICA CANDIDATA', requiredSections: ['Ampacidade', 'Queda', 'Curto', 'Critério dominante', 'Objetivo ativo', 'Hipóteses', 'Bloqueios'], installationAuthorized: 'NÃO', forbiddenTerms: ['recomendado', 'selecionado', 'dimensionamento final'] })),
   contract('GRD-05', 'scientific', 'productive, eligibility, and IEC requests are refused', matrix('GRD-05', ['project_purchase_installation', 'implementation_eligibility', 'IEC_conformity'], (request) => ({ request, refused: true, productionAllowed: false, state: 'EXPERIMENTAL_PRELIMINAR_NAO_CANONICO', blocker: 'B-06' }))),
 ];
 
 const technical = [
   contract('TECH-01', 'technical', 'root input must be a plain object', matrix('TECH-01', ['undefined', 'null', 'array', 'string', 'number', 'boolean'], (observedType) => ({ observedType, errorCode: 'INPUT_STRUCTURE_INVALID', reason: 'root_not_plain_object' }))),
-  contract('TECH-02', 'technical', 'unknown properties are rejected at every closed-schema scope', matrix('TECH-02', ['root', 'catalog', 'catalog.candidates[]', 'grouping', 'fault', 'advancedBranchesByCombination[]'], (scope) => ({ scope, errorCode: 'INPUT_STRUCTURE_INVALID', reason: 'unexpected_property' }))),
+  contract('TECH-02', 'technical', 'unknown properties are rejected at every closed-schema scope', matrix('TECH-02', ['root', 'catalog', 'catalog.candidates[]', 'grouping', 'fault', 'advancedBranchesByCombination[]'], (scope) => ({ scope, errorCode: scope === 'catalog.candidates[]' ? 'CANDIDATE_STRUCTURE_INVALID' : 'INPUT_STRUCTURE_INVALID', reason: 'unexpected_property' }))),
   contract('TECH-03', 'technical', 'contract version is mandatory and exact', matrix('TECH-03', ['missing', 'wrong'], (state) => ({ state, expectedVersion: CONTRACT_VERSION, errorCode: 'CONTRACT_VERSION_UNSUPPORTED' }))),
   contract('TECH-04', 'technical', 'global numeric fields reject invalid types and domains', matrix('TECH-04', [
     ['totalLoadCurrent_A', 'string'], ['totalLoadCurrent_A', 'NaN'], ['lineVoltage_V', 'Infinity'],
     ['maximumVoltageDrop_percent', 'zero'], ['maxParallelCount', 'fractional'], ['nCircuits', 'zero'],
     ['fault.totalFaultCurrent_A', 'negative'], ['fault.clearingTime_s', 'boolean'],
   ], ([field, invalid]) => ({ field, invalid, errorCode: 'GLOBAL_METADATA_INVALID' }))),
-  contract('TECH-05', 'technical', 'analysis mode is a closed enumeration', matrix('TECH-05', ['missing', 'UNKNOWN_MODE'], (value) => ({ value, allowed: ['MODO_GUIADO_PRELIMINAR', 'MODO_AVANCADO'], errorCode: 'ANALYSIS_MODE_INVALID' }))),
-  contract('TECH-06', 'technical', 'objective is a closed enumeration', matrix('TECH-06', ['missing', 'UNKNOWN_OBJECTIVE'], (value) => ({ value, allowed: ['NONE', 'MIN_PARALLEL_COUNT', 'MIN_TOTAL_COPPER', 'MAX_MINIMUM_MARGIN'], errorCode: 'OBJECTIVE_INVALID' }))),
+  contract('TECH-05', 'technical', 'analysis mode is a closed enumeration', matrix('TECH-05', [null, 'UNKNOWN_MODE'], (value) => ({ value, allowed: ['MODO_GUIADO_PRELIMINAR', 'MODO_AVANCADO'], errorCode: 'ANALYSIS_MODE_INVALID' }))),
+  contract('TECH-06', 'technical', 'objective is a closed enumeration', matrix('TECH-06', [null, 'UNKNOWN_OBJECTIVE'], (value) => ({ value, allowed: ['NONE', 'MIN_PARALLEL_COUNT', 'MIN_TOTAL_COPPER', 'MAX_MINIMUM_MARGIN'], errorCode: 'OBJECTIVE_INVALID' }))),
   contract('TECH-07', 'technical', 'catalog mode is a closed enumeration', one('TECH-07', { invalidMode: 'UNKNOWN_CATALOG', errorCode: 'CATALOG_MODE_INVALID' })),
   contract('TECH-08', 'technical', 'grouping mode is a closed enumeration', one('TECH-08', { invalidMode: 'UNKNOWN_GROUPING', allowed: ['CANDIDATE_SPECIFIC', 'GROUPING_MATRIX', 'LAB_CONSTANT_CONFIRMED'], errorCode: 'GROUPING_MODE_INVALID' })),
   contract('TECH-09', 'technical', 'identified secondary catalog requires traceability', matrix('TECH-09', ['source', 'sourceVersion', 'provenance'], (field) => ({ mode: 'CATALOGO_SECUNDARIO_IDENTIFICADO', removedField: field, errorCode: 'CATALOG_TRACEABILITY_MISSING' }))),
@@ -984,7 +1329,7 @@ const technical = [
     ['outside_universe', 'PROVIDED_COMBINATION_INVALID'],
   ], ([defect, errorCode]) => ({ defect, errorCode }))),
   contract('TECH-19', 'technical', 'empty results distinguish calculated rejection from blocked evaluation', matrix('TECH-19', [
-    ['all_calculated_rejected', 'NO_VALID_CANDIDATE'], ['all_blocked', 'NO_EVALUABLE_COMBINATION'],
+    ['all_calculated_rejected', 'NO_VALID_ALTERNATIVE'], ['all_blocked', 'NO_EVALUABLE_COMBINATION'],
   ], ([condition, errorCode]) => ({ condition, errorCode }))),
   contract('TECH-20', 'technical', 'real L0 call count is exact', matrix('TECH-20', [
     ['evaluable_combinations', 'once_each'], ['preparation_blocked', 0],
@@ -999,7 +1344,7 @@ const technical = [
   ], ([pathName, expected]) => ({ path: pathName, expected, jsonFinite: true }))),
   contract('TECH-25', 'technical', 'success envelope is closed and reconciled', matrix('TECH-25', [
     'root_schema', 'data_schema', 'evaluatedCandidates_schema', 'candidateAlternatives_schema',
-    'rejectedCandidates_schema', 'nonDominatedAlternatives_schema', 'providedCombination_schema',
+    'rejectedCandidates_schema', 'nonDominatedAlternatives_schema', 'warning_raw_display_schema',
     'ten_permanent_guards', 'source_status_L0', 'array_reconciliation',
   ], (schemaArea) => ({ schemaArea, closed: true })), ['productionAllowed=false', 'installableSelection=null', 'installationAuthorized=false']),
   contract('TECH-26', 'technical', 'failure envelope follows closed Problem Details schema', matrix('TECH-26', [
