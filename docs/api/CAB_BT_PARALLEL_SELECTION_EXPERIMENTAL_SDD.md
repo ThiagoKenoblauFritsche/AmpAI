@@ -1,5 +1,5 @@
 ---
-status: SDD_EXPERIMENTAL_RATIFICADO_PARA_RED_CORE
+status: SDD_EXPERIMENTAL_RATIFICADO_PARA_CORRECAO_DO_RED
 document_class: active
 authority: "@CTO"
 consumers:
@@ -8,9 +8,11 @@ consumers:
   - "@Senior_Frontend_Dev"
 lifecycle: "candidato até ratificação do Conselho; experimental enquanto a fonte primária integral estiver ausente"
 governanca: v7.3
-os: CAB-BT-PARALLEL-002-SDD-EXP
-classe: CHG-3 científica experimental
+os: CAB-BT-PARALLEL-002-SDD-EXP-R3
+classe: CHG-3 arquitetural/contratual experimental
 baseline_imutavel: 2b61627d8640fce91eb229ca522ae33a143671df
+baseline_git_da_correcao: 39d1b2c6b43a3f8a1a0f8ee8fcc03f03f234192d
+parecer_origem: CAB-BT-PARALLEL-002-CONTRACT-ORACLE-001
 baseline_main_de_origem: 83e24131c0cc09813be65a5fa269961b9cc80c5c
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
@@ -449,6 +451,14 @@ verificada em runtime porque JSON não representa `NaN` ou `Infinity`.
 `EXPLICIT_ASSUMPTION`. Em `CONSERVATIVE_SINGLE_BRANCH` e `BLOCK`, essas propriedades devem ser
 fisicamente omitidas, conforme o contrato L0.
 
+`providedCombination` é validada em duas fases. Tipo, propriedades, finitude e domínio básico são
+validados junto aos metadados globais; a pertença da seção ao catálogo retido e de `nParallel` ao universo
+formado é validada na etapa 18 do pipeline. Se o valor for `null`, o sucesso preserva `null`. Se a combinação
+for válida, o sucesso pode apenas ecoar a análise da combinação, sem elegê-la ou promovê-la. Qualquer seção
+ausente do catálogo retido, quantidade inválida ou combinação fora de `U` retorna imediatamente envelope de
+falha RFC 7807 com `PROVIDED_COMBINATION_INVALID`; esse código é proibido dentro de `data`, `warnings`,
+diagnósticos ou blockers de candidata em um envelope de sucesso.
+
 ### 4.4 Catálogo e representação de impedância
 
 Cada item possui exatamente dez campos escalares obrigatórios:
@@ -566,7 +576,33 @@ Ausência de apresentação/confirmacão retorna `GUIDED_HYPOTHESIS_UNCONFIRMED`
 - a impedância do item de catálogo continua validada/rastreada, mas **não** substitui nem completa os ramos
   avançados; `branches[]` é a única fonte de `Z_i` para L0 nesse modo.
 
-Ausência ou quantidade incorreta de ramos bloqueia a combinação como `ADVANCED_BRANCHES_INVALID`.
+Os caminhos nominais são fechados:
+
+| Natureza | Caminho contratual | `params` exatos |
+| --- | --- | --- |
+| mapa global não-array | falha de topo RFC 7807: `error` e `blockers[10]` | `{ reason: "map_not_array" }` |
+| combinação ausente no mapa | `data.evaluatedCandidates[i].blockers[j]` | `{ candidateId, reason: "combination_missing" }` |
+| descrição ausente/vazia | `data.evaluatedCandidates[i].blockers[j]` | `{ candidateId, reason: "description_missing" }` |
+| quantidade de ramos incompatível | `data.evaluatedCandidates[i].blockers[j]` | `{ candidateId, reason: "branch_count_mismatch", expected, observed }` |
+| ID de ramo duplicado | `data.evaluatedCandidates[i].blockers[j]` | `{ candidateId, reason: "branch_id_duplicate", observed }` |
+| impedância de ramo inválida | `data.evaluatedCandidates[i].blockers[j]` | `{ candidateId, reason: "branch_impedance_invalid", observed }` |
+| proveniência de ramo inválida | `data.evaluatedCandidates[i].blockers[j]` | `{ candidateId, reason: "branch_provenance_invalid", observed }` |
+
+Cada blocker de combinação é exatamente
+`{ code:"ADVANCED_BRANCHES_INVALID", params:<tabela>, severity:"blocker" }`, sem propriedade extra. Ele
+bloqueia somente a combinação correspondente e permanece em `rejectedCandidates` enquanto ao menos uma
+combinação for avaliável. O caso global `map_not_array` não forma universo e retorna imediatamente falha de
+topo com `data=null`, dez guardrails e o blocker específico na posição 11.
+
+Se todas as combinações forem bloqueadas, o envelope de topo passa a
+`NO_EVALUABLE_COMBINATION`. Seus params exatos são
+`{ evaluatedCount, blockersByCandidate }`; `blockersByCandidate[]` preserva cada `candidateId` e seu array de
+blockers exatos, inclusive `ADVANCED_BRANCHES_INVALID`, sem converter, ocultar ou promover esse código ao
+erro de topo. Para falhas de ramos avançados antes de qualquer chamada L0, `evaluatedCount=0`.
+
+Em `MODO_AVANCADO` válido, `ADVANCED_BRANCHES_INVALID` deve estar ausente de todo o envelope, inclusive
+`universe`, candidatos, blockers, warnings e diagnósticos. O contrato atual não define `enforcedRuleCode`
+nem reutiliza código de erro como telemetria positiva.
 
 ### 4.8 Poda e universo
 
@@ -605,7 +641,7 @@ Ordem obrigatória e observável:
 15. particionar e reconciliar o universo;
 16. computar a fronteira somente sobre válidas;
 17. ordenar todas as válidas pelo objetivo;
-18. resolver `providedCombination`, sem promovê-la;
+18. resolver `providedCombination`, sem promovê-la; valor inválido encerra em falha RFC 7807;
 19. validar finitude de todo resultado numérico;
 20. emitir Result Pattern imutável.
 
@@ -758,7 +794,27 @@ JSON Schema estrutural resumido do sucesso (os schemas específicos dos candidat
     },
     "assumptions": { "type": "array" },
     "blockers": { "type": "array", "minItems": 10 },
-    "warnings": { "type": "array" },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "code", "candidateId", "continuousProxy", "continuousProxyDisplay",
+          "discreteRequired", "maxParallelCount", "note", "normativeThreshold"
+        ],
+        "properties": {
+          "code": { "const": "EXCESSIVE_COUNT" },
+          "candidateId": { "type": "string", "minLength": 1 },
+          "continuousProxy": { "type": "number" },
+          "continuousProxyDisplay": { "type": "number" },
+          "discreteRequired": { "type": "integer", "minimum": 1 },
+          "maxParallelCount": { "type": "integer", "minimum": 1 },
+          "note": { "const": "evaluate_busway_qualitatively" },
+          "normativeThreshold": { "type": "null" }
+        }
+      }
+    },
     "sourceStatus": {
       "type": "object",
       "required": [
@@ -829,6 +885,15 @@ assumptionKeys[], blockerCodes[], notice
 A UI renderiza “2 × 240 mm² por fase”, os três critérios, dominante, hipóteses e bloqueios. Ela não pode
 substituir `firstInPresentationOrder` por “recomendado” nem ocultar alternativas válidas.
 
+### 9.3 Warning `EXCESSIVE_COUNT`
+
+`warnings[]` possui schema fechado e, nesta versão, aceita somente `EXCESSIVE_COUNT`. O campo
+`continuousProxy` contém o valor integral de precisão de máquina produzido pelo cálculo. O campo
+`continuousProxyDisplay` contém exclusivamente `round(continuousProxy, 3)` para apresentação. Todas as
+comparações, `discreteRequired`, margens, ordenação e fronteira usam apenas `continuousProxy`; o valor de
+apresentação nunca retroalimenta cálculo ou decisão. O RED verifica o valor bruto pela tolerância
+computacional já declarada e o valor apresentado por igualdade com o arredondamento a três casas.
+
 ## 10. Result Pattern e RFC 7807
 
 O envelope de falha é fechado pelo schema abaixo. Ele contém exatamente dez blockers permanentes e um
@@ -876,7 +941,7 @@ blocker específico da falha:
         { "contains": { "properties": { "code": { "const": "PRODUCTION_USE_BLOCKED" } }, "required": ["code"] } }
       ]
     },
-    "warnings": { "type": "array" },
+    "warnings": { "type": "array", "maxItems": 0 },
     "sourceStatus": {
       "type": "object",
       "additionalProperties": false,
@@ -910,7 +975,36 @@ blocker específico da falha:
         "severity": { "const": "error" }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "error": {
+            "properties": { "code": { "const": "PROVIDED_COMBINATION_INVALID" } },
+            "required": ["code"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "error": {
+            "properties": {
+              "params": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["section_mm2", "nParallel"],
+                "properties": {
+                  "section_mm2": {},
+                  "nParallel": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 
@@ -969,10 +1063,30 @@ Reconciliação vinculante:
    específicos da tentativa; o item permanente permanece sem esses params e não há objeto duplicado;
 6. todo envelope, inclusive falha estrutural, contém aviso integral, `productionAllowed=false`, fonte não
    canônica e conformidade falsa.
+7. `relatedCodes` é proibido em `error`, `params`, blockers, issues, warnings e diagnósticos; um código só
+   satisfaz o contrato no caminho nominal definido para ele.
+
+### 10.1 Falha `PROVIDED_COMBINATION_INVALID`
+
+Uma combinação informada com seção ausente do catálogo retido, `nParallel` inválido ou par fora do universo
+retorna falha de topo: `ok=false`, `classification="BLOCKED"`, `data=null`, `status=422`, exatamente dez
+guardrails permanentes e `blockers[10].code="PROVIDED_COMBINATION_INVALID"`. Os únicos params são, sem
+coerção nem propriedades extras:
+
+```json
+{
+  "section_mm2": "<valor recebido>",
+  "nParallel": "<valor recebido>"
+}
+```
+
+`error.params` e `blockers[10].params` são profundamente iguais. O envelope não contém `relatedCodes` nem
+`data.providedCombination.code`. Combinação válida é apenas ecoada/analisada no sucesso, sem erro e sem
+promoção; entrada `null` permanece `null`.
 
 ## 11. Catálogo determinístico de erros
 
-| Código | Condição | `params` mínimo |
+| Código | Condição | `params` exato |
 | --- | --- | --- |
 | `INPUT_STRUCTURE_INVALID` | raiz não objeto simples, container de tipo errado, propriedade desconhecida | `{ path, reason }` |
 | `CONTRACT_VERSION_UNSUPPORTED` | versão ausente/incorreta | `{ received, allowed }` |
@@ -994,7 +1108,7 @@ Reconciliação vinculante:
 | `GROUPING_FACTOR_INVALID` | `k_g` fora de `(0,1]` ou não finito | `{ candidateId, value }` |
 | `GROUPING_CONFIRMATION_MISSING` | constante laboratorial não confirmada | `{ path }` |
 | `GUIDED_HYPOTHESIS_UNCONFIRMED` | hipótese não exibida/confirmada/proveniente | `{ missing[] }` |
-| `ADVANCED_BRANCHES_INVALID` | mapa/descrição/ramos ausentes ou incompatíveis | `{ candidateId, reason, expected?, observed? }` |
+| `ADVANCED_BRANCHES_INVALID` | mapa/descrição/ramos ausentes ou incompatíveis | mapa global: `{ reason:"map_not_array" }`; combinação: schema exato da matriz §4.7 |
 | `PROVIDED_COMBINATION_INVALID` | combinação informada fora do catálogo/domínio | `{ section_mm2, nParallel }` |
 | `NO_EVALUABLE_COMBINATION` | todas as combinações bloquearam antes/depois de L0 | `{ evaluatedCount, blockersByCandidate[] }` |
 | `NUMERIC_RESULT_NON_FINITE` | resultado L1–L3 não finito fora do caso `Smin=0` tratado | `{ stage, field, candidateId? }` |
@@ -1003,6 +1117,13 @@ Reconciliação vinculante:
 
 Erros L0 mantêm o código e `params` originais dentro do candidato. A camada não troca
 `PARALLEL_Z_ZERO`, `FAULT_IMBALANCE_MISSING`, `GROUPING_FACTOR_MISSING` ou outro código L0 por erro genérico.
+Nenhum código aceita `relatedCodes`. `GLOBAL_METADATA_MISSING.params` contém exclusivamente `paths`;
+propriedade desconhecida em item usa exclusivamente `CANDIDATE_STRUCTURE_INVALID`; valor ou estrutura de
+impedância usa o único código primário determinado pela precedência. Problemas independentes acumuláveis são
+objetos separados no array contratual, nunca códigos embutidos em params de outro problema.
+`advancedBranchesByCombination` não-array é a exceção específica à regra genérica de container incorreto: a
+keyword de tipo nesse path resolve para `ADVANCED_BRANCHES_INVALID/map_not_array`, conforme §4.7, e não para
+`INPUT_STRUCTURE_INVALID`.
 
 ### 11.1 Precedência de validação
 
@@ -1098,6 +1219,31 @@ Schema mínimo do summary:
 }
 ```
 
+### 13.2.1 Oráculo contratual exato
+
+Os 74 relatórios contêm exatamente 244 subcasos únicos. Cada subcaso possui fixture determinístico, invoca a
+candidata real quando o módulo existe e decide `compliant` somente por caminhos contratuais exatos. Helpers de
+busca recursiva, incluindo `recursivelyContains` e `recursivelyContainsAll`, são proibidos em qualquer decisão
+de conformidade. Se existirem apenas para diagnóstico, seu resultado não pode influenciar relatório, subcaso
+ou summary.
+
+O oráculo exige simultaneamente:
+
+- schema fechado, contagem, ordem e propriedades exatas;
+- igualdade profunda de `params` e rejeição de propriedades extras;
+- código positivo somente no caminho nominal: erro de topo, `blockers[10]`, blocker/issue de candidata,
+  warning ou diagnóstico neutro são categorias distintas e não intercambiáveis;
+- ausência integral de códigos de erro em caminhos felizes;
+- `PROVIDED_COMBINATION_INVALID` inválido como falha de topo RFC 7807 e combinação válida sem código de erro;
+- `ADVANCED_BRANCHES_INVALID` no caminho exato do defeito e ausência integral em `MODO_AVANCADO` válido;
+- zero `relatedCodes` em todo envelope;
+- `EXCESSIVE_COUNT.continuousProxy` bruto confrontado pela tolerância computacional e
+  `continuousProxyDisplay` confrontado separadamente com o arredondamento a três casas.
+
+Relatório que encontra o valor correto em caminho incorreto é não conforme. O caminho `module_missing`
+continua produzindo RED completo; o caminho `ready` deve poder produzir PASS ou FUNCTIONAL_FAILURE conforme
+o resultado real.
+
 ### 13.3 IDs exatos — 48 científicos + 26 técnicos
 
 #### 13.3.1 Conjunto científico — 48
@@ -1129,7 +1275,7 @@ Schema mínimo do summary:
 | `CAL-01` | várias candidatas e dominante ampacidade |
 | `CAL-02` | alternativa candidata única |
 | `CAL-03` | matriz dos três critérios dominantes |
-| `CAL-04` | quantidade excessiva |
+| `CAL-04` | quantidade excessiva com `continuousProxy` bruto e `continuousProxyDisplay` a três casas |
 | `GRD-02` | nota qualitativa de barramento |
 | `UNI-01` | produto cartesiano completo |
 | `UNI-02` | reconciliação `20/11/9/11` |
@@ -1162,7 +1308,7 @@ Cada matriz deve registrar seus subcasos em `observed.cases[]`, com `caseId`, `a
 | ID | Matriz/caso técnico obrigatório |
 | --- | --- |
 | `TECH-01` | raiz `undefined`, `null`, array, string, number e boolean → `INPUT_STRUCTURE_INVALID` |
-| `TECH-02` | propriedades desconhecidas na raiz, catálogo, item, grouping, fault e modo avançado |
+| `TECH-02` | propriedades desconhecidas na raiz, catálogo, item, grouping, fault e modo avançado, com um único código no caminho exato |
 | `TECH-03` | versão ausente e incorreta → `CONTRACT_VERSION_UNSUPPORTED` |
 | `TECH-04` | metadados globais presentes com tipo, não finitude e domínio inválidos |
 | `TECH-05` | `analysisMode` inválido → `ANALYSIS_MODE_INVALID` |
@@ -1173,20 +1319,20 @@ Cada matriz deve registrar seus subcasos em `observed.cases[]`, com `caseId`, `a
 | `TECH-10` | confirmação ausente nos três modos de catálogo e temperatura sugerida não confirmada |
 | `TECH-11` | poda confirmada ocorre antes de U e registra nominalmente todos os itens removidos |
 | `TECH-12` | poda não confirmada → `SUGGESTION_UNCONFIRMED`, sem formar U |
-| `TECH-13` | item não objeto simples, propriedade desconhecida e estrutura inválida |
+| `TECH-13` | item não objeto simples, propriedade desconhecida e estrutura inválida, sem código relacionado oculto |
 | `TECH-14` | catálogo homogêneo, seção duplicada bloqueia todas as duplicatas, IDs por `nParallel` são únicos e `referenceTemperature_C`/`degC` permanecem explícitos |
 | `TECH-15` | `k_g` zero, negativo, maior que 1, `NaN` e infinito → `GROUPING_FACTOR_INVALID` |
-| `TECH-16` | `MODO_AVANCADO` feliz usa apenas ramos explícitos e geometria descrita |
-| `TECH-17` | matriz de `ADVANCED_BRANCHES_INVALID`: mapa, combinação, descrição, quantidade, ID, Z e proveniência |
-| `TECH-18` | `providedCombination` com seção ausente, quantidade inválida ou fora de U |
+| `TECH-16` | `MODO_AVANCADO` feliz usa apenas ramos explícitos/geometria descrita e contém zero `ADVANCED_BRANCHES_INVALID` |
+| `TECH-17` | matriz de `ADVANCED_BRANCHES_INVALID`: mapa não-array como falha de topo; demais defeitos como blocker exato da combinação; colapso integral em `NO_EVALUABLE_COMBINATION` |
+| `TECH-18` | `providedCombination` com seção ausente, quantidade inválida ou fora de U retorna falha de topo RFC 7807 com params exatos |
 | `TECH-19` | distinção: todas calculadas/reprovadas → `NO_VALID_ALTERNATIVE`; todas bloqueadas → `NO_EVALUABLE_COMBINATION` |
 | `TECH-20` | L0 chamado exatamente uma vez por combinação avaliável e zero vezes quando o preparo bloqueia |
 | `TECH-21` | pureza, determinismo, entrada e envelope L0 não mutados, zero efeitos colaterais |
 | `TECH-22` | ordem de propriedades e permutação de itens completos produzem arrays canônicos equivalentes |
 | `TECH-23` | `NaN`/infinito produzido em L1–L3 → `NUMERIC_RESULT_NON_FINITE`, sem número parcial |
 | `TECH-24` | `Smin=0`: margem de curto `null`, flag positiva, curto não dominante e JSON finito |
-| `TECH-25` | schema completo de sucesso, reconciliação dos arrays, dez guardrails e fonte L0 preservada |
-| `TECH-26` | schema fechado de falha, 10 guardrails + blocker específico, ordem canônica e igualdade blocker/error |
+| `TECH-25` | schema completo de sucesso, warning bruto/display fechado, reconciliação dos arrays, dez guardrails e fonte L0 preservada |
+| `TECH-26` | schema fechado de falha, 10 guardrails + blocker específico, ordem, igualdade blocker/error e zero `relatedCodes` |
 
 ### 13.4 Exit codes
 
@@ -1362,7 +1508,7 @@ Entrada prevista:
 | Classe | `CHG-3 científica experimental` |
 | Domínio | enumeração/comparação preliminar de cabos BT em paralelo |
 | Ciência | `2b61627d8640fce91eb229ca522ae33a143671df` |
-| Estado atual | `SDD_EXPERIMENTAL_RATIFICADO_PARA_RED_CORE` |
+| Estado atual | `SDD_EXPERIMENTAL_RATIFICADO_PARA_CORRECAO_DO_RED` |
 | Estado produtivo | `BLOQUEADO`, `productionAllowed=false` |
 | Teste novo | experimental, 74 relatórios core (48 científicos + 26 técnicos); 15 visuais em fase posterior |
 | TESTE DO CEO | `SIM`, depois de GREEN independente e remoto da UI |
@@ -1412,7 +1558,10 @@ O aceite valida clareza e utilidade experimental; não remove nenhum bloqueio pr
 
 ## 20. Ciclo de vida e encerramento
 
-Estado atual: somente SDD candidato, sem RED, implementação, PR ou merge. Após futura integração:
+Estado atual: SDD R3 materializado no worktree documental. O RED vigente na cadeia experimental ainda possui
+oráculo permissivo e aguarda correção pelo QA somente depois da ratificação deste SDD. A candidata Backend
+permanece untracked, bloqueada e sem elegibilidade para commit/push. Não existe PR ou merge desta cadeia.
+Após futura integração:
 
 - `MERGE_VALIDADO` exige PR, SHA e Gate remoto;
 - `ENCERRAMENTO_OPERACIONAL` exige `origin/main → AmpAI/ em main → Google Drive`, hashes aplicáveis,
@@ -1440,5 +1589,6 @@ Estado atual: somente SDD candidato, sem RED, implementação, PR ou merge. Apó
 
 ---
 
-**Estado vinculante:** `SDD_EXPERIMENTAL_RATIFICADO_PARA_RED_CORE`. QA RED, Backend, Frontend, commit, push, PR e merge
-permanecem bloqueados até conferência do Conselho e autorização correspondente.
+**Estado vinculante:** `SDD_EXPERIMENTAL_RATIFICADO_PARA_CORRECAO_DO_RED`. Correção do RED, Backend, QA independente,
+Frontend, commit, push, PR e merge permanecem bloqueados até conferência focalizada do Conselho e autorização
+correspondente.
