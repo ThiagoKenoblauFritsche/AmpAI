@@ -1007,6 +1007,9 @@ document.addEventListener('click', function(e) {
                 consumeCablingEnvelope('MT', window.calculateCablingMT(input));
             }
             break;
+        case 'enumerate-parallel-selection':
+            if (typeof window.parSelCalculate === 'function') window.parSelCalculate();
+            break;
         case 'calc-icc-rede':
             if (typeof window.calcIccRede === 'function') window.calcIccRede();
             break;
@@ -1813,4 +1816,367 @@ window.calcIccAgr = function() {
     
     window.showIccToaster("Cálculo de Agregação concluído com sucesso.");
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// O.S. CAB-BT-PARALLEL-002-UI — Alternativas paralelas preliminares (experimental).
+// Região isolada do card BT produtivo. Primeira leitura: "quantos cabos por fase e
+// de qual seção". Constrói o DTO confirmado do contrato de referência, aciona
+// window.enumerateCablingBTParallelAlternativesExperimental exatamente uma vez por
+// clique e projeta o resultado real (presentationModel/arrays), sem recalcular,
+// reordenar ou derivar alternativas. Estado: EXPERIMENTAL_PRELIMINAR_NAO_CANONICO;
+// productionAllowed=false; installableSelection=null; instalação NÃO autorizada.
+// ─────────────────────────────────────────────────────────────────────────────
+(function parSelLab() {
+    'use strict';
+
+    // Entrada de referência reproduzível (SDD 4.2). Catálogo laboratorial confirmado
+    // como conjunto (ASSUMPTION_ONLY); os campos práticos/avançados sobrescrevem o clone.
+    function referenceInput() {
+        return {
+            contractVersion: 'CAB-BT-PARALLEL-SELECTION-EXP-1', analysisMode: 'MODO_GUIADO_PRELIMINAR', objective: 'NONE',
+            totalLoadCurrent_A: 600, lineVoltage_V: 400,
+            powerFactor: { value: 0.9, inputClass: 'SUGERIDA_COM_CONFIRMACAO', confirmed: true, provenance: 'ASSUMPTION_ONLY' },
+            maximumVoltageDrop_percent: 3, maxParallelCount: 4, nCircuits: 1, arrangement: 'LAB_IDENTICAL_BRANCHES',
+            catalog: {
+                mode: 'CATALOGO_LAB_ASSUMPTION_ONLY', confirmed: true, source: 'CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md',
+                sourceVersion: '2b61627d8640fce91eb229ca522ae33a143671df', provenance: 'ASSUMPTION_ONLY',
+                impedanceBasis: { length_m: 100, description: 'Z(S)=2.25/S+j0.008 ohm; laboratory placeholder', provenance: 'ASSUMPTION_ONLY' },
+                candidates: [
+                    { section_mm2: 95, tabulatedAmpacity_A: 240, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.02368421052631579, im: 0.008 } },
+                    { section_mm2: 120, tabulatedAmpacity_A: 285, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', resistance_ohm: 0.01875, reactance_ohm: 0.008 },
+                    { section_mm2: 150, tabulatedAmpacity_A: 330, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.015, im: 0.008 } },
+                    { section_mm2: 185, tabulatedAmpacity_A: 380, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.012162162162162163, im: 0.008 } },
+                    { section_mm2: 240, tabulatedAmpacity_A: 445, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.009375, im: 0.008 } },
+                ],
+            },
+            grouping: { mode: 'LAB_CONSTANT_CONFIRMED', value: 0.8, confirmed: true, source: 'laboratory sensitivity', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY' },
+            guidedHypothesis: { displayedBeforeCalculation: true, confirmed: true, provenance: 'ASSUMPTION_ONLY' },
+            advancedBranchesByCombination: [],
+            fault: { totalFaultCurrent_A: 20000, clearingTime_s: 0.2, adiabaticK_A_sqrt_s_per_mm2: { value: 115, provenance: 'ASSUMPTION_ONLY' }, imbalance: { mode: 'EXPLICIT_ASSUMPTION', deltaFault: 1, provenance: 'ASSUMPTION_ONLY' } },
+            pruning: { maximumSection_mm2: null, confirmed: false, provenance: null },
+            providedCombination: { section_mm2: 150, nParallel: 3 },
+        };
+    }
+
+    // Rótulos de resultado por idioma (JS): tokens contratuais/códigos permanecem invariantes.
+    var L = {
+        installAuth: { pt: 'Instalação autorizada', en: 'Installation authorized', es: 'Instalación autorizada' },
+        no: { pt: 'NÃO', en: 'NO', es: 'NO' },
+        perPhase: { pt: 'por fase', en: 'per phase', es: 'por fase' },
+        heading: { pt: 'Alternativas matemáticas preliminares', en: 'Preliminary mathematical alternatives', es: 'Alternativas matemáticas preliminares' },
+        crit: {
+            AMPACIDADE: { pt: 'Ampacidade', en: 'Ampacity', es: 'Ampacidad' },
+            QUEDA: { pt: 'Queda de tensão', en: 'Voltage drop', es: 'Caída de tensión' },
+            CURTO: { pt: 'Curto-circuito', en: 'Short-circuit', es: 'Cortocircuito' },
+        },
+        st: { ATENDE: { pt: 'atende', en: 'meets', es: 'cumple' }, NAO_ATENDE: { pt: 'não atende', en: 'does not meet', es: 'no cumple' } },
+        dominant: { pt: 'Critério dominante', en: 'Dominant criterion', es: 'Criterio dominante' },
+        temperature: { pt: 'Temperatura de referência', en: 'Reference temperature', es: 'Temperatura de referencia' },
+        firstOrder: { pt: 'Primeira na ordem de apresentação', en: 'First in presentation order', es: 'Primera en el orden de presentación' },
+        frontier: { pt: 'Fronteira não dominada', en: 'Non-dominated frontier', es: 'Frontera no dominada' },
+        confirmedInputs: { pt: 'Entradas confirmadas', en: 'Confirmed inputs', es: 'Entradas confirmadas' },
+        assumptions: { pt: 'Hipóteses', en: 'Assumptions', es: 'Supuestos' },
+        blockers: { pt: 'Bloqueadores', en: 'Blockers', es: 'Bloqueadores' },
+        primaryAbsent: { pt: 'Fonte primária ausente', en: 'Primary source absent', es: 'Fuente primaria ausente' },
+        iecNotDeclared: { pt: 'Conformidade não declarada (IEC)', en: 'Conformity not declared (IEC)', es: 'Conformidad no declarada (IEC)' },
+        userLimit: { pt: 'limite do usuário', en: 'user limit', es: 'límite del usuario' },
+        margin: { pt: 'margem', en: 'margin', es: 'margen' },
+        minSection: { pt: 'seção mínima', en: 'minimum section', es: 'sección mínima' },
+        errorTitle: { pt: 'Não foi possível comparar', en: 'Comparison unavailable', es: 'Comparación no disponible' },
+        sourceStatus: { pt: 'Status da fonte', en: 'Source status', es: 'Estado de la fuente' },
+        yes: { pt: 'SIM', en: 'YES', es: 'SÍ' },
+        uiFailureTitle: { pt: 'Falha interna da camada visual', en: 'Internal visual-layer failure', es: 'Falla interna de la capa visual' },
+        uiFailureNote: { pt: 'Exceção da integração da interface — não é um envelope do motor; sem números parciais.', en: 'UI integration exception — not an engine envelope; no partial numbers.', es: 'Excepción de integración de la interfaz — no es un envelope del motor; sin números parciales.' },
+        integrationFailClosed: { pt: 'Falha de integração fail-closed: guardrails do envelope divergem do contrato experimental; apresentação de alternativas bloqueada.', en: 'Fail-closed integration failure: envelope guardrails diverge from the experimental contract; alternatives display blocked.', es: 'Falla de integración fail-closed: los guardrails del envelope divergen del contrato experimental; presentación de alternativas bloqueada.' },
+        guardrailLabel: { pt: 'Guardrails divergentes', en: 'Divergent guardrails', es: 'Guardrails divergentes' },
+    };
+
+    function el(id) { return document.getElementById(id); }
+    function curLang() {
+        var lang = (document.documentElement.lang || 'pt').toLowerCase();
+        if (lang.indexOf('en') === 0) return 'en';
+        if (lang.indexOf('es') === 0) return 'es';
+        return 'pt';
+    }
+    function tr(entry, lang) { return (entry && (entry[lang] || entry.pt)) || ''; }
+    function esc(v) { return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function num(v, d) {
+        if (typeof v !== 'number' || !isFinite(v)) return null;
+        return String(Number(v.toFixed(d == null ? 2 : d)));
+    }
+    function fieldNum(id) { var e = el(id); return e ? parseFloat(e.value) : NaN; }
+    function fieldInt(id) { var e = el(id); return e ? parseInt(e.value, 10) : NaN; }
+
+    // Campo do catálogo laboratorial no DOM (por índice/campo). Sem defaults silenciosos:
+    // valores ausentes/invalidos permanecem NaN/'' e seguem fail-closed pelo motor real.
+    function catField(idx, field) {
+        return document.querySelector('[data-catalog-index="' + idx + '"][data-catalog-field="' + field + '"]');
+    }
+    // R1 §2 + R2 §2: constrói catalog.candidates DIRETAMENTE dos valores atuais do DOM.
+    // SEM fallback estático: catálogo DOM ausente → coleção VAZIA que o motor rejeita
+    // (fail-closed). Nenhuma entrada científica de referenceInput() pode reaparecer.
+    function buildCatalogFromDom() {
+        var nodes = document.querySelectorAll('#cbpsx-catalog [data-catalog-index][data-catalog-field]');
+        var order = [];
+        var seen = {};
+        Array.prototype.forEach.call(nodes, function (n) {
+            var i = n.getAttribute('data-catalog-index');
+            if (!Object.prototype.hasOwnProperty.call(seen, i)) { seen[i] = true; order.push(i); }
+        });
+        order.sort(function (a, b) { return Number(a) - Number(b); });
+        return order.map(function (i) {
+            function raw(field) { var e = catField(i, field); return e ? e.value : ''; }
+            return {
+                section_mm2: parseFloat(raw('section')),
+                tabulatedAmpacity_A: parseFloat(raw('ampacity')),
+                material: String(raw('material')),
+                insulation: 'LAB_UNSPECIFIED',
+                installationMethod: 'LAB_UNSPECIFIED',
+                referenceTemperature_C: parseFloat(raw('temp')),
+                units: 'SI',
+                source: 'LAB_CATALOG',
+                sourceVersion: 'PRELIM-1',
+                provenance: String(raw('provenance')),
+                resistance_ohm: parseFloat(raw('r')),
+                reactance_ohm: parseFloat(raw('x')),
+            };
+        });
+    }
+
+    // Constrói o DTO a partir do DOM. referenceInput() fornece APENAS o andaime não editável
+    // (contractVersion, modes, provenance, impedanceBasis, providedCombination). R2 §2: todo
+    // campo EDITÁVEL é atribuído com o valor observado no DOM, MESMO inválido (NaN/''),
+    // sem preservar 600/400/3/0,9/0,8 etc. Campo vazio chega ao motor como inválido/ausente
+    // e segue fail-closed — nunca recupera o default de referenceInput().
+    function buildInput() {
+        var input = referenceInput();
+        var obj = el('bt-parallel-selection-objective');
+        input.objective = obj ? obj.value : undefined;
+        input.totalLoadCurrent_A = fieldNum('bt-parallel-selection-current');
+        input.lineVoltage_V = fieldNum('bt-parallel-selection-voltage');
+        input.maximumVoltageDrop_percent = fieldNum('bt-parallel-selection-drop');
+        input.powerFactor.value = fieldNum('bt-parallel-selection-pf');
+        input.grouping.value = fieldNum('bt-parallel-selection-kg');
+        input.nCircuits = fieldInt('bt-parallel-selection-ncircuits');
+        input.maxParallelCount = fieldInt('bt-parallel-selection-maxparallel');
+        input.fault.totalFaultCurrent_A = fieldNum('bt-parallel-selection-ifault');
+        input.fault.clearingTime_s = fieldNum('bt-parallel-selection-time');
+        input.fault.adiabaticK_A_sqrt_s_per_mm2.value = fieldNum('bt-parallel-selection-k');
+        input.fault.imbalance.deltaFault = fieldNum('bt-parallel-selection-delta');
+        // Confirmações: elemento ausente ⇒ confirmed=false; nunca true como fallback.
+        var catEl = el('bt-parallel-selection-catalog-confirmed'); input.catalog.confirmed = catEl ? catEl.checked === true : false;
+        var hypEl = el('bt-parallel-selection-hypothesis-confirmed'); input.guidedHypothesis.confirmed = hypEl ? hypEl.checked === true : false;
+        // Catálogo estritamente do DOM; ausência ⇒ coleção vazia (fail-closed pelo motor).
+        input.catalog.candidates = buildCatalogFromDom();
+        return input;
+    }
+
+    function critLine(lang, token, statusToken, extras) {
+        var status = tr(L.st[statusToken] || L.st.ATENDE, lang);
+        var parts = [tr(L.crit[token], lang) + ': ' + status].concat(extras.filter(Boolean));
+        return '<div class="cbpsx-crit">' + esc(parts.join(' · ')) + '</div>';
+    }
+
+    function cardHtml(card, lang, isFirst, onFrontier) {
+        var cr = card.criteria || {};
+        var amp = cr.ampacity || { values: {} };
+        var vd = cr.voltageDrop || { values: {} };
+        var sc = cr.shortCircuit || { values: {} };
+        var admissible = num(amp.values.admissibleCurrent_A, 0);
+        var ampMargin = num(amp.values.margin != null ? amp.values.margin * 100 : null, 1);
+        var actual = num(vd.values.actualPercent, 2);
+        var limit = num(vd.values.userLimitPercent, 2);
+        var minSec = num(sc.values.minimumSectionContinuous_mm2, 1);
+        var temp = num((card.catalogMetadata || {}).referenceTemperature_C, 0);
+        var domLabels = (card.dominantCriteria || []).map(function (t) { return tr(L.crit[t] || { pt: t, en: t, es: t }, lang); });
+        var head = card.quantityPerPhase + ' × ' + card.section_mm2 + ' mm² ' + tr(L.perPhase, lang);
+        var lines = [];
+        lines.push('<div class="cbpsx-alt-head">' + esc(head) + '</div>');
+        if (isFirst) lines.push('<div class="cbpsx-alt-order">' + esc(tr(L.firstOrder, lang)) + '</div>');
+        lines.push(critLine(lang, 'AMPACIDADE', amp.status, [admissible ? admissible + ' A' : null, ampMargin ? tr(L.margin, lang) + ' ' + ampMargin + '%' : null]));
+        lines.push(critLine(lang, 'QUEDA', vd.status, [actual ? actual + ' %' : null, limit ? tr(L.userLimit, lang) + ' ' + limit + ' %' : null]));
+        lines.push(critLine(lang, 'CURTO', sc.status, [minSec ? tr(L.minSection, lang) + ' ' + minSec + ' mm²' : null]));
+        if (domLabels.length) lines.push('<div class="cbpsx-crit">' + esc(tr(L.dominant, lang) + ': ' + domLabels.join(', ')) + '</div>');
+        var badge = tr(L.temperature, lang) + ': ' + (temp || '30') + ' °C';
+        if (onFrontier) badge += ' · ' + tr(L.frontier, lang);
+        lines.push('<div class="cbpsx-badge">' + esc(badge) + '</div>');
+        return '<div class="cbpsx-alt' + (isFirst ? ' cbpsx-first' : '') + '" data-candidate-id="' + esc(card.candidateId) + '">' + lines.join('') + '</div>';
+    }
+
+    // Representação fiel de installableSelection (null permanece "null", nunca omitido).
+    function installableRepr(sel) {
+        if (sel === null) return 'null';
+        if (sel === undefined) return 'undefined';
+        try { return JSON.stringify(sel); } catch (serializeError) { return String(sel); }
+    }
+
+    // installableSelection real: sob data no caminho feliz; ausente (data null) no erro.
+    function installableFrom(envelope) {
+        if (envelope && envelope.data && typeof envelope.data === 'object'
+            && Object.prototype.hasOwnProperty.call(envelope.data, 'installableSelection')) {
+            return envelope.data.installableSelection;
+        }
+        if (envelope && Object.prototype.hasOwnProperty.call(envelope, 'installableSelection')) {
+            return envelope.installableSelection;
+        }
+        return undefined;
+    }
+
+    // R1 §3 + R2 §3: verificação de guardrails contra o contrato experimental. installable/
+    // installation só se aplicam quando há data (caminho feliz); no erro, data é ausente.
+    function guardrailViolations(envelope) {
+        var v = [];
+        var ss = envelope.sourceStatus;
+        if (envelope.productionAllowed !== false) v.push('productionAllowed');
+        if (!ss || typeof ss !== 'object') {
+            v.push('sourceStatus');
+        } else {
+            if (ss.iecConformity !== false) v.push('sourceStatus.iecConformity');
+            if (ss.primarySourceComplete !== false) v.push('sourceStatus.primarySourceComplete');
+        }
+        var codes = (envelope.blockers || []).map(function (b) { return b.code; });
+        ['B-01', 'B-02', 'B-03', 'B-04', 'B-05', 'B-06'].forEach(function (req) {
+            if (codes.indexOf(req) < 0) v.push('blocker:' + req);
+        });
+        if (envelope.data && typeof envelope.data === 'object') {
+            if (envelope.data.installableSelection !== null) v.push('data.installableSelection');
+            if (envelope.data.installationAuthorized !== false) v.push('data.installationAuthorized');
+        }
+        return v;
+    }
+
+    // R2 §3: linhas de guardrail projetadas DIRETAMENTE do envelope (caminho feliz e de erro).
+    // Sem números parciais; installationAuthorized só quando há data.
+    function envelopeGuardrailLines(envelope, lang) {
+        var ss = envelope.sourceStatus || {};
+        var hasData = envelope.data && typeof envelope.data === 'object';
+        var lines = [];
+        lines.push('<div>productionAllowed = ' + esc(String(envelope.productionAllowed))
+            + ' · installableSelection = ' + esc(installableRepr(installableFrom(envelope)))
+            + (hasData ? ' · installationAuthorized = ' + esc(String(envelope.data.installationAuthorized)) : '') + '</div>');
+        lines.push('<div>' + esc(tr(L.sourceStatus, lang) + ': ' + String(ss.classification)
+            + ' · primarySourceComplete = ' + String(ss.primarySourceComplete)
+            + ' · iecConformity = ' + String(ss.iecConformity)) + '</div>');
+        if (envelope.displayNotice != null) lines.push('<div>' + esc(String(envelope.displayNotice)) + '</div>');
+        var assumptionIds = (envelope.assumptions || []).map(function (a) { return a.id + ' (' + a.provenance + ')'; });
+        if (assumptionIds.length) lines.push('<div>' + esc(tr(L.assumptions, lang)) + ': ' + esc(assumptionIds.join('; ')) + '</div>');
+        var blockerCodes = (envelope.blockers || []).map(function (b) { return b.code; });
+        lines.push('<div>' + esc(tr(L.blockers, lang)) + ': ' + esc(blockerCodes.join(', ') || '—') + '</div>');
+        return lines;
+    }
+
+    // R1 §3: caminho feliz — instalação NÃO autorizada + guardrails reais + entradas confirmadas.
+    function governanceHtml(envelope, input, lang) {
+        var data = envelope.data || {};
+        var installAuthorized = data.installationAuthorized === true;
+        var lines = [];
+        lines.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + (installAuthorized ? tr(L.yes, lang) : tr(L.no, lang))) + '</div>');
+        lines = lines.concat(envelopeGuardrailLines(envelope, lang));
+        var ci = tr(L.confirmedInputs, lang) + ': ' + input.totalLoadCurrent_A + ' A · ' + input.lineVoltage_V + ' V · ' + input.maximumVoltageDrop_percent + ' %';
+        lines.push('<div>' + esc(ci) + '</div>');
+        return '<div class="cbpsx-gov">' + lines.join('') + '</div>';
+    }
+
+    function renderResults() {
+        var container = el('cbpsx-results');
+        if (!container) return;
+        var store = window._parSelLast;
+        if (!store) { container.innerHTML = ''; return; }
+        var lang = curLang();
+
+        // R1 §4: exceção da CAMADA VISUAL — separada do envelope, sem código de domínio
+        // nem números parciais. Apresentada como falha interna da interface.
+        if (store.uiFailure) {
+            var uf = store.uiFailure;
+            var ub = [];
+            ub.push('<div class="cbpsx-install">' + esc(tr(L.uiFailureTitle, lang)) + '</div>');
+            ub.push('<div>' + esc(tr(L.uiFailureNote, lang)) + '</div>');
+            ub.push('<div>' + esc((uf.name || 'Error') + ': ' + (uf.message || '')) + '</div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + ub.join('') + '</div>';
+            return;
+        }
+
+        var envelope = store.envelope;
+        var input = store.input;
+
+        // R2 §3: envelope de erro real do motor — PROJEÇÃO COMPLETA e fiel (productionAllowed,
+        // installableSelection, sourceStatus.*, displayNotice, error.code/status/title, blockers,
+        // assumptions quando presentes), sem constantes, sem mascarar e sem números parciais.
+        if (!envelope || envelope.ok !== true || !envelope.data) {
+            if (!envelope || typeof envelope !== 'object') {
+                // Estado indefinido sem envelope nem uiFailure → falha interna da camada visual.
+                container.innerHTML = '<div class="cbpsx-gov" role="alert"><div class="cbpsx-install">'
+                    + esc(tr(L.uiFailureTitle, lang)) + '</div><div>' + esc(tr(L.uiFailureNote, lang)) + '</div></div>';
+                return;
+            }
+            var problem = envelope.error || {};
+            var eb = [];
+            eb.push('<div class="cbpsx-install"><strong>' + esc(tr(L.errorTitle, lang)) + '</strong></div>');
+            eb.push('<div>ok = ' + esc(String(envelope.ok)) + '</div>');
+            eb.push('<div>error.code = ' + esc(String(problem.code)) + ' · status = ' + esc(String(problem.status))
+                + (problem.title != null ? ' · title = ' + esc(String(problem.title)) : '') + '</div>');
+            eb = eb.concat(envelopeGuardrailLines(envelope, lang));
+            // Guardrail obrigatório ausente/divergente → falha de integração identificada
+            // SEPARADAMENTE; permanece sem alternativas e sem números parciais.
+            var evio = guardrailViolations(envelope);
+            if (evio.length > 0) {
+                eb.push('<div><strong>' + esc(tr(L.integrationFailClosed, lang)) + '</strong></div>');
+                eb.push('<div>' + esc(tr(L.guardrailLabel, lang) + ': ' + evio.join(', ')) + '</div>');
+            }
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + eb.join('') + '</div>';
+            return;
+        }
+
+        // R1 §3: guardrail ausente/divergente → bloquear alternativas + falha de integração fail-closed.
+        var violations = guardrailViolations(envelope);
+        if (violations.length > 0) {
+            var gb = [];
+            gb.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + tr(L.no, lang)) + '</div>');
+            gb.push('<div><strong>' + esc(tr(L.integrationFailClosed, lang)) + '</strong></div>');
+            gb.push('<div>' + esc(tr(L.guardrailLabel, lang) + ': ' + violations.join(', ')) + '</div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + gb.join('') + '</div>';
+            return;
+        }
+
+        var data = envelope.data;
+        var cardsById = {};
+        (data.presentationModel && data.presentationModel.cards ? data.presentationModel.cards : []).forEach(function (c) { cardsById[c.candidateId] = c; });
+        var order = (data.presentationOrder || []).map(function (p) { return p.candidateId; });
+        var firstId = data.firstInPresentationOrder ? data.firstInPresentationOrder.candidateId : (order[0] || null);
+        var frontierIds = {};
+        (data.nonDominatedAlternatives || []).forEach(function (f) { frontierIds[f.candidateId] = true; });
+        var cards = order.map(function (id, idx) {
+            var card = cardsById[id];
+            if (!card) return '';
+            return cardHtml(card, lang, id === firstId && idx === 0, frontierIds[id] === true);
+        }).join('');
+        var html = governanceHtml(envelope, input, lang)
+            + '<div class="cbpsx-alt-heading" style="font-weight:800;margin:0.2rem 0 0.5rem 0;">' + esc(tr(L.heading, lang)) + '</div>'
+            + '<div class="cbpsx-alts">' + cards + '</div>';
+        container.innerHTML = html;
+    }
+
+    window.parSelCalculate = function parSelCalculate() {
+        try {
+            var input = buildInput();
+            var envelope = window.enumerateCablingBTParallelAlternativesExperimental(input);
+            window._parSelLast = { envelope: envelope, input: input, uiFailure: null };
+        } catch (failure) {
+            // R1 §4: exceção da integração fica SEPARADA do envelope (uiFailure). Sem envelope
+            // sintético, sem error.code de domínio inventado, sem números parciais.
+            window._parSelLast = { envelope: null, input: null, uiFailure: { name: String(failure && failure.name || 'Error'), message: String(failure && failure.message || failure) } };
+        }
+        renderResults();
+    };
+
+    // Re-localiza os resultados renderizados ao trocar de idioma (tokens/aviso invariantes).
+    if (typeof window.setLanguage === 'function') {
+        var prevSetLanguage = window.setLanguage;
+        window.setLanguage = function (lang) {
+            var out = prevSetLanguage.apply(this, arguments);
+            try { if (window._parSelLast) renderResults(); } catch (ignore) { /* noop */ }
+            return out;
+        };
+    }
+})();
 
