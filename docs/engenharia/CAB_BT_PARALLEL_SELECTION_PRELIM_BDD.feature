@@ -150,9 +150,9 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       | re booleano                        | impedance_ohm.re | NOT_NUMBER        | boolean |
       | im objeto/array                    | impedance_ohm.im | NOT_NUMBER        | object  |
       | re null                            | impedance_ohm.re | NOT_NUMBER        | null    |
-      | re NaN                             | impedance_ohm.re | NON_FINITE        | number  |
-      | im +Infinity                       | impedance_ohm.im | NON_FINITE        | number  |
-      | re -Infinity                       | impedance_ohm.re | NON_FINITE        | number  |
+      | re NaN                             | impedance_ohm.re | NON_FINITE        | number:NaN       |
+      | im +Infinity                       | impedance_ohm.im | NON_FINITE        | number:+Infinity |
+      | re -Infinity                       | impedance_ohm.re | NON_FINITE        | number:-Infinity |
 
   Esquema do Cenario: [Invalido] RESISTANCE_REACTANCE_PAIR puro com valor presente invalido
     Dado "resistance_ohm" e "reactance_ohm" presentes (sem impedance) com "<defeito>"
@@ -168,9 +168,9 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       | resistance booleano           | resistance_ohm | NOT_NUMBER | boolean |
       | reactance objeto/array        | reactance_ohm  | NOT_NUMBER | object  |
       | resistance null               | resistance_ohm | NOT_NUMBER | null    |
-      | reactance NaN                 | reactance_ohm  | NON_FINITE | number  |
-      | resistance +Infinity          | resistance_ohm | NON_FINITE | number  |
-      | reactance -Infinity           | reactance_ohm  | NON_FINITE | number  |
+      | reactance NaN                 | reactance_ohm  | NON_FINITE | number:NaN       |
+      | resistance +Infinity          | resistance_ohm | NON_FINITE | number:+Infinity |
+      | reactance -Infinity           | reactance_ohm  | NON_FINITE | number:-Infinity |
 
   Cenario: [Invalido] Varios componentes invalidos -> invalidFields[] em ordem canonica
     Dado "impedance_ohm" presente (sem R/X) com "re" e "im" ambos invalidos
@@ -210,6 +210,112 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
     Quando a camada normaliza cada representacao em candidatos SEPARADOS (sem coexistencia)
     Entao ambas produzem a mesma impedancia "0,015 + j0,008 ohm"
     E nenhuma normalizacao inventa componente ausente
+
+  # ═══ ERRATA NONFINITE-ERRATA-001: taxonomia observedType + escalares presentes invalidos ═══
+  # observedType de nao finitos: "number:NaN" | "number:+Infinity" | "number:-Infinity".
+  # "number" fica reservado a numero FINITO (inclusive fora de faixa).
+  # CANDIDATE_VALUE_INVALID cobre os 10 escalares; CANDIDATE_IMPEDANCE_VALUE_INVALID e EXCLUSIVO de
+  # impedance_ohm / impedance_ohm.re / impedance_ohm.im / resistance_ohm / reactance_ohm.
+
+  Cenario: [Precedencia] Ordem vinculante de validacao do item (issues acumulam nessa ordem)
+    Dado um item de catalogo
+    Quando a camada valida o item
+    Entao a precedencia e exatamente:
+      """
+      1. estrutura do item;
+      2. conflito de representacao de impedancia (TERMINAL);
+      3. campos ausentes -> CANDIDATE_INCOMPLETE (missingFields[]);
+      4. escalares presentes invalidos -> CANDIDATE_VALUE_INVALID (invalidFields[]);
+      5. impedancia presente invalida -> CANDIDATE_IMPEDANCE_VALUE_INVALID (invalidFields[]);
+      6. somente entao o calculo (L0 / L1-L3).
+      """
+    E ausencias e valores invalidos independentes no mesmo item ACUMULAM issues nessa ordem
+    E nenhum valor invalido alcanca L0 nem a matematica L1-L3
+
+  Esquema do Cenario: [Escalar] Escalar presente invalido -> CANDIDATE_VALUE_INVALID (um por escalar, 10 escalares)
+    Dado a entrada de catalogo com o escalar "<campo>" presente com valor invalido "<valor>"
+    Quando a camada valida os escalares presentes
+    Entao o resultado e "CANDIDATE_VALUE_INVALID"
+    E "invalidFields[]" contem { path: "<campo>", reason: "<reason>", observedType: "<observedType>" }
+    E "CANDIDATE_IMPEDANCE_VALUE_INVALID" NAO e usado para escalares (exclusivo de impedancia)
+    E nenhum valor invalido alcanca L0 nem a matematica L1-L3
+
+    Exemplos:
+      | campo                  | valor     | reason     | observedType     |
+      | section_mm2            | NaN       | NON_FINITE | number:NaN       |
+      | tabulatedAmpacity_A    | NaN       | NON_FINITE | number:NaN       |
+      | material               | 5         | NOT_STRING | number           |
+      | insulation             | true      | NOT_STRING | boolean          |
+      | installationMethod     | {}        | NOT_STRING | object           |
+      | referenceTemperature_C | +Infinity | NON_FINITE | number:+Infinity |
+      | units                  | 1         | NOT_STRING | number           |
+      | source                 | null      | NOT_STRING | null             |
+      | sourceVersion          | []        | NOT_STRING | array            |
+      | provenance             | 0         | NOT_STRING | number           |
+
+  Esquema do Cenario: [Escalar] tabulatedAmpacity_A nao finita -> CANDIDATE_VALUE_INVALID
+    Dado "tabulatedAmpacity_A" presente com valor "<valor>"
+    Quando a camada valida os escalares presentes
+    Entao o resultado e "CANDIDATE_VALUE_INVALID"
+    E "invalidFields[]" contem { path: "tabulatedAmpacity_A", reason: "NON_FINITE", observedType: "<observedType>" }
+
+    Exemplos:
+      | valor     | observedType     |
+      | NaN       | number:NaN       |
+      | +Infinity | number:+Infinity |
+      | -Infinity | number:-Infinity |
+
+  Cenario: [Escalar] Varios escalares invalidos -> invalidFields[] na ordem canonica dos 10 escalares
+    Dado um item com "provenance", "material" e "tabulatedAmpacity_A" presentes e invalidos, em ordem de propriedade arbitraria
+    Quando a camada valida os escalares presentes
+    Entao "invalidFields[]" registra os tres, sem duplicidade
+    E a ordem canonica dos escalares e: section_mm2, tabulatedAmpacity_A, material, insulation, installationMethod, referenceTemperature_C, units, source, sourceVersion, provenance
+    E, neste exemplo, a ordem resultante e "tabulatedAmpacity_A", depois "material", depois "provenance" (independente da ordem de entrada)
+
+  Cenario: [Escalar] Issue nominal de CANDIDATE_VALUE_INVALID (schema)
+    Dado a entrada de catalogo "300", indice 0, modo "CATALOGO_LAB_ASSUMPTION_ONLY", com "tabulatedAmpacity_A=NaN"
+    Quando a camada valida os escalares presentes
+    Entao a issue emitida e exatamente:
+      """
+      {
+        "code": "CANDIDATE_VALUE_INVALID",
+        "catalogEntryId": "300",
+        "catalogEntryIndex": 0,
+        "invalidFields": [
+          { "path": "tabulatedAmpacity_A", "reason": "NON_FINITE", "observedType": "number:NaN" }
+        ],
+        "mode": "CATALOGO_LAB_ASSUMPTION_ONLY"
+      }
+      """
+
+  Cenario: [Precedencia] Ausencia + escalar invalido acumulados na ordem correta
+    Dado um item com "material" AUSENTE e "tabulatedAmpacity_A" presente e invalido "NaN"
+    Quando a camada valida o item
+    Entao acumula, nesta ordem: "CANDIDATE_INCOMPLETE" (missingFields=["material"]) e depois "CANDIDATE_VALUE_INVALID" (invalidFields=[{ path: "tabulatedAmpacity_A", reason: "NON_FINITE", observedType: "number:NaN" }])
+    E nenhum valor invalido alcanca L0 nem a matematica L1-L3
+
+  Cenario: [Terminal] Conflito de representacao permanece terminal sobre escalares invalidos
+    Dado um item com conflito de representacao de impedancia E escalares presentes invalidos
+    Quando a camada aplica a precedencia
+    Entao retorna EXCLUSIVAMENTE "CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT" (terminal), antes de avaliar escalares
+    E nenhum "CANDIDATE_VALUE_INVALID" e emitido para esse item
+
+  Cenario: [Catalogo misto] Determinístico: 95 valido + 300 com tabulatedAmpacity_A=NaN
+    Dado "maxParallelCount=1"
+    E um catalogo contendo "95 mm² valido" e "300 mm² com tabulatedAmpacity_A=NaN"
+    Quando o catalogo misto e avaliado
+    Entao "evaluatedCandidates[1].candidateId" e "1x300"
+    E "evaluatedCandidates[1].blockers[0].code" e "CANDIDATE_STRUCTURE_INVALID"
+    E "evaluatedCandidates[1].blockers[0].params.reason" e "candidate_value_invalid"
+    E a candidata "1x300" possui status "BLOCKED"
+    E "1x300" NAO aparece em "candidateAlternatives"
+    E "1x300" NAO produz numero utilizavel
+    E "1x300" NAO alcanca L0 nem a matematica L1-L3
+    # Desambiguacao de indice (condicao residual desta errata):
+    E "catalogEntryIndex" NAO e usado como indice de "evaluatedCandidates"
+    E a posicao "[1]" decorre EXCLUSIVAMENTE de "maxParallelCount=1" e da ordem canonica por nParallel e section_mm2 (1x95 no indice 0, 1x300 no indice 1)
+    E uma implementacao de teste pode, alternativamente, localizar por igualdade EXATA de candidateId ("1x300")
+    E busca recursiva, busca parcial ou "primeiro blocker semelhante" permanece PROIBIDA
 
   Cenario: [Bloqueio] Catalogo inteiro sem candidato avaliavel
     Dado que todos os candidatos do catalogo estao incompletos
@@ -368,15 +474,22 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       | tabulatedAmpacity_A |
       | provenance          |
 
-  Cenario: [300] Ampacidade de 300 nao finita -> fail-closed
-    Dado a entrada de "300 mm²" com "tabulatedAmpacity_A" nao finita (NaN ou Infinity)
-    Quando a camada valida
-    Entao o candidato de 300 e rejeitado, sem numero utilizavel e sem ampacidade inventada
+  Esquema do Cenario: [300] Ampacidade de 300 nao finita -> CANDIDATE_VALUE_INVALID
+    Dado a entrada de "300 mm²" com "tabulatedAmpacity_A" nao finita "<valor>"
+    Quando a camada valida os escalares presentes
+    Entao o resultado e "CANDIDATE_VALUE_INVALID" com invalidFields { path: "tabulatedAmpacity_A", reason: "NON_FINITE", observedType: "<observedType>" }
+    E o candidato de 300 e rejeitado, sem numero utilizavel e sem ampacidade inventada
+
+    Exemplos:
+      | valor     | observedType     |
+      | NaN       | number:NaN       |
+      | +Infinity | number:+Infinity |
+      | -Infinity | number:-Infinity |
 
   Cenario: [300] Impedancia de 300 nao finita em representacao unica -> CANDIDATE_IMPEDANCE_VALUE_INVALID
-    Dado a entrada de "300 mm²" (sem conflito) com componente de impedancia nao finita
+    Dado a entrada de "300 mm²" (sem conflito) com componente de impedancia nao finita (ex.: re = +Infinity)
     Quando a camada valida
-    Entao o resultado e "CANDIDATE_IMPEDANCE_VALUE_INVALID" com "invalidFields[]" e reason "NON_FINITE"
+    Entao o resultado e "CANDIDATE_IMPEDANCE_VALUE_INVALID" com "invalidFields[]", reason "NON_FINITE" e observedType "number:+Infinity"
 
   Cenario: [300] Conflito de representacao na entrada de 300
     Dado a entrada de "300 mm²" com "impedance_ohm" presente E "resistance_ohm"/"reactance_ohm" presentes
