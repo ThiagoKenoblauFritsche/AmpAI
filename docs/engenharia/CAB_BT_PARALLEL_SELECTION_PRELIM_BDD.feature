@@ -71,7 +71,7 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       | material             |
       | insulation           |
       | installationMethod   |
-      | referenceTemperature |
+      | referenceTemperature_C |
       | units                |
       | source               |
       | sourceVersion        |
@@ -284,26 +284,26 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
     Entao emite nota QUALITATIVA "avaliar barramento/busway (limiar normativo AUSENTE — B-04)"
     E NAO emite recomendacao comercial automatica
 
-  # ───────────────── UNIVERSO CARTESIANO COMPLETO (20 COMBINACOES) ─────────────────
+  # ───────────────── UNIVERSO CARTESIANO COMPLETO (24 COMBINACOES; catalogo estendido a 300) ─────────────────
 
   Cenario: [Universo] Produto cartesiano completo sem poda silenciosa
-    Dado o catalogo {95,120,150,185,240} e "n_p max = 4"
+    Dado o catalogo estendido {95,120,150,185,240,300} e "n_p max = 4"
     Quando a camada forma o universo U = catalogo x {1,2,3,4}
-    Entao "evaluatedCandidates" tem exatamente 20 combinacoes
+    Entao "evaluatedCandidates" tem exatamente 24 combinacoes
     E NAO ha amostragem parcial nem poda silenciosa
     E qualquer poda autorizada pelo usuario ocorre ANTES de formar U e e registrada nominalmente
 
-  Cenario: [Universo] Contagens reconciliadas 20 / 11 / 9 / 11
-    Dado o universo U (base I_b=600, U_LL=400, ΔUmax=3%, k_g=0,8, I_k=20000, t=0,2, k=115)
+  Cenario: [Universo] Contagens reconciliadas 24 / 14 / 10 / 14 (antes: 20 / 11 / 9 / 11)
+    Dado o universo U (base I_b=600, U_LL=400, ΔUmax=3%, k_g=0,8, I_k=20000, t=0,2, k=115; A(300)=516 ASSUMPTION_ONLY)
     Quando a camada particiona U pelo nucleo real
-    Entao "evaluatedCandidates" = 20
-    E "candidateAlternatives" (validas) = 11
-    E "rejectedCandidates" = 9
-    E "nonDominatedAlternatives" = 11
+    Entao "evaluatedCandidates" = 24
+    E "candidateAlternatives" (validas) = 14
+    E "rejectedCandidates" = 10
+    E "nonDominatedAlternatives" = 14
     E "candidateAlternatives" uniao "rejectedCandidates" = "evaluatedCandidates" (reconciliacao)
     E "nonDominatedAlternatives" esta contido em "candidateAlternatives"
 
-  Esquema do Cenario: [Universo] Inventario das 11 validas
+  Esquema do Cenario: [Universo] Inventario das 14 validas (3 novas de 300 mm²)
     Dado a candidata valida "<id>"
     Entao seu "nParallel" e "<nP>", "totalCopper_mm2" e "<cobre>" e a margem minima e aproximadamente "<m>"
 
@@ -311,17 +311,20 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       | id      | nP | cobre | m        |
       | 2 x 185 | 2  | 370   | 0,013333 |
       | 2 x 240 | 2  | 480   | 0,186667 |
+      | 2 x 300 | 2  | 600   | 0,376000 |
       | 3 x 120 | 3  | 360   | 0,140000 |
       | 3 x 150 | 3  | 450   | 0,320000 |
       | 3 x 185 | 3  | 555   | 0,520000 |
       | 3 x 240 | 3  | 720   | 0,655766 |
+      | 3 x 300 | 3  | 900   | 0,704480 |
       | 4 x 95  | 4  | 380   | 0,280000 |
       | 4 x 120 | 4  | 480   | 0,520000 |
       | 4 x 150 | 4  | 600   | 0,632218 |
       | 4 x 185 | 4  | 740   | 0,687515 |
       | 4 x 240 | 4  | 960   | 0,741824 |
+      | 4 x 300 | 4  | 1200  | 0,778360 |
 
-  Esquema do Cenario: [Universo] Inventario das 9 rejeitadas (sem omissao)
+  Esquema do Cenario: [Universo] Inventario das 10 rejeitadas (sem omissao; inclui 1×300)
     Dado a candidata rejeitada "<id>"
     Entao os criterios reprovados sao "<fails>" e nenhum blocker de nucleo se aplica
 
@@ -332,22 +335,78 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       | 1 x 150 | AMPACIDADE, QUEDA |
       | 1 x 185 | AMPACIDADE, QUEDA |
       | 1 x 240 | AMPACIDADE, QUEDA |
+      | 1 x 300 | AMPACIDADE        |
       | 2 x 95  | AMPACIDADE, QUEDA |
       | 2 x 120 | AMPACIDADE        |
       | 2 x 150 | AMPACIDADE        |
       | 3 x 95  | AMPACIDADE        |
 
-  Cenario: [Universo] Candidatas antes omitidas agora presentes
-    Dado o universo completo U
+  Cenario: [Universo] 300 mm²: 1×300 reprova; 2×300, 3×300 e 4×300 sao validas
+    Dado o catalogo estendido e "A(300)=516 A" ASSUMPTION_ONLY
+    Quando a camada avalia as combinacoes de 300 mm² pelo nucleo real
+    Entao "1 x 300" e rejeitada por "AMPACIDADE" (I_adm=413 < 600; ΔU=2,660% OK; curto OK)
+    E "2 x 300" atende (cobre=600, m*=0,376000)
+    E "3 x 300" atende (cobre=900, m*=0,704480)
+    E "4 x 300" atende (cobre=1200, m*=0,778360)
+    E todas mantem "productionAllowed=false" e "installableSelection=null"
+
+  Cenario: [Universo] Candidatas antes omitidas e as novas de 300 estao presentes
+    Dado o universo completo U (24 combinacoes)
     Entao as candidatas "2 x 185", "3 x 120", "3 x 185", "3 x 240", "4 x 95", "4 x 150", "4 x 185" e "4 x 240" estao presentes e avaliadas
+    E as novas "1 x 300", "2 x 300", "3 x 300" e "4 x 300" estao presentes e avaliadas
     E nenhuma foi omitida por nao aparecer em exemplos ilustrativos anteriores
 
-  # ───────────────────────── FRONTEIRA NAO DOMINADA (11) ─────────────────────────
+  # ─────────────── ENTRADA DE 300 mm²: FAIL-CLOSED E CATALOGO HETEROGENEO ───────────────
 
-  Cenario: [Fronteira] Todas as 11 validas sao nao dominadas
-    Dado as 11 candidatas validas do universo base
+  Esquema do Cenario: [300] Campo escalar obrigatorio ausente na entrada de 300 -> CANDIDATE_INCOMPLETE
+    Dado a entrada de "300 mm²" sem o campo escalar obrigatorio "<campo>"
+    Quando a camada valida o candidato de 300
+    Entao e rejeitado como "CANDIDATE_INCOMPLETE" com "missingFields[]" contendo "<campo>"
+
+    Exemplos:
+      | campo               |
+      | tabulatedAmpacity_A |
+      | provenance          |
+
+  Cenario: [300] Ampacidade de 300 nao finita -> fail-closed
+    Dado a entrada de "300 mm²" com "tabulatedAmpacity_A" nao finita (NaN ou Infinity)
+    Quando a camada valida
+    Entao o candidato de 300 e rejeitado, sem numero utilizavel e sem ampacidade inventada
+
+  Cenario: [300] Impedancia de 300 nao finita em representacao unica -> CANDIDATE_IMPEDANCE_VALUE_INVALID
+    Dado a entrada de "300 mm²" (sem conflito) com componente de impedancia nao finita
+    Quando a camada valida
+    Entao o resultado e "CANDIDATE_IMPEDANCE_VALUE_INVALID" com "invalidFields[]" e reason "NON_FINITE"
+
+  Cenario: [300] Conflito de representacao na entrada de 300
+    Dado a entrada de "300 mm²" com "impedance_ohm" presente E "resistance_ohm"/"reactance_ohm" presentes
+    Quando a camada aplica a precedencia (conflito primeiro, por presenca)
+    Entao o resultado e "CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT"
+
+  Esquema do Cenario: [Catalogo] Campo homogeneo divergente -> CANDIDATE_STRUCTURE_INVALID / catalog_heterogeneous
+    Dado um candidato cujo campo homogeneo "<campo>" DIVERGE do perfil laboratorial do catalogo
+    Quando a camada valida a homogeneidade do catalogo
+    Entao o codigo e "CANDIDATE_STRUCTURE_INVALID" com reason "catalog_heterogeneous"
+    E o campo divergente "<campo>" e identificado nominalmente
+    E a candidata divergente e BLOQUEADA, sem aceitacao silenciosa
+    E nenhum numero utilizavel e produzido para a candidata
+    E NAO ha fallback nem normalizacao do campo divergente
+
+    Exemplos:
+      | campo                  |
+      | material               |
+      | insulation             |
+      | installationMethod     |
+      | referenceTemperature_C |
+      | units                  |
+
+  # ───────────────────────── FRONTEIRA NAO DOMINADA (14) ─────────────────────────
+
+  Cenario: [Fronteira] Todas as 14 validas sao nao dominadas (3 novas de 300 entram; nenhuma existente sai)
+    Dado as 14 candidatas validas do universo base estendido
     Quando a camada computa a fronteira (n_p min exato, cobre min exato, margem minima max com tolerancia +-0,5%)
-    Entao "nonDominatedAlternatives" contem as 11 validas
+    Entao "nonDominatedAlternatives" contem as 14 validas
+    E "2 x 300", "3 x 300" e "4 x 300" entram na fronteira e nenhuma existente e removida
     E nenhuma candidata domina outra, pois cada uma preserva alguma troca entre n_p, cobre e margem
     E a saida retorna TODAS as candidatas e DESTACA a fronteira sem eleger instalavel
 
@@ -364,39 +423,39 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
 
   # ───────────────────────── OBJETIVO CONFIGURAVEL ─────────────────────────
 
-  Esquema do Cenario: [Objetivo] Comparador total por objetivo (11 validas)
-    Dado as 11 candidatas validas
+  Esquema do Cenario: [Objetivo] Comparador total por objetivo (14 validas); 300 mm² muda dois firsts
+    Dado as 14 candidatas validas
     Quando o objetivo ativo e "<objetivo>"
-    Entao a PRIMEIRA na ordem de apresentacao e "<primeira>"
+    Entao a PRIMEIRA na ordem de apresentacao e "<primeira>" (antes era "<antes>")
     E nenhuma candidata e chamada de solucao IEC ou instalavel
 
     Exemplos:
-      | objetivo            | primeira |
-      | NONE                | 2 x 185  |
-      | MIN_PARALLEL_COUNT  | 2 x 240  |
-      | MIN_TOTAL_COPPER    | 3 x 120  |
-      | MAX_MINIMUM_MARGIN  | 4 x 240  |
+      | objetivo            | primeira | antes   |
+      | NONE                | 2 x 185  | 2 x 185 |
+      | MIN_PARALLEL_COUNT  | 2 x 300  | 2 x 240 |
+      | MIN_TOTAL_COPPER    | 3 x 120  | 3 x 120 |
+      | MAX_MINIMUM_MARGIN  | 4 x 300  | 4 x 240 |
 
-  Cenario: [Objetivo] Empate primario e desempate de MIN_PARALLEL_COUNT
-    Dado que "2 x 185" e "2 x 240" empatam em nParallel = 2
+  Cenario: [Objetivo] Empate primario e desempate de MIN_PARALLEL_COUNT (agora com 2×300)
+    Dado que "2 x 185", "2 x 240" e "2 x 300" empatam em nParallel = 2
     Quando o objetivo e "MIN_PARALLEL_COUNT" (n_p asc, margem minima desc, cobre asc, secao asc, candidateId asc)
-    Entao o desempate por margem minima decrescente coloca "2 x 240" (0,186667) ANTES de "2 x 185" (0,013333)
+    Entao o desempate por margem minima decrescente coloca "2 x 300" (0,376000) ANTES de "2 x 240" (0,186667) e "2 x 185" (0,013333)
     E isso e ordenacao por preferencia, nao selecao instalavel
 
-  Cenario: [Objetivo] MIN_TOTAL_COPPER inicia por 3 x 120
+  Cenario: [Objetivo] MIN_TOTAL_COPPER inicia por 3 x 120 (inalterado por 300)
     Dado o objetivo "MIN_TOTAL_COPPER"
-    Quando a camada ordena as 11 validas
+    Quando a camada ordena as 14 validas
     Entao a primeira e "3 x 120" (cobre total 360 mm²)
     E NAO e chamada de selecionada nem recomendada
 
-  Cenario: [Objetivo] MAX_MINIMUM_MARGIN inicia por 4 x 240
+  Cenario: [Objetivo] MAX_MINIMUM_MARGIN inicia por 4 x 300 (antes 4 x 240)
     Dado o objetivo "MAX_MINIMUM_MARGIN"
-    Quando a camada ordena as 11 validas
-    Entao a primeira e "4 x 240" (margem minima 0,741824)
+    Quando a camada ordena as 14 validas
+    Entao a primeira e "4 x 300" (margem minima 0,778360), acima de "4 x 240" (0,741824)
 
   Cenario: [Objetivo] NONE nao elege e usa ordem de apresentacao
     Dado o objetivo "NONE"
-    Quando a camada apresenta as 11 validas
+    Quando a camada apresenta as 14 validas
     Entao nenhuma candidata e eleita ("NO_CANDIDATE_ELECTED", "PRESENTATION_ORDER_ONLY")
     E a ordem e determinística: nParallel asc, section_mm2 asc, candidateId asc
     E a primeira apresentada e "2 x 185"

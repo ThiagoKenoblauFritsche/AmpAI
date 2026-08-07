@@ -67,8 +67,9 @@ registrada nominalmente. A saída particiona $U$ deterministicamente:
 **`evaluatedCandidates`** (todo $U$) = **`candidateAlternatives`** (válidas) ∪ **`rejectedCandidates`**
 (reprovadas/bloqueadas); **`nonDominatedAlternatives`** ⊆ válidas; **`providedCombination`** quando o usuário
 informa uma combinação. **Reconciliação obrigatória** das contagens. Preserva `installableSelection: null`,
-`DISCRETE_SELECTION_BLOCKED`, `productionAllowed=false`. Exemplo-base: $|U|=5\times4=20$ → **20** avaliadas,
-**11** válidas, **9** rejeitadas, **11** não dominadas (Memorial §6.0).
+`DISCRETE_SELECTION_BLOCKED`, `productionAllowed=false`. Exemplo-base **atual** (catálogo estendido a
+300 mm²): $|U|=6\times4=24$ → **24** avaliadas, **14** válidas, **10** rejeitadas, **14** não dominadas
+(Memorial §6.0). **Antes — catálogo limitado a 240 mm²:** 20 / 11 / 9 / 11.
 
 ---
 
@@ -133,10 +134,22 @@ $$\underline{Z}(S) = \frac{2{,}25}{S} + j\,0{,}008\ \Omega, \qquad
 - **Sem validade normativa**; **proibida** extrapolação silenciosa a outras seções, comprimentos,
   materiais ou geometrias.
 
+**Sexta seção — 300 mm² (CAB-BT-PARALLEL-003).** Estende-se o catálogo laboratorial para
+{95,120,150,185,240,**300**}. Impedância: $\underline{Z}(300)=0{,}0075+j0{,}008\ \Omega$ — **$R=0{,}0075\ \Omega$
+decorre apenas desta hipótese laboratorial** ($2{,}25/300$), **não da IEC**, e **não** é dado normativo nem
+comercial. Ampacidade $A(300)=516$ A é **`ASSUMPTION_ONLY`**, obtida por **extrapolação linear monótona
+documentada** dos dois pontos superiores (não silenciosa; sensibilidade ≈509–516 A). O universo recalculado
+(24 combinações, 14 válidas) e o efeito nos objetivos estão em
+[[cab-bt-parallel-selection-prelim-memorial]] §6.0-A e §6.0. Os metadados exatos do catálogo executável
+(`material=COPPER_LAB`, `insulation=LAB_UNSPECIFIED`, `installationMethod=LAB_UNSPECIFIED`,
+`referenceTemperature_C=30`, `units=SI`, `source=LAB_CATALOG`, `sourceVersion=PRELIM-1`) são
+**identificadores laboratoriais** — **não especificação física, comercial ou normativa de cabo** (§6.0-A).
+`productionAllowed=false`; **sem** conformidade IEC; **sem** recomendação de compra ou instalação.
+
 **Schema de cada candidato de catálogo.** **Dez campos escalares obrigatórios** — exigidos
 **independentemente** da representação de impedância:
 
-`section_mm2`, `tabulatedAmpacity_A`, `material`, `insulation`, `installationMethod`, `referenceTemperature`,
+`section_mm2`, `tabulatedAmpacity_A`, `material`, `insulation`, `installationMethod`, `referenceTemperature_C`,
 `units`, `source`, `sourceVersion`, `provenance`.
 
 Mais **exatamente uma** representação de impedância:
@@ -187,7 +200,7 @@ string numérica em number.
 **Ordem canônica de `missingFields[]`** (coletar todos os ausentes aplicáveis, remover duplicidades, ordenar
 **sempre** por esta lista — a ordem de entrada não interfere; mesma entrada semântica em ordens diferentes
 gera resultado idêntico): `section_mm2` (1) · `tabulatedAmpacity_A` (2) · `material` (3) · `insulation` (4)
-· `installationMethod` (5) · `referenceTemperature` (6) · `units` (7) · `source` (8) · `sourceVersion` (9)
+· `installationMethod` (5) · `referenceTemperature_C` (6) · `units` (7) · `source` (8) · `sourceVersion` (9)
 · `provenance` (10) · `impedanceRepresentation` (11) · `impedance_ohm.re` (12) · `impedance_ohm.im` (13) ·
 `resistance_ohm` (14) · `reactance_ohm` (15).
 
@@ -200,7 +213,13 @@ independente da ordem de entrada): `impedance_ohm` (1) · `impedance_ohm.re` (2)
   (`candidateId`, `missingFields[]` canônico, `mode`, `provenance` observada);
 - **nenhuma normalização inventa componente ausente**; `impedance_ohm` **incompleto não cai** para R/X;
 - ausência de **metadados globais indispensáveis** (tensão, $I_b$, $I_k$, $t$, objetivo-modo) →
-  **`GLOBAL_METADATA_MISSING`**; **catálogo sem candidato completo** → **`CATALOG_NO_EVALUABLE_CANDIDATE`**.
+  **`GLOBAL_METADATA_MISSING`**; **catálogo sem candidato completo** → **`CATALOG_NO_EVALUABLE_CANDIDATE`**;
+- **homogeneidade do catálogo:** candidato cujo campo homogêneo (`material`, `insulation`,
+  `installationMethod`, `referenceTemperature_C`, `units`) **diverge** do perfil laboratorial do catálogo →
+  **`CANDIDATE_STRUCTURE_INVALID`** (`reason: catalog_heterogeneous`), com o campo divergente identificado
+  nominalmente; candidata **bloqueada** (sem aceitação silenciosa), **nenhum** número utilizável, **nenhum**
+  fallback ou normalização do campo divergente. A entrada de 300 mm² ratificada (§6.0-A) **é homogênea** —
+  esta regra é o guardrail; a reexecução comprovou `catalog_heterogeneous=0`.
 
 ---
 
@@ -244,10 +263,11 @@ por um **objetivo** — preferência do usuário/produto, **nunca IEC**:
 
 Regras: **ausência de objetivo não elege candidata**; ordenação fixa existe **apenas** para apresentação
 determinística; **o objetivo não transforma candidata em seleção instalável**. Exemplo sobre o universo
-completo de 11 válidas (Memorial §5/§6.0): `NONE` → 2×185 (só apresentação, nada eleito);
-`MIN_PARALLEL_COUNT` → 2×240 primeiro (empate $n_p=2$ desempatado por margem, 2×240 antes de 2×185);
-`MIN_TOTAL_COPPER` → **3×120** primeiro (360 mm²); `MAX_MINIMUM_MARGIN` → 4×240 primeiro; **nenhuma** é
-"solução IEC" ou instalável.
+completo **estendido — 24 combinações / 14 válidas / 10 rejeitadas / 14 não dominadas** (Memorial §5/§6.0):
+`NONE` → 2×185 (só apresentação, nada eleito); `MIN_PARALLEL_COUNT` → **2×300** primeiro (empate $n_p=2$
+desempatado por margem: 2×300 antes de 2×240 e 2×185); `MIN_TOTAL_COPPER` → **3×120** primeiro (360 mm²);
+`MAX_MINIMUM_MARGIN` → **4×300** primeiro; **nenhuma** é "solução IEC" ou instalável, nem recomendação ou
+autorização de instalação.
 
 ---
 

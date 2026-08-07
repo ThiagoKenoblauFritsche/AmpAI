@@ -94,21 +94,21 @@ solução instalável.
 
 ## 5. Objetivo configurável — comparadores totais (Objetivos 7–11)
 
-O **objetivo** (preferência do usuário/produto, **nunca IEC**) apenas **ordena** as **11 candidatas
+O **objetivo** (preferência do usuário/produto, **nunca IEC**) apenas **ordena** as **14 candidatas
 válidas** (universo completo §6.0); **não** elege solução instalável. Comparadores **totais
 determinísticos** (desempate final por `candidateId` crescente):
 
-| Objetivo | Cadeia de comparação | Primeira na ordem (verificada) |
-|---|---|---|
-| `NONE` | $n_p$↑, `section_mm2`↑, `candidateId`↑ | **2×185** — `PRESENTATION_ORDER_ONLY`, `NO_CANDIDATE_ELECTED` |
-| `MIN_PARALLEL_COUNT` | $n_p$↑, $m^\star$↓, $C$↑, $S$↑, `candidateId`↑ | **2×240** |
-| `MIN_TOTAL_COPPER` | $C$↑, $m^\star$↓, $n_p$↑, $S$↑, `candidateId`↑ | **3×120** ($C=360$ mm²) |
-| `MAX_MINIMUM_MARGIN` | $m^\star$↓, $C$↑, $n_p$↑, $S$↑, `candidateId`↑ | **4×240** ($m^\star=0{,}741824$) |
+| Objetivo | Cadeia de comparação | Primeira na ordem (verificada) | Antes (até 240) |
+|---|---|---|---|
+| `NONE` | $n_p$↑, `section_mm2`↑, `candidateId`↑ | **2×185** — `PRESENTATION_ORDER_ONLY`, `NO_CANDIDATE_ELECTED` | 2×185 (igual) |
+| `MIN_PARALLEL_COUNT` | $n_p$↑, $m^\star$↓, $C$↑, $S$↑, `candidateId`↑ | **2×300** | 2×240 → **mudou** |
+| `MIN_TOTAL_COPPER` | $C$↑, $m^\star$↓, $n_p$↑, $S$↑, `candidateId`↑ | **3×120** ($C=360$ mm²) | 3×120 (igual) |
+| `MAX_MINIMUM_MARGIN` | $m^\star$↓, $C$↑, $n_p$↑, $S$↑, `candidateId`↑ | **4×300** ($m^\star=0{,}778360$) | 4×240 → **mudou** |
 
-**Empate primário de `MIN_PARALLEL_COUNT`:** 2×185 e 2×240 empatam em $n_p=2$; o desempate por **margem
-mínima decrescente** coloca **2×240** ($m^\star=0{,}186667$) **antes** de **2×185** ($m^\star=0{,}013333$).
-`NONE` **não** aplica esse desempate (ordena por $n_p$ depois $S$), logo começa por **2×185** — evidenciando
-que a ordem é preferência de apresentação, não eleição.
+**300 mm² altera duas ordens:** `MIN_PARALLEL_COUNT` passa a começar por **2×300** (empate em $n_p=2$
+desempatado por margem: 2×300 $m^\star=0{,}376$ > 2×240 $0{,}186667$ > 2×185 $0{,}013333$); `MAX_MINIMUM_MARGIN`
+por **4×300** ($m^\star=0{,}778360>0{,}741824$ de 4×240). `NONE` (2×185) e `MIN_TOTAL_COPPER` (3×120) **não**
+mudam. **Nenhuma primeira posição é seleção ou recomendação instalável.**
 
 Todas as ordens são **preferência de apresentação**: `firstInPresentationOrder` **não** significa
 instalação autorizada. `installableSelection: null`, `DISCRETE_SELECTION_BLOCKED`, `productionAllowed=false`.
@@ -120,37 +120,70 @@ Nenhuma candidata é chamada de selecionada/recomendada/solução final/dimensio
 
 Base: $U_{LL}=400$ V, $\cos\varphi=0{,}9$, $I_b=600$ A, $I_k=20\,000$ A, $t=0{,}2$ s, $k=115$,
 $k_g=0{,}8$ (**`LAB_CONSTANT_CONFIRMED` / `ASSUMPTION_ONLY`**), $\Delta U_{max}=3\%$, ramos idênticos
-(**$\delta_{load}=1$ produzido pelo L0**), catálogo `ASSUMPTION_ONLY` {95:240, 120:285, 150:330, 185:380,
-240:445} A, modelo $\underline{Z}(S)=\tfrac{2{,}25}{S}+j0{,}008\ \Omega$ (RNC-P §5; $L_{ref}=100$ m).
+(**$\delta_{load}=1$ produzido pelo L0**), catálogo `ASSUMPTION_ONLY` **estendido** {95:240, 120:285,
+150:330, 185:380, 240:445, **300:516**} A (entrada de 300 mm² em §6.0-A), modelo
+$\underline{Z}(S)=\tfrac{2{,}25}{S}+j0{,}008\ \Omega$ (RNC-P §5; $L_{ref}=100$ m).
+
+### 6.0-A Entrada laboratorial de 300 mm² (sexta seção)
+
+Campos **exatos do catálogo executável** (todos `ASSUMPTION_ONLY`; **identificadores laboratoriais — não
+especificação física, comercial ou normativa de cabo**; **não IEC**):
+`section_mm2=300` · `tabulatedAmpacity_A=516` · `material=COPPER_LAB` · `insulation=LAB_UNSPECIFIED` ·
+`installationMethod=LAB_UNSPECIFIED` · `referenceTemperature_C=30` · `units=SI` · `source=LAB_CATALOG` ·
+`sourceVersion=PRELIM-1` · `provenance=ASSUMPTION_ONLY` · `impedance_ohm={ re: 0.0075, im: 0.008 }`
+(representação `IMPEDANCE_COMPLEX`).
+
+**Ampacidade — método documentado (sem extrapolação silenciosa):** os valores do catálogo são placeholders
+de laboratório. Adota-se **extrapolação linear monótona** dos dois pontos superiores $(185,380)$ e
+$(240,445)$: inclinação $\tfrac{445-380}{240-185}=1{,}1818\ \text{A/mm}^2$ ⇒ $A(300)=445+1{,}1818\cdot60=
+515{,}9\approx\mathbf{516}$ A. **Sensibilidade:** a lei de potência $A=c\,S^{n}$ (mesmos dois pontos) dá
+$A(300)=509{,}5$ A; **intervalo produzido pelos dois métodos de extrapolação avaliados: aproximadamente
+509–516 A**. **Valor determinístico adotado: 516 A** (`ASSUMPTION_ONLY`);
+qualquer valor sem fonte primária é `ASSUMPTION_ONLY`; **nenhuma conformidade IEC**.
+
+**Impedância:** estende-se a hipótese laboratorial $\underline{Z}(S)=\tfrac{2{,}25}{S}+j0{,}008\ \Omega$ →
+$\underline{Z}(300)=\mathbf{0{,}0075}+j0{,}008\ \Omega$. **$R=0{,}0075\ \Omega$ decorre apenas dessa hipótese
+laboratorial** ($2{,}25\ \Omega\cdot\text{mm}^2 / 300\ \text{mm}^2$), **não da IEC**, e **não** é dado
+normativo nem comercial.
+
+**Robustez do universo (sensibilidade):** para qualquer $A(300)\ge 480$ A o resultado qualitativo é
+**invariante** (14 válidas, fronteira 14, `MIN_PARALLEL_COUNT`→2×300, `MAX_MINIMUM_MARGIN`→4×300). O ponto
+$A(300)=445$ A é **cenário-limite externo à faixa de extrapolação adotada** (509–516 A), **não utilizado
+como valor do catálogo** e **incluído apenas como contraprova de sensibilidade** (nesse limite o 2×300
+empataria com 2×240); **nenhuma conclusão física universal** é formulada sem fonte primária. As duas
+extrapolações (509/516 A) caem na faixa robusta.
 
 ### 6.0 Universo cartesiano completo (vinculante)
 
-$U = \text{catálogo}\times\{1,\dots,n_p^{max}\}$; catálogo {95,120,150,185,240}, $n_p^{max}=4$ ⇒
-$|U|=5\times4=\mathbf{20}$. **Proibidos** amostragem parcial, poda silenciosa, fronteira sobre subconjunto
-ilustrativo e objetivos sobre subconjunto diferente de $U$. Poda autorizada por entrada do usuário ocorre
-**antes** de formar $U$ e é registrada nominalmente.
+$U = \text{catálogo}\times\{1,\dots,n_p^{max}\}$; catálogo **estendido** {95,120,150,185,240,**300**},
+$n_p^{max}=4$ ⇒ $|U|=6\times4=\mathbf{24}$. **Proibidos** amostragem parcial, poda silenciosa, fronteira
+sobre subconjunto ilustrativo e objetivos sobre subconjunto diferente de $U$.
 
-**Partição determinística (verificada no motor real):** `evaluatedCandidates`=**20** ·
-`candidateAlternatives`=**11** · `rejectedCandidates`=**9** · `nonDominatedAlternatives`=**11**. Reconciliação:
-$11+9=20$; $\text{nonDominated}\subseteq\text{candidateAlternatives}$.
+**Partição determinística (verificada no motor real):** `evaluatedCandidates`=**24** ·
+`candidateAlternatives`=**14** · `rejectedCandidates`=**10** · `nonDominatedAlternatives`=**14**.
+Reconciliação: $14+10=24$; $\text{nonDominated}\subseteq\text{candidateAlternatives}$.
+**Antes** (catálogo até 240): 20 / 11 / 9 / 11.
 
-**As 11 candidatas válidas** ($m^\star$ = precisão do motor):
+**As 14 candidatas válidas** ($m^\star$ = precisão do motor; **em negrito as 3 novas de 300 mm²**):
 
 | Candidata | $n_p$ | Cobre (mm²) | $m^\star$ |
 |---|---:|---:|---:|
 | 2×185 | 2 | 370 | 0,013333 |
 | 2×240 | 2 | 480 | 0,186667 |
+| **2×300** | 2 | 600 | **0,376000** |
 | 3×120 | 3 | 360 | 0,140000 |
 | 3×150 | 3 | 450 | 0,320000 |
 | 3×185 | 3 | 555 | 0,520000 |
 | 3×240 | 3 | 720 | 0,655766 |
+| **3×300** | 3 | 900 | **0,704480** |
 | 4×95 | 4 | 380 | 0,280000 |
 | 4×120 | 4 | 480 | 0,520000 |
 | 4×150 | 4 | 600 | 0,632218 |
 | 4×185 | 4 | 740 | 0,687515 |
 | 4×240 | 4 | 960 | 0,741824 |
+| **4×300** | 4 | 1200 | **0,778360** |
 
-**As 9 candidatas rejeitadas** (sem omissão; nenhuma tem blocker de núcleo — reprovação de critério em L1):
+**As 10 candidatas rejeitadas** (sem omissão; nenhuma tem blocker de núcleo — reprovação de critério em L1):
 
 | Candidata | $I_{adm}$ (A) | $\Delta U\%$ | $S_{min}$ (mm²) | Critérios reprovados |
 |---|---:|---:|---:|---|
@@ -159,14 +192,15 @@ $11+9=20$; $\text{nonDominated}\subseteq\text{candidateAlternatives}$.
 | 1×150 | 264 | 4,413 | 77,78 | AMPACIDADE, QUEDA |
 | 1×185 | 304 | 3,750 | 77,78 | AMPACIDADE, QUEDA |
 | 1×240 | 356 | 3,098 | 77,78 | AMPACIDADE, QUEDA |
+| **1×300** | **413** | **2,660** | 77,78 | **AMPACIDADE** |
 | 2×95 | 384 | 3,222 | 38,89 | AMPACIDADE, QUEDA |
 | 2×120 | 456 | 2,645 | 38,89 | AMPACIDADE |
 | 2×150 | 528 | 2,207 | 38,89 | AMPACIDADE |
 | 3×95 | 576 | 2,148 | 25,93 | AMPACIDADE |
 
-**Fronteira = todas as 11 válidas.** Não é erro: cada candidata preserva uma **troca** entre quantidade de
-cabos ($n_p$), cobre total e margem mínima; nenhuma domina outra (verificado). **Nenhuma candidata pode ser
-removida da fronteira por não ter aparecido em exemplos ilustrativos anteriores.**
+**Fronteira = todas as 14 válidas.** Cada candidata preserva uma **troca** entre $n_p$, cobre e margem;
+nenhuma domina outra (verificado). As **3 novas** (2×300, 3×300, 4×300) **entram** na fronteira e **nenhuma
+existente é removida**.
 
 ---
 
@@ -179,7 +213,7 @@ Catálogo {240}, $I_b=600$, $n_p^{max}=2$: **1×240** rejeitado (amp 356<600; Δ
 (712) → única candidata válida deste catálogo restrito.
 
 #### 6.2 Critérios e dominante por AMPACIDADE (subconjunto ilustrativo)
-Três das 11 válidas do §6.0, para ilustrar critérios (não é a fronteira — a fronteira tem 11):
+Três das 14 válidas do §6.0, para ilustrar critérios (não é a fronteira — a fronteira tem 14):
 
 | Cand. | $I_{adm}$ (A) | $m_{amp}$ | $\Delta U\%$ | $m_{du}$ | $S_{min}$ | $m_{sc}$ | $m^\star$ |
 |---|---|---|---|---|---|---|---|
