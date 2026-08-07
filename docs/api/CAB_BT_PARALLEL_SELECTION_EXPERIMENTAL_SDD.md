@@ -8,14 +8,16 @@ consumers:
   - "@Senior_Frontend_Dev"
 lifecycle: "candidato até ratificação do Conselho; experimental enquanto a fonte primária integral estiver ausente"
 governanca: v7.3
-os: CAB-BT-PARALLEL-003-SDD-300MM2-EXP-R2
+os: CAB-BT-PARALLEL-003-SDD-NONFINITE-R4
 classe: CHG-3 arquitetural/contratual experimental
-baseline_imutavel: 122b885db40f69b422dac8ea4c2e419dc547220f
+baseline_imutavel: dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1
 baseline_cientifica_300mm2: 122b885db40f69b422dac8ea4c2e419dc547220f
+baseline_errata_nonfinite: dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1
+baseline_sdd_300mm2_r2: 380b949a9fba20bf63e9b052f03d5899046046c8
 baseline_core_green: 5411779a86a3280bb6b35a90e2efa8f024a7e1b8
 baseline_ui_green_anterior: c3e49d1a8bf6e8376e9f1ddd6d1c2737d5ce8f81
 baseline_red_visual_anterior: 0984fb0c0881df8d4e5c9f7ad520e383b8a586a8
-parecer_origem: CAB-BT-PARALLEL-003-SCI-300MM2-EXP-R2
+parecer_origem: CAB-BT-PARALLEL-003-SDD-NONFINITE-R3-AUDIT
 baseline_main_de_origem: 83e24131c0cc09813be65a5fa269961b9cc80c5c
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
@@ -117,13 +119,27 @@ implementação L1–L3 (`2b61627d…`) e não deve ser falsificado pela UI nem 
 contrato do core. A rastreabilidade da extensão ocorre pelo catálogo de entrada, por este SDD e pelos testes
 focais.
 
+### 1.3 Errata contratual de valores não finitos — R3
+
+Esta R3 incorpora a errata científica publicada em
+`dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1`. Ela não altera equações, valores de 300 mm², universo,
+fronteira ou objetivos. A emenda separa valores presentes inválidos nos dez escalares conhecidos de valores
+presentes inválidos na representação de impedância, preserva a taxonomia detalhada de não finitude e impede
+que uma entrada conhecida inválida alcance L0 ou a matemática L1–L3.
+
+### 1.4 Fechamento contratual R4
+
+Esta R4 fecha exclusivamente duas lacunas de schema identificadas na auditoria da R3: o valor de
+`provenance` com tipo string, porém fora do domínio `ASSUMPTION_ONLY`, e a identidade histórica exata da
+issue `CANDIDATE_IMPEDANCE_VALUE_INVALID`. Nenhuma contagem, fixture, ciência ou resultado focal é alterado.
+
 ## 2. Fontes, autoridade e precedência
 
 | Fonte | Identificação | Classe | Autoridade neste SDD |
 | --- | --- | --- | --- |
 | Registro científico prático | `RNC-P_CAB_BT_PARALLEL_SELECTION_PRELIM.md` em `122b885d…` | RNC-P experimental ratificado para SDD | requisitos e limites L1–L3, incluindo 300 mm² |
 | Memorial prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md` em `122b885d…` | memorial experimental | equações, casos e números esperados, incluindo 300 mm² |
-| BDD prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `122b885d…` | evidência comportamental científica | cenários obrigatórios da extensão focal |
+| BDD prático + errata nonfinite | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `dc37b9c…` | evidência comportamental científica | cenários obrigatórios da extensão focal e contrato de valores presentes inválidos |
 | Motor integrado | `js/core_cabos_bt_parallel_experimental.js` em `main@83e24131…` | implementação experimental L0 | única fonte executável de L0 |
 | SDD L0 | `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.md` | contrato experimental integrado | envelope e erros do L0 |
 | IEC 60364-5-52 Ed. 3.1 integral | ausente | norma primária ausente | **não disponível para regra produtiva** |
@@ -132,7 +148,7 @@ Precedência vinculante:
 
 1. norma primária integral e futuro RNC-C, quando ratificados;
 2. contrato L0 integrado para os cálculos que já executa;
-3. pacote científico `122b885d…` para L1–L3 e extensão focal de 300 mm²;
+3. pacote científico `122b885d…`, complementado pela errata `dc37b9c…`, para L1–L3 e extensão focal de 300 mm²;
 4. este SDD para estrutura de software, DTOs, Result Pattern e evidência;
 5. exemplos e textos de interface, que nunca substituem os itens anteriores.
 
@@ -572,9 +588,10 @@ Presença é existência da propriedade. A precedência é vinculante:
 3. sem `impedance_ohm`, com R ou X → validar `RESISTANCE_REACTANCE_PAIR`;
 4. nenhum → `CANDIDATE_INCOMPLETE`, `missingFields=["impedanceRepresentation"]`.
 
-Ausência usa `CANDIDATE_INCOMPLETE`; propriedade presente inválida usa
-`CANDIDATE_IMPEDANCE_VALUE_INVALID`. Não há coerção de string numérica, fallback, impedância parcial ou
-componente inventado.
+Ausência usa `CANDIDATE_INCOMPLETE`. Propriedade escalar conhecida presente e inválida usa
+`CANDIDATE_VALUE_INVALID`; propriedade de impedância presente e inválida usa exclusivamente
+`CANDIDATE_IMPEDANCE_VALUE_INVALID`. Não há coerção de string numérica, fallback, impedância parcial,
+componente inventado nem passagem de entrada inválida para L0/L1–L3.
 
 Ordem canônica de `missingFields[]`:
 
@@ -585,15 +602,89 @@ impedanceRepresentation, impedance_ohm.re, impedance_ohm.im,
 resistance_ohm, reactance_ohm
 ```
 
-Ordem canônica de `invalidFields[]`:
+Ordem canônica de `invalidFields[]` para os dez escalares:
+
+```text
+section_mm2, tabulatedAmpacity_A, material, insulation, installationMethod,
+referenceTemperature_C, units, source, sourceVersion, provenance
+```
+
+Ordem canônica de `invalidFields[]` para impedância:
 
 ```text
 impedance_ohm, impedance_ohm.re, impedance_ohm.im, resistance_ohm, reactance_ohm
 ```
 
-Cada `invalidFields[]` contém `{ path, reason, observedType }`; `reason` é
-`NOT_SIMPLE_OBJECT`, `NOT_NUMBER` ou `NON_FINITE`. As coleções acumulam todos os paths aplicáveis, removem
-duplicidades e são independentes da ordem das propriedades.
+Cada `invalidFields[]` contém exclusivamente `{ path, reason, observedType }`. Para escalares, `reason` é
+`NOT_NUMBER`, `NON_FINITE`, `OUT_OF_RANGE`, `NOT_STRING` ou `NOT_ASSUMPTION_ONLY`, conforme tipo e domínio
+do campo; para
+impedância, permanece `NOT_SIMPLE_OBJECT`, `NOT_NUMBER` ou `NON_FINITE`. As coleções acumulam todos os paths
+aplicáveis, removem duplicidades e são independentes da ordem das propriedades.
+
+`observedType` usa a taxonomia vinculante `number:NaN`, `number:+Infinity` e `number:-Infinity` para números
+não finitos. `number` fica reservado a número finito, inclusive fora de faixa. Os demais tipos são nominais:
+`string`, `boolean`, `object`, `array`, `null` e `undefined`. String numérica não é convertida.
+
+A issue escalar dentro de `CATALOG_NO_EVALUABLE_CANDIDATE.params.errors[]` possui schema fechado, sem
+propriedades adicionais:
+
+```json
+{
+  "code": "CANDIDATE_VALUE_INVALID",
+  "catalogEntryId": "300",
+  "catalogEntryIndex": 0,
+  "invalidFields": [
+    {
+      "path": "tabulatedAmpacity_A",
+      "reason": "NON_FINITE",
+      "observedType": "number:NaN"
+    }
+  ],
+  "mode": "CATALOGO_LAB_ASSUMPTION_ONLY"
+}
+```
+
+`code`, `catalogEntryId`, `catalogEntryIndex`, `invalidFields` e `mode` são obrigatórios. Cada item de
+`invalidFields` exige exatamente `path`, `reason` e `observedType`. Ausências e valores inválidos independentes
+no mesmo item acumulam issues na precedência da §11.1; conflito de representação continua terminal e impede
+qualquer issue posterior para o item.
+
+Para `provenance`, a resolução é determinística: valor presente não-string retorna `NOT_STRING`; valor string
+diferente de `ASSUMPTION_ONLY` retorna `NOT_ASSUMPTION_ONLY`. Caso técnico nominal de schema
+`R4-PROVENANCE-DOMAIN` — sem novo relatório ou `caseId`: entrada com `provenance="USER_CONFIRMED"` produz
+exatamente `invalidFields[0]={path:"provenance",reason:"NOT_ASSUMPTION_ONLY",observedType:"string"}` dentro
+de uma issue `CANDIDATE_VALUE_INVALID`; não alcança L0/L1–L3. A ordem canônica permanece a dos dez escalares.
+
+A issue histórica de impedância dentro de `CATALOG_NO_EVALUABLE_CANDIDATE.params.errors[]` também possui
+schema fechado, sem `candidateId`, `catalogEntryIndex` ou propriedade adicional:
+
+```json
+{
+  "code": "CANDIDATE_IMPEDANCE_VALUE_INVALID",
+  "catalogEntryId": "300",
+  "invalidFields": [
+    {
+      "path": "resistance_ohm",
+      "reason": "NON_FINITE",
+      "observedType": "number:+Infinity"
+    }
+  ],
+  "mode": "CATALOGO_LAB_ASSUMPTION_ONLY"
+}
+```
+
+Para essa issue, `code`, `catalogEntryId`, `invalidFields` e `mode` são os únicos campos obrigatórios e
+permitidos. Cada item de `invalidFields` continua fechado em `path`, `reason` e `observedType`.
+
+Em catálogo misto, um item escalarmente inválido não invalida entradas independentes válidas, mas suas
+combinações são bloqueadas antes de L0. A fixture vinculante usa `maxParallelCount=1`, item 95 válido e item
+300 com `tabulatedAmpacity_A=NaN`: `evaluatedCandidates[1].candidateId="1x300"`, status `BLOCKED`,
+`evaluatedCandidates[1].blockers[0].code="CANDIDATE_STRUCTURE_INVALID"` e
+`evaluatedCandidates[1].blockers[0].params.reason="candidate_value_invalid"`. `1x300` não aparece em
+`candidateAlternatives`, não produz número utilizável e não alcança L0/L1–L3. `catalogEntryIndex` não é índice
+de `evaluatedCandidates`; a posição `[1]` decorre somente dessa fixture e da ordem canônica. Uma localização
+alternativa exige igualdade exata de `candidateId`; busca recursiva, parcial ou por blocker semelhante é
+proibida.
 
 ### 4.5 Modos de catálogo
 
@@ -1174,7 +1265,8 @@ promoção; entrada `null` permanece `null`.
 | `CANDIDATE_STRUCTURE_INVALID` | item não objeto simples, propriedade desconhecida, catálogo heterogêneo ou seção duplicada | `{ catalogEntryId, catalogEntryIndex, reason, path?, conflictingEntryIds? }` |
 | `CANDIDATE_INCOMPLETE` | escalar/componente conhecido ausente | `{ candidateId, missingFields[], mode, provenance }` |
 | `CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT` | coexistência por presença | `{ candidateId, presentFields[] }` |
-| `CANDIDATE_IMPEDANCE_VALUE_INVALID` | valor presente não numérico/não finito | `{ candidateId, invalidFields[], mode }` |
+| `CANDIDATE_VALUE_INVALID` | valor presente inválido em um dos dez escalares conhecidos | issue fechada `{ code, catalogEntryId, catalogEntryIndex, invalidFields[], mode }` conforme §4.4 |
+| `CANDIDATE_IMPEDANCE_VALUE_INVALID` | valor presente inválido exclusivamente em `impedance_ohm`, `.re`, `.im`, `resistance_ohm` ou `reactance_ohm` | issue fechada `{ code, catalogEntryId, invalidFields[], mode }`; `candidateId` e `catalogEntryIndex` proibidos |
 | `GROUPING_MODE_INVALID` | modo `k_g` desconhecido | `{ received }` |
 | `GROUPING_FACTOR_MISSING` | entrada específica/matriz sem correspondência | `{ candidateId, nParallel, nCircuits }` |
 | `GROUPING_FACTOR_INVALID` | `k_g` fora de `(0,1]` ou não finito | `{ candidateId, value }` |
@@ -1183,15 +1275,16 @@ promoção; entrada `null` permanece `null`.
 | `ADVANCED_BRANCHES_INVALID` | mapa/descrição/ramos ausentes ou incompatíveis | mapa global: `{ reason:"map_not_array" }`; combinação: schema exato da matriz §4.7 |
 | `PROVIDED_COMBINATION_INVALID` | combinação informada fora do catálogo/domínio | `{ section_mm2, nParallel }` |
 | `NO_EVALUABLE_COMBINATION` | todas as combinações bloquearam antes/depois de L0 | `{ evaluatedCount, blockersByCandidate[] }` |
-| `NUMERIC_RESULT_NON_FINITE` | resultado L1–L3 não finito fora do caso `Smin=0` tratado | `{ stage, field, candidateId? }` |
+| `NUMERIC_RESULT_NON_FINITE` | resultado computacional inesperadamente não finito após todas as entradas serem válidas, fora do caso `Smin=0` tratado | `{ stage, field, candidateId? }` |
 | `PRODUCTION_USE_BLOCKED` | solicitação produtiva | `{ prohibitedUse }` |
 | `IEC_CONFORMITY_BLOCKED` | solicitação de conformidade | `{ sourceStatus }` |
 
 Erros L0 mantêm o código e `params` originais dentro do candidato. A camada não troca
 `PARALLEL_Z_ZERO`, `FAULT_IMBALANCE_MISSING`, `GROUPING_FACTOR_MISSING` ou outro código L0 por erro genérico.
 Nenhum código aceita `relatedCodes`. `GLOBAL_METADATA_MISSING.params` contém exclusivamente `paths`;
-propriedade desconhecida em item usa exclusivamente `CANDIDATE_STRUCTURE_INVALID`; valor ou estrutura de
-impedância usa o único código primário determinado pela precedência. Problemas independentes acumuláveis são
+propriedade desconhecida em item usa exclusivamente `CANDIDATE_STRUCTURE_INVALID`; valor escalar ou valor/
+estrutura de impedância usa o único código primário determinado pela precedência. `NUMERIC_RESULT_NON_FINITE`
+é defesa interna tardia e nunca substitui a validação de uma entrada conhecida inválida. Problemas independentes acumuláveis são
 objetos separados no array contratual, nunca códigos embutidos em params de outro problema.
 `advancedBranchesByCombination` não-array é a exceção específica à regra genérica de container incorreto: a
 keyword de tipo nesse path resolve para `ADVANCED_BRANCHES_INVALID/map_not_array`, conforme §4.7, e não para
@@ -1204,15 +1297,19 @@ keyword de tipo nesse path resolve para `ADVANCED_BRANCHES_INVALID/map_not_array
 3. ausência de containers/metadados globais;
 4. valor global inválido/confirmação;
 5. modo/rastreabilidade do catálogo;
-6. por item: conflito de representação **antes** de completude/tipo;
-7. por item: escalares/componentes ausentes;
-8. por item: valores presentes inválidos;
-9. modo/resolução de agrupamento;
-10. hipótese guiada/ramos avançados;
-11. erro L0;
-12. finitude L1–L3.
+6. por item: estrutura do item;
+7. por item: conflito de representação de impedância, **terminal**;
+8. por item: campos ausentes → `CANDIDATE_INCOMPLETE`;
+9. por item: escalares presentes inválidos → `CANDIDATE_VALUE_INVALID`;
+10. por item: valores de impedância presentes inválidos → `CANDIDATE_IMPEDANCE_VALUE_INVALID`;
+11. modo/resolução de agrupamento;
+12. hipótese guiada/ramos avançados;
+13. erro L0;
+14. finitude computacional L1–L3.
 
-Validações por item acumulam todos os erros independentes permitidos; falhas globais retornam imediatamente.
+Validações por item acumulam ausências e valores inválidos independentes nessa ordem; conflito de
+representação é terminal para o item. Nenhum valor inválido alcança L0 ou a matemática L1–L3. Falhas globais
+retornam imediatamente.
 
 ## 12. Invariantes de segurança
 
@@ -1408,7 +1505,7 @@ Cada matriz deve registrar seus subcasos em `observed.cases[]`, com `caseId`, `a
 | `TECH-20` | L0 chamado exatamente uma vez por combinação avaliável e zero vezes quando o preparo bloqueia |
 | `TECH-21` | pureza, determinismo, entrada e envelope L0 não mutados, zero efeitos colaterais |
 | `TECH-22` | ordem de propriedades e permutação de itens completos produzem arrays canônicos equivalentes |
-| `TECH-23` | `NaN`/infinito produzido em L1–L3 → `NUMERIC_RESULT_NON_FINITE`, sem número parcial |
+| `TECH-23` | após entradas válidas, `NaN`/infinito produzido inesperadamente em L1–L3 → `NUMERIC_RESULT_NON_FINITE`, sem número parcial; entrada conhecida inválida é excluída deste contrato |
 | `TECH-24` | `Smin=0`: margem de curto `null`, flag positiva, curto não dominante e JSON finito |
 | `TECH-25` | schema completo de sucesso, warning bruto/display fechado, reconciliação dos arrays, dez guardrails e fonte L0 preservada |
 | `TECH-26` | schema fechado de falha, 10 guardrails + blocker específico, ordem, igualdade blocker/error e zero `relatedCodes` |
@@ -1564,7 +1661,8 @@ tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
 
 #### 14.5.1 Caracterização do core existente — 12 relatórios
 
-O primeiro arquivo não nasce como RED de implementação. Ele caracteriza o motor já integrado e deve chamar
+O primeiro arquivo nasceu como caracterização do motor já integrado. Após a evidência original e a ratificação
+da errata nonfinite, sua próxima revisão será o RED focal contratualmente válido: deve chamar
 `enumerateCablingBTParallelAlternativesExperimental(input)` com o catálogo real de seis seções, sem stub,
 mock, adaptador ou alteração do motor. Prefixos exatos:
 
@@ -1594,10 +1692,10 @@ A ausência de 300 mm² não é erro do core genérico. Um catálogo válido de 
 retornando sucesso histórico `20/11/9/11`. Já a fixture **focal** dos testes MM300/UI300 sem a linha de 300 é
 erro de configuração do harness, detectado antes de chamar o motor e encerrado com exit `3`; não produz
 relatório funcional falso. Quando a candidata 300 existe, campo ausente retorna `CANDIDATE_INCOMPLETE` no
-caminho nominal do erro de catálogo. Campo presente não finito/não numérico retorna
-`CANDIDATE_IMPEDANCE_VALUE_INVALID` com `invalidFields[]` exato, inclusive para
-`tabulatedAmpacity_A` conforme o contrato histórico do motor. Impedância incompleta, inválida ou conflitante
-mantém os códigos e paths definidos nas §§4.4 e 11.
+caminho nominal do erro de catálogo. Escalar conhecido presente não finito/não numérico retorna
+`CANDIDATE_VALUE_INVALID` com `invalidFields[]` exato; propriedade de impedância presente inválida retorna
+`CANDIDATE_IMPEDANCE_VALUE_INVALID`. Impedância incompleta ou conflitante mantém os códigos e paths definidos
+nas §§4.4 e 11. Nenhum desses valores pode alcançar L0 ou a matemática L1–L3.
 
 Cada relatório possui schema fechado:
 
@@ -1799,9 +1897,32 @@ Matrizes core:
 | Relatório | Casos exatos | Paths/resultado vinculante |
 | --- | --- | --- |
 | `MM300-CORE-08` | 4: `...-01` NONE; `...-02` MIN_PARALLEL_COUNT; `...-03` MIN_TOTAL_COPPER; `...-04` MAX_MINIMUM_MARGIN | `result.data.firstInPresentationOrder.{nParallel,section_mm2}` = `{2,185}`, `{2,300}`, `{3,120}`, `{4,300}`; `result.data.installableSelection=null`; `result.data.installationAuthorized=false` |
-| `MM300-CORE-10` | 4: `...-01` catálogo histórico; `...-02` 300 sem ampacidade; `...-03` ampacidade 300=`NaN`; `...-04` `resistance_ohm` 300=`Infinity` | caso 01: `result.ok=true`, `result.data.evaluatedCandidates.length=20`, `result.data.candidateAlternatives.length=11`, `result.data.rejectedCandidates.length=9` e `result.data.nonDominatedAlternatives.length=11`; casos 02–04 usam catálogo somente com 300 e exigem `result.error.code="CATALOG_NO_EVALUABLE_CANDIDATE"`; `result.error.params.errors[0].code` = `CANDIDATE_INCOMPLETE`, `CANDIDATE_IMPEDANCE_VALUE_INVALID`, `CANDIDATE_IMPEDANCE_VALUE_INVALID`; paths internos = `missingFields[0]="tabulatedAmpacity_A"`, `invalidFields[0]={path:"tabulatedAmpacity_A",reason:"NON_FINITE",observedType:"number"}`, `invalidFields[0]={path:"resistance_ohm",reason:"NON_FINITE",observedType:"number"}` |
+| `MM300-CORE-10` | 4: `...-01` catálogo histórico; `...-02` 300 sem ampacidade; `...-03` ampacidade 300=`NaN`; `...-04` `resistance_ohm` 300=`Infinity` | quatro subcontratos nominais abaixo; casos 02–04 usam catálogo somente com 300 e exigem `result.error.code="CATALOG_NO_EVALUABLE_CANDIDATE"` |
 | `MM300-CORE-11` | 2: `...-01` coexistência de representações; `...-02` material heterogêneo | caso 01, catálogo somente com 300: `result.error.params.errors[0].code="CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT"`; caso 02, `maxParallelCount=1`, catálogo 95+300: `result.data.evaluatedCandidates[1].candidateId="1x300"`, `blockers[0].code="CANDIDATE_STRUCTURE_INVALID"`, `blockers[0].params.reason="catalog_heterogeneous"`; zero alternativa 300 válida |
 | `MM300-CORE-12` | 4: `...-01` pureza; `...-02` determinismo; `...-03` guardrails; `...-04` campos proibidos | clone profundo da entrada permanece idêntico; duas saídas são profundamente iguais; `result.productionAllowed=false`, `result.data.installableSelection=null`, `result.data.installationAuthorized=false`; `result.blockers[0].code="B-01"`, `result.blockers[1].code="B-02"`, `result.blockers[2].code="B-03"`, `result.blockers[3].code="B-04"`, `result.blockers[4].code="B-05"`, `result.blockers[5].code="B-06"`; `recommended`, `selected` e `finalSizing` ausentes nos paths de topo e das candidatas |
+
+Subcontratos fechados de `MM300-CORE-10`:
+
+1. `MM300-CORE-10-CASE-01`: `result.ok=true`; comprimentos exatos de
+   `result.data.evaluatedCandidates`, `candidateAlternatives`, `rejectedCandidates` e
+   `nonDominatedAlternatives` iguais a `20`, `11`, `9` e `11`.
+2. `MM300-CORE-10-CASE-02`: `result.error.params.errors[0].code="CANDIDATE_INCOMPLETE"` e
+   `result.error.params.errors[0].missingFields[0]="tabulatedAmpacity_A"`.
+3. `MM300-CORE-10-CASE-03`: `result.error.params.errors[0].code="CANDIDATE_VALUE_INVALID"` e
+   `result.error.params.errors[0].invalidFields[0]` profundamente igual a
+   `{path:"tabulatedAmpacity_A",reason:"NON_FINITE",observedType:"number:NaN"}`.
+4. `MM300-CORE-10-CASE-04`:
+   `result.error.params.errors[0]` profundamente igual, sem propriedades adicionais, a
+   `{code:"CANDIDATE_IMPEDANCE_VALUE_INVALID",catalogEntryId:"300",invalidFields:[{path:"resistance_ohm",reason:"NON_FINITE",observedType:"number:+Infinity"}],mode:"CATALOGO_LAB_ASSUMPTION_ONLY"}`.
+   `candidateId` e `catalogEntryIndex` são nominalmente ausentes.
+
+Nos casos 03 e 04, `errors[0]` obedece ao schema fechado e nenhum número utilizável alcança L0/L1–L3.
+
+A correção do oráculo focal pelo QA é restrita a essas expectativas de CASE-03 e CASE-04; IDs, fixtures,
+quantidades, schemas, caminhos e demais valores permanecem congelados. Após a correção, CASE-04 deve ficar
+PASS sem alteração de Backend, pois a candidata já emite `number:+Infinity`. CASE-03 deve permanecer RED,
+exigindo `CANDIDATE_VALUE_INVALID/number:NaN` e demonstrando que a validação tardia atual ainda permite que
+`tabulatedAmpacity_A=NaN` alcance `minimumMargin`. Qualquer alteração adicional do teste exige nova O.S.
 
 Antes de emitir qualquer relatório core focal, o harness valida que sua fixture nominal contém exatamente seis
 seções e uma única `section_mm2=300`. Zero ou múltiplas linhas 300, metadado diferente ou contagem diferente
@@ -1941,12 +2062,23 @@ O aceite valida clareza e utilidade experimental; não remove nenhum bloqueio pr
 
 Estado atual: o core L1–L3 está integrado e GREEN em `5411779a…`; a UI anterior de cinco seções está GREEN em
 `c3e49d1a…`, mas o aceite do CEO ficou `APROVADO_COM_AJUSTE_FOCAL` pela ausência de 300 mm². A ciência da
-extensão está publicada em `122b885d…`. Este SDD permanece candidato e não commitado; os testes focais ainda
-não existem. Não existe PR ou merge autorizado para a extensão, e a PR #40 continua **DO NOT MERGE**.
+extensão está publicada em `122b885d…` e a errata nonfinite está publicada em `dc37b9c…`. Este SDD R4
+permanece candidato e não commitado.
 
-Sequência vinculante após auditoria e commit documental: caracterização core → RED visual funcional → GREEN
-Frontend → QA independente local/remoto na mesma SHA → nova prévia → reteste do CEO. Backend só entra se a
-caracterização demonstrar divergência real. Após futura integração:
+A caracterização focal original existe como arquivo não congelado
+`tests/test_cab_bt_parallel_selection_300mm2_experimental.js`, SHA-256 LF
+`2249BD070AAB9E14FFEDD36FD81C93112945AE1C1642A287E81892ED66E9C548`. Sua execução processável preservada
+produziu 12/12 relatórios exercidos, 11 PASS e um `FUNCTIONAL_FAILURE` em `MM300-CORE-10`: CASE-03 revelou a
+validação escalar tardia e CASE-04 confirmou a taxonomia detalhada `number:+Infinity`. Essa evidência é
+caracterização histórica anterior a este contrato; não é o RED focal corrigido, não está congelada e não
+autoriza Backend.
+
+Sequência vinculante após auditoria e commit documental: QA corrige exclusivamente o oráculo focal de
+CASE-03/04 → comprova RED funcional contratualmente válido → Backend corrige somente a divergência escalar →
+QA GREEN independente do core → RED visual funcional → GREEN Frontend → QA independente local/remoto na
+mesma SHA → nova prévia → reteste do CEO. Backend permanece bloqueado até o RED focal corrigido e válido.
+Não existe PR ou merge autorizado para a extensão, e a PR #40 continua **DO NOT MERGE**. Após futura
+integração:
 
 - `MERGE_VALIDADO` exige PR, SHA e Gate remoto;
 - `ENCERRAMENTO_OPERACIONAL` exige `origin/main → AmpAI/ em main → Google Drive`, hashes aplicáveis,
@@ -1964,6 +2096,11 @@ caracterização demonstrar divergência real. Após futura integração:
 - [x] RNC-P, memorial, BDD e fonte primária ausente classificados.
 - [x] Regressão histórica de 74 relatórios core e 15 relatórios visuais preservada.
 - [x] Caracterização focal core de 12 relatórios e RED visual focal de 15 relatórios definidos.
+- [x] `CANDIDATE_VALUE_INVALID` separado de `CANDIDATE_IMPEDANCE_VALUE_INVALID`, com schemas e ordens fechados.
+- [x] `provenance` não-string e string fora do domínio separados por `NOT_STRING`/`NOT_ASSUMPTION_ONLY`.
+- [x] Issue de impedância fechada em `{code,catalogEntryId,invalidFields,mode}`, sem índices de candidata/catálogo.
+- [x] Taxonomia `number:NaN`/`number:+Infinity`/`number:-Infinity` e precedência da errata `dc37b9c…` incorporadas.
+- [x] Caracterização original preservada como evidência não congelada; correção focal do oráculo precede Backend.
 - [x] Catálogo de seis seções, 42 campos UI e objetivos com 300 mm² especificados.
 - [x] Regressão stable, artifact remoto e CodeRabbit consultivo previstos.
 - [x] `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` separados.
