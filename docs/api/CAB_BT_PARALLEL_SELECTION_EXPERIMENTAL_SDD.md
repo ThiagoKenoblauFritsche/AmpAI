@@ -1,5 +1,5 @@
 ---
-status: SDD_EXPERIMENTAL_RATIFICADO_PARA_CORRECAO_DO_RED
+status: SDD_CANDIDATO_PARA_AUDITORIA
 document_class: active
 authority: "@CTO"
 consumers:
@@ -8,17 +8,20 @@ consumers:
   - "@Senior_Frontend_Dev"
 lifecycle: "candidato até ratificação do Conselho; experimental enquanto a fonte primária integral estiver ausente"
 governanca: v7.3
-os: CAB-BT-PARALLEL-002-SDD-EXP-R3
+os: CAB-BT-PARALLEL-003-SDD-300MM2-EXP-R2
 classe: CHG-3 arquitetural/contratual experimental
-baseline_imutavel: 2b61627d8640fce91eb229ca522ae33a143671df
-baseline_git_da_correcao: 39d1b2c6b43a3f8a1a0f8ee8fcc03f03f234192d
-parecer_origem: CAB-BT-PARALLEL-002-CONTRACT-ORACLE-001
+baseline_imutavel: 122b885db40f69b422dac8ea4c2e419dc547220f
+baseline_cientifica_300mm2: 122b885db40f69b422dac8ea4c2e419dc547220f
+baseline_core_green: 5411779a86a3280bb6b35a90e2efa8f024a7e1b8
+baseline_ui_green_anterior: c3e49d1a8bf6e8376e9f1ddd6d1c2737d5ce8f81
+baseline_red_visual_anterior: 0984fb0c0881df8d4e5c9f7ad520e383b8a586a8
+parecer_origem: CAB-BT-PARALLEL-003-SCI-300MM2-EXP-R2
 baseline_main_de_origem: 83e24131c0cc09813be65a5fa269961b9cc80c5c
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
 productionAllowed: false
 teste_do_ceo: SIM_APOS_GREEN_INDEPENDENTE_E_REMOTO_DA_UI
-data: 2026-08-03
+data: 2026-08-07
 ---
 
 # SDD experimental — Enumeração e comparação preliminar de cabos BT em paralelo
@@ -32,8 +35,8 @@ data: 2026-08-03
 
 ## 1. Decisão executiva e alcance
 
-Este SDD transforma o pacote científico ratificado no commit
-`2b61627d8640fce91eb229ca522ae33a143671df` em um contrato técnico testável para:
+Este SDD transforma o pacote científico ratificado e estendido no commit
+`122b885db40f69b422dac8ea4c2e419dc547220f` em um contrato técnico testável para:
 
 1. validar um catálogo experimental rastreável;
 2. formar o produto cartesiano completo `seções × nParallel`;
@@ -44,7 +47,7 @@ Este SDD transforma o pacote científico ratificado no commit
 6. particionar todas as combinações em válidas e rejeitadas/bloqueadas;
 7. computar a fronteira não dominada;
 8. ordenar alternativas por objetivo configurável, sem eleger solução instalável;
-9. fornecer um modelo de apresentação compreensível, como `2 × 240 mm² por fase`.
+9. fornecer um modelo de apresentação compreensível, como `2 × 300 mm² por fase`.
 
 O contrato **não** autoriza seleção produtiva, recomendação comercial, aquisição, instalação,
 dimensionamento final, memorial final ou afirmação de conformidade IEC. Enquanto a IEC 60364-5-52
@@ -59,13 +62,68 @@ Este documento tem autoridade, consumidores e ciclo de vida diferentes do SDD do
 - este documento especifica L1–L3, o catálogo, a enumeração, a comparação e o modelo de apresentação;
 - o motor L0 integrado pela PR #39 permanece imutável e é dependência obrigatória.
 
+### 1.2 Emenda focal CAB-BT-PARALLEL-003 — seção experimental de 300 mm²
+
+Esta revisão estende o catálogo laboratorial de cinco para seis seções. Ela tem precedência sobre qualquer
+contagem, fixture, objetivo ou exemplo histórico deste documento que ainda mencione o universo limitado a
+`{95, 120, 150, 185, 240}` mm². Tais referências antigas permanecem somente como regressão histórica da
+cadeia CAB-BT-PARALLEL-002 e não definem o estado atual.
+
+O item adicional é exatamente:
+
+```json
+{
+  "section_mm2": 300,
+  "tabulatedAmpacity_A": 516,
+  "material": "COPPER_LAB",
+  "insulation": "LAB_UNSPECIFIED",
+  "installationMethod": "LAB_UNSPECIFIED",
+  "referenceTemperature_C": 30,
+  "units": "SI",
+  "source": "LAB_CATALOG",
+  "sourceVersion": "PRELIM-1",
+  "provenance": "ASSUMPTION_ONLY",
+  "impedance_ohm": { "re": 0.0075, "im": 0.008 }
+}
+```
+
+Os identificadores são laboratoriais. `516 A` e `0,0075+j0,008 Ω` são hipóteses experimentais rastreadas,
+não valores IEC, de fabricante ou de catálogo comercial. A extrapolação que originou a hipótese não pertence
+ao motor nem à UI: ambos recebem o item já materializado e nunca o recalculam.
+
+Com `maxParallelCount=4`, o universo atual é o produto cartesiano completo de seis seções por quatro
+quantidades: `24` combinações avaliadas, `14` alternativas válidas, `10` rejeitadas e `14` não dominadas.
+Para o fixture de 600 A / 400 V / 3%, os resultados determinísticos são:
+
+| Objetivo | Primeiro item apresentado | Natureza |
+| --- | --- | --- |
+| `NONE` | `2 × 185 mm² por fase` | apenas ordem de apresentação |
+| `MIN_PARALLEL_COUNT` | `2 × 300 mm² por fase` | empate em quantidade resolvido pela margem |
+| `MIN_TOTAL_COPPER` | `3 × 120 mm² por fase` | ordenação matemática |
+| `MAX_MINIMUM_MARGIN` | `4 × 300 mm² por fase` | ordenação matemática |
+
+`1×300` reprova somente por ampacidade; `2×300`, `3×300` e `4×300` são alternativas válidas no laboratório.
+Nenhum desses resultados elege, recomenda ou autoriza instalação.
+
+O motor L1–L3 integrado em `5411779a86a3280bb6b35a90e2efa8f024a7e1b8` é orientado pelo catálogo.
+Não se antecipa mudança de Backend: primeiro o QA deve caracterizar o core com as seis seções. Somente uma
+divergência funcional reproduzível entre o envelope real e este contrato autoriza nova O.S. de Backend.
+O delta material esperado é a UI: seis linhas de catálogo, `42` campos editáveis e projeção dos novos
+resultados sem fórmula, extrapolação ou fallback visual.
+
+O `catalog.sourceVersion` da fixture atual é `122b885d…`. O campo histórico
+`sourceStatus.scientificBaselineSha` emitido pelo motor continua identificando a ciência de origem da
+implementação L1–L3 (`2b61627d…`) e não deve ser falsificado pela UI nem alterado sem mudança explícita de
+contrato do core. A rastreabilidade da extensão ocorre pelo catálogo de entrada, por este SDD e pelos testes
+focais.
+
 ## 2. Fontes, autoridade e precedência
 
 | Fonte | Identificação | Classe | Autoridade neste SDD |
 | --- | --- | --- | --- |
-| Registro científico prático | `RNC-P_CAB_BT_PARALLEL_SELECTION_PRELIM.md` em `2b61627d…` | RNC-P experimental ratificado para SDD | requisitos e limites L1–L3 |
-| Memorial prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md` em `2b61627d…` | memorial experimental | equações, casos e números esperados |
-| BDD prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `2b61627d…` | evidência comportamental científica | cenários obrigatórios do RED |
+| Registro científico prático | `RNC-P_CAB_BT_PARALLEL_SELECTION_PRELIM.md` em `122b885d…` | RNC-P experimental ratificado para SDD | requisitos e limites L1–L3, incluindo 300 mm² |
+| Memorial prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md` em `122b885d…` | memorial experimental | equações, casos e números esperados, incluindo 300 mm² |
+| BDD prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `122b885d…` | evidência comportamental científica | cenários obrigatórios da extensão focal |
 | Motor integrado | `js/core_cabos_bt_parallel_experimental.js` em `main@83e24131…` | implementação experimental L0 | única fonte executável de L0 |
 | SDD L0 | `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.md` | contrato experimental integrado | envelope e erros do L0 |
 | IEC 60364-5-52 Ed. 3.1 integral | ausente | norma primária ausente | **não disponível para regra produtiva** |
@@ -74,7 +132,7 @@ Precedência vinculante:
 
 1. norma primária integral e futuro RNC-C, quando ratificados;
 2. contrato L0 integrado para os cálculos que já executa;
-3. pacote científico `2b61627d…` para L1–L3;
+3. pacote científico `122b885d…` para L1–L3 e extensão focal de 300 mm²;
 4. este SDD para estrutura de software, DTOs, Result Pattern e evidência;
 5. exemplos e textos de interface, que nunca substituem os itens anteriores.
 
@@ -87,17 +145,18 @@ Qualquer divergência científica retorna ao Conselho; Backend, Frontend e QA n�
 | Camada | Arquivo/função | Responsabilidade |
 | --- | --- | --- |
 | L0 existente | `js/core_cabos_bt_parallel_experimental.js` / `calculateCablingBTParallelExperimental(input)` | admitâncias, correntes, `Zeq`, `deltaLoad`, proxy térmico, queda em V e adiabático |
-| L1–L3 novo | `js/core_cabos_bt_parallel_selection_experimental.js` / `enumerateCablingBTParallelAlternativesExperimental(input)` | validar catálogo, enumerar, chamar L0, avaliar critérios, fronteira e ordenação |
-| UI futura | `index.html` e `js/ui_render.js` | coletar/confirmar entradas e renderizar exclusivamente o modelo recebido |
-| RED core | `tests/test_cab_bt_parallel_selection_experimental.js` | 74 contratos processáveis: 48 científicos + 26 técnicos |
-| RED visual futuro | `tests/test_cab_bt_parallel_selection_ui_experimental.js` | 15 contratos visuais, somente após GREEN independente do core |
+| L1–L3 integrado | `js/core_cabos_bt_parallel_selection_experimental.js` / `enumerateCablingBTParallelAlternativesExperimental(input)` em `5411779a…` | validar catálogo, enumerar, chamar L0, avaliar critérios, fronteira e ordenação |
+| UI anterior | `index.html` e `js/ui_render.js` em `c3e49d1a…` | candidata GREEN de cinco seções; requer ajuste focal para 300 mm² |
+| Regressão core | `tests/test_cab_bt_parallel_selection_experimental.js` | 74 contratos processáveis: 48 científicos + 26 técnicos |
+| Regressão visual | `tests/test_cab_bt_parallel_selection_ui_experimental.js` | 15 contratos da UI anterior |
+| Caracterização/RED focal | arquivos definidos em §14.5 | provar core dinâmico e produzir RED visual específico de 300 mm² |
 
 ### 3.2 Regras arquiteturais vinculantes
 
-- O novo motor é síncrono, determinístico e puro.
+- O motor L1–L3 integrado é síncrono, determinístico e puro.
 - Zero DOM, renderer, console, rede, filesystem, relógio, locale implícito ou aleatoriedade no core.
 - Zero mutação da entrada, do catálogo, dos envelopes L0 ou de estado global.
-- O novo motor **deve chamar** `calculateCablingBTParallelExperimental()` exatamente uma vez por combinação
+- O motor L1–L3 **deve chamar** `calculateCablingBTParallelExperimental()` exatamente uma vez por combinação
   que alcance L0; não copia nem reimplementa sua matemática.
 - L1 lê exclusivamente estes caminhos do sucesso L0:
   - `data.capacityProxy.totalAdmissibleCurrentProxy_A`;
@@ -154,7 +213,7 @@ O fixture-base abaixo é vinculante para os números do Memorial. Todos os valor
     "mode": "CATALOGO_LAB_ASSUMPTION_ONLY",
     "confirmed": true,
     "source": "CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md",
-    "sourceVersion": "2b61627d8640fce91eb229ca522ae33a143671df",
+    "sourceVersion": "122b885db40f69b422dac8ea4c2e419dc547220f",
     "provenance": "ASSUMPTION_ONLY",
     "impedanceBasis": {
       "length_m": 100,
@@ -227,6 +286,19 @@ O fixture-base abaixo é vinculante para os números do Memorial. Todos os valor
         "sourceVersion": "PRELIM-1",
         "provenance": "ASSUMPTION_ONLY",
         "impedance_ohm": { "re": 0.009375, "im": 0.008 }
+      },
+      {
+        "section_mm2": 300,
+        "tabulatedAmpacity_A": 516,
+        "material": "COPPER_LAB",
+        "insulation": "LAB_UNSPECIFIED",
+        "installationMethod": "LAB_UNSPECIFIED",
+        "referenceTemperature_C": 30,
+        "units": "SI",
+        "source": "LAB_CATALOG",
+        "sourceVersion": "PRELIM-1",
+        "provenance": "ASSUMPTION_ONLY",
+        "impedance_ohm": { "re": 0.0075, "im": 0.008 }
       }
     ]
   },
@@ -845,7 +917,7 @@ JSON Schema estrutural resumido do sucesso (os schemas específicos dos candidat
 }
 ```
 
-Para o fixture-base, os arrays devem ser materializados integralmente e reconciliar `20/11/9/11`; não se
+Para o fixture-base atual, os arrays devem ser materializados integralmente e reconciliar `24/14/10/14`; não se
 aceita envelope resumido, paginação ou omissão de candidatas no core.
 
 ### 9.1 Candidato avaliado
@@ -1160,17 +1232,24 @@ Em sucesso e falha:
 - catálogo/objetivo não alteram blockers L0;
 - a nota de barramento é qualitativa, com limiar normativo ausente, nunca recomendação automática.
 
-## 13. Contrato do QA RED core
+## 13. Contrato histórico congelado do core — catálogo até 240 mm²
 
-### 13.1 Arquivo, execução e estado
+Esta seção preserva byte-conceitualmente a regressão de 74 relatórios da CAB-BT-PARALLEL-002. Sua fixture
+continua limitada a `{95,120,150,185,240}` mm² e seus resultados permanecem `20/11/9/11`. Nenhum contrato
+desta seção é atualizado para 300 mm²; a extensão pertence exclusivamente aos 12 relatórios `MM300-CORE-*`
+da §14.5.1. A execução atual esperada é PASS contra o módulo integrado em `5411779a…`.
+
+### 13.1 Arquivo, execução e estado histórico
 
 - executor: `@Senior_QA_Security`;
 - arquivo exclusivo inicial: `tests/test_cab_bt_parallel_selection_experimental.js`;
 - classificação: `experimental`, fora de `qa/test-manifest.json`;
-- baseline imutável: commit do SDD ratificado, descendente de `2b61627d…`;
+- baseline histórica do oráculo: RED R4 em `86085949e7a8c5b4c2334854550aab0764811da6`;
+- candidata GREEN histórica: `5411779a86a3280bb6b35a90e2efa8f024a7e1b8`;
 - comando sintático: `node --check tests/test_cab_bt_parallel_selection_experimental.js` → exit `0`;
 - comando funcional: `node tests/test_cab_bt_parallel_selection_experimental.js`;
-- RED válido: módulo novo ausente, 74 relatórios completos, asserções exercidas, exit `1`;
+- estado atual: módulo presente, 74 relatórios completos, 244 subcasos exercidos, PASS e exit `0`;
+- o caminho histórico `module_missing` permanece apenas como evidência do RED original; não é precondição atual;
 - não é permitido stub/mock do módulo produtivo.
 
 ### 13.2 Protocolo JSON-lines fechado
@@ -1187,8 +1266,8 @@ Schema mínimo por relatório:
 {
   "id": "KG-01",
   "category": "grouping",
-  "classification": "FUNCTIONAL_FAILURE",
-  "compliant": false,
+  "classification": "PASS",
+  "compliant": true,
   "assertionExercised": true,
   "expected": {},
   "observed": {},
@@ -1207,15 +1286,15 @@ Schema mínimo do summary:
 
 ```json
 {
-  "classification": "FUNCTIONAL_FAILURE",
+  "classification": "PASS",
   "reports": 74,
   "expectedReports": 74,
   "scientificReports": 48,
   "technicalReports": 26,
-  "compliant": 0,
-  "nonCompliant": 74,
+  "compliant": 74,
+  "nonCompliant": 0,
   "assertionsExercised": 74,
-  "processExitCode": 1
+  "processExitCode": 0
 }
 ```
 
@@ -1278,16 +1357,16 @@ o resultado real.
 | `CAL-04` | quantidade excessiva com `continuousProxy` bruto e `continuousProxyDisplay` a três casas |
 | `GRD-02` | nota qualitativa de barramento |
 | `UNI-01` | produto cartesiano completo |
-| `UNI-02` | reconciliação `20/11/9/11` |
-| `UNI-03` | inventário matricial das 11 válidas |
-| `UNI-04` | inventário matricial das 9 rejeitadas |
+| `UNI-02` | reconciliação histórica `20/11/9/11` |
+| `UNI-03` | inventário matricial histórico das 11 válidas até 240 mm² |
+| `UNI-04` | inventário matricial histórico das 9 rejeitadas até 240 mm² |
 | `UNI-05` | candidatas antes omitidas presentes |
-| `FRN-01` | fronteira com 11 não dominadas |
+| `FRN-01` | fronteira histórica com 11 não dominadas |
 | `FRN-02` | matriz do comparador dentro/fora da tolerância |
 | `OBJ-01` | matriz dos quatro objetivos |
 | `OBJ-02` | empate de `MIN_PARALLEL_COUNT` |
 | `OBJ-03` | `MIN_TOTAL_COPPER` inicia em 3×120 |
-| `OBJ-04` | `MAX_MINIMUM_MARGIN` inicia em 4×240 |
+| `OBJ-04` | `MAX_MINIMUM_MARGIN` histórico inicia em 4×240 |
 | `OBJ-05` | `NONE` não elege e inicia em 2×185 |
 | `OBJ-06` | objetivo nunca cria seleção instalável |
 | `GRD-03` | proxy contínuo não instalável |
@@ -1347,15 +1426,16 @@ Relatório incompleto nunca é RED/GREEN funcional.
 
 ## 14. Fases GREEN e QA independente
 
-### 14.1 Backend GREEN
+### 14.1 Backend GREEN histórico — não reaberto pela extensão
 
-Executor: `@Senior_Backend_Dev`, após RED válido. Allowlist inicial:
+O motor está GREEN em `5411779a…`. A allowlist histórica foi:
 
 ```text
 js/core_cabos_bt_parallel_selection_experimental.js
 ```
 
-Proibido alterar L0, UI, teste RED, manifesto, workflow, packages ou documentação científica. O Backend não
+Na CAB-BT-PARALLEL-003, o Backend permanece fora do fluxo nominal. Proibido alterar L0, UI, testes, manifesto,
+workflow, packages ou documentação científica sem divergência focal comprovada e nova O.S. O Backend não
 emite veredito e devolve ao CTO.
 
 ### 14.2 QA independente do core
@@ -1377,7 +1457,7 @@ Esperado: três processos novos com 74/74 PASS (48 científicos + 26 técnicos),
 stable completa com exit `0`.
 O teste novo continua `experimental` e não entra no manifesto nesta cadeia.
 
-### 14.3 UI somente depois do GREEN do core
+### 14.3 UI focal somente depois da caracterização GREEN do core
 
 Allowlist de Frontend:
 
@@ -1391,7 +1471,7 @@ laboratório, editável e confirmável. Deve mostrar todas as alternativas candi
 como `2 × 240 mm² por fase` e `3 × 150 mm² por fase`, com três critérios e dominante. Nenhuma variável é
 inventada; falta de catálogo/hipótese bloqueia.
 
-### 14.4 RED visual futuro — 15 relatórios
+### 14.4 Regressão visual anterior — 15 relatórios
 
 Arquivo: `tests/test_cab_bt_parallel_selection_ui_experimental.js`, classificação `experimental`.
 Prefixos `CAB_BT_PARALLEL_SELECTION_UI_EXP_REPORT` e
@@ -1472,6 +1552,308 @@ Contrato do artifact remoto:
   `CONFIG_ERROR`;
 - nenhum retry, mudança de timeout/assertions ou rerun sem autorização distinta.
 
+### 14.5 Protocolo focal de 300 mm² — autoridade sobre a extensão CAB-BT-PARALLEL-003
+
+Os testes históricos de 74 relatórios core e 15 relatórios visuais continuam como regressão. A extensão é
+exercida por dois arquivos novos e experimentais, fora do manifesto stable:
+
+```text
+tests/test_cab_bt_parallel_selection_300mm2_experimental.js
+tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+```
+
+#### 14.5.1 Caracterização do core existente — 12 relatórios
+
+O primeiro arquivo não nasce como RED de implementação. Ele caracteriza o motor já integrado e deve chamar
+`enumerateCablingBTParallelAlternativesExperimental(input)` com o catálogo real de seis seções, sem stub,
+mock, adaptador ou alteração do motor. Prefixos exatos:
+
+```text
+CAB_BT_PARALLEL_300_CORE_EXP_REPORT
+CAB_BT_PARALLEL_300_CORE_EXP_SUMMARY
+```
+
+IDs exatos e únicos:
+
+| ID | Contrato focal |
+| --- | --- |
+| `MM300-CORE-01` | item de 300 mm² coincide exatamente com os 11 campos e a impedância ratificada |
+| `MM300-CORE-02` | universo completo: 24 avaliadas, 14 válidas, 10 rejeitadas e 14 não dominadas |
+| `MM300-CORE-03` | `1×300` reprova somente por ampacidade |
+| `MM300-CORE-04` | `2×300` é alternativa válida, sem autorização instalável |
+| `MM300-CORE-05` | `3×300` é alternativa válida, sem autorização instalável |
+| `MM300-CORE-06` | `4×300` é alternativa válida, sem autorização instalável |
+| `MM300-CORE-07` | `NONE` inicia em 2×185 e não elege candidata |
+| `MM300-CORE-08` | objetivos iniciam em 2×300, 3×120 e 4×300 nos modos respectivos |
+| `MM300-CORE-09` | catálogo homogêneo produz zero `catalog_heterogeneous` e zero `CANDIDATE_STRUCTURE_INVALID` |
+| `MM300-CORE-10` | distingue catálogo histórico válido sem 300, fixture focal sem linha 300, candidata incompleta e valores presentes inválidos |
+| `MM300-CORE-11` | representação de impedância conflitante e metadado homogêneo divergente têm códigos/paths exatos |
+| `MM300-CORE-12` | pureza, não mutação, determinismo, B-01…B-06 e guardrails produtivos permanecem íntegros |
+
+A ausência de 300 mm² não é erro do core genérico. Um catálogo válido de cinco seções deve continuar
+retornando sucesso histórico `20/11/9/11`. Já a fixture **focal** dos testes MM300/UI300 sem a linha de 300 é
+erro de configuração do harness, detectado antes de chamar o motor e encerrado com exit `3`; não produz
+relatório funcional falso. Quando a candidata 300 existe, campo ausente retorna `CANDIDATE_INCOMPLETE` no
+caminho nominal do erro de catálogo. Campo presente não finito/não numérico retorna
+`CANDIDATE_IMPEDANCE_VALUE_INVALID` com `invalidFields[]` exato, inclusive para
+`tabulatedAmpacity_A` conforme o contrato histórico do motor. Impedância incompleta, inválida ou conflitante
+mantém os códigos e paths definidos nas §§4.4 e 11.
+
+Cada relatório possui schema fechado:
+
+```json
+{
+  "id": "MM300-CORE-01",
+  "category": "core_characterization_300mm2_experimental",
+  "classification": "PASS",
+  "compliant": true,
+  "assertionExercised": true,
+  "expected": {},
+  "observed": {},
+  "issues": []
+}
+```
+
+Summary único:
+
+```json
+{
+  "classification": "PASS",
+  "reports": 12,
+  "expectedReports": 12,
+  "compliant": 12,
+  "nonCompliant": 0,
+  "assertionsExercised": 12,
+  "processExitCode": 0
+}
+```
+
+Prefixo e JSON ocupam uma única linha por relatório/summary. Exit `0` é PASS; `1` é
+`FUNCTIONAL_FAILURE` com 12 relatórios completos; `2` é `INFRA_BLOCKED` antes das asserções; `3` é
+`CONFIG_ERROR` por protocolo, fixture, schema, quantidade, ID ou summary inválido. Ausência de relatório ou
+`assertionExercised=false` fora do bloqueio de infraestrutura nunca é GREEN. Uma divergência funcional
+reproduzível neste teste retorna ao CTO; só então ele pode emitir O.S. de Backend focal.
+
+#### 14.5.2 RED visual focal — 15 relatórios
+
+O segundo arquivo deve falhar funcionalmente contra a UI de cinco seções e passar somente quando a UI
+materializar o catálogo de seis seções sem recálculo. Prefixos exatos:
+
+```text
+CAB_BT_PARALLEL_300_UI_EXP_REPORT
+CAB_BT_PARALLEL_300_UI_EXP_SUMMARY
+```
+
+IDs exatos e únicos:
+
+| ID | Contrato visual focal |
+| --- | --- |
+| `UI300-01` | `<details data-advanced>` inicia fechado e contém seis linhas de catálogo |
+| `UI300-02` | existem exatamente 42 campos editáveis do catálogo, sete por seção |
+| `UI300-03` | as duas confirmações permanecem visíveis, habilitadas e fora do conteúdo recolhido |
+| `UI300-04` | a linha 300 e os metadados DOM compartilhados formam, por igualdade profunda, o DTO completo ratificado |
+| `UI300-05` | sete edições nominais da linha 300 alteram exclusivamente o path correspondente no DTO completo |
+| `UI300-06` | nenhuma extrapolação, fórmula, fallback ou valor estático de recuperação existe na UI |
+| `UI300-07` | envelope real projeta 24/14/10/14 e as alternativas 1×…4×300 com seus estados reais |
+| `UI300-08` | `NONE` apresenta 2×185 primeiro sem eleger ou recomendar |
+| `UI300-09` | `MIN_PARALLEL_COUNT` apresenta 2×300 primeiro |
+| `UI300-10` | `MIN_TOTAL_COPPER` apresenta 3×120 primeiro |
+| `UI300-11` | `MAX_MINIMUM_MARGIN` apresenta 4×300 primeiro |
+| `UI300-12` | ausência, inválido, não finito, conflito e heterogeneidade são projetados fail-closed, sem números parciais |
+| `UI300-13` | PT/EN/ES exibem 300 mm² e não vazam idioma nem vocabulário proibido |
+| `UI300-14` | 375 px, temas claro/escuro, foco, labels, landmark e zero overflow permanecem conformes |
+| `UI300-15` | impressão contém aviso, seis entradas, 300 mm², objetivos, critérios e “Instalação autorizada: NÃO” |
+
+Schema fechado de relatório:
+
+```json
+{
+  "id": "UI300-01",
+  "category": "visual_300mm2_experimental",
+  "classification": "PASS",
+  "compliant": true,
+  "assertionExercised": true,
+  "expected": {},
+  "observed": {},
+  "telemetry": {
+    "pageLoaded": true,
+    "consoleErrors": [],
+    "pageErrors": [],
+    "invalidTokens": []
+  },
+  "issues": []
+}
+```
+
+Summary único:
+
+```json
+{
+  "classification": "PASS",
+  "reports": 15,
+  "expectedReports": 15,
+  "compliant": 15,
+  "nonCompliant": 0,
+  "assertionsExercised": 15,
+  "processExitCode": 0,
+  "preflightExitCode": 0,
+  "preflightError": null,
+  "functionalError": null
+}
+```
+
+Exit `0/1/2/3` significa, respectivamente, `PASS`, `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` exclusivo do
+preflight Chromium e `CONFIG_ERROR`. O processo emite exatamente 15 relatórios e um summary até no bloqueio
+de preflight; nesse caso todos são `INFRA_BLOCKED` com `assertionExercised=false`. Erro após o preflight é
+`CONFIG_ERROR`, nunca `INFRA_BLOCKED`. O coletor preserva stdout/stderr integrais.
+
+#### 14.5.3 Comandos, ordem e evidência
+
+Após ratificação e materialização deste SDD, o roteamento é:
+
+```text
+@Senior_QA_Security:
+  node --check tests/test_cab_bt_parallel_selection_300mm2_experimental.js
+  node tests/test_cab_bt_parallel_selection_300mm2_experimental.js
+  node --check tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+  node tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+
+@Senior_Frontend_Dev, somente após RED visual funcional válido:
+  alterar exclusivamente index.html e js/ui_render.js
+
+@Senior_QA_Security, na candidata GREEN imutável:
+  node tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+  node tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+  node tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+  node tests/test_cab_bt_parallel_selection_300mm2_experimental.js
+  node tests/test_cab_bt_parallel_selection_experimental.js
+  node tests/test_cab_bt_parallel_experimental.js
+  npm run test:regression
+  git diff --check <baseline>...HEAD
+```
+
+Os três processos visuais locais devem ser independentes, 15/15 PASS e byte-equivalentes em conteúdo
+funcional. Se o primeiro bloquear no Chromium, os outros dois não são executados sem nova autorização.
+O GREEN remoto usa `qa-visual.yml`, `workflow_dispatch`, attempt 1, SHA imutável e input exato
+`tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js`. O artifact é `qa-visual-evidence` e contém
+`qa-visual-evidence.txt` UTF-8 com run ID, evento, attempt, branch, SHA, arquivo, Chromium, preflight, stdout,
+stderr e exit. O QA registra ID, tamanho, digest GitHub e SHA-256 recalculado do ZIP. Depois executa uma única
+vez o Regression Gate shadow na mesma SHA. Artifact ausente, truncado, ilegível ou divergente é
+`CONFIG_ERROR`. Retry, rerun, aumento de timeout ou alteração de assertions exigem O.S. distinta.
+
+#### 14.5.4 Contrato de UI
+
+- O painel avançado inicia fechado e contém as seis linhas e os 42 controles editáveis do catálogo.
+- Os sete controles editáveis de cada linha são exatamente `section_mm2`, `tabulatedAmpacity_A`,
+  `resistance_ohm`, `reactance_ohm`, `referenceTemperature_C`, `material` e `provenance`.
+- A representação enviada é exclusivamente `RESISTANCE_REACTANCE_PAIR`: cada candidata contém
+  `resistance_ohm` e `reactance_ohm` e omite fisicamente `impedance_ohm`. Enviar ambas as representações é
+  proibido e deve falhar antes de qualquer apresentação numérica.
+- Os cinco escalares não editáveis por linha residem em metadados compartilhados, somente leitura, dentro do
+  DOM do painel avançado: `[data-catalog-shared-metadata] [data-meta="insulation"]`,
+  `[data-meta="installationMethod"]`, `[data-meta="units"]`, `[data-meta="source"]` e
+  `[data-meta="entrySourceVersion"]`. Seus `data-value` são, respectivamente, `LAB_UNSPECIFIED`,
+  `LAB_UNSPECIFIED`, `SI`, `LAB_CATALOG` e `PRELIM-1`. A UI os lê do DOM; não os recupera de constantes JS.
+- `catalog.sourceVersion` vem exclusivamente do elemento DOM somente leitura
+  `[data-catalog-metadata] [data-meta="catalogSourceVersion"]`, cujo `data-value` é a SHA completa
+  `122b885db40f69b422dac8ea4c2e419dc547220f`. O mesmo bloco fornece `catalog.source`, `catalog.mode`,
+  `catalog.provenance` e a base de impedância; nenhum deles é inferido da candidata.
+- O DTO de cada candidata possui exatamente os dez escalares do §4.4 e somente o par R+X. `UI300-04` faz
+  igualdade profunda do DTO completo da linha 300; `UI300-05` altera cada um dos sete campos editáveis e
+  exige que apenas o path correspondente mude, mantendo os cinco metadados compartilhados e a omissão de
+  `impedance_ohm`.
+- As duas confirmações ratificadas permanecem visíveis e habilitadas na visão principal; movê-las para o
+  conteúdo fechado exige revisão coordenada do oráculo visual.
+- `catalog.candidates` é construído exclusivamente do DOM. Campo ausente/vazio/inválido permanece inválido;
+  catálogo ausente vira coleção vazia; não há recuperação por fixture ou constante.
+- A UI chama o motor real uma única vez, projeta o envelope recebido e não calcula ampacidade, impedância,
+  critérios, fronteira, margem ou objetivos.
+- No sucesso e no erro, aviso, `productionAllowed`, `installableSelection`, `installationAuthorized`, fonte,
+  assumptions, blockers e códigos são projetados dos caminhos reais. Falha da camada visual permanece em
+  `uiFailure`, sem inventar `error.code` de domínio.
+
+#### 14.5.5 Matrizes vinculantes e oráculo fechado
+
+Todo relatório matricial contém `observed.cases[]` com quantidade e IDs exatos. Cada item é objeto fechado com
+estas propriedades, sem extras:
+
+```json
+{
+  "caseId": "MM300-CORE-08-CASE-01",
+  "assertionExercised": true,
+  "compliant": true,
+  "expected": { "paths": {} },
+  "observed": { "paths": {} },
+  "issues": []
+}
+```
+
+O harness compara os paths nominais por igualdade profunda. Busca recursiva por valor, texto, código ou
+fragmento — inclusive `recursivelyContains`, `recursivelyContainsAll`, regex global do envelope ou
+`JSON.stringify(...).includes(...)` — é proibida para decidir conformidade. Caminhos felizes exigem também
+asserções negativas de ausência dos códigos de erro, de `recommended`, `selected`, `installationAuthorized`
+verdadeiro e de `productionAllowed` verdadeiro.
+
+Matrizes core:
+
+| Relatório | Casos exatos | Paths/resultado vinculante |
+| --- | --- | --- |
+| `MM300-CORE-08` | 4: `...-01` NONE; `...-02` MIN_PARALLEL_COUNT; `...-03` MIN_TOTAL_COPPER; `...-04` MAX_MINIMUM_MARGIN | `result.data.firstInPresentationOrder.{nParallel,section_mm2}` = `{2,185}`, `{2,300}`, `{3,120}`, `{4,300}`; `result.data.installableSelection=null`; `result.data.installationAuthorized=false` |
+| `MM300-CORE-10` | 4: `...-01` catálogo histórico; `...-02` 300 sem ampacidade; `...-03` ampacidade 300=`NaN`; `...-04` `resistance_ohm` 300=`Infinity` | caso 01: `result.ok=true`, `result.data.evaluatedCandidates.length=20`, `result.data.candidateAlternatives.length=11`, `result.data.rejectedCandidates.length=9` e `result.data.nonDominatedAlternatives.length=11`; casos 02–04 usam catálogo somente com 300 e exigem `result.error.code="CATALOG_NO_EVALUABLE_CANDIDATE"`; `result.error.params.errors[0].code` = `CANDIDATE_INCOMPLETE`, `CANDIDATE_IMPEDANCE_VALUE_INVALID`, `CANDIDATE_IMPEDANCE_VALUE_INVALID`; paths internos = `missingFields[0]="tabulatedAmpacity_A"`, `invalidFields[0]={path:"tabulatedAmpacity_A",reason:"NON_FINITE",observedType:"number"}`, `invalidFields[0]={path:"resistance_ohm",reason:"NON_FINITE",observedType:"number"}` |
+| `MM300-CORE-11` | 2: `...-01` coexistência de representações; `...-02` material heterogêneo | caso 01, catálogo somente com 300: `result.error.params.errors[0].code="CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT"`; caso 02, `maxParallelCount=1`, catálogo 95+300: `result.data.evaluatedCandidates[1].candidateId="1x300"`, `blockers[0].code="CANDIDATE_STRUCTURE_INVALID"`, `blockers[0].params.reason="catalog_heterogeneous"`; zero alternativa 300 válida |
+| `MM300-CORE-12` | 4: `...-01` pureza; `...-02` determinismo; `...-03` guardrails; `...-04` campos proibidos | clone profundo da entrada permanece idêntico; duas saídas são profundamente iguais; `result.productionAllowed=false`, `result.data.installableSelection=null`, `result.data.installationAuthorized=false`; `result.blockers[0].code="B-01"`, `result.blockers[1].code="B-02"`, `result.blockers[2].code="B-03"`, `result.blockers[3].code="B-04"`, `result.blockers[4].code="B-05"`, `result.blockers[5].code="B-06"`; `recommended`, `selected` e `finalSizing` ausentes nos paths de topo e das candidatas |
+
+Antes de emitir qualquer relatório core focal, o harness valida que sua fixture nominal contém exatamente seis
+seções e uma única `section_mm2=300`. Zero ou múltiplas linhas 300, metadado diferente ou contagem diferente
+encerra com `CONFIG_ERROR`, exit `3`, sem chamar o motor. Isso não altera o fato de que um consumidor genérico
+pode enviar catálogo válido de cinco seções e obter sucesso histórico.
+
+No teste visual, a ausência da linha 300 na página é divergência funcional nominal de `UI300-01` e produz o
+RED esperado contra a UI anterior. Já a ausência da candidata 300 na fixture interna do próprio harness é
+`CONFIG_ERROR`/exit `3`. Assim, falha do produto e defeito do oráculo não são confundidos.
+
+Matrizes visuais:
+
+| Relatório | Casos exatos | Paths/resultado vinculante |
+| --- | --- | --- |
+| `UI300-05` | 7: `...-01` seção; `...-02` ampacidade; `...-03` R; `...-04` X; `...-05` temperatura; `...-06` material; `...-07` proveniência | em cada caso, somente `capturedInput.catalog.candidates[5].<path>` muda para o valor injetado; os demais paths mantêm igualdade profunda com a fixture; `impedance_ohm` permanece ausente; os cinco metadados compartilhados e `catalog.sourceVersion` permanecem exatos |
+| `UI300-12` | 5: `...-01` ampacidade ausente; `...-02` ampacidade não finita; `...-03` R não finita; `...-04` conflito estrutural; `...-05` material heterogêneo | casos 01–03 e 05 alteram o DOM, capturam o DTO exato e exigem `engineResult.data.evaluatedCandidates[5].candidateId="1x300"`; nesse mesmo item, `blockers[0].{code,params.reason}` = `CANDIDATE_STRUCTURE_INVALID/candidate_incomplete`, `CANDIDATE_STRUCTURE_INVALID/candidate_value_invalid`, `CANDIDATE_STRUCTURE_INVALID/candidate_value_invalid`, `CANDIDATE_STRUCTURE_INVALID/catalog_heterogeneous`; caso 04 usa o motor real sobre clone focal cujo catálogo contém somente a linha 300 capturada acrescida de `impedance_ohm` e exige `engineResult.error.params.errors[0].code="CANDIDATE_IMPEDANCE_REPRESENTATION_CONFLICT"`; a UI projeta o envelope real sem cards ou números parciais |
+| `UI300-13` | 3: `...-01` PT; `...-02` EN; `...-03` ES | `document.documentElement.lang`, rótulo 300 mm², aviso literal e listas nominais de termos proibidos são verificados por idioma; zero vazamento cruzado |
+| `UI300-14` | 4: `...-01` 375 claro; `...-02` 375 escuro; `...-03` acessibilidade desktop; `...-04` teclado/foco | `document.documentElement.scrollWidth<=clientWidth`, zero elemento recortado, seis linhas após abrir o painel, labels associados, landmark único, ordem DOM, tabulação e estilo de foco visível nos paths/elementos nominais |
+
+`UI300-13` reutiliza nominalmente a lista histórica, congelada abaixo após normalização NFD, remoção de marcas
+diacríticas, lowercase e compactação de espaços:
+
+| Idioma | Chave | Padrão proibido exato |
+| --- | --- | --- |
+| PT | `recommended` | `\brecomendad[oa]\b` |
+| PT | `selected` | `\bselecionad[oa]\b` |
+| PT | `final_solution` | `solucao final` |
+| PT | `iec_conformity` | `conforme iec` |
+| PT | `productive_release` | `liberad[oa] para (?:projeto|compra|instalacao)` |
+| EN | `recommended` | `\brecommended\b` |
+| EN | `selected` | `\bselected\b` |
+| EN | `final_solution` | `final solution` |
+| EN | `iec_conformity` | `iec (?:compliant|conformant)` |
+| EN | `productive_release` | `(?:released|approved) for (?:design|purchase|installation)` |
+| ES | `recommended` | `\brecomendad[oa]\b` |
+| ES | `selected` | `\bseleccionad[oa]\b` |
+| ES | `final_solution` | `solucion final` |
+| ES | `iec_conformity` | `conforme con iec` |
+| ES | `productive_release` | `(?:liberad[oa]|aprobad[oa]) para (?:proyecto|compra|instalacion)` |
+
+Os quinze padrões devem ser compilados individualmente; padrão ausente, extra ou alterado é
+`CONFIG_ERROR`, não PASS funcional.
+
+No caso `UI300-12-CASE-04`, o envelope não é mock: ele é produzido pelo motor real com fault injection
+explicitamente registrada em `observed.faultInjection`. O harness não altera código de produção. Em todos os
+demais casos, a chamada ocorre pelo fluxo real da página.
+
+Para cada matriz acima, ausência, duplicidade, `caseId` extra, ordem divergente, path não exercido,
+`assertionExercised=false`, schema incompleto ou summary incompatível torna a execução inteira
+`CONFIG_ERROR`/exit `3`. Um relatório agregado não pode passar por maioria; todos os seus casos precisam estar
+conformes.
+
 ## 15. Regressão, CI e PR
 
 - Toda PR executável preserva `npm run test:regression` e o shadow Gate vigente.
@@ -1490,7 +1872,7 @@ Bloco preparado para futura integração, somente após aceite do pacote execut�
 ### Laboratório experimental — alternativas de cabos BT em paralelo
 
 O AmpAI pode enumerar e comparar alternativas matemáticas preliminares, como
-`2 × 240 mm² por fase`, utilizando catálogo e hipóteses explicitamente confirmados.
+`2 × 300 mm² por fase`, utilizando catálogo e hipóteses explicitamente confirmados.
 
 > PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.
 
@@ -1504,13 +1886,13 @@ Entrada prevista:
 
 | Campo | Valor |
 | --- | --- |
-| ID | `CAB-BT-PARALLEL-002` |
+| ID | `CAB-BT-PARALLEL-003` |
 | Classe | `CHG-3 científica experimental` |
 | Domínio | enumeração/comparação preliminar de cabos BT em paralelo |
-| Ciência | `2b61627d8640fce91eb229ca522ae33a143671df` |
-| Estado atual | `SDD_EXPERIMENTAL_RATIFICADO_PARA_CORRECAO_DO_RED` |
+| Ciência | `122b885db40f69b422dac8ea4c2e419dc547220f` |
+| Estado atual | `SDD_CANDIDATO_PARA_AUDITORIA` |
 | Estado produtivo | `BLOQUEADO`, `productionAllowed=false` |
-| Teste novo | experimental, 74 relatórios core (48 científicos + 26 técnicos); 15 visuais em fase posterior |
+| Teste novo | caracterização focal core com 12 relatórios e RED visual focal com 15 relatórios; ambos experimentais |
 | TESTE DO CEO | `SIM`, depois de GREEN independente e remoto da UI |
 | PR/SHA/Gate | pendentes |
 | Marco remoto | pendente |
@@ -1525,11 +1907,10 @@ escopo própria ou integração no mesmo pacote futuro expressamente autorizada.
 | Fase | Executor | Autoridade | Retorno |
 | --- | --- | --- | --- |
 | Auditoria deste SDD | Conselho de Arquitetura e Governança | Conselho | CTO |
-| RED core experimental | Senior QA-Security | QA | CTO |
-| GREEN core | Senior Backend Dev | sem veredito | CTO |
-| QA independente core | Senior QA-Security | QA | CTO |
-| RED visual | Senior QA-Security | QA | CTO |
-| GREEN UI | Senior Frontend Dev | sem veredito | CTO |
+| Caracterização core 300 mm² | Senior QA-Security | QA | CTO |
+| Backend focal, somente se houver divergência core | Senior Backend Dev | sem veredito | CTO |
+| RED visual 300 mm² | Senior QA-Security | QA | CTO |
+| GREEN UI 300 mm² | Senior Frontend Dev | sem veredito | CTO |
 | QA independente/remoto | Senior QA-Security | QA | CTO |
 | Teste manual | CEO | CEO | CTO |
 | Merge | CEO | CEO | CTO |
@@ -1549,8 +1930,8 @@ Não existe handoff direto entre executores. O CTO roteia cada etapa; QA não im
 Cenário mínimo esperado pelo CEO:
 
 - informar `I_b=600 A`, `400 V`, limite de queda `3%` e confirmar o catálogo/hipóteses laboratoriais;
-- visualizar, sem abrir painéis técnicos desnecessários, alternativas como 2×185, 2×240 e 3×120;
-- alternar os objetivos e observar 2×240, 3×120 e 4×240 no topo conforme o objetivo;
+- visualizar, sem abrir painéis técnicos desnecessários, alternativas como 2×185, 2×240, 2×300 e 3×120;
+- alternar os objetivos e observar 2×300, 3×120 e 4×300 no topo conforme o objetivo;
 - identificar critérios, dominante, hipóteses e “Instalação autorizada: NÃO”;
 - não encontrar “recomendado”, “selecionado” ou declaração IEC.
 
@@ -1558,10 +1939,14 @@ O aceite valida clareza e utilidade experimental; não remove nenhum bloqueio pr
 
 ## 20. Ciclo de vida e encerramento
 
-Estado atual: SDD R3 materializado no worktree documental. O RED vigente na cadeia experimental ainda possui
-oráculo permissivo e aguarda correção pelo QA somente depois da ratificação deste SDD. A candidata Backend
-permanece untracked, bloqueada e sem elegibilidade para commit/push. Não existe PR ou merge desta cadeia.
-Após futura integração:
+Estado atual: o core L1–L3 está integrado e GREEN em `5411779a…`; a UI anterior de cinco seções está GREEN em
+`c3e49d1a…`, mas o aceite do CEO ficou `APROVADO_COM_AJUSTE_FOCAL` pela ausência de 300 mm². A ciência da
+extensão está publicada em `122b885d…`. Este SDD permanece candidato e não commitado; os testes focais ainda
+não existem. Não existe PR ou merge autorizado para a extensão, e a PR #40 continua **DO NOT MERGE**.
+
+Sequência vinculante após auditoria e commit documental: caracterização core → RED visual funcional → GREEN
+Frontend → QA independente local/remoto na mesma SHA → nova prévia → reteste do CEO. Backend só entra se a
+caracterização demonstrar divergência real. Após futura integração:
 
 - `MERGE_VALIDADO` exige PR, SHA e Gate remoto;
 - `ENCERRAMENTO_OPERACIONAL` exige `origin/main → AmpAI/ em main → Google Drive`, hashes aplicáveis,
@@ -1577,8 +1962,9 @@ Após futura integração:
 - [x] Renderização restrita a `index.html`/`js/ui_render.js`.
 - [x] Motor L0 integrado preservado e chamado sem recálculo.
 - [x] RNC-P, memorial, BDD e fonte primária ausente classificados.
-- [x] Teste novo experimental, RED e protocolo de 74 relatórios definidos.
-- [x] RED visual futuro e 15 relatórios definidos.
+- [x] Regressão histórica de 74 relatórios core e 15 relatórios visuais preservada.
+- [x] Caracterização focal core de 12 relatórios e RED visual focal de 15 relatórios definidos.
+- [x] Catálogo de seis seções, 42 campos UI e objetivos com 300 mm² especificados.
 - [x] Regressão stable, artifact remoto e CodeRabbit consultivo previstos.
 - [x] `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` separados.
 - [x] O.S. classificada como CHG-3 e roteamento explicitado.
@@ -1589,6 +1975,6 @@ Após futura integração:
 
 ---
 
-**Estado vinculante:** `SDD_EXPERIMENTAL_RATIFICADO_PARA_CORRECAO_DO_RED`. Correção do RED, Backend, QA independente,
-Frontend, commit, push, PR e merge permanecem bloqueados até conferência focalizada do Conselho e autorização
-correspondente.
+**Estado vinculante:** `SDD_CANDIDATO_PARA_AUDITORIA`. Commit, push, caracterização core, RED visual, Backend,
+Frontend, QA independente, PR e merge permanecem bloqueados até conferência focalizada do
+`@Conselho_de_Arquitetura_e_Governanca` e autorização correspondente do `@CTO/@CEO`.
