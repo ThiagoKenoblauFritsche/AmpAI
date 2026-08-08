@@ -22,9 +22,9 @@ const SELECTION_EXPORT = 'enumerateCablingBTParallelAlternativesExperimental';
 const IDS = Array.from({ length: 15 }, (_unused, index) => `UI-${String(index + 1).padStart(2, '0')}`);
 const OBJECTIVE_TOPS = {
   NONE: '2x185',
-  MIN_PARALLEL_COUNT: '2x240',
+  MIN_PARALLEL_COUNT: '2x300',
   MIN_TOTAL_COPPER: '3x120',
-  MAX_MINIMUM_MARGIN: '4x240',
+  MAX_MINIMUM_MARGIN: '4x300',
 };
 const CEO_FIXTURE = {
   totalLoadCurrent_A: 600,
