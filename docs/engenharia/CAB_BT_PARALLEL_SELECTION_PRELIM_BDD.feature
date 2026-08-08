@@ -272,6 +272,12 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
     E a ordem canonica dos escalares e: section_mm2, tabulatedAmpacity_A, material, insulation, installationMethod, referenceTemperature_C, units, source, sourceVersion, provenance
     E, neste exemplo, a ordem resultante e "tabulatedAmpacity_A", depois "material", depois "provenance" (independente da ordem de entrada)
 
+  # ── Identidade do item de catalogo (contrato ratificado CATALOG_ENTRY_ID_SECTION_300) ──
+  # catalogEntryId identifica o ITEM de catalogo:
+  #   - section_mm2 finita, positiva e unica  -> catalogEntryId="section-${section_mm2}"  (ex.: 300 -> "section-300");
+  #   - section_mm2 ausente ou invalida        -> catalogEntryId="catalog-entry-${index}".
+  # candidateId identifica POSTERIORMENTE a combinacao nParallel x section (ex.: "1x300"), nao o item.
+  # Nenhuma excecao especifica para 300 mm2.
   Cenario: [Escalar] Issue nominal de CANDIDATE_VALUE_INVALID (schema)
     Dado a entrada de catalogo "300", indice 0, modo "CATALOGO_LAB_ASSUMPTION_ONLY", com "tabulatedAmpacity_A=NaN"
     Quando a camada valida os escalares presentes
@@ -279,7 +285,7 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
       """
       {
         "code": "CANDIDATE_VALUE_INVALID",
-        "catalogEntryId": "300",
+        "catalogEntryId": "section-300",
         "catalogEntryIndex": 0,
         "invalidFields": [
           { "path": "tabulatedAmpacity_A", "reason": "NON_FINITE", "observedType": "number:NaN" }
@@ -490,6 +496,28 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
     Dado a entrada de "300 mm²" (sem conflito) com componente de impedancia nao finita (ex.: re = +Infinity)
     Quando a camada valida
     Entao o resultado e "CANDIDATE_IMPEDANCE_VALUE_INVALID" com "invalidFields[]", reason "NON_FINITE" e observedType "number:+Infinity"
+
+  Cenario: [300] Issue nominal de CANDIDATE_IMPEDANCE_VALUE_INVALID (schema; resistance_ohm=+Infinity)
+    Dado a entrada de "300 mm²" com "resistance_ohm=+Infinity" (RESISTANCE_REACTANCE_PAIR, sem conflito)
+    Quando a camada valida a impedancia presente
+    Entao a issue emitida e exatamente:
+      """
+      {
+        "code": "CANDIDATE_IMPEDANCE_VALUE_INVALID",
+        "catalogEntryId": "section-300",
+        "invalidFields": [
+          {
+            "path": "resistance_ohm",
+            "reason": "NON_FINITE",
+            "observedType": "number:+Infinity"
+          }
+        ],
+        "mode": "CATALOGO_LAB_ASSUMPTION_ONLY"
+      }
+      """
+    E "candidateId" esta AUSENTE
+    E "catalogEntryIndex" esta AUSENTE
+    E nenhuma propriedade adicional e permitida
 
   Cenario: [300] Conflito de representacao na entrada de 300
     Dado a entrada de "300 mm²" com "impedance_ohm" presente E "resistance_ohm"/"reactance_ohm" presentes
