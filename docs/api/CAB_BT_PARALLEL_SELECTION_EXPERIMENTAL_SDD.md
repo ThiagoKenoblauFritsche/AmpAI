@@ -8,16 +8,18 @@ consumers:
   - "@Senior_Frontend_Dev"
 lifecycle: "candidato até ratificação do Conselho; experimental enquanto a fonte primária integral estiver ausente"
 governanca: v7.3
-os: CAB-BT-PARALLEL-003-SDD-NONFINITE-R4
+os: CAB-BT-PARALLEL-003-SDD-CATALOG-ENTRY-ID-R5
 classe: CHG-3 arquitetural/contratual experimental
-baseline_imutavel: dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1
+baseline_imutavel: 54941f9d3a126116ecaf9d519eb2b904ea6034f0
 baseline_cientifica_300mm2: 122b885db40f69b422dac8ea4c2e419dc547220f
 baseline_errata_nonfinite: dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1
+baseline_errata_catalog_entry_id: 54941f9d3a126116ecaf9d519eb2b904ea6034f0
 baseline_sdd_300mm2_r2: 380b949a9fba20bf63e9b052f03d5899046046c8
+baseline_sdd_nonfinite_r4: 9d5403fff49567cf74af4ce18fdd5f168e59b547
 baseline_core_green: 5411779a86a3280bb6b35a90e2efa8f024a7e1b8
 baseline_ui_green_anterior: c3e49d1a8bf6e8376e9f1ddd6d1c2737d5ce8f81
 baseline_red_visual_anterior: 0984fb0c0881df8d4e5c9f7ad520e383b8a586a8
-parecer_origem: CAB-BT-PARALLEL-003-SDD-NONFINITE-R3-AUDIT
+parecer_origem: CAB-BT-PARALLEL-003-CONTRACT-CATALOG-ENTRY-ID-001
 baseline_main_de_origem: 83e24131c0cc09813be65a5fa269961b9cc80c5c
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
@@ -133,13 +135,21 @@ Esta R4 fecha exclusivamente duas lacunas de schema identificadas na auditoria d
 `provenance` com tipo string, porém fora do domínio `ASSUMPTION_ONLY`, e a identidade histórica exata da
 issue `CANDIDATE_IMPEDANCE_VALUE_INVALID`. Nenhuma contagem, fixture, ciência ou resultado focal é alterado.
 
+### 1.5 Identidade canônica do item de catálogo — R5
+
+Esta R5 incorpora a errata publicada em `54941f9d3a126116ecaf9d519eb2b904ea6034f0`. Para seção finita,
+positiva e única, `catalogEntryId` é sempre `section-${section_mm2}`; portanto, a candidata focal usa
+`catalogEntryId="section-300"`, mesmo quando ampacidade ou impedância estão inválidas. Se a própria
+`section_mm2` estiver ausente ou inválida, permanece `catalogEntryId="catalog-entry-${index}"`. O identificador
+do item não depende de `nParallel`; `candidateId` só identifica posteriormente cada combinação enumerada.
+
 ## 2. Fontes, autoridade e precedência
 
 | Fonte | Identificação | Classe | Autoridade neste SDD |
 | --- | --- | --- | --- |
 | Registro científico prático | `RNC-P_CAB_BT_PARALLEL_SELECTION_PRELIM.md` em `122b885d…` | RNC-P experimental ratificado para SDD | requisitos e limites L1–L3, incluindo 300 mm² |
 | Memorial prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md` em `122b885d…` | memorial experimental | equações, casos e números esperados, incluindo 300 mm² |
-| BDD prático + errata nonfinite | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `dc37b9c…` | evidência comportamental científica | cenários obrigatórios da extensão focal e contrato de valores presentes inválidos |
+| BDD prático + erratas | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `54941f9…` | evidência comportamental científica | cenários obrigatórios da extensão focal, valores presentes inválidos e identidade canônica do item |
 | Motor integrado | `js/core_cabos_bt_parallel_experimental.js` em `main@83e24131…` | implementação experimental L0 | única fonte executável de L0 |
 | SDD L0 | `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.md` | contrato experimental integrado | envelope e erros do L0 |
 | IEC 60364-5-52 Ed. 3.1 integral | ausente | norma primária ausente | **não disponível para regra produtiva** |
@@ -148,7 +158,7 @@ Precedência vinculante:
 
 1. norma primária integral e futuro RNC-C, quando ratificados;
 2. contrato L0 integrado para os cálculos que já executa;
-3. pacote científico `122b885d…`, complementado pela errata `dc37b9c…`, para L1–L3 e extensão focal de 300 mm²;
+3. pacote científico `122b885d…`, complementado pelas erratas `dc37b9c…` e `54941f9…`, para L1–L3 e extensão focal de 300 mm²;
 4. este SDD para estrutura de software, DTOs, Result Pattern e evidência;
 5. exemplos e textos de interface, que nunca substituem os itens anteriores.
 
@@ -631,7 +641,7 @@ propriedades adicionais:
 ```json
 {
   "code": "CANDIDATE_VALUE_INVALID",
-  "catalogEntryId": "300",
+  "catalogEntryId": "section-300",
   "catalogEntryIndex": 0,
   "invalidFields": [
     {
@@ -661,7 +671,7 @@ schema fechado, sem `candidateId`, `catalogEntryIndex` ou propriedade adicional:
 ```json
 {
   "code": "CANDIDATE_IMPEDANCE_VALUE_INVALID",
-  "catalogEntryId": "300",
+  "catalogEntryId": "section-300",
   "invalidFields": [
     {
       "path": "resistance_ohm",
@@ -1662,7 +1672,7 @@ tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
 #### 14.5.1 Caracterização do core existente — 12 relatórios
 
 O primeiro arquivo nasceu como caracterização do motor já integrado. Após a evidência original e a ratificação
-da errata nonfinite, sua próxima revisão será o RED focal contratualmente válido: deve chamar
+das erratas nonfinite e de identidade do item, sua próxima revisão será o RED focal contratualmente válido: deve chamar
 `enumerateCablingBTParallelAlternativesExperimental(input)` com o catálogo real de seis seções, sem stub,
 mock, adaptador ou alteração do motor. Prefixos exatos:
 
@@ -1908,12 +1918,12 @@ Subcontratos fechados de `MM300-CORE-10`:
    `nonDominatedAlternatives` iguais a `20`, `11`, `9` e `11`.
 2. `MM300-CORE-10-CASE-02`: `result.error.params.errors[0].code="CANDIDATE_INCOMPLETE"` e
    `result.error.params.errors[0].missingFields[0]="tabulatedAmpacity_A"`.
-3. `MM300-CORE-10-CASE-03`: `result.error.params.errors[0].code="CANDIDATE_VALUE_INVALID"` e
-   `result.error.params.errors[0].invalidFields[0]` profundamente igual a
-   `{path:"tabulatedAmpacity_A",reason:"NON_FINITE",observedType:"number:NaN"}`.
+3. `MM300-CORE-10-CASE-03`: `result.error.params.errors[0]` profundamente igual, sem propriedades
+   adicionais, a
+   `{code:"CANDIDATE_VALUE_INVALID",catalogEntryId:"section-300",catalogEntryIndex:0,invalidFields:[{path:"tabulatedAmpacity_A",reason:"NON_FINITE",observedType:"number:NaN"}],mode:"CATALOGO_LAB_ASSUMPTION_ONLY"}`.
 4. `MM300-CORE-10-CASE-04`:
    `result.error.params.errors[0]` profundamente igual, sem propriedades adicionais, a
-   `{code:"CANDIDATE_IMPEDANCE_VALUE_INVALID",catalogEntryId:"300",invalidFields:[{path:"resistance_ohm",reason:"NON_FINITE",observedType:"number:+Infinity"}],mode:"CATALOGO_LAB_ASSUMPTION_ONLY"}`.
+   `{code:"CANDIDATE_IMPEDANCE_VALUE_INVALID",catalogEntryId:"section-300",invalidFields:[{path:"resistance_ohm",reason:"NON_FINITE",observedType:"number:+Infinity"}],mode:"CATALOGO_LAB_ASSUMPTION_ONLY"}`.
    `candidateId` e `catalogEntryIndex` são nominalmente ausentes.
 
 Nos casos 03 e 04, `errors[0]` obedece ao schema fechado e nenhum número utilizável alcança L0/L1–L3.
@@ -2062,7 +2072,8 @@ O aceite valida clareza e utilidade experimental; não remove nenhum bloqueio pr
 
 Estado atual: o core L1–L3 está integrado e GREEN em `5411779a…`; a UI anterior de cinco seções está GREEN em
 `c3e49d1a…`, mas o aceite do CEO ficou `APROVADO_COM_AJUSTE_FOCAL` pela ausência de 300 mm². A ciência da
-extensão está publicada em `122b885d…` e a errata nonfinite está publicada em `dc37b9c…`. Este SDD R4
+extensão está publicada em `122b885d…`; a errata nonfinite está publicada em `dc37b9c…` e a errata de
+identidade canônica está publicada em `54941f9…`. Este SDD R5
 permanece candidato e não commitado.
 
 A caracterização focal original existe como arquivo não congelado
@@ -2099,6 +2110,8 @@ integração:
 - [x] `CANDIDATE_VALUE_INVALID` separado de `CANDIDATE_IMPEDANCE_VALUE_INVALID`, com schemas e ordens fechados.
 - [x] `provenance` não-string e string fora do domínio separados por `NOT_STRING`/`NOT_ASSUMPTION_ONLY`.
 - [x] Issue de impedância fechada em `{code,catalogEntryId,invalidFields,mode}`, sem índices de candidata/catálogo.
+- [x] `catalogEntryId="section-300"` reconciliado nos schemas e nos oráculos CASE-03/04.
+- [x] Seção ausente/inválida preserva `catalogEntryId="catalog-entry-${index}"`; `candidateId` permanece distinto.
 - [x] Taxonomia `number:NaN`/`number:+Infinity`/`number:-Infinity` e precedência da errata `dc37b9c…` incorporadas.
 - [x] Caracterização original preservada como evidência não congelada; correção focal do oráculo precede Backend.
 - [x] Catálogo de seis seções, 42 campos UI e objetivos com 300 mm² especificados.
