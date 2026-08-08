@@ -481,12 +481,18 @@ function validateCandidateItem(rawItem, index) {
   }
 
   var orderedMissing = MISSING_FIELD_ORDER.filter(function keepMissing(field) { return missingFields.indexOf(field) !== -1; });
-  var orderedInvalid = INVALID_FIELD_ORDER.filter(function keepInvalid(path) { return has(invalidByPath, path); }).map(function pick(path) { return invalidByPath[path]; });
+  // Escalares conhecidos invalidos -> CANDIDATE_VALUE_INVALID (ordem canonica dos escalares).
+  var scalarInvalid = CANDIDATE_SCALARS.filter(function keepScalar(p) { return has(invalidByPath, p); }).map(function pickScalar(p) { return invalidByPath[p]; });
+  // Componentes de impedancia invalidos -> CANDIDATE_IMPEDANCE_VALUE_INVALID (ordem canonica de impedancia).
+  var impedanceInvalid = INVALID_FIELD_ORDER.filter(function keepImp(p) { return has(invalidByPath, p); }).map(function pickImp(p) { return invalidByPath[p]; });
   if (orderedMissing.length > 0) {
     detailedIssues.push({ code: 'CANDIDATE_INCOMPLETE', catalogEntryId: catalogEntryId, missingFields: orderedMissing, mode: mode, provenance: 'ASSUMPTION_ONLY' });
   }
-  if (orderedInvalid.length > 0) {
-    detailedIssues.push({ code: 'CANDIDATE_IMPEDANCE_VALUE_INVALID', catalogEntryId: catalogEntryId, invalidFields: orderedInvalid, mode: mode });
+  if (scalarInvalid.length > 0) {
+    detailedIssues.push({ code: 'CANDIDATE_VALUE_INVALID', catalogEntryId: catalogEntryId, catalogEntryIndex: catalogEntryIndex, invalidFields: scalarInvalid, mode: mode });
+  }
+  if (impedanceInvalid.length > 0) {
+    detailedIssues.push({ code: 'CANDIDATE_IMPEDANCE_VALUE_INVALID', catalogEntryId: catalogEntryId, invalidFields: impedanceInvalid, mode: mode });
   }
 
   var complete = detailedIssues.length === 0;
