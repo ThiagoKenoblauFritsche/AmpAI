@@ -1837,18 +1837,9 @@ window.calcIccAgr = function() {
             totalLoadCurrent_A: 600, lineVoltage_V: 400,
             powerFactor: { value: 0.9, inputClass: 'SUGERIDA_COM_CONFIRMACAO', confirmed: true, provenance: 'ASSUMPTION_ONLY' },
             maximumVoltageDrop_percent: 3, maxParallelCount: 4, nCircuits: 1, arrangement: 'LAB_IDENTICAL_BRANCHES',
-            catalog: {
-                mode: 'CATALOGO_LAB_ASSUMPTION_ONLY', confirmed: true, source: 'CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md',
-                sourceVersion: '2b61627d8640fce91eb229ca522ae33a143671df', provenance: 'ASSUMPTION_ONLY',
-                impedanceBasis: { length_m: 100, description: 'Z(S)=2.25/S+j0.008 ohm; laboratory placeholder', provenance: 'ASSUMPTION_ONLY' },
-                candidates: [
-                    { section_mm2: 95, tabulatedAmpacity_A: 240, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.02368421052631579, im: 0.008 } },
-                    { section_mm2: 120, tabulatedAmpacity_A: 285, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', resistance_ohm: 0.01875, reactance_ohm: 0.008 },
-                    { section_mm2: 150, tabulatedAmpacity_A: 330, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.015, im: 0.008 } },
-                    { section_mm2: 185, tabulatedAmpacity_A: 380, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.012162162162162163, im: 0.008 } },
-                    { section_mm2: 240, tabulatedAmpacity_A: 445, material: 'COPPER_LAB', insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', referenceTemperature_C: 30, units: 'SI', source: 'LAB_CATALOG', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY', impedance_ohm: { re: 0.009375, im: 0.008 } },
-                ],
-            },
+            // O.S.003 §3: sem fixture estático de catálogo. mode/source/sourceVersion/provenance/
+            // impedanceBasis/candidates são construídos EXCLUSIVAMENTE do DOM em buildInput().
+            catalog: { candidates: [] },
             grouping: { mode: 'LAB_CONSTANT_CONFIRMED', value: 0.8, confirmed: true, source: 'laboratory sensitivity', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY' },
             guidedHypothesis: { displayedBeforeCalculation: true, confirmed: true, provenance: 'ASSUMPTION_ONLY' },
             advancedBranchesByCombination: [],
@@ -1889,6 +1880,8 @@ window.calcIccAgr = function() {
         uiFailureNote: { pt: 'Exceção da integração da interface — não é um envelope do motor; sem números parciais.', en: 'UI integration exception — not an engine envelope; no partial numbers.', es: 'Excepción de integración de la interfaz — no es un envelope del motor; sin números parciales.' },
         integrationFailClosed: { pt: 'Falha de integração fail-closed: guardrails do envelope divergem do contrato experimental; apresentação de alternativas bloqueada.', en: 'Fail-closed integration failure: envelope guardrails diverge from the experimental contract; alternatives display blocked.', es: 'Falla de integración fail-closed: los guardrails del envelope divergen del contrato experimental; presentación de alternativas bloqueada.' },
         guardrailLabel: { pt: 'Guardrails divergentes', en: 'Divergent guardrails', es: 'Guardrails divergentes' },
+        catalogStructuralInvalid: { pt: 'Catálogo com entrada estruturalmente inválida — apresentação de alternativas bloqueada (fail-closed).', en: 'Catalog contains a structurally invalid entry — alternatives display blocked (fail-closed).', es: 'Catálogo con una entrada estructuralmente inválida — presentación de alternativas bloqueada (fail-closed).' },
+        structuralReasons: { pt: 'Motivos', en: 'Reasons', es: 'Motivos' },
     };
 
     function el(id) { return document.getElementById(id); }
@@ -1912,9 +1905,28 @@ window.calcIccAgr = function() {
     function catField(idx, field) {
         return document.querySelector('[data-catalog-index="' + idx + '"][data-catalog-field="' + field + '"]');
     }
-    // R1 §2 + R2 §2: constrói catalog.candidates DIRETAMENTE dos valores atuais do DOM.
-    // SEM fallback estático: catálogo DOM ausente → coleção VAZIA que o motor rejeita
-    // (fail-closed). Nenhuma entrada científica de referenceInput() pode reaparecer.
+    // Lê um metadado materializado no DOM (atributo data-value); ausência ⇒ null (sem fallback).
+    function metaValue(rootSelector, name) {
+        var e = document.querySelector(rootSelector + ' [data-meta="' + name + '"]');
+        return e ? e.getAttribute('data-value') : null;
+    }
+    // Escalar numérico: vazio/ausente ⇒ chave OMITIDA (candidate_incomplete no motor);
+    // presente ⇒ parseFloat (NaN/Infinity se não numérico ⇒ candidate_value_invalid).
+    function setNumField(obj, key, rawVal) {
+        if (rawVal === '' || rawVal == null) return;
+        obj[key] = parseFloat(rawVal);
+    }
+    // Escalar textual: vazio/ausente ⇒ chave OMITIDA; presente ⇒ String.
+    function setStrField(obj, key, rawVal) {
+        if (rawVal === '' || rawVal == null) return;
+        obj[key] = String(rawVal);
+    }
+
+    // R1 §2 + R2 §2 + O.S.003: catalog.candidates DIRETAMENTE do DOM. Metadados homogêneos
+    // (insulation/installationMethod/units/source/sourceVersion) vêm do DOM materializado
+    // ([data-catalog-shared-metadata]); representação EXCLUSIVA resistance_ohm/reactance_ohm
+    // (nunca impedance_ohm). Catálogo DOM ausente ⇒ coleção VAZIA (fail-closed pelo motor);
+    // sem fixture/fallback estático.
     function buildCatalogFromDom() {
         var nodes = document.querySelectorAll('#cbpsx-catalog [data-catalog-index][data-catalog-field]');
         var order = [];
@@ -1924,22 +1936,29 @@ window.calcIccAgr = function() {
             if (!Object.prototype.hasOwnProperty.call(seen, i)) { seen[i] = true; order.push(i); }
         });
         order.sort(function (a, b) { return Number(a) - Number(b); });
+        var shared = {
+            insulation: metaValue('[data-catalog-shared-metadata]', 'insulation'),
+            installationMethod: metaValue('[data-catalog-shared-metadata]', 'installationMethod'),
+            units: metaValue('[data-catalog-shared-metadata]', 'units'),
+            source: metaValue('[data-catalog-shared-metadata]', 'source'),
+            sourceVersion: metaValue('[data-catalog-shared-metadata]', 'entrySourceVersion'),
+        };
         return order.map(function (i) {
             function raw(field) { var e = catField(i, field); return e ? e.value : ''; }
-            return {
-                section_mm2: parseFloat(raw('section')),
-                tabulatedAmpacity_A: parseFloat(raw('ampacity')),
-                material: String(raw('material')),
-                insulation: 'LAB_UNSPECIFIED',
-                installationMethod: 'LAB_UNSPECIFIED',
-                referenceTemperature_C: parseFloat(raw('temp')),
-                units: 'SI',
-                source: 'LAB_CATALOG',
-                sourceVersion: 'PRELIM-1',
-                provenance: String(raw('provenance')),
-                resistance_ohm: parseFloat(raw('r')),
-                reactance_ohm: parseFloat(raw('x')),
-            };
+            var cand = {};
+            setNumField(cand, 'section_mm2', raw('section'));
+            setNumField(cand, 'tabulatedAmpacity_A', raw('ampacity'));
+            setStrField(cand, 'material', raw('material'));
+            cand.insulation = shared.insulation;
+            cand.installationMethod = shared.installationMethod;
+            setNumField(cand, 'referenceTemperature_C', raw('temp'));
+            cand.units = shared.units;
+            cand.source = shared.source;
+            cand.sourceVersion = shared.sourceVersion;
+            setStrField(cand, 'provenance', raw('provenance'));
+            setNumField(cand, 'resistance_ohm', raw('r'));
+            setNumField(cand, 'reactance_ohm', raw('x'));
+            return cand;
         });
     }
 
@@ -1964,10 +1983,25 @@ window.calcIccAgr = function() {
         input.fault.adiabaticK_A_sqrt_s_per_mm2.value = fieldNum('bt-parallel-selection-k');
         input.fault.imbalance.deltaFault = fieldNum('bt-parallel-selection-delta');
         // Confirmações: elemento ausente ⇒ confirmed=false; nunca true como fallback.
-        var catEl = el('bt-parallel-selection-catalog-confirmed'); input.catalog.confirmed = catEl ? catEl.checked === true : false;
+        var catEl = el('bt-parallel-selection-catalog-confirmed');
         var hypEl = el('bt-parallel-selection-hypothesis-confirmed'); input.guidedHypothesis.confirmed = hypEl ? hypEl.checked === true : false;
-        // Catálogo estritamente do DOM; ausência ⇒ coleção vazia (fail-closed pelo motor).
-        input.catalog.candidates = buildCatalogFromDom();
+        // O.S.003 §5/§6: catálogo construído INTEGRALMENTE do DOM — metadados materializados
+        // em [data-catalog-metadata] e candidatas em [data-catalog-index]; sem constante JS.
+        // catalog.sourceVersion vem EXCLUSIVAMENTE do DOM.
+        var impLen = metaValue('[data-catalog-metadata]', 'impedanceLength_m');
+        input.catalog = {
+            mode: metaValue('[data-catalog-metadata]', 'catalogMode'),
+            confirmed: catEl ? catEl.checked === true : false,
+            source: metaValue('[data-catalog-metadata]', 'catalogSource'),
+            sourceVersion: metaValue('[data-catalog-metadata]', 'catalogSourceVersion'),
+            provenance: metaValue('[data-catalog-metadata]', 'catalogProvenance'),
+            impedanceBasis: {
+                length_m: impLen == null ? null : Number(impLen),
+                description: metaValue('[data-catalog-metadata]', 'impedanceDescription'),
+                provenance: metaValue('[data-catalog-metadata]', 'impedanceProvenance'),
+            },
+            candidates: buildCatalogFromDom(),
+        };
         return input;
     }
 
@@ -1991,7 +2025,8 @@ window.calcIccAgr = function() {
         var domLabels = (card.dominantCriteria || []).map(function (t) { return tr(L.crit[t] || { pt: t, en: t, es: t }, lang); });
         var head = card.quantityPerPhase + ' × ' + card.section_mm2 + ' mm² ' + tr(L.perPhase, lang);
         var lines = [];
-        lines.push('<div class="cbpsx-alt-head">' + esc(head) + '</div>');
+        // Código da combinação (ex.: 2x185) em texto, além da forma humana "n × S mm²".
+        lines.push('<div class="cbpsx-alt-head"><span class="cbpsx-alt-code">' + esc(card.candidateId) + '</span> ' + esc(head) + '</div>');
         if (isFirst) lines.push('<div class="cbpsx-alt-order">' + esc(tr(L.firstOrder, lang)) + '</div>');
         lines.push(critLine(lang, 'AMPACIDADE', amp.status, [admissible ? admissible + ' A' : null, ampMargin ? tr(L.margin, lang) + ' ' + ampMargin + '%' : null]));
         lines.push(critLine(lang, 'QUEDA', vd.status, [actual ? actual + ' %' : null, limit ? tr(L.userLimit, lang) + ' ' + limit + ' %' : null]));
@@ -2139,6 +2174,22 @@ window.calcIccAgr = function() {
         }
 
         var data = envelope.data;
+        // O.S.003 UI300-12: entrada de catálogo estruturalmente inválida (campo ausente/inválido
+        // ou catálogo heterogêneo) ⇒ fail-closed: sem alternativas nem números parciais.
+        var structuralReasons = {};
+        (data.evaluatedCandidates || []).forEach(function (c) {
+            (c.blockers || []).forEach(function (b) {
+                if (b && b.code === 'CANDIDATE_STRUCTURE_INVALID' && b.params && b.params.reason) structuralReasons[b.params.reason] = true;
+            });
+        });
+        if (Object.keys(structuralReasons).length > 0) {
+            var sb = [];
+            sb.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + tr(L.no, lang)) + '</div>');
+            sb.push('<div><strong>' + esc(tr(L.catalogStructuralInvalid, lang)) + '</strong></div>');
+            sb.push('<div>' + esc(tr(L.structuralReasons, lang) + ': CANDIDATE_STRUCTURE_INVALID (' + Object.keys(structuralReasons).join(', ') + ')') + '</div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + sb.join('') + '</div>';
+            return;
+        }
         var cardsById = {};
         (data.presentationModel && data.presentationModel.cards ? data.presentationModel.cards : []).forEach(function (c) { cardsById[c.candidateId] = c; });
         var order = (data.presentationOrder || []).map(function (p) { return p.candidateId; });
@@ -2169,12 +2220,21 @@ window.calcIccAgr = function() {
         renderResults();
     };
 
-    // Re-localiza os resultados renderizados ao trocar de idioma (tokens/aviso invariantes).
+    // Re-localiza os resultados ao trocar de idioma (tokens/aviso invariantes).
     if (typeof window.setLanguage === 'function') {
         var prevSetLanguage = window.setLanguage;
         window.setLanguage = function (lang) {
             var out = prevSetLanguage.apply(this, arguments);
-            try { if (window._parSelLast) renderResults(); } catch (ignore) { /* noop */ }
+            // O.S.003 UI300-13: o atributo lang do documento usa o código simples (pt/en/es).
+            try {
+                var norm = String(lang || '').toLowerCase();
+                if (norm.indexOf('pt') === 0) document.documentElement.lang = 'pt';
+                else if (norm.indexOf('en') === 0) document.documentElement.lang = 'en';
+                else if (norm.indexOf('es') === 0) document.documentElement.lang = 'es';
+            } catch (langErr) { /* noop */ }
+            // O.S.003 UI300-15: reprojeta com o DOM/idioma atuais. Recalcula quando já houve
+            // um cálculo, para a projeção refletir o catálogo vigente no novo idioma.
+            try { if (window._parSelLast) window.parSelCalculate(); } catch (ignore) { /* noop */ }
             return out;
         };
     }

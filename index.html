@@ -1971,6 +1971,7 @@
                         #cab-bt-parallel-selection-experimental .cbpsx-alt { border:1px solid var(--border); border-radius:10px; padding:0.65rem; min-width:0; overflow-wrap:anywhere; }
                         #cab-bt-parallel-selection-experimental .cbpsx-alt.cbpsx-first { border-color:var(--accent); }
                         #cab-bt-parallel-selection-experimental .cbpsx-alt-head { font-size:0.98rem; font-weight:800; color:var(--text-primary); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt-code { font-size:0.72rem; font-weight:700; color:var(--accent); background:var(--bg-secondary); border:1px solid var(--border); border-radius:5px; padding:0.02rem 0.28rem; margin-right:0.25rem; }
                         #cab-bt-parallel-selection-experimental .cbpsx-alt-order { font-size:0.66rem; font-weight:700; color:var(--accent); text-transform:uppercase; }
                         #cab-bt-parallel-selection-experimental .cbpsx-crit { font-size:0.72rem; color:var(--text-secondary); padding:0.08rem 0; }
                         #cab-bt-parallel-selection-experimental .cbpsx-badge { font-size:0.66rem; color:var(--text-muted); }
@@ -1996,15 +1997,28 @@
                                     </select></label>
                             </div>
                             <button type="button" id="cbpsx-calculate" class="btn-action btn-accent" data-selection-action="calculate" data-action="enumerate-parallel-selection" data-i18n="parsel.f.calculate">Comparar alternativas</button>
-                            <p class="cbpsx-lab-summary" id="cbpsx-lab-summary" data-i18n="parsel.mainsummary">Os dados laboratoriais (catálogo e hipóteses) estão recolhidos na seção avançada abaixo — revise e edite antes de confirmar.</p>
-                            <label class="cbpsx-field cbpsx-check cbpsx-confirm"><input type="checkbox" data-selection-confirm="catalog" id="bt-parallel-selection-catalog-confirmed"><span data-i18n="parsel.f.catalog">Confirmo o catálogo laboratorial revisado na seção avançada (ASSUMPTION_ONLY)</span></label>
+                            <p class="cbpsx-lab-summary" id="cbpsx-lab-summary" data-i18n="parsel.mainsummary">O catálogo laboratorial (6 entradas, incluindo 300 mm²) está apresentado abaixo para revisão e edição; as hipóteses e os dados técnicos profundos ficam na seção avançada. Confirme antes de comparar.</p>
+                            <label class="cbpsx-field cbpsx-check cbpsx-confirm"><input type="checkbox" data-selection-confirm="catalog" id="bt-parallel-selection-catalog-confirmed"><span data-i18n="parsel.f.catalog">Confirmo o catálogo laboratorial apresentado (ASSUMPTION_ONLY)</span></label>
                             <label class="cbpsx-field cbpsx-check cbpsx-confirm"><input type="checkbox" data-selection-confirm="hypothesis" id="bt-parallel-selection-hypothesis-confirmed"><span data-i18n="parsel.f.hypothesis">Confirmo as hipóteses laboratoriais revisadas na seção avançada (ASSUMPTION_ONLY)</span></label>
-                            <details data-advanced data-selection-advanced>
-                                <summary data-i18n="parsel.advanced.summary">Laboratório avançado (dados técnicos ASSUMPTION_ONLY)</summary>
-                                <p class="cbpsx-adv-note" data-i18n="parsel.advanced.note">Valores preliminares editáveis do pacote científico. Nunca normativos.</p>
-                                <fieldset class="cbpsx-cat" id="cbpsx-catalog">
-                                <legend data-i18n="parsel.cat.legend">Catálogo laboratorial — 5 entradas, editável (ASSUMPTION_ONLY)</legend>
+                            <fieldset class="cbpsx-cat" id="cbpsx-catalog">
+                                <legend data-i18n="parsel.cat.legend">Catálogo laboratorial — 6 entradas, editável (ASSUMPTION_ONLY)</legend>
                                 <p class="cbpsx-cat-note" data-i18n="parsel.cat.note">Dados laboratoriais apresentados e editáveis (ASSUMPTION_ONLY). Uso preliminar; o DTO é construído a partir destes campos.</p>
+                                <div class="cbpsx-cat-meta" data-catalog-shared-metadata hidden>
+                                    <span data-meta="insulation" data-value="LAB_UNSPECIFIED"></span>
+                                    <span data-meta="installationMethod" data-value="LAB_UNSPECIFIED"></span>
+                                    <span data-meta="units" data-value="SI"></span>
+                                    <span data-meta="source" data-value="LAB_CATALOG"></span>
+                                    <span data-meta="entrySourceVersion" data-value="PRELIM-1"></span>
+                                </div>
+                                <div class="cbpsx-cat-meta" data-catalog-metadata hidden>
+                                    <span data-meta="catalogMode" data-value="CATALOGO_LAB_ASSUMPTION_ONLY"></span>
+                                    <span data-meta="catalogSource" data-value="CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md"></span>
+                                    <span data-meta="catalogSourceVersion" data-value="122b885db40f69b422dac8ea4c2e419dc547220f"></span>
+                                    <span data-meta="catalogProvenance" data-value="ASSUMPTION_ONLY"></span>
+                                    <span data-meta="impedanceLength_m" data-value="100"></span>
+                                    <span data-meta="impedanceDescription" data-value="Z(S)=2.25/S+j0.008 ohm; laboratory placeholder"></span>
+                                    <span data-meta="impedanceProvenance" data-value="ASSUMPTION_ONLY"></span>
+                                </div>
                                 <div class="cbpsx-cat-row" data-catalog-index="0">
                                     <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>1</span></div>
                                     <div class="cbpsx-cat-fields">
@@ -2065,7 +2079,22 @@
                                         <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="4" data-catalog-field="provenance" id="bt-parallel-selection-cat-4-provenance" value="ASSUMPTION_ONLY"></label>
                                     </div>
                                 </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="5">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>6</span> <span>— 300 mm²</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="section" id="bt-parallel-selection-cat-5-section" value="300"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="ampacity" id="bt-parallel-selection-cat-5-ampacity" value="516"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="r" id="bt-parallel-selection-cat-5-r" value="0.0075"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="x" id="bt-parallel-selection-cat-5-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="temp" id="bt-parallel-selection-cat-5-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="5" data-catalog-field="material" id="bt-parallel-selection-cat-5-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="5" data-catalog-field="provenance" id="bt-parallel-selection-cat-5-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
                                 </fieldset>
+                                <details data-advanced data-selection-advanced>
+                                <summary data-i18n="parsel.advanced.summary">Laboratório avançado (dados técnicos ASSUMPTION_ONLY)</summary>
+                                <p class="cbpsx-adv-note" data-i18n="parsel.advanced.note">Valores preliminares editáveis do pacote científico. Nunca normativos.</p>
                                 <fieldset class="cbpsx-hyp" id="cbpsx-hypotheses">
                                 <legend data-i18n="parsel.hyp.legend">Hipóteses laboratoriais apresentadas</legend>
                                 <ul class="cbpsx-hyp-list">
@@ -2590,11 +2619,11 @@
                 'parsel.f.voltage': 'Tensão de linha (V)',
                 'parsel.f.drop': 'Limite de queda de tensão (%)',
                 'parsel.f.objective': 'Ordenar alternativas por',
-                'parsel.f.catalog': 'Confirmo o catálogo laboratorial revisado na seção avançada (ASSUMPTION_ONLY)',
+                'parsel.f.catalog': 'Confirmo o catálogo laboratorial apresentado (ASSUMPTION_ONLY)',
                 'parsel.f.hypothesis': 'Confirmo as hipóteses laboratoriais revisadas na seção avançada (ASSUMPTION_ONLY)',
-                'parsel.mainsummary': 'Os dados laboratoriais (catálogo e hipóteses) estão recolhidos na seção avançada abaixo — revise e edite antes de confirmar.',
+                'parsel.mainsummary': 'O catálogo laboratorial (6 entradas, incluindo 300 mm²) está apresentado abaixo para revisão e edição; as hipóteses e os dados técnicos profundos ficam na seção avançada. Confirme antes de comparar.',
                 'parsel.f.calculate': 'Comparar alternativas',
-                'parsel.cat.legend': 'Catálogo laboratorial — 5 entradas, editável (ASSUMPTION_ONLY)',
+                'parsel.cat.legend': 'Catálogo laboratorial — 6 entradas, editável (ASSUMPTION_ONLY)',
                 'parsel.cat.note': 'Dados laboratoriais apresentados e editáveis (ASSUMPTION_ONLY). Uso preliminar; o DTO é construído a partir destes campos.',
                 'parsel.cat.entry': 'Cabo',
                 'parsel.cat.section': 'Seção (mm²)',
@@ -2851,11 +2880,11 @@
                 'parsel.f.voltage': 'Line voltage (V)',
                 'parsel.f.drop': 'Voltage drop limit (%)',
                 'parsel.f.objective': 'Sort alternatives by',
-                'parsel.f.catalog': 'I confirm the laboratory catalog reviewed in the advanced section (ASSUMPTION_ONLY)',
+                'parsel.f.catalog': 'I confirm the laboratory catalog presented (ASSUMPTION_ONLY)',
                 'parsel.f.hypothesis': 'I confirm the laboratory hypotheses reviewed in the advanced section (ASSUMPTION_ONLY)',
-                'parsel.mainsummary': 'The laboratory data (catalog and hypotheses) is collapsed in the advanced section below — review and edit before confirming.',
+                'parsel.mainsummary': 'The laboratory catalog (6 entries, including 300 mm²) is presented below for review and editing; the hypotheses and deep technical data stay in the advanced section. Confirm before comparing.',
                 'parsel.f.calculate': 'Compare alternatives',
-                'parsel.cat.legend': 'Laboratory catalog — 5 entries, editable (ASSUMPTION_ONLY)',
+                'parsel.cat.legend': 'Laboratory catalog — 6 entries, editable (ASSUMPTION_ONLY)',
                 'parsel.cat.note': 'Laboratory data presented and editable (ASSUMPTION_ONLY). Preliminary use; the DTO is built from these fields.',
                 'parsel.cat.entry': 'Cable',
                 'parsel.cat.section': 'Section (mm²)',
@@ -3111,11 +3140,11 @@
                 'parsel.f.voltage': 'Tensión de línea (V)',
                 'parsel.f.drop': 'Límite de caída de tensión (%)',
                 'parsel.f.objective': 'Ordenar alternativas por',
-                'parsel.f.catalog': 'Confirmo el catálogo de laboratorio revisado en la sección avanzada (ASSUMPTION_ONLY)',
+                'parsel.f.catalog': 'Confirmo el catálogo de laboratorio presentado (ASSUMPTION_ONLY)',
                 'parsel.f.hypothesis': 'Confirmo las hipótesis de laboratorio revisadas en la sección avanzada (ASSUMPTION_ONLY)',
-                'parsel.mainsummary': 'Los datos de laboratorio (catálogo e hipótesis) están recogidos en la sección avanzada abajo — revise y edite antes de confirmar.',
+                'parsel.mainsummary': 'El catálogo de laboratorio (6 entradas, incluyendo 300 mm²) está presentado abajo para revisión y edición; las hipótesis y los datos técnicos profundos quedan en la sección avanzada. Confirme antes de comparar.',
                 'parsel.f.calculate': 'Comparar alternativas',
-                'parsel.cat.legend': 'Catálogo de laboratorio — 5 entradas, editable (ASSUMPTION_ONLY)',
+                'parsel.cat.legend': 'Catálogo de laboratorio — 6 entradas, editable (ASSUMPTION_ONLY)',
                 'parsel.cat.note': 'Datos de laboratorio presentados y editables (ASSUMPTION_ONLY). Uso preliminar; el DTO se construye a partir de estos campos.',
                 'parsel.cat.entry': 'Cable',
                 'parsel.cat.section': 'Sección (mm²)',
