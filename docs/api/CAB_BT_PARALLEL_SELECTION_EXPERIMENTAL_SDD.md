@@ -8,24 +8,28 @@ consumers:
   - "@Senior_Frontend_Dev"
 lifecycle: "candidato até ratificação do Conselho; experimental enquanto a fonte primária integral estiver ausente"
 governanca: v7.3
-os: CAB-BT-PARALLEL-003-SDD-CATALOG-ENTRY-ID-R5
+os: CAB-BT-PARALLEL-004-SDD-MINIMUM-PER-SECTION-EXP
 classe: CHG-3 arquitetural/contratual experimental
-baseline_imutavel: 54941f9d3a126116ecaf9d519eb2b904ea6034f0
+baseline_imutavel: b58254bf8ecffcaa4825d2c3225977c30eb01174
+baseline_cientifica_minimum_per_section: b58254bf8ecffcaa4825d2c3225977c30eb01174
 baseline_cientifica_300mm2: 122b885db40f69b422dac8ea4c2e419dc547220f
 baseline_errata_nonfinite: dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1
 baseline_errata_catalog_entry_id: 54941f9d3a126116ecaf9d519eb2b904ea6034f0
 baseline_sdd_300mm2_r2: 380b949a9fba20bf63e9b052f03d5899046046c8
 baseline_sdd_nonfinite_r4: 9d5403fff49567cf74af4ce18fdd5f168e59b547
 baseline_core_green: 5411779a86a3280bb6b35a90e2efa8f024a7e1b8
+baseline_core_green_300mm2: 71e3f78a5160203c524d3ae3ff5cee0ae0c7f017
 baseline_ui_green_anterior: c3e49d1a8bf6e8376e9f1ddd6d1c2737d5ce8f81
+baseline_ui_green_300mm2: 27186bb595c0f0719809303ccb72c0f9ef684700
 baseline_red_visual_anterior: 0984fb0c0881df8d4e5c9f7ad520e383b8a586a8
-parecer_origem: CAB-BT-PARALLEL-003-CONTRACT-CATALOG-ENTRY-ID-001
+parecer_origem: CAB-BT-PARALLEL-004-SCI-MINIMUM-PER-SECTION-EXP-R2-AUDIT
+parecer_contratual_r1: RATIFICADO_COM_CONDICOES_CONTRATUAIS_PRECEDENTES_AO_RED
 baseline_main_de_origem: 83e24131c0cc09813be65a5fa269961b9cc80c5c
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
 productionAllowed: false
-teste_do_ceo: SIM_APOS_GREEN_INDEPENDENTE_E_REMOTO_DA_UI
-data: 2026-08-07
+teste_do_ceo: APROVADO_COM_AJUSTES_VISUAIS_FOCAIS_ENCERRAMENTO_PENDENTE
+data: 2026-08-09
 ---
 
 # SDD experimental — Enumeração e comparação preliminar de cabos BT em paralelo
@@ -39,8 +43,9 @@ data: 2026-08-07
 
 ## 1. Decisão executiva e alcance
 
-Este SDD transforma o pacote científico ratificado e estendido no commit
-`122b885db40f69b422dac8ea4c2e419dc547220f` em um contrato técnico testável para:
+Este SDD transforma o pacote científico CAB-004 ratificado e publicado em
+`b58254bf8ecffcaa4825d2c3225977c30eb01174`, incluindo as bases científicas precedentes, em um contrato
+técnico testável para:
 
 1. validar um catálogo experimental rastreável;
 2. formar o produto cartesiano completo `seções × nParallel`;
@@ -109,11 +114,11 @@ Para o fixture de 600 A / 400 V / 3%, os resultados determinísticos são:
 `1×300` reprova somente por ampacidade; `2×300`, `3×300` e `4×300` são alternativas válidas no laboratório.
 Nenhum desses resultados elege, recomenda ou autoriza instalação.
 
-O motor L1–L3 integrado em `5411779a86a3280bb6b35a90e2efa8f024a7e1b8` é orientado pelo catálogo.
-Não se antecipa mudança de Backend: primeiro o QA deve caracterizar o core com as seis seções. Somente uma
-divergência funcional reproduzível entre o envelope real e este contrato autoriza nova O.S. de Backend.
-O delta material esperado é a UI: seis linhas de catálogo, `42` campos editáveis e projeção dos novos
-resultados sem fórmula, extrapolação ou fallback visual.
+Na etapa CAB-003, o motor orientado pelo catálogo foi caracterizado antes de qualquer mudança Backend. Esse
+fluxo histórico foi encerrado pelo core GREEN `71e3f78a…` e pela UI GREEN `27186bb5…`. A emenda CAB-004 possui
+um delta novo e explícito no Backend: produzir a projeção mínima por seção depois da enumeração integral. O
+Frontend continua proibido de calcular essa projeção; limita-se a fornecer a política, o limite e a renderizar
+os paths recebidos, sem fórmula, extrapolação ou fallback visual.
 
 O `catalog.sourceVersion` da fixture atual é `122b885d…`. O campo histórico
 `sourceStatus.scientificBaselineSha` emitido pelo motor continua identificando a ciência de origem da
@@ -143,6 +148,44 @@ positiva e única, `catalogEntryId` é sempre `section-${section_mm2}`; portanto
 `section_mm2` estiver ausente ou inválida, permanece `catalogEntryId="catalog-entry-${index}"`. O identificador
 do item não depende de `nParallel`; `candidateId` só identifica posteriormente cada combinação enumerada.
 
+### 1.6 Emenda focal CAB-BT-PARALLEL-004 — menor quantidade que atende por seção
+
+Esta revisão incorpora o pacote científico-documental publicado em
+`b58254bf8ecffcaa4825d2c3225977c30eb01174` e tem precedência sobre qualquer regra de apresentação
+anterior que mostre simultaneamente duas ou mais candidatas válidas da mesma seção. Ela não altera as
+equações, os três critérios, a fronteira, o catálogo, o envelope bruto nem os bloqueios produtivos.
+
+O core L1–L3 passa a aceitar uma política **explícita e opcional** de apresentação. Quando ausente, o modo
+histórico `ALL_VALID_LEGACY` preserva byte-conceitualmente os 74 relatórios e os consumidores existentes.
+Quando a UI envia `MINIMUM_PASSING_PER_SECTION`, o core enumera e avalia todo o universo, escolhe para cada
+`section_mm2` somente a candidata `VALID` com menor `nParallel` e aplica o comparador do objetivo apenas ao
+conjunto filtrado. A UI consome essa projeção pronta; não agrupa, compara margens, reordena ou recalcula.
+
+No perfil visual desta revisão:
+
+- `maxParallelCount` inicia em `10` e o controle aceita somente inteiros de `1` a `10`;
+- o catálogo possui seis seções, logo o universo inicial bruto possui `60` combinações;
+- o usuário pode reduzir o limite; com `7`, o universo possui `42` combinações;
+- `candidateAlternatives`, `evaluatedCandidates`, `rejectedCandidates` e `nonDominatedAlternatives`
+  permanecem integrais;
+- somente `presentationOrder`, `firstInPresentationOrder` e `presentationModel.cards` usam a projeção;
+- candidatas válidas superiores da mesma seção permanecem rastreáveis em `hiddenCandidateIds`;
+- seção sem candidata válida produz ausência nominal, nunca número, fallback ou recomendação.
+
+Para a fixture do CEO (`1800 A`, `400 V`, `3%`, `maxParallelCount=7`), a seção de `300 mm²` contém
+`5x300`, `6x300` e `7x300` válidas; somente `5x300` é apresentada. A regra é idêntica para todas as seções.
+
+Esta emenda também fecha a localização dos onze grupos visíveis PT/EN/ES. O `displayNotice` bruto do motor
+permanece imutável e rastreável; a camada visual apresenta a tradução exata vinculada à chave semântica,
+sem esconder a advertência. Códigos, enums, `ASSUMPTION_ONLY` e B-01…B-06 nunca são traduzidos.
+
+### 1.7 Fechamento contratual CAB-004 R1
+
+Esta R1 atende exclusivamente às três condições precedentes ao RED: fecha o JSON Schema discriminado dos
+dois sucessos, torna as contagens do summary core factuais em `CONFIG_ERROR` e transforma `MPS-UI-11` em
+oráculo nominal dos dois paths observados pelo CEO. Ciência, contagens, ordenações, traduções e guardrails não
+foram reabertos.
+
 ## 2. Fontes, autoridade e precedência
 
 | Fonte | Identificação | Classe | Autoridade neste SDD |
@@ -150,6 +193,7 @@ do item não depende de `nParallel`; `candidateId` só identifica posteriormente
 | Registro científico prático | `RNC-P_CAB_BT_PARALLEL_SELECTION_PRELIM.md` em `122b885d…` | RNC-P experimental ratificado para SDD | requisitos e limites L1–L3, incluindo 300 mm² |
 | Memorial prático | `CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md` em `122b885d…` | memorial experimental | equações, casos e números esperados, incluindo 300 mm² |
 | BDD prático + erratas | `CAB_BT_PARALLEL_SELECTION_PRELIM_BDD.feature` em `54941f9…` | evidência comportamental científica | cenários obrigatórios da extensão focal, valores presentes inválidos e identidade canônica do item |
+| Pacote científico CAB-004 | RNC-P, Memorial e BDD em `b58254bf8ecffcaa4825d2c3225977c30eb01174` | contrato experimental ratificado para SDD | universo até 10, `minimumPassingBySection`, ordens, i18n e paths dos guardrails |
 | Motor integrado | `js/core_cabos_bt_parallel_experimental.js` em `main@83e24131…` | implementação experimental L0 | única fonte executável de L0 |
 | SDD L0 | `docs/api/CAB_BT_PARALLEL_EXPERIMENTAL_SDD.md` | contrato experimental integrado | envelope e erros do L0 |
 | IEC 60364-5-52 Ed. 3.1 integral | ausente | norma primária ausente | **não disponível para regra produtiva** |
@@ -159,8 +203,10 @@ Precedência vinculante:
 1. norma primária integral e futuro RNC-C, quando ratificados;
 2. contrato L0 integrado para os cálculos que já executa;
 3. pacote científico `122b885d…`, complementado pelas erratas `dc37b9c…` e `54941f9…`, para L1–L3 e extensão focal de 300 mm²;
-4. este SDD para estrutura de software, DTOs, Result Pattern e evidência;
-5. exemplos e textos de interface, que nunca substituem os itens anteriores.
+4. pacote `b58254bf…` para a política de apresentação mínima por seção, faixa visual `1…10`, localização e
+   paths de guardrails;
+5. este SDD para estrutura de software, DTOs, Result Pattern e evidência;
+6. exemplos e textos de interface, que nunca substituem os itens anteriores.
 
 Qualquer divergência científica retorna ao Conselho; Backend, Frontend e QA não reinterpretam fórmulas.
 
@@ -171,11 +217,12 @@ Qualquer divergência científica retorna ao Conselho; Backend, Frontend e QA n�
 | Camada | Arquivo/função | Responsabilidade |
 | --- | --- | --- |
 | L0 existente | `js/core_cabos_bt_parallel_experimental.js` / `calculateCablingBTParallelExperimental(input)` | admitâncias, correntes, `Zeq`, `deltaLoad`, proxy térmico, queda em V e adiabático |
-| L1–L3 integrado | `js/core_cabos_bt_parallel_selection_experimental.js` / `enumerateCablingBTParallelAlternativesExperimental(input)` em `5411779a…` | validar catálogo, enumerar, chamar L0, avaliar critérios, fronteira e ordenação |
-| UI anterior | `index.html` e `js/ui_render.js` em `c3e49d1a…` | candidata GREEN de cinco seções; requer ajuste focal para 300 mm² |
+| L1–L3 integrado | `js/core_cabos_bt_parallel_selection_experimental.js` / `enumerateCablingBTParallelAlternativesExperimental(input)` em `71e3f78a…` | validar catálogo, enumerar, chamar L0, avaliar critérios, fronteira e ordenação; ainda não expõe CAB-004 |
+| UI GREEN 300 mm² | `index.html` e `js/ui_render.js` em `27186bb5…` | seis seções e correção OS044R; ainda apresenta todas as válidas |
 | Regressão core | `tests/test_cab_bt_parallel_selection_experimental.js` | 74 contratos processáveis: 48 científicos + 26 técnicos |
 | Regressão visual | `tests/test_cab_bt_parallel_selection_ui_experimental.js` | 15 contratos da UI anterior |
 | Caracterização/RED focal | arquivos definidos em §14.5 | provar core dinâmico e produzir RED visual específico de 300 mm² |
+| RED CAB-004 | arquivos definidos em §14.6 | provar projeção mínima por seção, default 10 e localização integral |
 
 ### 3.2 Regras arquiteturais vinculantes
 
@@ -404,6 +451,21 @@ automaticamente um código RFC 7807.
     "objective": {
       "enum": ["NONE", "MIN_PARALLEL_COUNT", "MIN_TOTAL_COPPER", "MAX_MINIMUM_MARGIN"]
     },
+    "presentationPolicy": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "confirmed", "provenance"],
+          "properties": {
+            "mode": { "const": "MINIMUM_PASSING_PER_SECTION" },
+            "confirmed": { "const": true },
+            "provenance": { "const": "CEO_APPROVED_PRESENTATION_POLICY" }
+          }
+        }
+      ]
+    },
     "totalLoadCurrent_A": { "type": "number", "exclusiveMinimum": 0 },
     "lineVoltage_V": { "type": "number", "exclusiveMinimum": 0 },
     "powerFactor": { "$ref": "#/$defs/powerFactor" },
@@ -532,6 +594,7 @@ verificada em runtime porque JSON não representa `NaN` ou `Infinity`.
 | `contractVersion` | string | valor exato do contrato |
 | `analysisMode` | enum | `MODO_GUIADO_PRELIMINAR` ou `MODO_AVANCADO` |
 | `objective` | enum | `NONE`, `MIN_PARALLEL_COUNT`, `MIN_TOTAL_COPPER`, `MAX_MINIMUM_MARGIN` |
+| `presentationPolicy` | objeto ou ausente/`null` | ausente/`null` preserva `ALL_VALID_LEGACY`; no CAB-004 exige o objeto fechado da §4.9 |
 | `totalLoadCurrent_A` | number finito `>0` | corrente de projeto informada |
 | `lineVoltage_V` | number finito `>0` | tensão linha-linha usada somente em L1 |
 | `powerFactor.value` | number finito `[0,1]` | repassado a L0 |
@@ -793,6 +856,43 @@ Itens incompletos que permanecerem no catálogo participam nominalmente do unive
 `BLOCKED`; assim, nenhuma entrada desaparece silenciosamente. Se não existir item completo, retorna
 `CATALOG_NO_EVALUABLE_CANDIDATE`.
 
+### 4.9 Política opcional de apresentação
+
+`presentationPolicy` não entra em `required` para preservar os contratos históricos. As únicas formas válidas são:
+
+```json
+null
+```
+
+ou:
+
+```json
+{
+  "mode": "MINIMUM_PASSING_PER_SECTION",
+  "confirmed": true,
+  "provenance": "CEO_APPROVED_PRESENTATION_POLICY"
+}
+```
+
+Ausência ou `null` resolve internamente para `ALL_VALID_LEGACY` e não acrescenta campos ao envelope histórico.
+Objeto, propriedade, valor ou confirmação divergente retorna falha RFC 7807 de topo:
+
+```json
+{
+  "code": "PRESENTATION_POLICY_INVALID",
+  "params": {
+    "path": "$.presentationPolicy",
+    "reason": "unsupported_or_unconfirmed_policy"
+  }
+}
+```
+
+O código é proibido no sucesso. A política não muda `U`, chamadas L0, margens, status, fronteira ou arrays brutos.
+O controle visual `maxParallelCount` inicia em `10`, possui `min=1`, `max=10`, `step=1` e não aceita vazio,
+fração, zero, negativo ou valor maior que `10`. Entrada visual inválida bloqueia a chamada ao core e produz falha
+de integração da UI, sem envelope sintético de domínio. O core genérico continua aceitando inteiro `>=1` para
+consumidores não visuais; o limite `1…10` é contrato da UI CAB-004.
+
 ## 5. Pipeline determinístico
 
 Ordem obrigatória e observável:
@@ -813,10 +913,13 @@ Ordem obrigatória e observável:
 14. propagar erro/blockers L0 ou calcular as três margens L1;
 15. particionar e reconciliar o universo;
 16. computar a fronteira somente sobre válidas;
-17. ordenar todas as válidas pelo objetivo;
-18. resolver `providedCombination`, sem promovê-la; valor inválido encerra em falha RFC 7807;
-19. validar finitude de todo resultado numérico;
-20. emitir Result Pattern imutável.
+17. resolver a política: legado mantém todas as válidas; CAB-004 agrupa as válidas por `section_mm2` e retém
+    exatamente o menor `nParallel` de cada seção;
+18. registrar contagens, ausências e todos os IDs válidos ocultados, sem removê-los dos arrays brutos;
+19. ordenar pelo objetivo o conjunto resultante da política e construir os cards somente a partir dele;
+20. resolver `providedCombination`, sem promovê-la; valor inválido encerra em falha RFC 7807;
+21. validar finitude de todo resultado numérico;
+22. emitir Result Pattern imutável.
 
 Nenhuma exceção de domínio pode escapar. Exceção inesperada de programação não deve ser convertida em
 sucesso; o teste a classifica como falha.
@@ -920,10 +1023,82 @@ todas bloquearam antes de uma avaliação L1 completa.
 - `assumptions` é deduplicado por `id + field + candidateId` e ordenado por esses campos;
 - a ordem de entrada de propriedades ou itens equivalentes não pode mudar o resultado semântico.
 
+### 8.2 Projeção determinística `MINIMUM_PASSING_PER_SECTION`
+
+Para cada seção `S` do catálogo retido:
+
+```text
+validForSection(S) = candidateAlternatives filtradas por section_mm2 === S
+minimumPassingBySection(S) = item de validForSection(S) com menor nParallel
+```
+
+Como o universo possui no máximo uma combinação por par `section_mm2 × nParallel`, não existe empate primário.
+Mesmo assim, o comparador total interno é `nParallel` ascendente e `candidateId` ascendente. O core avalia primeiro
+todo o universo; é proibido parar após encontrar a primeira válida ou inferir monotonicidade dos critérios.
+
+`minimumPassingBySection[]` usa seção ascendente e contém exatamente uma entrada por seção do catálogo retido:
+
+```json
+{
+  "section_mm2": 300,
+  "candidateId": "5x300",
+  "status": "PASSING_ALTERNATIVE_FOUND",
+  "evaluatedRange": { "minimum": 1, "maximum": 7 }
+}
+```
+
+Quando não existe válida:
+
+```json
+{
+  "section_mm2": 95,
+  "candidateId": null,
+  "status": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE",
+  "evaluatedRange": { "minimum": 1, "maximum": 7 }
+}
+```
+
+Após formar esse array, o core aplica o comparador do objetivo somente às entradas com `candidateId` não nulo.
+`presentationOrder`, `firstInPresentationOrder` e `presentationModel.cards` refletem esse conjunto. Os arrays
+`evaluatedCandidates`, `candidateAlternatives`, `rejectedCandidates` e `nonDominatedAlternatives` permanecem
+inalterados e reconciliados com o universo bruto.
+
+Para a fixture do CEO no default `10`:
+
+| Seção | Candidata mínima |
+| --- | --- |
+| 95 | `10x95` |
+| 120 | `8x120` |
+| 150 | `7x150` |
+| 185 | `6x185` |
+| 240 | `6x240` |
+| 300 | `5x300` |
+
+`rawCount=60`, `validRawCount=24` e `filteredCount=6`. As ordens vinculantes são:
+
+| Objetivo | Ordem completa |
+| --- | --- |
+| `NONE` | `5x300`, `6x185`, `6x240`, `7x150`, `8x120`, `10x95` |
+| `MIN_PARALLEL_COUNT` | `5x300`, `6x240`, `6x185`, `7x150`, `8x120`, `10x95` |
+| `MIN_TOTAL_COPPER` | `10x95`, `8x120`, `7x150`, `6x185`, `6x240`, `5x300` |
+| `MAX_MINIMUM_MARGIN` | `6x240`, `5x300`, `10x95`, `7x150`, `8x120`, `6x185` |
+
+Com limite `7`, `rawCount=42`, `validRawCount=8`, `filteredCount=4`, as seções `95` e `120` ficam sem
+alternativa, e a projeção contém `7x150`, `6x185`, `6x240`, `5x300`. `6x300` e `7x300` permanecem válidas
+no bruto e aparecem em `hiddenCandidateIds`, mas nunca em cards ou impressão.
+
+As ordens completas vinculantes para o limite `7` são:
+
+| Objetivo | Ordem completa |
+| --- | --- |
+| `NONE` | `5x300`, `6x185`, `6x240`, `7x150` |
+| `MIN_PARALLEL_COUNT` | `5x300`, `6x240`, `6x185`, `7x150` |
+| `MIN_TOTAL_COPPER` | `7x150`, `6x185`, `6x240`, `5x300` |
+| `MAX_MINIMUM_MARGIN` | `6x240`, `5x300`, `7x150`, `6x185` |
+
 ## 9. Envelope de sucesso
 
-JSON Schema estrutural resumido do sucesso (os schemas específicos dos candidatos são vinculados pela
-§9.1):
+JSON Schema discriminado do sucesso (os schemas específicos dos candidatos continuam vinculados pela §9.1):
 
 ```json
 {
@@ -934,11 +1109,147 @@ JSON Schema estrutural resumido do sucesso (os schemas específicos dos candidat
     "ok", "classification", "data", "assumptions", "blockers", "warnings",
     "sourceStatus", "productionAllowed", "displayNotice", "error"
   ],
+  "$defs": {
+    "evaluatedRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "maximum"],
+      "properties": {
+        "minimum": { "const": 1 },
+        "maximum": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "minimumPassingItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section_mm2", "candidateId", "status", "evaluatedRange"],
+      "properties": {
+        "section_mm2": { "type": "number", "exclusiveMinimum": 0 },
+        "candidateId": {
+          "oneOf": [
+            { "type": "null" },
+            { "type": "string", "pattern": "^[1-9][0-9]*x[1-9][0-9]*(?:\\.[0-9]+)?$" }
+          ]
+        },
+        "status": {
+          "enum": [
+            "PASSING_ALTERNATIVE_FOUND",
+            "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE"
+          ]
+        },
+        "evaluatedRange": { "$ref": "#/$defs/evaluatedRange" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "PASSING_ALTERNATIVE_FOUND" } } },
+          "then": { "properties": { "candidateId": { "type": "string" } } }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE" }
+            }
+          },
+          "then": { "properties": { "candidateId": { "type": "null" } } }
+        }
+      ]
+    },
+    "absenceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["section_mm2", "messageKey", "messageArgs"],
+      "properties": {
+        "section_mm2": { "type": "number", "exclusiveMinimum": 0 },
+        "messageKey": { "const": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE" },
+        "messageArgs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["section_mm2", "minimum", "maximum"],
+          "properties": {
+            "section_mm2": { "type": "number", "exclusiveMinimum": 0 },
+            "minimum": { "const": 1 },
+            "maximum": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "presentationProjection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode", "rawCount", "validRawCount", "filteredCount",
+        "minimumPassingBySection", "visibleCandidateIds", "hiddenCandidateIds",
+        "noPassingSections_mm2"
+      ],
+      "properties": {
+        "mode": { "const": "MINIMUM_PASSING_PER_SECTION" },
+        "rawCount": { "type": "integer", "minimum": 0 },
+        "validRawCount": { "type": "integer", "minimum": 0 },
+        "filteredCount": { "type": "integer", "minimum": 0 },
+        "minimumPassingBySection": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/minimumPassingItem" }
+        },
+        "visibleCandidateIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[1-9][0-9]*x[1-9][0-9]*(?:\\.[0-9]+)?$" }
+        },
+        "hiddenCandidateIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[1-9][0-9]*x[1-9][0-9]*(?:\\.[0-9]+)?$" }
+        },
+        "noPassingSections_mm2": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    },
+    "presentationModelLegacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notice", "objective", "analysisMode", "installationAuthorized", "heading", "cards"
+      ],
+      "properties": {
+        "notice": { "type": "string" },
+        "objective": { "type": "string" },
+        "analysisMode": { "type": "string" },
+        "installationAuthorized": { "const": false },
+        "heading": { "type": "string" },
+        "cards": { "type": "array" }
+      }
+    },
+    "presentationModelMinimum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notice", "objective", "analysisMode", "installationAuthorized", "heading", "cards",
+        "projectionMode", "absenceEntries"
+      ],
+      "properties": {
+        "notice": { "type": "string" },
+        "objective": { "type": "string" },
+        "analysisMode": { "type": "string" },
+        "installationAuthorized": { "const": false },
+        "heading": { "type": "string" },
+        "cards": { "type": "array" },
+        "projectionMode": { "const": "MINIMUM_PASSING_PER_SECTION" },
+        "absenceEntries": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/absenceEntry" }
+        }
+      }
+    }
+  },
   "properties": {
     "ok": { "const": true },
     "classification": { "const": "MATHEMATICAL_ONLY" },
     "data": {
       "type": "object",
+      "additionalProperties": false,
       "required": [
         "contractVersion", "analysisMode", "objective", "universe",
         "evaluatedCandidates", "candidateAlternatives", "rejectedCandidates",
@@ -962,7 +1273,13 @@ JSON Schema estrutural resumido do sucesso (os schemas específicos dos candidat
         "installableSelection": { "type": "null" },
         "discreteSelectionBlocked": { "const": true },
         "installationAuthorized": { "const": false },
-        "presentationModel": { "type": "object" }
+        "presentationModel": {
+          "oneOf": [
+            { "$ref": "#/$defs/presentationModelLegacy" },
+            { "$ref": "#/$defs/presentationModelMinimum" }
+          ]
+        },
+        "presentationProjection": { "$ref": "#/$defs/presentationProjection" }
       }
     },
     "assumptions": { "type": "array" },
@@ -1014,12 +1331,38 @@ JSON Schema estrutural resumido do sucesso (os schemas específicos dos candidat
       "const": "PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO"
     },
     "error": { "type": "null" }
-  }
+  },
+  "oneOf": [
+    {
+      "title": "ALL_VALID_LEGACY",
+      "properties": {
+        "data": {
+          "not": { "required": ["presentationProjection"] },
+          "properties": {
+            "presentationModel": { "$ref": "#/$defs/presentationModelLegacy" }
+          }
+        }
+      }
+    },
+    {
+      "title": "MINIMUM_PASSING_PER_SECTION",
+      "properties": {
+        "data": {
+          "required": ["presentationProjection"],
+          "properties": {
+            "presentationProjection": { "$ref": "#/$defs/presentationProjection" },
+            "presentationModel": { "$ref": "#/$defs/presentationModelMinimum" }
+          }
+        }
+      }
+    }
+  ]
 }
 ```
 
-Para o fixture-base atual, os arrays devem ser materializados integralmente e reconciliar `24/14/10/14`; não se
-aceita envelope resumido, paginação ou omissão de candidatas no core.
+Para o fixture-base histórico CAB-003 (`maxParallelCount=4`), os arrays devem ser materializados integralmente
+e reconciliar `24/14/10/14`; não se aceita envelope resumido, paginação ou omissão de candidatas no core. A
+fixture CAB-004 possui as contagens próprias da §8.2 e não altera retrospectivamente esse contrato.
 
 ### 9.1 Candidato avaliado
 
@@ -1056,7 +1399,100 @@ assumptionKeys[], blockerCodes[], notice
 ```
 
 A UI renderiza “2 × 240 mm² por fase”, os três critérios, dominante, hipóteses e bloqueios. Ela não pode
-substituir `firstInPresentationOrder` por “recomendado” nem ocultar alternativas válidas.
+substituir `firstInPresentationOrder` por “recomendado”. No modo legado, não oculta alternativa válida. No
+modo CAB-004, renderiza exclusivamente os cards recebidos do core e só deixa de mostrar as candidatas
+nominalmente registradas pela projeção; não implementa filtro próprio.
+
+O JSON Schema discriminado da §9 torna `presentationProjection`, `projectionMode` e `absenceEntries`
+obrigatórios no sucesso `MINIMUM_PASSING_PER_SECTION`. No sucesso `ALL_VALID_LEGACY`, esses três campos são
+fisicamente ausentes. `minimumPassingBySection[]`, `evaluatedRange`, `absenceEntries[]` e seus argumentos são
+objetos fechados por `$defs`, sem propriedades adicionais.
+
+Exemplo vinculante da fixture `42/8/4` — não substitui o schema estrutural genérico da §9:
+
+```json
+{
+  "mode": "MINIMUM_PASSING_PER_SECTION",
+  "rawCount": 42,
+  "validRawCount": 8,
+  "filteredCount": 4,
+  "minimumPassingBySection": [
+    {
+      "section_mm2": 95,
+      "candidateId": null,
+      "status": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE",
+      "evaluatedRange": { "minimum": 1, "maximum": 7 }
+    },
+    {
+      "section_mm2": 120,
+      "candidateId": null,
+      "status": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE",
+      "evaluatedRange": { "minimum": 1, "maximum": 7 }
+    },
+    {
+      "section_mm2": 150,
+      "candidateId": "7x150",
+      "status": "PASSING_ALTERNATIVE_FOUND",
+      "evaluatedRange": { "minimum": 1, "maximum": 7 }
+    },
+    {
+      "section_mm2": 185,
+      "candidateId": "6x185",
+      "status": "PASSING_ALTERNATIVE_FOUND",
+      "evaluatedRange": { "minimum": 1, "maximum": 7 }
+    },
+    {
+      "section_mm2": 240,
+      "candidateId": "6x240",
+      "status": "PASSING_ALTERNATIVE_FOUND",
+      "evaluatedRange": { "minimum": 1, "maximum": 7 }
+    },
+    {
+      "section_mm2": 300,
+      "candidateId": "5x300",
+      "status": "PASSING_ALTERNATIVE_FOUND",
+      "evaluatedRange": { "minimum": 1, "maximum": 7 }
+    }
+  ],
+  "visibleCandidateIds": ["7x150", "6x185", "6x240", "5x300"],
+  "hiddenCandidateIds": ["7x185", "7x240", "6x300", "7x300"],
+  "noPassingSections_mm2": [95, 120]
+}
+```
+
+Na mesma fixture, as extensões de `presentationModel` são exatamente:
+
+```json
+{
+  "projectionMode": "MINIMUM_PASSING_PER_SECTION",
+  "absenceEntries": [
+    {
+      "section_mm2": 95,
+      "messageKey": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE",
+      "messageArgs": { "section_mm2": 95, "minimum": 1, "maximum": 7 }
+    },
+    {
+      "section_mm2": 120,
+      "messageKey": "NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE",
+      "messageArgs": { "section_mm2": 120, "minimum": 1, "maximum": 7 }
+    }
+  ]
+}
+```
+
+Todas as propriedades acima são obrigatórias e `additionalProperties=false`. `visibleCandidateIds` acompanha
+a ordem canônica de seção de `minimumPassingBySection`, não a ordem do objetivo; `presentationOrder` contém
+a ordem do objetivo. `hiddenCandidateIds` usa seção ascendente, depois `nParallel` ascendente. Ausência,
+duplicidade, ID extra, contagem divergente ou candidata visível também presente em `hiddenCandidateIds` é
+`CONFIG_ERROR` no oráculo.
+
+As reconciliações semânticas, não expressáveis apenas pelas keywords estruturais, também são vinculantes:
+`rawCount = evaluatedCandidates.length`; `validRawCount = candidateAlternatives.length`;
+`filteredCount = visibleCandidateIds.length = presentationOrder.length = presentationModel.cards.length`;
+`hiddenCandidateIds` é exatamente `candidateAlternatives[].candidateId − visibleCandidateIds`;
+`noPassingSections_mm2` é exatamente o conjunto dos itens de `minimumPassingBySection` com `candidateId=null`;
+e `presentationModel.absenceEntries` corresponde um-a-um, por igualdade profunda de seção e intervalo, a esse
+mesmo conjunto. `minimumPassingBySection` e `absenceEntries` usam seção ascendente.
 
 ### 9.3 Warning `EXCESSIVE_COUNT`
 
@@ -1066,6 +1502,71 @@ substituir `firstInPresentationOrder` por “recomendado” nem ocultar alternat
 comparações, `discreteRequired`, margens, ordenação e fronteira usam apenas `continuousProxy`; o valor de
 apresentação nunca retroalimenta cálculo ou decisão. O RED verifica o valor bruto pela tolerância
 computacional já declarada e o valor apresentado por igualdade com o arredondamento a três casas.
+
+### 9.4 Localização visual CAB-004
+
+O core não traduz frases. A UI mantém um catálogo único de chaves PT/EN/ES e troca todo texto visível quando
+`document.documentElement.lang` muda. O aviso bruto `displayNotice` permanece no envelope e deve ser exatamente
+o literal histórico em português; a UI reconhece esse valor apenas para selecionar a chave semântica
+`PRELIMINARY_DO_NOT_USE`. Valor bruto desconhecido nunca é ocultado: gera `uiFailure` fail-closed e é mostrado
+verbatim junto da advertência localizada.
+
+Os onze grupos vinculantes são:
+
+| Chave | PT | EN | ES |
+| --- | --- | --- | --- |
+| `warning` | `PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.` | `PRELIMINARY — DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION.` | `PRELIMINAR — NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN.` |
+| `installation` | `Instalação autorizada: NÃO` | `Installation authorized: NO` | `Instalación autorizada: NO` |
+| `production` | `Estado de produção: BLOQUEADO` | `Production state: BLOCKED` | `Estado de producción: BLOQUEADO` |
+| `source` | `Fonte primária IEC integral: AUSENTE — sem conformidade IEC` | `Full primary IEC source: ABSENT — no IEC conformity` | `Fuente primaria IEC íntegra: AUSENTE — sin conformidad IEC` |
+| `assumptions` | `Hipóteses (ASSUMPTION_ONLY)` | `Assumptions (ASSUMPTION_ONLY)` | `Hipótesis (ASSUMPTION_ONLY)` |
+| `blockers` | `Bloqueadores` | `Blockers` | `Bloqueadores` |
+| `confirmedInputs` | `Entradas confirmadas` | `Confirmed inputs` | `Entradas confirmadas` |
+| `heading` | `Menor quantidade que atende por seção no intervalo avaliado` | `Smallest quantity meeting the criteria per section within the evaluated range` | `Menor cantidad que cumple por sección en el intervalo evaluado` |
+| `criteria` | `Critérios: ampacidade, queda de tensão, curto-circuito` | `Criteria: ampacity, voltage drop, short-circuit` | `Criterios: ampacidad, caída de tensión, cortocircuito` |
+| `absence(S,N)` | `Nenhuma alternativa da seção S atende dentro do intervalo avaliado de 1 até N cabos por fase.` | `No alternative for section S meets the criteria within the evaluated range of 1 to N conductors per phase.` | `Ninguna alternativa de la sección S cumple dentro del intervalo evaluado de 1 a N conductores por fase.` |
+| `printLabel` | `Impressão preliminar — não é memorial final` | `Preliminary print — not a final report` | `Impresión preliminar — no es memoria final` |
+
+`S` e `N` são interpolados somente depois de selecionar a tradução; o BDD materializa `N=7` e `N=10`.
+Comparação do oráculo atual usa igualdade UTF-8 integral: sem NFD, remoção de acentos, substring, tradução
+parcial ou equivalência case-insensitive. `Bloqueadores`, `Entradas confirmadas` e `PRELIMINAR` são cognatos
+espanhóis válidos, não vazamento de português.
+
+Vazamento usa apenas as listas fechadas ratificadas:
+
+```json
+{
+  "pt": [
+    "NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO",
+    "Instalação autorizada: NÃO",
+    "Estado de produção: BLOQUEADO",
+    "queda de tensão",
+    "cabos por fase",
+    "não é memorial final"
+  ],
+  "en": [
+    "DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION",
+    "Installation authorized: NO",
+    "Production state: BLOCKED",
+    "voltage drop",
+    "conductors per phase",
+    "not a final report"
+  ],
+  "es": [
+    "NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN",
+    "Instalación autorizada: NO",
+    "Estado de producción: BLOQUEADO",
+    "caída de tensión",
+    "conductores por fase",
+    "no es memoria final"
+  ]
+}
+```
+
+PT rejeita as listas EN/ES; EN rejeita PT/ES; ES rejeita PT/EN. NFD permanece permitido exclusivamente no
+oráculo histórico de vocabulário proibido (`recomendado`, `selecionado`, `ótimo para instalação`,
+`dimensionamento final`) e não participa da localização atual. A tela e a árvore de impressão usam o mesmo
+catálogo de traduções e o idioma ativo; nenhum segundo conjunto hardcoded é permitido.
 
 ## 10. Result Pattern e RFC 7807
 
@@ -1267,6 +1768,7 @@ promoção; entrada `null` permanece `null`.
 | `GLOBAL_METADATA_INVALID` | campo global conhecido presente, tipo/domínio inválido | `{ path, reason }` |
 | `ANALYSIS_MODE_INVALID` | modo desconhecido | `{ received, allowed[] }` |
 | `OBJECTIVE_INVALID` | objetivo desconhecido | `{ received, allowed[] }` |
+| `PRESENTATION_POLICY_INVALID` | política presente com tipo, propriedades, modo, confirmação ou proveniência divergente | `{ path:"$.presentationPolicy", reason:"unsupported_or_unconfirmed_policy" }` |
 | `SUGGESTION_UNCONFIRMED` | valor sugerido/poda sem confirmação | `{ path }` |
 | `CATALOG_MODE_INVALID` | modo de catálogo desconhecido | `{ received }` |
 | `CATALOG_TRACEABILITY_MISSING` | modo secundário sem fonte/versão/proveniência | `{ paths[] }` |
@@ -1985,6 +2487,323 @@ Para cada matriz acima, ausência, duplicidade, `caseId` extra, ordem divergente
 `CONFIG_ERROR`/exit `3`. Um relatório agregado não pode passar por maioria; todos os seus casos precisam estar
 conformes.
 
+### 14.6 Protocolo focal CAB-BT-PARALLEL-004
+
+Esta seção tem autoridade sobre a implementação da política `MINIMUM_PASSING_PER_SECTION` e da localização
+integral. Os testes são experimentais e permanecem fora de `qa/test-manifest.json`.
+
+#### 14.6.1 RED core — 16 relatórios e 134 casos
+
+Arquivo exclusivo inicial:
+
+```text
+tests/test_cab_bt_parallel_selection_minimum_per_section_experimental.js
+```
+
+Prefixos exatos:
+
+```text
+CAB_BT_PARALLEL_MINIMUM_PER_SECTION_EXP_REPORT
+CAB_BT_PARALLEL_MINIMUM_PER_SECTION_EXP_SUMMARY
+```
+
+IDs exatos `MPS-CORE-01`…`MPS-CORE-16`, sem lacunas ou duplicidades:
+
+| ID | Casos | Contrato |
+| --- | ---: | --- |
+| `MPS-CORE-01` | 2 | política omitida e `null` preservam envelope histórico sem campos CAB-004 |
+| `MPS-CORE-02` | 5 | tipo, propriedade extra, modo, confirmação e proveniência inválidos retornam `PRESENTATION_POLICY_INVALID` exato |
+| `MPS-CORE-03` | 2 | default 10 produz `rawCount=60`; limite 7 produz `rawCount=42` |
+| `MPS-CORE-04` | 6 | default 10 contém exatamente `10x95`, `8x120`, `7x150`, `6x185`, `6x240`, `5x300` por seção |
+| `MPS-CORE-05` | 6 | limite 7 contém ausências 95/120 e mínimas `7x150`, `6x185`, `6x240`, `5x300` |
+| `MPS-CORE-06` | 4 | `4x300` rejeitada; `5x300`, `6x300`, `7x300` válidas; somente `5x300` visível |
+| `MPS-CORE-07` | 60 | enumeração integral default: IDs canônicos e `l0CallCount=1` em cada combinação avaliável; zero parada antecipada |
+| `MPS-CORE-08` | 4 | quatro ordens completas do default 10, profundamente iguais à §8.2 |
+| `MPS-CORE-09` | 4 | quatro ordens completas do limite 7, conforme pacote científico |
+| `MPS-CORE-10` | 18 | `hiddenCandidateIds` default exatos, canônicos e ainda presentes em `candidateAlternatives` |
+| `MPS-CORE-11` | 4 | limite 7 oculta exatamente `7x185`, `7x240`, `6x300`, `7x300` |
+| `MPS-CORE-12` | 2 | `nCircuits=1` e `3` não alteram universo, IDs nem escolha mínima por seção |
+| `MPS-CORE-13` | 4 | pureza, determinismo, arrays brutos e fronteira permanecem íntegros |
+| `MPS-CORE-14` | 3 | schemas fechados da projeção, sucesso CAB-004 e ausência física dos campos no legado |
+| `MPS-CORE-15` | 6 | listas visible/hidden são disjuntas, completas e reconciliadas por seção |
+| `MPS-CORE-16` | 4 | todos os objetivos preservam `productionAllowed=false`, `installableSelection=null`, `installationAuthorized=false` e B-01…B-06 |
+
+Total exato: `16` relatórios e `134` `caseId`. Em cada linha da tabela, os IDs são nominalmente
+`MPS-CORE-NN-CASE-01` até `MPS-CORE-NN-CASE-CC`, onde `CC` é a contagem exata daquela linha, sempre com dois
+dígitos. Em `MPS-CORE-07`, `01…60` mapeia `nParallel` ascendente e, dentro dele, `section_mm2` ascendente.
+Cada caso contém exatamente `caseId`, `expected`, `observed`, `assertionExercised` e `compliant`, sem propriedade
+adicional. Ausência, duplicidade, ordem divergente ou caso extra classifica toda a execução como
+`CONFIG_ERROR`.
+
+Schema fechado de relatório:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "category", "classification", "compliant", "assertionExercised",
+    "expected", "observed", "issues"
+  ],
+  "properties": {
+    "id": { "pattern": "^MPS-CORE-(0[1-9]|1[0-6])$" },
+    "category": { "const": "minimum_per_section_core_experimental" },
+    "classification": { "enum": ["PASS", "FUNCTIONAL_FAILURE", "CONFIG_ERROR"] },
+    "compliant": { "type": "boolean" },
+    "assertionExercised": { "type": "boolean" },
+    "expected": { "type": "object" },
+    "observed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cases"],
+      "properties": {
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["caseId", "expected", "observed", "assertionExercised", "compliant"],
+            "properties": {
+              "caseId": { "type": "string" },
+              "expected": {},
+              "observed": {},
+              "assertionExercised": { "type": "boolean" },
+              "compliant": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "issues": { "type": "array" }
+  }
+}
+```
+
+Summary fechado:
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "classification", "reports", "expectedReports", "cases", "expectedCases",
+    "compliant", "nonCompliant", "assertionsExercised", "caseAssertionsExercised",
+    "processExitCode"
+  ],
+  "properties": {
+    "classification": { "enum": ["PASS", "FUNCTIONAL_FAILURE", "CONFIG_ERROR"] },
+    "reports": { "type": "integer", "minimum": 0, "maximum": 16 },
+    "expectedReports": { "const": 16 },
+    "cases": { "type": "integer", "minimum": 0, "maximum": 134 },
+    "expectedCases": { "const": 134 },
+    "compliant": { "type": "integer", "minimum": 0, "maximum": 16 },
+    "nonCompliant": { "type": "integer", "minimum": 0, "maximum": 16 },
+    "assertionsExercised": { "type": "integer", "minimum": 0, "maximum": 16 },
+    "caseAssertionsExercised": { "type": "integer", "minimum": 0, "maximum": 134 },
+    "processExitCode": { "enum": [0, 1, 3] }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "classification": { "const": "PASS" } } },
+      "then": {
+        "properties": {
+          "reports": { "const": 16 },
+          "cases": { "const": 134 },
+          "compliant": { "const": 16 },
+          "nonCompliant": { "const": 0 },
+          "assertionsExercised": { "const": 16 },
+          "caseAssertionsExercised": { "const": 134 },
+          "processExitCode": { "const": 0 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "FUNCTIONAL_FAILURE" } } },
+      "then": {
+        "properties": {
+          "reports": { "const": 16 },
+          "cases": { "const": 134 },
+          "nonCompliant": { "type": "integer", "minimum": 1, "maximum": 16 },
+          "assertionsExercised": { "const": 16 },
+          "caseAssertionsExercised": { "const": 134 },
+          "processExitCode": { "const": 1 }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "CONFIG_ERROR" } } },
+      "then": { "properties": { "processExitCode": { "const": 3 } } }
+    }
+  ]
+}
+```
+
+`expectedReports=16` e `expectedCases=134` são invariáveis; `reports`, `cases`, `assertionsExercised` e
+`caseAssertionsExercised` são contagens **observadas e factuais**. `compliant + nonCompliant = reports`.
+`PASS` exige protocolo integral `16/134`, assertions `16/134`, `16/0` e exit `0`. `FUNCTIONAL_FAILURE` exige o
+mesmo protocolo integral, ao menos um não conforme e exit `1`. Relatório/caso ausente ou extra, duplicidade,
+execução parcial, assertion não exercida, schema inválido ou summary divergente produz `CONFIG_ERROR`/exit `3`;
+nesse estado o summary registra as contagens realmente emitidas/exercidas e nunca inventa `16/134`. Se uma
+barreira externa capturar exceção antes de qualquer relatório, registra `reports=0`, `cases=0`, assertions
+`0/0`, `compliant=0` e `nonCompliant=0`, mantendo os dois expected invariáveis.
+
+O RED contra o core `71e3f78a…` deve ser `FUNCTIONAL_FAILURE`/exit `1` porque a política ainda não existe;
+todos os relatórios e casos precisam ser emitidos e exercidos. `module_missing` não é o RED esperado. A
+quantidade exata de relatórios conformes no RED é observada, não presumida pelo SDD.
+
+#### 14.6.2 RED visual — 15 relatórios e 87 casos
+
+Arquivo exclusivo inicial:
+
+```text
+tests/test_cab_bt_parallel_selection_minimum_per_section_ui_experimental.js
+```
+
+Prefixos:
+
+```text
+CAB_BT_PARALLEL_MINIMUM_PER_SECTION_UI_EXP_REPORT
+CAB_BT_PARALLEL_MINIMUM_PER_SECTION_UI_EXP_SUMMARY
+```
+
+| ID | Casos | Contrato |
+| --- | ---: | --- |
+| `MPS-UI-01` | 1 | controle inicia em 10 e possui `min=1`, `max=10`, `step=1` |
+| `MPS-UI-02` | 1 | DTO envia política fechada e cada cálculo chama o core real exatamente uma vez |
+| `MPS-UI-03` | 6 | default mostra exatamente uma candidata por seção |
+| `MPS-UI-04` | 4 | quatro objetivos reproduzem as ordens completas do default 10 |
+| `MPS-UI-05` | 4 | ao reduzir para 7, mostra `7x150`, `6x185`, `6x240`, `5x300` |
+| `MPS-UI-06` | 2 | `6x300`/`7x300` ausentes dos cards e presentes no envelope bruto capturado |
+| `MPS-UI-07` | 6 | ausências 95/120 localizadas com `N=7` em PT/EN/ES |
+| `MPS-UI-08` | 33 | onze grupos por igualdade UTF-8 integral nos três idiomas |
+| `MPS-UI-09` | 6 | seis relações idioma ativo × idioma incorreto usam listas fechadas |
+| `MPS-UI-10` | 6 | cognatos ES válidos, acento removido, tradução parcial e separação NFD |
+| `MPS-UI-11` | 2 | EN/ES validam nominalmente o aviso permanente e o aviso projetado no resultado |
+| `MPS-UI-12` | 3 | impressão PT/EN/ES usa cards filtrados, ausências, aviso e rótulo localizados |
+| `MPS-UI-13` | 5 | vazio, fração, zero, negativo e 11 bloqueiam antes do core, sem números parciais |
+| `MPS-UI-14` | 4 | 375 px claro/escuro, acessibilidade e foco permanecem conformes com catálogo visível |
+| `MPS-UI-15` | 4 | guardrails, códigos invariantes e vocabulário não instalável permanecem íntegros |
+
+Oráculo autossuficiente de `MPS-UI-11`:
+
+| caseId | Idioma ativo | Paths exatos | Valor PT proibido exato | Valor esperado em ambos os paths |
+| --- | --- | --- | --- | --- |
+| `MPS-UI-11-CASE-01` | `en` e `document.documentElement.lang="en"` | `#cbpsx-notice.textContent` e `[data-cab-bt-parallel-display-notice].textContent` | `PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.` | `PRELIMINARY — DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION.` |
+| `MPS-UI-11-CASE-02` | `es` e `document.documentElement.lang="es"` | `#cbpsx-notice.textContent` e `[data-cab-bt-parallel-display-notice].textContent` | `PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.` | `PRELIMINAR — NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN.` |
+
+Cada caso exige existência e visibilidade dos dois nós, igualdade UTF-8 integral do `textContent` normalizado
+somente por `trim()`, e rejeição do valor PT completo. Além da igualdade nominal, `en` aplica exclusivamente
+`forbiddenExpressionsByLanguage.en.pt = P` e `es` aplica exclusivamente
+`forbiddenExpressionsByLanguage.es.pt = P`, conforme §9.4. Não há busca por “qualquer texto português”,
+idioma inferido, tradução parcial, substring como substituta da igualdade, NFD ou aproximação semântica.
+O atributo `data-cab-bt-parallel-display-notice` é obrigatório na projeção visual do `displayNotice`; não altera
+o envelope nem o valor bruto do core.
+
+Total exato: `15` relatórios, IDs `MPS-UI-01…15`, e `87` casos únicos. Cada linha usa IDs nominais
+`MPS-UI-NN-CASE-01…CC`, com a mesma regra fechada da §14.6.1. Cada relatório contém exatamente `id`,
+`category`, `classification`, `compliant`, `assertionExercised`, `expected`, `observed`, `telemetry` e `issues`.
+`category` é `minimum_per_section_ui_experimental`; `observed` contém exclusivamente `cases`; `telemetry`
+contém exclusivamente os quatro campos abaixo:
+
+```json
+{
+  "id": "MPS-UI-01",
+  "category": "minimum_per_section_ui_experimental",
+  "classification": "FUNCTIONAL_FAILURE",
+  "compliant": false,
+  "assertionExercised": true,
+  "expected": {},
+  "observed": { "cases": [] },
+  "telemetry": {
+    "pageLoaded": true,
+    "consoleErrors": [],
+    "pageErrors": [],
+    "invalidTokens": []
+  },
+  "issues": []
+}
+```
+
+O summary contém exatamente `classification`, `reports`, `expectedReports`, `cases`, `expectedCases`,
+`compliant`, `nonCompliant`, `assertionsExercised`, `caseAssertionsExercised`, `processExitCode`,
+`preflightExitCode`, `preflightError` e `functionalError`. `expectedReports=15` e `expectedCases=87` são
+invariáveis; as outras contagens são factuais. Em `PASS`, `reports/cases=15/87`, os exits são `0`, as assertions
+são `15/87`, `compliant/nonCompliant=15/0` e os dois erros são `null`. Em `FUNCTIONAL_FAILURE`, o mesmo
+protocolo integral é obrigatório, preflight `0`, processo `1` e ao menos um relatório é não conforme. Em
+`INFRA_BLOCKED`, existem `15` relatórios bloqueados, exits `2`, assertions `0/0` e somente `preflightError` é
+não nulo. Qualquer outra quebra é `CONFIG_ERROR`/exit `3`, com contagens observadas sem preenchimento fictício.
+
+#### 14.6.3 Correção de fixtures históricas
+
+Os testes visuais existentes continuam regressão, mas seus cenários CAB-003 devem fixar explicitamente
+`maxParallelCount=4` antes de calcular:
+
+```text
+tests/test_cab_bt_parallel_selection_ui_experimental.js
+tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+```
+
+Essa correção não muda IDs, expectativas, contagens ou assertions históricas; apenas remove a dependência do
+novo default visual `10`. Alterar tops, relaxar asserts ou aceitar `4` e `10` simultaneamente é proibido.
+
+#### 14.6.4 Oráculo exato e proibições
+
+- toda verificação usa paths nominais e igualdade profunda;
+- `recursivelyContains`, busca por substring de IDs, “algum card semelhante” e maioria são proibidos;
+- o core RED chama a função real; o visual carrega a página real e captura a chamada real;
+- nenhum mock/stub substitui L0, L1–L3, DOM ou envelope;
+- `candidateAlternatives.length` prova o bruto; `presentationProjection` prova o filtro;
+- UI não pode calcular `arg min`, margem, cobre ou comparadores;
+- cards, ausências e impressão devem vir dos paths do envelope CAB-004;
+- valores localizados são comparados em UTF-8 integral; NFD somente no oráculo histórico proibido.
+
+#### 14.6.5 Comandos, exits e evidência remota
+
+Ordem mínima:
+
+```text
+node --check tests/test_cab_bt_parallel_selection_minimum_per_section_experimental.js
+node tests/test_cab_bt_parallel_selection_minimum_per_section_experimental.js
+node tests/test_cab_bt_parallel_selection_experimental.js
+node tests/test_cab_bt_parallel_selection_300mm2_experimental.js
+node tests/test_cab_bt_parallel_experimental.js
+node --check tests/test_cab_bt_parallel_selection_minimum_per_section_ui_experimental.js
+node tests/test_cab_bt_parallel_selection_minimum_per_section_ui_experimental.js
+node tests/test_cab_bt_parallel_selection_ui_experimental.js
+node tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
+npm.cmd run test:regression
+```
+
+GREEN independente exige três processos do core focal e três do visual focal, stdout byte-idêntico em cada
+grupo, regressões históricas integrais e shadow Gate remoto na mesma SHA.
+
+| Exit | Classificação |
+| --- | --- |
+| `0` | todos os relatórios/casos conformes, assertions exercidas e summary reconciliado |
+| `1` | `FUNCTIONAL_FAILURE` processável com protocolo completo |
+| `2` | `INFRA_BLOCKED` exclusivamente quando Chromium falha antes das assertions |
+| `3` | `CONFIG_ERROR`: integridade, schema, contagem, caso, summary, execução parcial ou harness inválido |
+
+O visual remoto usa `qa-visual.yml`, `workflow_dispatch`, attempt `1`, SHA imutável e artifact
+`qa-visual-evidence`. O shadow usa `regression-gate-shadow.yml`. QA registra run, job, branch, SHA, exits,
+versão Chromium, artifact ID/tamanho, digest GitHub, SHA-256 recalculado do ZIP e SHA-256 do TXT extraído.
+Nenhum retry/rerun ocorre sem O.S. distinta.
+
+#### 14.6.6 Sequência vinculante
+
+1. auditoria e commit deste SDD;
+2. QA corrige somente as duas fixtures históricas e produz o RED core CAB-004;
+3. Backend implementa a projeção no L1–L3, sem alterar L0;
+4. QA independente comprova GREEN core;
+5. QA produz RED visual CAB-004;
+6. Frontend altera somente `index.html`/`js/ui_render.js`, sem regra científica;
+7. QA independente local/remoto executa focal, históricos e stable;
+8. DevOps/SRE serve prévia na SHA imutável;
+9. CEO retesta os três ajustes visuais;
+10. PR e merge continuam dependentes de autorização humana posterior.
+
 ## 15. Regressão, CI e PR
 
 - Toda PR executável preserva `npm run test:regression` e o shadow Gate vigente.
@@ -2017,14 +2836,16 @@ Entrada prevista:
 
 | Campo | Valor |
 | --- | --- |
-| ID | `CAB-BT-PARALLEL-003` |
+| ID | `CAB-BT-PARALLEL-004` |
 | Classe | `CHG-3 científica experimental` |
-| Domínio | enumeração/comparação preliminar de cabos BT em paralelo |
-| Ciência | `122b885db40f69b422dac8ea4c2e419dc547220f` |
+| Domínio | apresentação mínima válida por seção, localização integral PT/EN/ES e default de dez cabos por fase |
+| Ciência | `b58254bf8ecffcaa4825d2c3225977c30eb01174` |
 | Estado atual | `SDD_CANDIDATO_PARA_AUDITORIA` |
 | Estado produtivo | `BLOQUEADO`, `productionAllowed=false` |
-| Teste novo | caracterização focal core com 12 relatórios e RED visual focal com 15 relatórios; ambos experimentais |
-| TESTE DO CEO | `SIM`, depois de GREEN independente e remoto da UI |
+| Base executável | core 300 mm² `71e3f78a…`; UI 300 mm² e correção de foco `27186bb5…` |
+| Teste novo | RED core focal com 16 relatórios/134 casos e RED visual focal com 15 relatórios/87 casos; ambos experimentais |
+| Regressões preservadas | core histórico 74/244, core 300 mm² 12/14, L0 40/40, visual histórico 15/15 e stable Gate |
+| TESTE DO CEO | `SIM`; estado recebido `APROVADO_COM_AJUSTES_VISUAIS_FOCAIS`, reteste após GREEN remoto CAB-004 |
 | PR/SHA/Gate | pendentes |
 | Marco remoto | pendente |
 | Marco operacional | pendente |
@@ -2038,10 +2859,11 @@ escopo própria ou integração no mesmo pacote futuro expressamente autorizada.
 | Fase | Executor | Autoridade | Retorno |
 | --- | --- | --- | --- |
 | Auditoria deste SDD | Conselho de Arquitetura e Governança | Conselho | CTO |
-| Caracterização core 300 mm² | Senior QA-Security | QA | CTO |
-| Backend focal, somente se houver divergência core | Senior Backend Dev | sem veredito | CTO |
-| RED visual 300 mm² | Senior QA-Security | QA | CTO |
-| GREEN UI 300 mm² | Senior Frontend Dev | sem veredito | CTO |
+| RED core CAB-004 e correção das duas fixtures históricas | Senior QA-Security | QA | CTO |
+| GREEN core da projeção mínima por seção | Senior Backend Dev | sem veredito | CTO |
+| GREEN core independente | Senior QA-Security | QA | CTO |
+| RED visual CAB-004 | Senior QA-Security | QA | CTO |
+| GREEN UI de localização/default/apresentação | Senior Frontend Dev | sem veredito | CTO |
 | QA independente/remoto | Senior QA-Security | QA | CTO |
 | Teste manual | CEO | CEO | CTO |
 | Merge | CEO | CEO | CTO |
@@ -2051,45 +2873,48 @@ Não existe handoff direto entre executores. O CTO roteia cada etapa; QA não im
 
 ## 19. Decisão de aceite
 
-**TESTE DO CEO: SIM.** O teste manual só é liberado após:
+**TESTE DO CEO: SIM.** O aceite anterior está registrado como
+`APROVADO_COM_AJUSTES_VISUAIS_FOCAIS`; o reteste de encerramento só é liberado após:
 
-1. GREEN independente do core;
-2. GREEN independente e remoto dos 15 contratos visuais na mesma SHA candidata;
-3. checks da PR verdes;
-4. prévia estável servida pelo DevOps/SRE.
+1. GREEN independente do core CAB-004, incluindo 16/16 relatórios e 134/134 casos;
+2. GREEN independente e remoto dos 15 contratos visuais CAB-004 na mesma SHA candidata;
+3. regressões históricas, focal 300 mm², L0 e stable integralmente verdes;
+4. prévia estável servida pelo DevOps/SRE na SHA imutável.
 
 Cenário mínimo esperado pelo CEO:
 
-- informar `I_b=600 A`, `400 V`, limite de queda `3%` e confirmar o catálogo/hipóteses laboratoriais;
-- visualizar, sem abrir painéis técnicos desnecessários, alternativas como 2×185, 2×240, 2×300 e 3×120;
-- alternar os objetivos e observar 2×300, 3×120 e 4×300 no topo conforme o objetivo;
-- identificar critérios, dominante, hipóteses e “Instalação autorizada: NÃO”;
-- não encontrar “recomendado”, “selecionado” ou declaração IEC.
+- iniciar com `maxParallelCount=10`, podendo reduzi-lo no intervalo inteiro `1…10`;
+- informar `I_b=1800 A`, `400 V`, limite de queda `3%`, reduzir o máximo para `7` e confirmar catálogo/hipóteses;
+- visualizar exatamente uma alternativa mínima válida por seção: `7×150`, `6×185`, `6×240` e `5×300`;
+- não visualizar `6×300`, `7×300`, `7×185` ou `7×240`, embora essas candidatas permaneçam no universo bruto;
+- alternar os quatro objetivos e confirmar que eles apenas reordenam o mesmo conjunto filtrado;
+- alternar PT/EN/ES e confirmar os onze grupos traduzidos, sem texto fixo em português e sem falso positivo para
+  `Bloqueadores`, `Entradas confirmadas` e `PRELIMINAR` em espanhol;
+- identificar critérios, dominante, hipóteses e a tradução ativa de “Instalação autorizada: NÃO”;
+- não encontrar “recomendado”, “selecionado”, seleção instalável ou declaração IEC.
 
 O aceite valida clareza e utilidade experimental; não remove nenhum bloqueio produtivo.
 
 ## 20. Ciclo de vida e encerramento
 
-Estado atual: o core L1–L3 está integrado e GREEN em `5411779a…`; a UI anterior de cinco seções está GREEN em
-`c3e49d1a…`, mas o aceite do CEO ficou `APROVADO_COM_AJUSTE_FOCAL` pela ausência de 300 mm². A ciência da
-extensão está publicada em `122b885d…`; a errata nonfinite está publicada em `dc37b9c…` e a errata de
-identidade canônica está publicada em `54941f9…`. Este SDD R5
-permanece candidato e não commitado.
+Estado atual recebido e preservado:
 
-A caracterização focal original existe como arquivo não congelado
-`tests/test_cab_bt_parallel_selection_300mm2_experimental.js`, SHA-256 LF
-`2249BD070AAB9E14FFEDD36FD81C93112945AE1C1642A287E81892ED66E9C548`. Sua execução processável preservada
-produziu 12/12 relatórios exercidos, 11 PASS e um `FUNCTIONAL_FAILURE` em `MM300-CORE-10`: CASE-03 revelou a
-validação escalar tardia e CASE-04 confirmou a taxonomia detalhada `number:+Infinity`. Essa evidência é
-caracterização histórica anterior a este contrato; não é o RED focal corrigido, não está congelada e não
-autoriza Backend.
+- core L1–L3 com seção de 300 mm² e validação nonfinite está GREEN em `71e3f78a5160203c524d3ae3ff5cee0ae0c7f017`;
+- UI de 300 mm², localização precedente e correção de foco OS044R está GREEN em
+  `27186bb595c0f0719809303ccb72c0f9ef684700`;
+- a validação remota cumulativa dessa UI passou nos runs `31313774728`, `31313846258` e `31313907711`;
+- o CEO aprovou a prévia e solicitou três ajustes focais: eliminar textos PT fixos, traduzir a apresentação de
+  saída e mostrar somente o menor `nParallel` válido por seção, com default `10`;
+- a ciência CAB-004 que fecha esses ajustes está publicada em
+  `b58254bf8ecffcaa4825d2c3225977c30eb01174`;
+- este SDD CAB-004 está materializado somente no worktree documental, permanece candidato e não commitado;
+- ainda não existem RED CAB-004, implementação Backend CAB-004, GREEN Frontend CAB-004, PR ou merge.
 
-Sequência vinculante após auditoria e commit documental: QA corrige exclusivamente o oráculo focal de
-CASE-03/04 → comprova RED funcional contratualmente válido → Backend corrige somente a divergência escalar →
-QA GREEN independente do core → RED visual funcional → GREEN Frontend → QA independente local/remoto na
-mesma SHA → nova prévia → reteste do CEO. Backend permanece bloqueado até o RED focal corrigido e válido.
-Não existe PR ou merge autorizado para a extensão, e a PR #40 continua **DO NOT MERGE**. Após futura
-integração:
+Sequência vinculante após auditoria e commit documental: QA produz o RED core e corrige somente as duas
+fixtures históricas identificadas → Backend implementa exclusivamente a projeção CAB-004 no L1–L3 → QA GREEN
+independente do core → QA produz RED visual → Frontend implementa localização/default/apresentação sem fórmula
+científica → QA independente local/remoto na mesma SHA → DevOps/SRE serve nova prévia → CEO executa o reteste
+de encerramento. A PR #40 continua **DO NOT MERGE**. Após futura integração:
 
 - `MERGE_VALIDADO` exige PR, SHA e Gate remoto;
 - `ENCERRAMENTO_OPERACIONAL` exige `origin/main → AmpAI/ em main → Google Drive`, hashes aplicáveis,
@@ -2115,6 +2940,17 @@ integração:
 - [x] Taxonomia `number:NaN`/`number:+Infinity`/`number:-Infinity` e precedência da errata `dc37b9c…` incorporadas.
 - [x] Caracterização original preservada como evidência não congelada; correção focal do oráculo precede Backend.
 - [x] Catálogo de seis seções, 42 campos UI e objetivos com 300 mm² especificados.
+- [x] `presentationPolicy` opcional preserva fisicamente o contrato histórico quando ausente.
+- [x] Sucesso discriminado fecha `data`, `presentationProjection`, seus itens e as duas formas de `presentationModel`.
+- [x] Enumeração bruta até dez cabos por fase separada da projeção mínima válida por seção.
+- [x] Contagens `60/6` no default e `42/4` na fixture do CEO reconciliadas.
+- [x] Quatro ordenações CAB-004 fechadas e incapazes de reintroduzir candidatas ocultas.
+- [x] Onze grupos PT/EN/ES fechados em UTF-8 integral, com listas de vazamento e cognatos legítimos.
+- [x] NFD restrito ao oráculo histórico de vocabulário proibido.
+- [x] RED core CAB-004 fechado em 16 relatórios/134 casos e RED visual em 15 relatórios/87 casos.
+- [x] Summary core distingue expected invariável de contagens observadas factuais em `CONFIG_ERROR`.
+- [x] `MPS-UI-11` fecha EN/ES, dois paths, valores proibidos/esperados e listas aplicáveis.
+- [x] Cenário de reteste do CEO atualizado para `1800 A / 400 V / 3% / max=7`, com default `10`.
 - [x] Regressão stable, artifact remoto e CodeRabbit consultivo previstos.
 - [x] `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` separados.
 - [x] O.S. classificada como CHG-3 e roteamento explicitado.
