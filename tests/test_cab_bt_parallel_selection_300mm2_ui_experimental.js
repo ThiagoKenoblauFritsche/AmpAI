@@ -841,6 +841,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       }
       const click = async () => {
         const before = calls.length;
+        set(document.querySelector('#bt-parallel-selection-maxparallel'), 4);
         action?.click();
         await frames(12);
         await wait(80);

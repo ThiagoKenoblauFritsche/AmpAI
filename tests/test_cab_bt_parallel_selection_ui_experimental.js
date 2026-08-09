@@ -389,6 +389,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
         current: queryAny(region, ['[data-selection-field="totalLoadCurrent_A"]', '[name="totalLoadCurrent_A"]', '#bt-parallel-selection-current']),
         voltage: queryAny(region, ['[data-selection-field="lineVoltage_V"]', '[name="lineVoltage_V"]', '#bt-parallel-selection-voltage']),
         drop: queryAny(region, ['[data-selection-field="maximumVoltageDrop_percent"]', '[name="maximumVoltageDrop_percent"]', '#bt-parallel-selection-drop']),
+        maxParallel: queryAny(region, ['[data-selection-field="maxParallelCount"]', '[name="maxParallelCount"]', '#bt-parallel-selection-maxparallel']),
         objective: queryAny(region, ['[data-selection-field="objective"]', '[name="objective"]', '#bt-parallel-selection-objective']),
         catalogConfirmed: queryAny(region, ['[data-selection-confirm="catalog"]', '[name="catalogConfirmed"]', '#bt-parallel-selection-catalog-confirmed']),
         hypothesisConfirmed: queryAny(region, ['[data-selection-confirm="hypothesis"]', '[name="hypothesisConfirmed"]', '#bt-parallel-selection-hypothesis-confirmed']),
@@ -427,6 +428,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
           continue;
         }
         setControl(practical.objective, objective);
+        setControl(practical.maxParallel, 4);
         const callsBefore = engineCalls.length;
         practical.action.click();
         await waitFrames(12);
