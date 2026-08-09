@@ -69,7 +69,9 @@ registrada nominalmente. A saída particiona $U$ deterministicamente:
 informa uma combinação. **Reconciliação obrigatória** das contagens. Preserva `installableSelection: null`,
 `DISCRETE_SELECTION_BLOCKED`, `productionAllowed=false`. Exemplo-base **atual** (catálogo estendido a
 300 mm²): $|U|=6\times4=24$ → **24** avaliadas, **14** válidas, **10** rejeitadas, **14** não dominadas
-(Memorial §6.0). **Antes — catálogo limitado a 240 mm²:** 20 / 11 / 9 / 11.
+(Memorial §6.0). **Antes — catálogo limitado a 240 mm²:** 20 / 11 / 9 / 11. **O.S. 004:** o **valor inicial**
+de `maxParallelCount` passa a **10** (universo bruto **60**; redução a 7 → 42); a projeção "menor quantidade que
+atende por seção" é registrada em **§12**.
 
 ---
 
@@ -306,3 +308,49 @@ autorização de instalação.
   COMPRA OU INSTALAÇÃO"**, **L0 da PR #39 imutável**, **PR #40 DO NOT MERGE**.
 - Tolerância **±0,5 % relativo** (`TOLERANCIA_COMPUTACIONAL_LAB_AMPAI`) é **política computacional AmpAI**,
   não normativa IEC. Matriz preliminar × produção: [[cab-bt-parallel-selection-prelim-memorial]] §8.
+
+---
+
+## 12. Universo até 10 e projeção "menor quantidade que atende por seção" (O.S. 004)
+
+> Contrato **`APROVADO_COM_AJUSTES_VISUAIS_FOCAIS`** (CEO, O.S. CAB-BT-PARALLEL-004). Ajustes **visuais focais**
+> sobre a enumeração já registrada; **nenhuma** alteração de física, de blocker ou de canonicidade. Números
+> reproduzidos no motor real: [[cab-bt-parallel-selection-prelim-memorial]] §9.
+
+**A. Universo de cálculo.** $U=\text{catálogo}\times\{1,\dots,\text{maxParallelCount}\}$; catálogo
+`{95,120,150,185,240,300}`; `maxParallelCount` **inteiro**, **valor inicial da UI = 10**, **limite visual
+permitido 1…10**. $n_p$ permanece **independente de $n_c$**. $|U|=6\times10=\mathbf{60}$ (inicial); ao reduzir
+o limite para 7 → $6\times7=\mathbf{42}$.
+
+**B. Enumeração integral.** L2 continua avaliando **todas** as combinações de $U$; **proibido** interromper a
+enumeração na primeira válida; **proibido** assumir monotonicidade científica para pular cálculos.
+
+**C. Projeção "menor quantidade que atende por seção".** Por `section_mm2` $=S$:
+`minimumPassingBySection(S) = arg min nParallel` entre as candidatas **integralmente válidas** (§Memorial §2)
+com $\text{section\_mm2}=S$; **no máximo uma** candidata por seção; candidatas da **mesma seção** com $n_p$
+**superior** são **ocultadas da apresentação e da impressão**, **sem** remoção do **envelope bruto** do motor
+(**filtro exclusivamente de apresentação**). Seção sem candidata válida até `maxParallelCount` → **não
+inventar**, **não exibir número aprovado**, **registrar nominalmente** a ausência.
+
+**D. Exemplo vinculante do CEO.** Fixture prática (`ASSUMPTION_ONLY`), `maxParallelCount=7`: 5×300, 6×300 e
+7×300 **atendem**; a apresentação mostra **somente 5×300**; 6×300 e 7×300 **permanecem no bruto**, ocultas.
+Regra exercida para **todas** as seções (Memorial §9.5–9.6).
+
+**E. Objetivos.** `NONE` · `MIN_PARALLEL_COUNT` · `MIN_TOTAL_COPPER` · `MAX_MINIMUM_MARGIN` **apenas reordenam**
+a apresentação **filtrada**; **não** reintroduzem candidatas superiores da mesma seção nem transformam a saída
+em recomendação instalável (`installableSelection: null`, `DISCRETE_SELECTION_BLOCKED`).
+
+**F. Terminologia.** **Proibido** na interface: "recomendado", "selecionado", "ótimo para instalação",
+"dimensionamento final". **Usar:** **"Menor quantidade que atende por seção no intervalo avaliado"**.
+
+**G. Localização PT/EN/ES.** **Todos** os textos visíveis acompanham o idioma selecionado — aviso permanente;
+"Instalação autorizada: NÃO"; estado de produção; status da fonte; hipóteses; bloqueios; entradas confirmadas;
+títulos e critérios dos cartões; mensagens de ausência de alternativa; impressão. **Códigos técnicos, enums e
+identificadores B-01…B-06 permanecem invariantes.** O aviso preserva **significado, severidade e permanência**
+nos três idiomas; a UI **não pode** ocultar a advertência (o valor bruto do motor pode permanecer rastreável).
+Catálogo de textos PT/EN/ES: Memorial §9.10.
+
+**H. Guardrails.** Preservados `EXPERIMENTAL_PRELIMINAR_NAO_CANONICO`, `LABORATORIO_APENAS`,
+`productionAllowed=false`, `installableSelection=null`, `installationAuthorized=false`, **fonte primária
+integral AUSENTE**, **sem conformidade IEC**, **B-01…B-06**, **nenhuma recomendação comercial ou autorização de
+instalação**. **PR #40 DO NOT MERGE.**

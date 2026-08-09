@@ -681,3 +681,258 @@ Funcionalidade: Enumeracao e comparacao preliminar de cabos BT em paralelo
     Quando alguem solicita "usar para projeto/compra/instalacao", "elegivel para implementacao" ou "conforme IEC"
     Entao a camada RECUSA (productionAllowed=false; B-06)
     E mantem o aviso permanente e o estado EXPERIMENTAL_PRELIMINAR_NAO_CANONICO
+
+  # ───────────── O.S. 004 — MENOR QUANTIDADE QUE ATENDE POR SECAO (universo ate 10) ─────────────
+  # Fixture pratica do CEO (ASSUMPTION_ONLY), reproduzida no motor real (Memorial 9):
+  #   Ib=1800 A, U=400 V, duMax=3%, Ik=20000 A, t=0,2 s, k=115, kg=0,8, cosphi=0,9, delta_fault=1.
+  # Filtro EXCLUSIVAMENTE de apresentacao; o envelope bruto do motor permanece integro.
+  # Textos de localizacao PT/EN/ES: valores reais (com acentos), espelham Memorial 9.10.
+
+  Cenario: [O.S.004][Universo] Valor inicial da UI enumera 60 combinacoes
+    Dado "maxParallelCount=10" e o catalogo {95,120,150,185,240,300}
+    Quando o motor enumera o universo bruto
+    Entao "|evaluatedCandidates|" e 60
+    E nParallel percorre 1..10
+    E o limite visual permitido e 1..10
+
+  Cenario: [O.S.004][Universo] Reducao do limite para 7 enumera 42 combinacoes
+    Dado "maxParallelCount=7" e o mesmo catalogo
+    Quando o motor enumera o universo bruto
+    Entao "|evaluatedCandidates|" e 42
+
+  Cenario: [O.S.004][Enumeracao] O motor avalia tudo e nao interrompe na primeira valida
+    Dado "maxParallelCount=10" e a fixture pratica do CEO
+    Quando o motor enumera
+    Entao TODAS as 60 combinacoes sao avaliadas
+    E a enumeracao NAO para na primeira combinacao valida
+    E NENHUMA monotonicidade cientifica e assumida para pular calculos
+
+  Cenario: [O.S.004][Independencia] nParallel e independente de nCircuits
+    Dado "maxParallelCount=10"
+    Entao nParallel percorre 1..10 independentemente de nCircuits
+    E o mapa nParallel -> nCircuits permanece BLOQUEADO (B-02)
+
+  Cenario: [O.S.004][Projecao] Menor quantidade que atende por secao (fixture do CEO, maxParallelCount=7)
+    Dado a fixture pratica do CEO e "maxParallelCount=7"
+    Quando a apresentacao projeta a menor quantidade que atende por secao
+    Entao a apresentacao contem EXATAMENTE "7x150", "6x185", "6x240" e "5x300"
+    E cada secao aparece no maximo uma vez
+    E o titulo/criterio do cartao e "Menor quantidade que atende por seção no intervalo avaliado"
+
+  Cenario: [O.S.004][Exemplo CEO] 5x300 e a menor; 6x300 e 7x300 atendem porem ficam ocultas
+    Dado a fixture pratica do CEO e "maxParallelCount=7"
+    Quando a secao "300 mm²" e projetada
+    Entao "5x300" atende (I_adm=2064 A) e e EXIBIDA como menor
+    E "6x300" atende (I_adm=2476,8 A) e "7x300" atende (I_adm=2889,6 A)
+    E "4x300" NAO atende (I_adm=1651,2 A; AMPACIDADE)
+    E a apresentacao e a impressao mostram SOMENTE "5x300"
+    E "6x300" e "7x300" permanecem no resultado bruto, ocultas na apresentacao e impressao
+    E "6x300" e "7x300" NAO sao apagadas nem removidas do envelope bruto
+
+  Esquema do Cenario: [O.S.004][Inventario] Menor valida por secao na fixture do CEO (maxParallelCount=7)
+    Dado a fixture pratica do CEO e "maxParallelCount=7"
+    Quando a secao "<secao>" e projetada
+    Entao a menor quantidade que atende e "<menor>"
+
+    Exemplos:
+      | secao | menor |
+      | 150   | 7x150 |
+      | 185   | 6x185 |
+      | 240   | 6x240 |
+      | 300   | 5x300 |
+
+  Cenario: [O.S.004][Sem alternativa] Secao sem candidata valida dentro do limite
+    Dado a fixture pratica do CEO e "maxParallelCount=7"
+    Quando as secoes 95 e 120 sao projetadas
+    Entao NENHUMA candidata de 95 atende dentro do limite (exigiria 10)
+    E NENHUMA candidata de 120 atende dentro do limite (exigiria 8)
+    E a apresentacao registra, para a secao 95, "Nenhuma alternativa da seção 95 mm² atende dentro do intervalo avaliado de 1 até 7 cabos por fase."
+    E a apresentacao registra, para a secao 120, "Nenhuma alternativa da seção 120 mm² atende dentro do intervalo avaliado de 1 até 7 cabos por fase."
+    E NAO exibe numero aprovado
+    E NAO inventa candidata
+    E as combinacoes de 95 e 120 permanecem avaliadas no envelope bruto
+
+  Cenario: [O.S.004-R1][Ausencia] Forma parametrizada unica (secao 95, limite 7) — PT/EN/ES
+    Dado a secao "95 mm²" sem candidata valida e o limite "7"
+    Entao a mensagem PT e EXATAMENTE "Nenhuma alternativa da seção 95 mm² atende dentro do intervalo avaliado de 1 até 7 cabos por fase."
+    E a mensagem EN e EXATAMENTE "No alternative for section 95 mm² meets the criteria within the evaluated range of 1 to 7 conductors per phase."
+    E a mensagem ES e EXATAMENTE "Ninguna alternativa de la sección 95 mm² cumple dentro del intervalo evaluado de 1 a 7 conductores por fase."
+    E a forma e unica por (secao S, limite N), sem alternar "1…N", "1..N" nem omitir o intervalo
+
+  Cenario: [O.S.004-R1][Ausencia] A forma parametrizada resolve N=10 (default) — PT/EN/ES
+    Dado a forma unica de ausencia parametrizada por (secao S, limite N) com "N=10"
+    Entao a forma PT e "Nenhuma alternativa da seção S atende dentro do intervalo avaliado de 1 até 10 cabos por fase."
+    E a forma EN e "No alternative for section S meets the criteria within the evaluated range of 1 to 10 conductors per phase."
+    E a forma ES e "Ninguna alternativa de la sección S cumple dentro del intervalo evaluado de 1 a 10 conductores por fase."
+    E o intervalo aparece como "de 1 até 10" (PT), "of 1 to 10" (EN) e "de 1 a 10" (ES)
+    E no default (maxParallelCount=10) as 6 secoes tem menor valida, logo nenhuma secao dispara a mensagem nesta fixture
+
+  Cenario: [O.S.004][Filtro] O filtro e exclusivamente de apresentacao
+    Dado a fixture pratica do CEO e "maxParallelCount=7"
+    Entao "|evaluatedCandidates|" (bruto) permanece 42
+    E a apresentacao filtrada tem 4 candidatas (uma por secao valida)
+    E todas as candidatas superiores da mesma secao continuam presentes no bruto
+    E nenhuma candidata e removida do envelope do motor
+
+  Esquema do Cenario: [O.S.004][Objetivos] Reordenam apenas o conjunto filtrado, sem reintroduzir superiores
+    Dado a apresentacao filtrada "7x150, 6x185, 6x240, 5x300" (fixture do CEO, maxParallelCount=7)
+    Quando o objetivo ativo e "<objetivo>"
+    Entao a ordem de apresentacao e "<ordem>"
+    E "6x300" e "7x300" NAO sao reintroduzidas
+    E nenhuma posicao vira selecao instalavel (installableSelection=null)
+
+    Exemplos:
+      | objetivo           | ordem                      |
+      | NONE               | 5x300, 6x185, 6x240, 7x150 |
+      | MIN_PARALLEL_COUNT | 5x300, 6x240, 6x185, 7x150 |
+      | MIN_TOTAL_COPPER   | 7x150, 6x185, 6x240, 5x300 |
+      | MAX_MINIMUM_MARGIN | 6x240, 5x300, 7x150, 6x185 |
+
+  Cenario: [O.S.004-R1][Default 10] rawCount, filteredCount e conjunto filtrado exato
+    Dado a fixture pratica do CEO e "maxParallelCount=10"
+    Entao "rawCount" (|evaluatedCandidates|) e 60
+    E "filteredCount" (menor por secao) e 6
+    E o conjunto filtrado e EXATAMENTE "10x95, 8x120, 7x150, 6x185, 6x240, 5x300"
+    E cada secao aparece EXATAMENTE uma vez
+    E nenhuma candidata superior da mesma secao aparece na apresentacao
+
+  Esquema do Cenario: [O.S.004-R1][Default 10] Ordens completas vinculantes (quantidade, ordem e candidateIds exatos)
+    Dado o conjunto filtrado do default 10 "10x95, 8x120, 7x150, 6x185, 6x240, 5x300"
+    Quando o objetivo ativo e "<objetivo>"
+    Entao a ordem de apresentacao e EXATAMENTE "<ordem>"
+    E a quantidade e 6 e os candidateIds sao exatos
+    E nenhuma candidata superior da mesma secao e reintroduzida
+    E nenhuma posicao vira selecao ou autorizacao instalavel (installableSelection=null)
+
+    Exemplos:
+      | objetivo           | ordem                                    |
+      | NONE               | 5x300, 6x185, 6x240, 7x150, 8x120, 10x95 |
+      | MIN_PARALLEL_COUNT | 5x300, 6x240, 6x185, 7x150, 8x120, 10x95 |
+      | MIN_TOTAL_COPPER   | 10x95, 8x120, 7x150, 6x185, 6x240, 5x300 |
+      | MAX_MINIMUM_MARGIN | 6x240, 5x300, 10x95, 7x150, 8x120, 6x185 |
+
+  Esquema do Cenario: [O.S.004-R1][Localizacao] Oraculo PT/EN/ES por campo visivel (11 campos)
+    Dado o campo visivel "<campo>"
+    Entao o texto PT e EXATAMENTE "<pt>"
+    E o texto EN e EXATAMENTE "<en>"
+    E o texto ES e EXATAMENTE "<es>"
+    E a comparacao dos 11 grupos e por igualdade INTEGRAL UTF-8 (sem remocao de acentos, sem case-insensitive, sem substring, sem traducao parcial)
+    E o vazamento e definido EXCLUSIVAMENTE por listas fechadas "forbiddenExpressionsByLanguage[idioma_ativo][idioma_errado]" (cenario [O.S.004-R2][Vazamento])
+    E NAO se usa regra generica "qualquer texto PT em ES" nem "qualquer palavra coincidente com PT"
+    E os cognatos ES legitimos "Bloqueadores", "Entradas confirmadas" e "PRELIMINAR" NAO constituem vazamento
+    E NFD NAO participa desta validacao atual (permitido SOMENTE no oraculo historico de vocabulario proibido)
+    E codigos, enums, productionAllowed, installableSelection, installationAuthorized e B-01..B-06 permanecem invariantes
+
+    Exemplos:
+      | campo                  | pt                                                           | en                                                                            | es                                                           |
+      | Aviso permanente       | PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO. | PRELIMINARY — DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION.                 | PRELIMINAR — NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN. |
+      | Instalacao autorizada  | Instalação autorizada: NÃO                                   | Installation authorized: NO                                                   | Instalación autorizada: NO                                   |
+      | Estado de producao     | Estado de produção: BLOQUEADO                                | Production state: BLOCKED                                                      | Estado de producción: BLOQUEADO                              |
+      | Status da fonte        | Fonte primária IEC integral: AUSENTE — sem conformidade IEC  | Full primary IEC source: ABSENT — no IEC conformity                           | Fuente primaria IEC íntegra: AUSENTE — sin conformidad IEC   |
+      | Hipoteses              | Hipóteses (ASSUMPTION_ONLY)                                  | Assumptions (ASSUMPTION_ONLY)                                                 | Hipótesis (ASSUMPTION_ONLY)                                  |
+      | Bloqueadores           | Bloqueadores                                                 | Blockers                                                                       | Bloqueadores                                                 |
+      | Entradas confirmadas   | Entradas confirmadas                                         | Confirmed inputs                                                              | Entradas confirmadas                                         |
+      | Titulo da apresentacao | Menor quantidade que atende por seção no intervalo avaliado  | Smallest quantity meeting the criteria per section within the evaluated range | Menor cantidad que cumple por sección en el intervalo evaluado |
+      | Criterios              | Critérios: ampacidade, queda de tensão, curto-circuito       | Criteria: ampacity, voltage drop, short-circuit                               | Criterios: ampacidad, caída de tensión, cortocircuito       |
+      | Mensagem de ausencia   | Nenhuma alternativa da seção S atende dentro do intervalo avaliado de 1 até N cabos por fase. | No alternative for section S meets the criteria within the evaluated range of 1 to N conductors per phase. | Ninguna alternativa de la sección S cumple dentro del intervalo evaluado de 1 a N conductores por fase. |
+      | Rotulo da impressao    | Impressão preliminar — não é memorial final                 | Preliminary print — not a final report                                        | Impresión preliminar — no es memoria final                  |
+
+  # ───────── O.S. 004-R2: oraculo de vazamento por LISTAS FECHADAS (elimina falsos positivos de cognatos) ─────────
+  # Vazamento NAO e "qualquer texto PT em ES"; e definido por expressoes COMPLETAS e EXCLUSIVAS do idioma errado.
+
+  Cenario: [O.S.004-R2][Vazamento] Estrutura forbiddenExpressionsByLanguage (listas fechadas, deterministicas)
+    Dado o oraculo de vazamento das traducoes atuais
+    Entao a estrutura e EXATAMENTE:
+      """
+      forbiddenExpressionsByLanguage = {
+        "pt": {
+          "en": ["DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION", "Installation authorized: NO", "Production state: BLOCKED", "voltage drop", "conductors per phase", "not a final report"],
+          "es": ["NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN", "Instalación autorizada: NO", "Estado de producción: BLOQUEADO", "caída de tensión", "conductores por fase", "no es memoria final"]
+        },
+        "en": {
+          "pt": ["NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO", "Instalação autorizada: NÃO", "Estado de produção: BLOQUEADO", "queda de tensão", "cabos por fase", "não é memorial final"],
+          "es": ["NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN", "Instalación autorizada: NO", "Estado de producción: BLOQUEADO", "caída de tensión", "conductores por fase", "no es memoria final"]
+        },
+        "es": {
+          "pt": ["NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO", "Instalação autorizada: NÃO", "Estado de produção: BLOQUEADO", "queda de tensão", "cabos por fase", "não é memorial final"],
+          "en": ["DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION", "Installation authorized: NO", "Production state: BLOCKED", "voltage drop", "conductors per phase", "not a final report"]
+        }
+      }
+      """
+    E cada expressao e COMPLETA e EXCLUSIVA do idioma incorreto (sem palavras isoladas compartilhadas)
+    E a deteccao usa igualdade/contencao de expressao EXATA, sem busca recursiva nem aproximacao semantica
+    E os cognatos "Bloqueadores", "Entradas confirmadas" e "PRELIMINAR" NAO aparecem em NENHUMA lista
+
+  Esquema do Cenario: [O.S.004-R2][Cognatos] Cognatos legitimos em ES NAO sao vazamento
+    Dado o idioma ativo "es" e um campo com o texto "<texto>"
+    Entao "<texto>" e traducao espanhola VALIDA (cognato legitimo), nao vazamento de portugues
+    E nenhuma lista forbiddenExpressionsByLanguage["es"]["pt"] nem ["es"]["en"] contem "<texto>"
+
+    Exemplos:
+      | texto                |
+      | Bloqueadores         |
+      | Entradas confirmadas |
+      | PRELIMINAR           |
+
+  Esquema do Cenario: [O.S.004-R2][Vazamento] Expressao EXCLUSIVA do idioma errado -> FALHA
+    Dado o idioma ativo "<ativo>" e um campo contendo a expressao "<expressao>"
+    Entao o oraculo sinaliza VAZAMENTO (a expressao pertence a forbiddenExpressionsByLanguage["<ativo>"]["<origem>"])
+    E a decisao e por lista fechada, nao por "qualquer texto coincidente"
+
+    Exemplos:
+      | ativo | origem | expressao                                       |
+      | es    | pt     | NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO  |
+      | es    | en     | DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION  |
+      | en    | pt     | Instalação autorizada: NÃO                      |
+      | en    | es     | Instalación autorizada: NO                      |
+      | pt    | en     | Production state: BLOCKED                       |
+      | pt    | es     | Estado de producción: BLOQUEADO                 |
+
+  Cenario: [O.S.004-R2][Igualdade] Os 11 grupos por igualdade INTEGRAL UTF-8 -> PASS
+    Dado os 11 grupos de traducao vinculantes (tabela [O.S.004-R1][Localizacao])
+    Entao cada texto PT, EN e ES e comparado por igualdade INTEGRAL UTF-8 ao valor vinculante e resulta PASS
+    E acentos sao preservados; NAO ha case-insensitive; substring NAO substitui igualdade integral; NAO ha traducao parcial
+
+  Cenario: [O.S.004-R2][Igualdade] Acento removido ou traducao parcial -> FALHA
+    Dado o campo "Aviso permanente" em "pt" com o valor "PRELIMINAR - NAO UTILIZAR PARA PROJETO, COMPRA OU INSTALACAO." (acentos removidos)
+    Entao a comparacao INTEGRAL UTF-8 resulta FALHA (o valor vinculante exige acentos: "NÃO", "INSTALAÇÃO")
+    E uma traducao PARCIAL do mesmo campo tambem resulta FALHA
+    E substring NAO substitui igualdade integral
+
+  Cenario: [O.S.004-R2][NFD] Oraculo ATUAL (UTF-8 integral) separado do HISTORICO (vocabulario proibido)
+    Dado o oraculo ATUAL das 11 traducoes
+    Entao ele usa igualdade INTEGRAL UTF-8 e NAO invoca NFD
+    E NFD NAO e usado para identificar vazamento entre PT/EN/ES
+    Mas o oraculo HISTORICO de vocabulario proibido ("recomendado", "selecionado", "otima para instalacao", "dimensionamento final")
+    Entao permite NFD SOMENTE nesse oraculo historico, claramente separado e nominalmente identificado
+
+  Cenario: [O.S.004][Impressao] A impressao reflete a projecao filtrada e mantem o aviso
+    Dado a fixture pratica do CEO, "maxParallelCount=7" e um idioma selecionado
+    Quando a impressao e gerada
+    Entao a impressao mostra a menor por secao (mesmo filtro da apresentacao)
+    E "6x300" e "7x300" permanecem ocultas na impressao
+    E o aviso permanente aparece no idioma selecionado (oraculo Localizacao)
+    E a autorizacao de instalacao aparece no idioma selecionado (oraculo Localizacao)
+    E o rotulo da impressao aparece no idioma selecionado (oraculo Localizacao)
+    E a impressao NAO e memorial final
+
+  Cenario: [O.S.004-R1][Guardrails] Paths corretos do envelope de selecao (default 10)
+    Dado a fixture pratica do CEO e "maxParallelCount=10"
+    Entao "result.ok" e true (um UNICO booleano de nivel de resultado)
+    E "result.data.evaluatedCandidates.length" e 60
+    E "result.data.evaluatedCandidates[*].productionAllowed" e false em TODAS
+    E "result.data.evaluatedCandidates[*].installableSelection" e null em TODAS
+    E "result.data.evaluatedCandidates[*].voltageDrop.actualPercent" e numero FINITO em TODAS
+    E NAO se usa "voltageDropPercent" nem "voltageDropPercent=null" nas expectativas das candidatas L1-L3
+    E "voltageDropPercent=null" e saida INTERNA do L0 (o L0 nao conhece a tensao), distinta de "voltageDrop.actualPercent"
+    E a verificacao usa os paths EXATOS, sem busca recursiva ou permissiva
+    E installationAuthorized=false
+    E EXPERIMENTAL_PRELIMINAR_NAO_CANONICO, LABORATORIO_APENAS e B-01..B-06 preservados
+    E fonte primaria integral AUSENTE; sem conformidade IEC
+
+  Cenario: [O.S.004][Sem recomendacao] Nenhuma projecao ou objetivo vira recomendacao instalavel
+    Dado a apresentacao filtrada da fixture do CEO
+    Quando qualquer objetivo e aplicado
+    Entao NENHUMA candidata e chamada de "recomendada", "selecionada", "otima para instalacao" ou "dimensionamento final"
+    E installableSelection=null e productionAllowed=false
+    E a saida e "Menor quantidade que atende por seção no intervalo avaliado", nunca selecao instalavel
