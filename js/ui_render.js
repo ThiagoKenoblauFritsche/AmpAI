@@ -840,6 +840,8 @@ window.switchModule = function(moduleName) {
     const navIMP = document.getElementById('nav-impedances');
 
     if (moduleName === 'impedances') {
+        // O.S.003-R3: saímos do Cabling — cancela pré-cálculo MT pendente (evita substituir #card-mt).
+        clearTimeout(window._mtPrecalcTimer); window._mtPrecalcTimer = null;
         // Oculta a sidebar de inputs do Curto-Circuito e o dashboard de CC
         if (sidebarSC)   sidebarSC.style.display   = 'none';
         if (dashboardSC) dashboardSC.style.display  = 'none';
@@ -883,7 +885,18 @@ window.switchModule = function(moduleName) {
         
         // Pré-calcular MT para que _lastMTPayload fique disponível para i18n
         // Delay de 350ms: aguarda o cooldown de isRendering do BT (50ms + sync template + 100ms lock)
-        setTimeout(() => {
+        // O.S. CAB-BT-PARALLEL-003-R3: este pré-cálculo re-injeta #card-mt (substituindo seus nós,
+        // inclusive memorial-mt/export). Se, ao disparar (350ms depois), o módulo Cabling já não
+        // estiver visível — porque trocamos para shortcircuit/impedances — a re-injeção é inútil e
+        // apenas substituiria os controles enquanto o OS044R os percorre por Tab no runner remoto
+        // (removendo o data-os044r-focus-id → 49/47). Guardamos o timer para cancelá-lo ao sair do
+        // módulo e verificamos a visibilidade no disparo. Nada muda no fluxo Cabling (o timer vive
+        // enquanto o módulo permanece visível, preservando o observador de estabilidade do OS044R).
+        clearTimeout(window._mtPrecalcTimer);
+        window._mtPrecalcTimer = setTimeout(() => {
+            window._mtPrecalcTimer = null;
+            const mc = document.getElementById('module-cabling');
+            if (mc && getComputedStyle(mc).display === 'none') return;
             if (typeof window.calculateCablingMT === 'function') {
                 const input = window.readMTInputsFromUI();
                 consumeCablingEnvelope('MT', window.calculateCablingMT(input));
@@ -892,6 +905,8 @@ window.switchModule = function(moduleName) {
 
     } else {
         // shortcircuit (default)
+        // O.S.003-R3: saímos do Cabling — cancela pré-cálculo MT pendente (evita substituir #card-mt).
+        clearTimeout(window._mtPrecalcTimer); window._mtPrecalcTimer = null;
         if (sidebarSC)   sidebarSC.style.display   = '';
         if (dashboardSC) dashboardSC.style.display  = '';
         moduleCabling.style.display = 'none';
