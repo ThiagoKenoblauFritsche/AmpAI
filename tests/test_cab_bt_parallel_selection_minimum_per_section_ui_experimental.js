@@ -174,8 +174,18 @@ function makeSpec(number, index, inputFactory, verify) {
 
 function makeSpecs() {
   const specs = [];
-  specs.push(makeSpec(1, 1, () => ({ present: true, visible: true, enabled: true, value: '10', min: '1', max: '10', step: '1', dtoMaxParallelCount: 10, userCanReduce: true, emptyDoesNotRecoverTen: true }),
-    (s, expected) => ({ observed: { ...s.initialControl, dtoMaxParallelCount: s.objectiveRuns.NONE.input?.maxParallelCount ?? null, userCanReduce: s.reducedRun.input?.maxParallelCount === 7, emptyDoesNotRecoverTen: s.invalidRuns.empty.engineCalls === 0 }, compliant: isDeepStrictEqual({ ...s.initialControl, dtoMaxParallelCount: s.objectiveRuns.NONE.input?.maxParallelCount ?? null, userCanReduce: s.reducedRun.input?.maxParallelCount === 7, emptyDoesNotRecoverTen: s.invalidRuns.empty.engineCalls === 0 }, expected) })));
+  specs.push(makeSpec(1, 1, () => ({ present: true, visible: true, enabled: true, value: '10', min: '1', max: '10', step: '1', dtoMaxParallelCount: 10, userCanReduce: true, emptyDoesNotRecoverTen: true, navigationContract: { switchModuleCalls: 1, restored: true } }),
+    (s, expected) => {
+      const controlObserved = { ...s.initialControl, dtoMaxParallelCount: s.objectiveRuns.NONE.input?.maxParallelCount ?? null, userCanReduce: s.reducedRun.input?.maxParallelCount === 7, emptyDoesNotRecoverTen: s.invalidRuns.empty.engineCalls === 0 };
+      const expectedControls = { ...expected };
+      delete expectedControls.navigationContract;
+      return {
+        observed: { ...controlObserved, navigation: s.navigation },
+        compliant: isDeepStrictEqual(controlObserved, expectedControls)
+          && s.navigation?.switchModuleCalls === expected.navigationContract.switchModuleCalls
+          && s.navigation?.restored === expected.navigationContract.restored,
+      };
+    }));
   specs.push(makeSpec(2, 1, () => ({ presentationPolicy: POLICY, engineCalls: 1, realEngine: true, coreSha256Lf: EXPECTED_CORE_SHA256_LF }),
     (s, expected) => { const run = s.objectiveRuns.NONE; const observed = { presentationPolicy: run.input?.presentationPolicy ?? null, engineCalls: run.engineCalls, realEngine: s.engineAvailable, coreSha256Lf: s.coreSha256Lf }; return { observed, compliant: isDeepStrictEqual(observed, expected) }; }));
 
@@ -247,7 +257,7 @@ function makeSpecs() {
     (s, expected) => { const codes = (s.reducedRun.envelope?.blockers || []).map((item) => item.code); const text = s.reducedRun.regionText; const observed = { requiredBlockerCodes: expected.requiredBlockerCodes, missingBlockerCodes: expected.requiredBlockerCodes.filter((code) => !codes.includes(code)), codesVisibleVerbatim: expected.requiredBlockerCodes.every((code) => text.includes(code)) }; return { observed, compliant: isDeepStrictEqual(observed, expected) }; }));
   specs.push(makeSpec(15, 3, () => ({ forbiddenInstallableVocabulary: [], uiFailure: null, syntheticDomainCode: false }),
     (s, expected) => { const normalized = removeDiacritics(s.reducedRun.regionText).toLowerCase(); const forbidden = ['recomendado', 'selecionado', 'otimo para instalacao', 'dimensionamento final'].filter((term) => normalized.includes(term)); const failure = s.reducedRun.uiFailure; const observed = { forbiddenInstallableVocabulary: forbidden, uiFailure: failure, syntheticDomainCode: Boolean(failure && Object.prototype.hasOwnProperty.call(failure, 'code')) }; return { observed, compliant: isDeepStrictEqual(observed, expected) }; }));
-  specs.push(makeSpec(15, 4, () => ({ finalMemorialClaim: false, positiveIecConformityClaim: false, displayNoticePreserved: 'PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.' }),
+  specs.push(makeSpec(15, 4, () => ({ finalMemorialClaim: false, positiveIecConformityClaim: false, displayNoticePreserved: 'PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO' }),
     (s, expected) => { const text = s.reducedRun.regionText; const normalized = removeDiacritics(text).toLowerCase(); const observed = { finalMemorialClaim: /memorial final|final report/.test(normalized) && !/nao e memorial final|not a final report|no es memoria final/.test(normalized), positiveIecConformityClaim: /conforme (?:a )?iec|iec compliant|conformidad iec declarada/.test(normalized), displayNoticePreserved: s.reducedRun.envelope?.displayNotice ?? null }; return { observed, compliant: isDeepStrictEqual(observed, expected) }; }));
   return specs;
 }
@@ -278,10 +288,38 @@ async function chromiumPreflight(puppeteer) {
   }
 }
 
+async function attachSelectionEngineCounter(page) {
+  const client = await page.createCDPSession();
+  await client.send('Debugger.enable');
+  const evaluated = await client.send('Runtime.evaluate', {
+    expression: 'window.enumerateCablingBTParallelAlternativesExperimental',
+    objectGroup: 'qa-selection-counter',
+    returnByValue: false,
+  });
+  if (!evaluated.result?.objectId) throw new Error('Motor real indisponível para instrumentação CDP read-only.');
+  let count = 0;
+  let resume = Promise.resolve();
+  client.on('Debugger.paused', () => {
+    count += 1;
+    resume = resume.then(() => client.send('Debugger.resume')).catch(() => {});
+  });
+  const breakpoint = await client.send('Debugger.setBreakpointOnFunctionCall', { objectId: evaluated.result.objectId });
+  await page.exposeFunction('__qaReadSelectionEngineCallCount', () => count);
+  return async () => {
+    await resume;
+    if (breakpoint.breakpointId) await client.send('Debugger.removeBreakpoint', { breakpointId: breakpoint.breakpointId }).catch(() => {});
+    await page.removeExposedFunction('__qaReadSelectionEngineCallCount').catch(() => {});
+    await client.send('Runtime.releaseObjectGroup', { objectGroup: 'qa-selection-counter' }).catch(() => {});
+    await client.send('Debugger.disable').catch(() => {});
+    await client.detach().catch(() => {});
+  };
+}
+
 async function executeVisualScenario(puppeteer) {
   let server;
   let browser;
   let page;
+  let counterCleanup;
   const consoleErrors = [];
   const pageErrors = [];
   try {
@@ -294,6 +332,7 @@ async function executeVisualScenario(puppeteer) {
     page.on('pageerror', (error) => pageErrors.push(serializeError(error)));
     await page.goto(staticServer.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForFunction(() => document.readyState !== 'loading' && window.__parselEnginesReady === true && typeof window.parSelCalculate === 'function', { timeout: 15000 });
+    counterCleanup = await attachSelectionEngineCounter(page);
 
     const snapshot = await page.evaluate(async ({ policy, objectives, languages, translations, forbidden, coreSha }) => {
       const wait = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
@@ -316,6 +355,24 @@ async function executeVisualScenario(puppeteer) {
         element.dispatchEvent(new Event('change', { bubbles: true }));
         return true;
       };
+      const storageKey = 'ampai-active-module';
+      const navigation = {
+        key: storageKey,
+        before: {
+          exists: Object.prototype.hasOwnProperty.call(localStorage, storageKey),
+          value: localStorage.getItem(storageKey),
+        },
+        after: null,
+        restored: false,
+        switchModuleCalls: 0,
+      };
+      if (typeof window.switchModule !== 'function') throw new Error('switchModule produtivo indisponível.');
+      try {
+        window.switchModule('cabling');
+        navigation.switchModuleCalls += 1;
+        await frames(10);
+        await wait(80);
+
       const region = document.querySelector('#cab-bt-parallel-selection-experimental');
       const control = document.querySelector('#bt-parallel-selection-maxparallel');
       const action = document.querySelector('#cbpsx-calculate');
@@ -336,29 +393,29 @@ async function executeVisualScenario(puppeteer) {
       set(catalogConfirmation, true); set(hypothesisConfirmation, true);
 
       const originalEngine = window.enumerateCablingBTParallelAlternativesExperimental;
-      const calls = [];
-      window.enumerateCablingBTParallelAlternativesExperimental = function observedRealEngine(input) {
-        const envelope = originalEngine.apply(this, arguments);
-        calls.push({ input: copy(input), envelope: copy(envelope) });
-        return envelope;
-      };
+      const observedRuns = [];
       const exactTexts = () => Array.from(region?.querySelectorAll('*') || [])
         .filter((element) => visible(element) && element.childElementCount === 0 && element.textContent.trim())
         .map((element) => element.textContent.trim());
-      const collect = (before) => ({
-        engineCalls: calls.length - before,
-        input: calls.at(-1)?.input ?? null,
-        envelope: calls.at(-1)?.envelope ?? null,
-        cardIds: Array.from(region?.querySelectorAll('.cbpsx-alt[data-candidate-id]') || []).map((element) => element.getAttribute('data-candidate-id')),
-        regionText: region?.innerText || '',
-        exactTexts: exactTexts(),
-        uiFailure: copy(window._parSelLast?.uiFailure ?? null),
-      });
+      const collect = (engineCalls) => {
+        const run = {
+          engineCalls,
+          input: copy(window._parSelLast?.input ?? null),
+          envelope: copy(window._parSelLast?.envelope ?? null),
+          cardIds: Array.from(region?.querySelectorAll('.cbpsx-alt[data-candidate-id]') || []).map((element) => element.getAttribute('data-candidate-id')),
+          regionText: region?.innerText || '',
+          exactTexts: exactTexts(),
+          uiFailure: copy(window._parSelLast?.uiFailure ?? null),
+        };
+        observedRuns.push(copy(run));
+        return run;
+      };
       const calculate = async (objective, maximum) => {
         set(objectiveControl, objective); set(control, maximum);
-        const before = calls.length;
+        const before = await window.__qaReadSelectionEngineCallCount();
         action?.click(); await frames(10); await wait(100);
-        return collect(before);
+        const after = await window.__qaReadSelectionEngineCallCount();
+        return collect(after - before);
       };
 
       const objectiveRuns = {};
@@ -367,9 +424,10 @@ async function executeVisualScenario(puppeteer) {
 
       const locales = {};
       for (const language of languages) {
-        const before = calls.length;
+        const before = await window.__qaReadSelectionEngineCallCount();
         window.setLanguage(language);
         await frames(8); await wait(80);
+        const after = await window.__qaReadSelectionEngineCallCount();
         const projected = document.querySelector('[data-cab-bt-parallel-display-notice]');
         const permanent = document.querySelector('#cbpsx-notice');
         locales[language] = {
@@ -380,7 +438,7 @@ async function executeVisualScenario(puppeteer) {
           projectedNotice: projected?.textContent.trim() ?? null,
           noticeVisible: visible(permanent),
           projectedNoticeVisible: visible(projected),
-          engineCalls: calls.length - before,
+          engineCalls: after - before,
           closedForbiddenLists: copy(forbidden),
           translationKeys: Object.keys(translations),
         };
@@ -389,9 +447,10 @@ async function executeVisualScenario(puppeteer) {
       const invalidRuns = {};
       for (const [name, raw] of [['empty', ''], ['fraction', '1.5'], ['zero', '0'], ['negative', '-1'], ['aboveMaximum', '11']]) {
         set(control, raw);
-        const before = calls.length;
+        const before = await window.__qaReadSelectionEngineCallCount();
         action?.click(); await frames(6); await wait(60);
-        invalidRuns[name] = collect(before);
+        const after = await window.__qaReadSelectionEngineCallCount();
+        invalidRuns[name] = collect(after - before);
       }
       const restoredRun = await calculate('MIN_TOTAL_COPPER', 7);
 
@@ -409,15 +468,24 @@ async function executeVisualScenario(puppeteer) {
           && !details.contains(catalogConfirmation) && !details.contains(hypothesisConfirmation)),
         detailsInitiallyClosed: initialDetailsClosed,
       };
-      window.enumerateCablingBTParallelAlternativesExperimental = originalEngine;
       return {
         pageLoaded: true,
         engineAvailable: typeof originalEngine === 'function',
         coreSha256Lf: coreSha,
         initialControl, objectiveRuns, reducedRun, restoredRun, locales, invalidRuns,
-        structure, inlineHandlers,
-        allCalls: calls,
+        structure, inlineHandlers, navigation,
+        allCalls: observedRuns,
       };
+      } finally {
+        if (navigation.before.exists) localStorage.setItem(storageKey, navigation.before.value);
+        else localStorage.removeItem(storageKey);
+        navigation.after = {
+          exists: Object.prototype.hasOwnProperty.call(localStorage, storageKey),
+          value: localStorage.getItem(storageKey),
+        };
+        navigation.restored = navigation.after.exists === navigation.before.exists
+          && navigation.after.value === navigation.before.value;
+      }
     }, { policy: POLICY, objectives: OBJECTIVE_ORDERS, languages: LANGUAGES, translations: TRANSLATIONS, forbidden: FORBIDDEN, coreSha: EXPECTED_CORE_SHA256_LF });
 
     const prints = {};
@@ -488,6 +556,7 @@ async function executeVisualScenario(puppeteer) {
       browserVersion: await browser.version(),
     };
   } finally {
+    if (counterCleanup) await counterCleanup().catch(() => {});
     if (page) await page.close().catch(() => {});
     if (browser) await browser.close().catch(() => {});
     await closeServer(server);
@@ -613,6 +682,9 @@ async function main() {
 
   try {
     const snapshot = await executeVisualScenario(puppeteer);
+    if (snapshot.navigation?.switchModuleCalls !== 1 || snapshot.navigation?.restored !== true) {
+      throw new Error(`Falha transacional de navegação: ${JSON.stringify(snapshot.navigation || null)}`);
+    }
     const cases = evaluateCases(specs, snapshot);
     let reports = buildReports(cases, {
       pageLoaded: snapshot.pageLoaded,

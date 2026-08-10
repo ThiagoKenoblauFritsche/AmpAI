@@ -18,6 +18,29 @@ const REPORT_PREFIX = 'CAB_BT_PARALLEL_300_UI_EXP_REPORT';
 const SUMMARY_PREFIX = 'CAB_BT_PARALLEL_300_UI_EXP_SUMMARY';
 const CATEGORY = 'visual_300mm2_experimental';
 const NOTICE = 'PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.';
+const RAW_NOTICE = 'PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO';
+const POLICY = Object.freeze({
+  mode: 'MINIMUM_PASSING_PER_SECTION',
+  confirmed: true,
+  provenance: 'CEO_APPROVED_PRESENTATION_POLICY',
+});
+const TRANSLATIONS = Object.freeze({
+  warning: Object.freeze({ pt: NOTICE, en: 'PRELIMINARY — DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION.', es: 'PRELIMINAR — NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN.' }),
+  installation: Object.freeze({ pt: 'Instalação autorizada: NÃO', en: 'Installation authorized: NO', es: 'Instalación autorizada: NO' }),
+  production: Object.freeze({ pt: 'Estado de produção: BLOQUEADO', en: 'Production state: BLOCKED', es: 'Estado de producción: BLOQUEADO' }),
+  source: Object.freeze({ pt: 'Fonte primária IEC integral: AUSENTE — sem conformidade IEC', en: 'Full primary IEC source: ABSENT — no IEC conformity', es: 'Fuente primaria IEC íntegra: AUSENTE — sin conformidad IEC' }),
+  assumptions: Object.freeze({ pt: 'Hipóteses (ASSUMPTION_ONLY)', en: 'Assumptions (ASSUMPTION_ONLY)', es: 'Hipótesis (ASSUMPTION_ONLY)' }),
+  blockers: Object.freeze({ pt: 'Bloqueadores', en: 'Blockers', es: 'Bloqueadores' }),
+  confirmedInputs: Object.freeze({ pt: 'Entradas confirmadas', en: 'Confirmed inputs', es: 'Entradas confirmadas' }),
+  heading: Object.freeze({ pt: 'Menor quantidade que atende por seção no intervalo avaliado', en: 'Smallest quantity meeting the criteria per section within the evaluated range', es: 'Menor cantidad que cumple por sección en el intervalo evaluado' }),
+  criteria: Object.freeze({ pt: 'Critérios: ampacidade, queda de tensão, curto-circuito', en: 'Criteria: ampacity, voltage drop, short-circuit', es: 'Criterios: ampacidad, caída de tensión, cortocircuito' }),
+  printLabel: Object.freeze({ pt: 'Impressão preliminar — não é memorial final', en: 'Preliminary print — not a final report', es: 'Impresión preliminar — no es memoria final' }),
+});
+const CLOSED_LANGUAGE_MARKERS = Object.freeze({
+  pt: Object.freeze(['DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION', 'Installation authorized: NO', 'Production state: BLOCKED', 'voltage drop', 'not a final report', 'NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN', 'Instalación autorizada: NO', 'Estado de producción: BLOQUEADO', 'caída de tensión', 'no es memoria final']),
+  en: Object.freeze(['NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO', 'Instalação autorizada: NÃO', 'Estado de produção: BLOQUEADO', 'queda de tensão', 'não é memorial final', 'NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN', 'Instalación autorizada: NO', 'Estado de producción: BLOQUEADO', 'caída de tensión', 'no es memoria final']),
+  es: Object.freeze(['NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO', 'Instalação autorizada: NÃO', 'Estado de produção: BLOQUEADO', 'queda de tensão', 'não é memorial final', 'DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION', 'Installation authorized: NO', 'Production state: BLOCKED', 'voltage drop', 'not a final report']),
+});
 const SELECTION_MODULE = path.join(ROOT, 'js', 'core_cabos_bt_parallel_selection_experimental.js');
 const SELECTION_EXPORT = 'enumerateCablingBTParallelAlternativesExperimental';
 const IDS = Array.from({ length: 15 }, (_unused, index) => `UI300-${String(index + 1).padStart(2, '0')}`);
@@ -25,7 +48,7 @@ const OBJECTIVE_TOPS = {
   NONE: '2x185',
   MIN_PARALLEL_COUNT: '2x300',
   MIN_TOTAL_COPPER: '3x120',
-  MAX_MINIMUM_MARGIN: '4x300',
+  MAX_MINIMUM_MARGIN: '2x300',
 };
 const SHARED_METADATA = Object.freeze({
   insulation: 'LAB_UNSPECIFIED', installationMethod: 'LAB_UNSPECIFIED', units: 'SI',
@@ -403,10 +426,38 @@ async function chromiumPreflight(puppeteer) {
   }
 }
 
+async function attachSelectionEngineCounter(page) {
+  const client = await page.createCDPSession();
+  await client.send('Debugger.enable');
+  const evaluated = await client.send('Runtime.evaluate', {
+    expression: 'window.enumerateCablingBTParallelAlternativesExperimental',
+    objectGroup: 'qa-selection-counter',
+    returnByValue: false,
+  });
+  if (!evaluated.result?.objectId) throw new Error('Motor real indisponível para instrumentação CDP read-only.');
+  let count = 0;
+  let resume = Promise.resolve();
+  client.on('Debugger.paused', () => {
+    count += 1;
+    resume = resume.then(() => client.send('Debugger.resume')).catch(() => {});
+  });
+  const breakpoint = await client.send('Debugger.setBreakpointOnFunctionCall', { objectId: evaluated.result.objectId });
+  await page.exposeFunction('__qaReadSelectionEngineCallCount', () => count);
+  return async () => {
+    await resume;
+    if (breakpoint.breakpointId) await client.send('Debugger.removeBreakpoint', { breakpointId: breakpoint.breakpointId }).catch(() => {});
+    await page.removeExposedFunction('__qaReadSelectionEngineCallCount').catch(() => {});
+    await client.send('Runtime.releaseObjectGroup', { objectGroup: 'qa-selection-counter' }).catch(() => {});
+    await client.send('Debugger.disable').catch(() => {});
+    await client.detach().catch(() => {});
+  };
+}
+
 async function executeVisualScenario(puppeteer, nodeCore) {
   let server;
   let browser;
   let page;
+  let counterCleanup;
   const consoleErrors = [];
   const pageErrors = [];
   try {
@@ -423,6 +474,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
     await page.goto(staticServer.url, { waitUntil: 'domcontentloaded', timeout: 30000 });
     await page.waitForFunction(() => document.readyState !== 'loading', { timeout: 15000 });
     await new Promise((resolve) => setTimeout(resolve, 250));
+    counterCleanup = await attachSelectionEngineCounter(page);
 
     const api = await page.evaluate(() => ({
       switchModule: typeof window.switchModule,
@@ -585,14 +637,6 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       const originalSelection = window.enumerateCablingBTParallelAlternativesExperimental;
       const engineCalls = [];
       const engineEnvelopes = [];
-      if (typeof originalSelection === 'function') {
-        window.enumerateCablingBTParallelAlternativesExperimental = function observedSelectionEngine(input) {
-          const result = originalSelection.apply(this, arguments);
-          engineCalls.push(safeJson(input));
-          engineEnvelopes.push(safeJson(result));
-          return result;
-        };
-      }
 
       const objectiveRuns = [];
       for (const objective of Object.keys(objectives)) {
@@ -601,18 +645,22 @@ async function executeVisualScenario(puppeteer, nodeCore) {
           continue;
         }
         setControl(practical.objective, objective);
-        const callsBefore = engineCalls.length;
+        const callsBefore = await window.__qaReadSelectionEngineCallCount();
         practical.action.click();
         await waitFrames(12);
         await wait(120);
-        const latest = engineEnvelopes[engineEnvelopes.length - 1] || null;
+        const callsAfter = await window.__qaReadSelectionEngineCallCount();
+        const latestInput = safeJson(window._parSelLast?.input ?? null);
+        const latest = safeJson(window._parSelLast?.envelope ?? null);
+        engineCalls.push(latestInput);
+        engineEnvelopes.push(latest);
         const regionText = findRegion().element?.innerText || '';
         const observedTop = latest?.data?.firstInPresentationOrder?.candidateId
           || latest?.data?.presentationOrder?.[0]?.candidateId || null;
         objectiveRuns.push({
           objective,
           attempted: true,
-          newEngineCalls: engineCalls.length - callsBefore,
+          newEngineCalls: callsAfter - callsBefore,
           expectedTop: objectives[objective],
           observedTop,
           topVisible: observedTop ? candidateVisible(regionText, observedTop) : false,
@@ -622,9 +670,6 @@ async function executeVisualScenario(puppeteer, nodeCore) {
         });
       }
 
-      if (typeof originalSelection === 'function') {
-        window.enumerateCablingBTParallelAlternativesExperimental = originalSelection;
-      }
       const regionNow = findRegion().element;
       const regionText = regionNow?.innerText || '';
       const practicalNow = {
@@ -829,28 +874,40 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       const action = document.querySelector('#cbpsx-calculate');
       const objectiveControl = document.querySelector('#bt-parallel-selection-objective');
       const original = window.enumerateCablingBTParallelAlternativesExperimental;
-      const calls = [];
-      const results = [];
-      if (typeof original === 'function') {
-        window.enumerateCablingBTParallelAlternativesExperimental = function observedRealEngine(input) {
-          const result = original.apply(this, arguments);
-          calls.push(copy(input));
-          results.push(copy(result));
-          return result;
-        };
-      }
       const click = async () => {
-        const before = calls.length;
+        const before = await window.__qaReadSelectionEngineCallCount();
         set(document.querySelector('#bt-parallel-selection-maxparallel'), 4);
         action?.click();
         await frames(12);
         await wait(80);
+        const after = await window.__qaReadSelectionEngineCallCount();
+        const input = copy(window._parSelLast?.input ?? null);
+        const result = copy(window._parSelLast?.envelope ?? null);
+        const rawArrays = {
+          evaluatedCandidates: (result?.data?.evaluatedCandidates || []).map((item) => item.candidateId),
+          candidateAlternatives: (result?.data?.candidateAlternatives || []).map((item) => item.candidateId),
+          rejectedCandidates: (result?.data?.rejectedCandidates || []).map((item) => item.candidateId),
+          nonDominatedAlternatives: (result?.data?.nonDominatedAlternatives || []).map((item) => item.candidateId),
+        };
+        const storedEnvelope = window._parSelLast?.envelope || null;
+        const storedRawArrays = {
+          evaluatedCandidates: (storedEnvelope?.data?.evaluatedCandidates || []).map((item) => item.candidateId),
+          candidateAlternatives: (storedEnvelope?.data?.candidateAlternatives || []).map((item) => item.candidateId),
+          rejectedCandidates: (storedEnvelope?.data?.rejectedCandidates || []).map((item) => item.candidateId),
+          nonDominatedAlternatives: (storedEnvelope?.data?.nonDominatedAlternatives || []).map((item) => item.candidateId),
+        };
         return {
-          engineCalls: calls.length - before,
-          input: calls.at(-1) || null,
-          result: results.at(-1) || null,
+          engineCalls: after - before,
+          input,
+          result,
           text: document.querySelector('#cbpsx-results')?.innerText || '',
           cards: document.querySelectorAll('#cbpsx-results [data-candidate-id]').length,
+          cardIds: Array.from(document.querySelectorAll('#cbpsx-results .cbpsx-alt[data-candidate-id]')).map((element) => element.getAttribute('data-candidate-id')).filter(Boolean),
+          presentationCardIds: (result?.data?.presentationModel?.cards || []).map((item) => item.candidateId),
+          hiddenCandidateIds: result?.data?.presentationProjection?.hiddenCandidateIds || [],
+          rawArrays,
+          storedRawArrays,
+          rawArraysUnmutated: JSON.stringify(rawArrays) === JSON.stringify(storedRawArrays),
         };
       };
       const nominalRuns = [];
@@ -893,24 +950,22 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       await runDomError('UI300-12-CASE-02', 'ampacity', 'nonfinite', 'NaN');
       await runDomError('UI300-12-CASE-03', 'r', 'nonfinite', 'Infinity');
 
-      const captured300 = calls.at(-1)?.catalog?.candidates?.[5] || null;
+      const captured300 = copy(window._parSelLast?.input?.catalog?.candidates?.[5] || null);
       let conflictRun = { caseId: 'UI300-12-CASE-04', controlPresent: Boolean(captured300), faultInjection: true,
         engineCalls: 0, input: null, result: null, text: '', cards: null };
       if (captured300 && typeof original === 'function') {
-        window.enumerateCablingBTParallelAlternativesExperimental = function injectedRealEngine(input) {
-          const cloned = copy(input);
-          const candidate = copy(cloned.catalog.candidates[5]);
-          candidate.impedance_ohm = { re: candidate.resistance_ohm, im: candidate.reactance_ohm };
-          cloned.catalog.candidates = [candidate];
-          const result = original.call(this, cloned);
-          calls.push(copy(cloned));
-          results.push(copy(result));
-          return result;
-        };
-        conflictRun = { caseId: 'UI300-12-CASE-04', controlPresent: true, faultInjection: true, ...(await click()) };
-        window.enumerateCablingBTParallelAlternativesExperimental = function observedRealEngineAgain(input) {
-          const result = original.apply(this, arguments);
-          calls.push(copy(input)); results.push(copy(result)); return result;
+        const cloned = copy(window._parSelLast?.input);
+        const candidate = copy(cloned.catalog.candidates[5]);
+        candidate.impedance_ohm = { re: candidate.resistance_ohm, im: candidate.reactance_ohm };
+        cloned.catalog.candidates = [candidate];
+        const before = await window.__qaReadSelectionEngineCallCount();
+        const result = copy(original(cloned));
+        const after = await window.__qaReadSelectionEngineCallCount();
+        conflictRun = {
+          caseId: 'UI300-12-CASE-04', controlPresent: true, faultInjection: true,
+          engineCalls: after - before, input: cloned, result,
+          text: document.querySelector('#cbpsx-results')?.innerText || '',
+          cards: document.querySelectorAll('#cbpsx-results .cbpsx-alt[data-candidate-id]').length,
         };
       }
       errorRuns.push(conflictRun);
@@ -922,8 +977,9 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       if (catalog) catalog.remove();
       const noCatalogRun = await click();
       if (catalog && parent) parent.insertBefore(catalog, next);
+      set(objectiveControl, 'MAX_MINIMUM_MARGIN');
+      const printRun = await click();
 
-      if (typeof original === 'function') window.enumerateCablingBTParallelAlternativesExperimental = original;
       const resultText = document.querySelector('#cbpsx-results')?.innerText || '';
       return {
         initial,
@@ -932,6 +988,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
         editRuns,
         errorRuns,
         noCatalogRun,
+        printRun,
         finalResultText: resultText,
         engineAvailable: typeof original === 'function',
       };
@@ -939,7 +996,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
 
     const locales = {};
     for (const language of ['pt', 'en', 'es']) {
-      locales[language] = await page.evaluate(async ({ language, selectors, notice, patternSpecs }) => {
+      locales[language] = await page.evaluate(async ({ language, selectors, translations, closedMarkers, rawNotice, patternSpecs }) => {
         if (typeof window.setLanguage === 'function') window.setLanguage(language);
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const region = selectors.map((selector) => document.querySelector(selector)).find(Boolean)
@@ -953,18 +1010,31 @@ async function executeVisualScenario(puppeteer, nodeCore) {
         const forbiddenVocabulary = compiledPatterns
           .filter(([, , pattern]) => pattern.test(normalizedText)).map(([term]) => term);
         const row300 = region?.querySelector('[data-catalog-index="5"]') || null;
+        const permanent = document.querySelector('#cbpsx-notice');
+        const projected = document.querySelector('[data-cab-bt-parallel-display-notice]');
+        const exactTexts = Array.from(region?.querySelectorAll('*') || [])
+          .filter((element) => element.childElementCount === 0 && element.textContent.trim())
+          .map((element) => element.textContent.trim());
+        const values = Object.fromEntries(Object.entries(translations).map(([group, byLanguage]) => [group,
+          group === 'warning' ? permanent?.textContent.trim() ?? null : exactTexts.find((value) => value === byLanguage[language]) ?? null]));
+        const combinedText = `${region?.innerText || ''}\n${projected?.textContent || ''}`;
         return {
           language,
           htmlLang: document.documentElement.lang,
           regionPresent: Boolean(region),
           text: region?.innerText || '',
-          noticeInvariant: Boolean(region && region.innerText.includes(notice)),
+          values,
+          permanentNotice: permanent?.textContent.trim() ?? null,
+          projectedNotice: projected?.textContent.trim() ?? null,
+          rawDisplayNotice: window._parSelLast?.envelope?.displayNotice ?? null,
+          rawNoticeExpected: rawNotice,
           row300Present: Boolean(row300),
           row300Text: row300?.innerText || '',
           patternSources: compiledPatterns.map(([term, source]) => [term, source]),
           forbiddenVocabulary,
+          closedLanguageLeakage: closedMarkers[language].filter((value) => combinedText.includes(value)),
         };
-      }, { language, selectors: REGION_SELECTORS, notice: NOTICE, patternSpecs: FORBIDDEN_PATTERNS });
+      }, { language, selectors: REGION_SELECTORS, translations: TRANSLATIONS, closedMarkers: CLOSED_LANGUAGE_MARKERS, rawNotice: RAW_NOTICE, patternSpecs: FORBIDDEN_PATTERNS });
     }
 
     await page.setViewport({ width: 375, height: 812, deviceScaleFactor: 1 });
@@ -1001,19 +1071,28 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       }, { theme, selectors: REGION_SELECTORS });
     }
 
-    await page.emulateMediaType('print');
-    const printable = await page.evaluate(({ selectors }) => {
-      const region = selectors.map((selector) => document.querySelector(selector)).find(Boolean) || null;
-      const details = region?.querySelector('details[data-advanced]') || null;
-      if (details) details.open = true;
-      const style = region ? getComputedStyle(region) : null;
-      return {
-        regionPresent: Boolean(region),
-        visibleInPrint: Boolean(region && style.display !== 'none' && style.visibility !== 'hidden'),
-        text: region?.innerText || '',
-      };
-    }, { selectors: REGION_SELECTORS });
-    await page.emulateMediaType('screen');
+    const printable = {};
+    for (const language of ['pt', 'en', 'es']) {
+      await page.evaluate(async (activeLanguage) => {
+        if (typeof window.setLanguage === 'function') window.setLanguage(activeLanguage);
+        await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      }, language);
+      await page.emulateMediaType('print');
+      printable[language] = await page.evaluate(({ selectors }) => {
+        const region = selectors.map((selector) => document.querySelector(selector)).find(Boolean) || null;
+        const details = region?.querySelector('details[data-advanced]') || null;
+        if (details) details.open = true;
+        const style = region ? getComputedStyle(region) : null;
+        return {
+          regionPresent: Boolean(region),
+          visibleInPrint: Boolean(region && style.display !== 'none' && style.visibility !== 'hidden'),
+          text: region?.innerText || '',
+          cardIds: Array.from(region?.querySelectorAll('.cbpsx-alt[data-candidate-id]') || []).map((element) => element.getAttribute('data-candidate-id')).filter(Boolean),
+          exactTexts: Array.from(region?.querySelectorAll('*') || []).filter((element) => element.childElementCount === 0 && element.textContent.trim()).map((element) => element.textContent.trim()),
+        };
+      }, { selectors: REGION_SELECTORS });
+      await page.emulateMediaType('screen');
+    }
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     return {
@@ -1032,6 +1111,7 @@ async function executeVisualScenario(puppeteer, nodeCore) {
       rawPageErrors: pageErrors.slice(),
     };
   } finally {
+    if (counterCleanup) await counterCleanup().catch(() => {});
     if (page) await page.close().catch(() => {});
     if (browser) await browser.close().catch(() => {});
     await closeServer(server);
@@ -1120,20 +1200,17 @@ function buildReports(snapshot) {
     return matrixCase(ERROR_CASE_IDS[index], expectedErrorPaths[index], observed);
   });
 
-  const localeLeaks = {
-    pt: ['ampacity', 'voltage drop', 'installation authorized'],
-    en: ['ampacidade', 'queda de tensao', 'instalacao autorizada'],
-    es: ['ampacity', 'voltage drop', 'installation authorized'],
-  };
   const localeMatrix = ['pt', 'en', 'es'].map((language, index) => {
     const item = snapshot.locales[language];
-    const normalizedText = normalize(item.text);
-    const leaks = localeLeaks[language].filter((token) => normalizedText.includes(token));
+    const expectedValues = Object.fromEntries(Object.entries(TRANSLATIONS).map(([group, byLanguage]) => [group, byLanguage[language]]));
     return matrixCase(LOCALE_CASE_IDS[index], {
       htmlLang: language,
       row300Present: true,
       row300Mentions300mm2: true,
-      noticeInvariant: true,
+      exactLocalizedValues: expectedValues,
+      permanentNotice: TRANSLATIONS.warning[language],
+      projectedNotice: TRANSLATIONS.warning[language],
+      rawDisplayNotice: RAW_NOTICE,
       patternSources: FORBIDDEN_PATTERNS[language],
       forbiddenVocabulary: [],
       crossLanguageLeakage: [],
@@ -1141,10 +1218,13 @@ function buildReports(snapshot) {
       htmlLang: item.htmlLang,
       row300Present: item.row300Present,
       row300Mentions300mm2: /300\s*mm(?:Â²|²|2)/i.test(item.row300Text),
-      noticeInvariant: item.noticeInvariant,
+      exactLocalizedValues: item.values,
+      permanentNotice: item.permanentNotice,
+      projectedNotice: item.projectedNotice,
+      rawDisplayNotice: item.rawDisplayNotice,
       patternSources: item.patternSources,
       forbiddenVocabulary: item.forbiddenVocabulary,
-      crossLanguageLeakage: leaks,
+      crossLanguageLeakage: item.closedLanguageLeakage,
     });
   });
 
@@ -1179,7 +1259,6 @@ function buildReports(snapshot) {
     }),
   ];
 
-  const printText = normalize(snapshot.printable.text);
   const evaluated300 = ['1x300', '2x300', '3x300', '4x300'].map((candidateId) => {
     const item = nominalResult?.data?.evaluatedCandidates?.find((candidate) => candidate.candidateId === candidateId);
     return { candidateId, status: item?.status ?? null };
@@ -1191,12 +1270,20 @@ function buildReports(snapshot) {
     return resultReport(id, checks({
       exactlyOneEngineCall: run.engineCalls === 1,
       expectedFirstCandidate: top === OBJECTIVE_TOPS[objective],
+      exactPresentationPolicy: isDeepStrictEqual(run.input?.presentationPolicy, POLICY),
+      firstMatchesPresentationOrder: top === (run.result?.data?.presentationOrder?.[0]?.candidateId || null),
+      cardsMatchPresentationModel: isDeepStrictEqual(run.cardIds, run.presentationCardIds),
+      hiddenCandidatesAbsentFromDom: run.hiddenCandidateIds.every((candidateId) => !run.cardIds.includes(candidateId)),
+      maximumMarginRetainsAll300Alternatives: objective !== 'MAX_MINIMUM_MARGIN'
+        || ['2x300', '3x300', '4x300'].every((candidateId) => (run.result?.data?.candidateAlternatives || []).some((item) => item.candidateId === candidateId)),
+      maximumMarginShowsOnlyMinimum300Card: objective !== 'MAX_MINIMUM_MARGIN'
+        || (run.cardIds.includes('2x300') && !run.cardIds.includes('3x300') && !run.cardIds.includes('4x300')),
       noElection: run.result?.data?.installableSelection === null,
       installationNotAuthorized: run.result?.data?.installationAuthorized === false,
       productionNotAllowed: run.result?.productionAllowed === false,
       noRecommendedPath: !Object.prototype.hasOwnProperty.call(run.result?.data || {}, 'recommended'),
       noSelectedPath: !Object.prototype.hasOwnProperty.call(run.result?.data || {}, 'selected'),
-    }), { objective, expectedTop: OBJECTIVE_TOPS[objective], observedTop: top, run }, reportTelemetry);
+    }), { objective, expectedTop: OBJECTIVE_TOPS[objective], expectedPolicy: POLICY, observedTop: top, run }, reportTelemetry);
   };
   const reports = [
     resultReport('UI300-01', checks({
@@ -1237,6 +1324,7 @@ function buildReports(snapshot) {
       alternativesCount14: nominalResult?.data?.candidateAlternatives?.length === 14,
       rejectedCount10: nominalResult?.data?.rejectedCandidates?.length === 10,
       frontierCount14: nominalResult?.data?.nonDominatedAlternatives?.length === 14,
+      rawScientificArraysUnmutated: f.nominalRuns.every((run) => run.rawArraysUnmutated),
       exact300States: isDeepStrictEqual(evaluated300, [
         { candidateId: '1x300', status: 'REJECTED' },
         { candidateId: '2x300', status: 'VALID' },
@@ -1266,14 +1354,19 @@ function buildReports(snapshot) {
       allCasesCompliant: responsiveMatrix.every((item) => item.compliant),
     }), { cases: responsiveMatrix }, reportTelemetry),
     resultReport('UI300-15', checks({
-      visibleInPrint: snapshot.printable.visibleInPrint,
-      literalNotice: snapshot.printable.text.includes(NOTICE),
-      sixCatalogEntries: f.initial.rowCount === 6 && /300\s*mm(?:Â²|²|2)/i.test(snapshot.printable.text),
-      objectivesPresent: Object.values(OBJECTIVE_TOPS).every((candidateId) => printText.includes(normalize(candidateId))),
-      criteriaPresent: /(ampacidade|ampacity|ampacidad)/.test(printText)
-        && /(queda|voltage drop|caida)/.test(printText) && /(curto|short-circuit|cortocircuito)/.test(printText),
-      installationNotAuthorized: /(instalacao autorizada|installation authorized|instalacion autorizada)\s*:\s*(nao|no)/.test(printText),
-    }), { printable: snapshot.printable }, reportTelemetry),
+      allLanguagesVisibleInPrint: Object.values(snapshot.printable).every((item) => item.visibleInPrint),
+      sixCatalogEntriesAnd300mm2: f.initial.rowCount === 6 && Object.values(snapshot.printable).every((item) => /300\s*mm(?:Â²|²|2)/i.test(item.text)),
+      onlyMinimumCards: Object.values(snapshot.printable).every((item) => isDeepStrictEqual(item.cardIds, f.printRun?.presentationCardIds || [])),
+      superior300CardsHidden: Object.values(snapshot.printable).every((item) => !item.cardIds.includes('3x300') && !item.cardIds.includes('4x300')),
+      localizedWarningAndPrintLabel: Object.entries(snapshot.printable).every(([language, item]) => item.exactTexts.includes(TRANSLATIONS.warning[language]) && item.exactTexts.includes(TRANSLATIONS.printLabel[language])),
+      criteriaPresent: Object.values(snapshot.printable).every((item) => {
+        const text = normalize(item.text);
+        return /(ampacidade|ampacity|ampacidad)/.test(text) && /(queda|voltage drop|caida)/.test(text) && /(curto|short-circuit|cortocircuito)/.test(text);
+      }),
+      installationNotAuthorized: Object.values(snapshot.printable).every((item) => /(instalacao autorizada|installation authorized|instalacion autorizada)\s*:\s*(nao|no)/.test(normalize(item.text))),
+      guardrailsPreserved: nominalResult?.productionAllowed === false && nominalResult?.data?.installableSelection === null
+        && nominalResult?.data?.installationAuthorized === false && ['B-01', 'B-02', 'B-03', 'B-04', 'B-05', 'B-06'].every((code) => (nominalResult?.blockers || []).some((item) => item.code === code)),
+    }), { printable: snapshot.printable, maximumMarginRun: f.printRun }, reportTelemetry),
   ];
   return reports;
 }
