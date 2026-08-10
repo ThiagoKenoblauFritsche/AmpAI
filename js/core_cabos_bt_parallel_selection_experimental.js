@@ -62,7 +62,7 @@ var KNOWN_KEYS = {
     'contractVersion', 'analysisMode', 'objective', 'totalLoadCurrent_A', 'lineVoltage_V',
     'powerFactor', 'maximumVoltageDrop_percent', 'maxParallelCount', 'nCircuits', 'arrangement',
     'catalog', 'grouping', 'guidedHypothesis', 'advancedBranchesByCombination', 'fault',
-    'pruning', 'providedCombination',
+    'pruning', 'providedCombination', 'presentationPolicy',
   ],
   powerFactor: ['value', 'inputClass', 'confirmed', 'provenance'],
   catalog: ['mode', 'confirmed', 'source', 'sourceVersion', 'provenance', 'impedanceBasis', 'candidates'],
@@ -843,6 +843,79 @@ function projectCandidate(c) {
   };
 }
 
+// ---------- Politica de apresentacao (CAB-004: minimo aprovado por secao) ----------
+
+function exactKeySet(object, keys) {
+  if (!isPlainObject(object)) return false;
+  var actual = Object.keys(object);
+  if (actual.length !== keys.length) return false;
+  for (var i = 0; i < keys.length; i += 1) { if (!has(object, keys[i])) return false; }
+  return true;
+}
+
+// Resolve o modo de apresentacao. Ausente/null => ALL_VALID_LEGACY; objeto fechado exato => MINIMUM; senao => falha.
+function resolvePresentationPolicy(input) {
+  if (!has(input, 'presentationPolicy') || input.presentationPolicy === null) return { mode: 'LEGACY' };
+  var p = input.presentationPolicy;
+  if (exactKeySet(p, ['mode', 'confirmed', 'provenance'])
+    && p.mode === 'MINIMUM_PASSING_PER_SECTION'
+    && p.confirmed === true
+    && p.provenance === 'CEO_APPROVED_PRESENTATION_POLICY') {
+    return { mode: 'MINIMUM' };
+  }
+  return { problem: problem('PRESENTATION_POLICY_INVALID', { path: '$.presentationPolicy', reason: 'unsupported_or_unconfirmed_policy' }) };
+}
+
+// Projecao minima por secao (CAB-004 secoes 3-5). Nao altera o universo cientifico; apenas projeta a apresentacao.
+function computeMinimumProjection(sectionsAsc, candidateAlternatives, evaluatedCount, validRawCount, maxParallel) {
+  var minimumPassingBySection = [];
+  var visibleCandidateIds = [];
+  var hiddenCandidateIds = [];
+  var noPassingSections = [];
+  var minimumCandidates = [];
+  var absenceEntries = [];
+  sectionsAsc.forEach(function eachSection(section) {
+    var validForSection = candidateAlternatives
+      .filter(function bySection(c) { return c.section_mm2 === section; })
+      .slice()
+      .sort(function byNParallel(a, b) { return a.nParallel - b.nParallel; });
+    var minItem = validForSection.length > 0 ? validForSection[0] : null;
+    var candidateId = minItem ? minItem.candidateId : null;
+    minimumPassingBySection.push({
+      section_mm2: section,
+      candidateId: candidateId,
+      status: candidateId === null ? 'NO_PASSING_ALTERNATIVE_IN_EVALUATED_RANGE' : 'PASSING_ALTERNATIVE_FOUND',
+      evaluatedRange: { minimum: 1, maximum: maxParallel },
+    });
+    if (minItem) {
+      visibleCandidateIds.push(candidateId);
+      minimumCandidates.push(minItem);
+      validForSection.slice(1).forEach(function pushHidden(c) { hiddenCandidateIds.push(c.candidateId); });
+    } else {
+      noPassingSections.push(section);
+      absenceEntries.push({
+        section_mm2: section,
+        messageKey: 'presentation.no_passing_alternative_in_evaluated_range',
+        messageArgs: { section_mm2: section, minimum: 1, maximum: maxParallel },
+      });
+    }
+  });
+  return {
+    presentationProjection: {
+      mode: 'MINIMUM_PASSING_PER_SECTION',
+      rawCount: evaluatedCount,
+      validRawCount: validRawCount,
+      filteredCount: visibleCandidateIds.length,
+      minimumPassingBySection: minimumPassingBySection,
+      visibleCandidateIds: visibleCandidateIds,
+      hiddenCandidateIds: hiddenCandidateIds,
+      noPassingSections_mm2: noPassingSections,
+    },
+    minimumCandidates: minimumCandidates,
+    absenceEntries: absenceEntries,
+  };
+}
+
 // ---------- Orquestracao (SDD 5) ----------
 
 /**
@@ -859,6 +932,11 @@ function enumerateCablingBTParallelAlternativesExperimental(input) {
   // 2-4. Estrutura, versao, metadados globais e confirmacoes.
   var structuralError = validateStructureAndGlobals(input);
   if (structuralError) return structuralError;
+
+  // Politica de apresentacao (CAB-004): ausente/null => legado; objeto fechado exato => minimo por secao; senao => falha.
+  var presentationPolicy = resolvePresentationPolicy(input);
+  if (presentationPolicy.problem) return presentationPolicy.problem;
+  var minimumMode = presentationPolicy.mode === 'MINIMUM';
 
   // 5. Modo/rastreabilidade/confirmacao do catalogo.
   var catalogMetaError = validateCatalogMeta(input);
@@ -1052,10 +1130,27 @@ function enumerateCablingBTParallelAlternativesExperimental(input) {
     providedCombination = found ? projectCandidate(found) : { section_mm2: pc.section_mm2, nParallel: pc.nParallel, evaluated: false, installableSelection: null };
   }
 
-  // 16-17. Fronteira e ordenacao (somente validas).
+  // 16-17. Fronteira e ordenacao (somente validas). Universo/fronteira NAO mudam com a politica.
   var nonDominated = computeFrontier(candidateAlternatives);
   var frontierProjected = sortCanonical(nonDominated).map(projectCandidate);
-  var presentationSorted = candidateAlternatives.slice().sort(objectiveComparator(input.objective));
+
+  // Projecao de apresentacao: legado ordena todas as validas; minimo por secao ordena apenas os minimos projetados.
+  var presentationProjection = null;
+  var absenceEntries = [];
+  var presentationSource = candidateAlternatives;
+  if (minimumMode) {
+    var sectionSet = {};
+    var sectionsAsc = [];
+    retainedEntries.forEach(function collectSection(e) {
+      if (e.section_mm2 !== null && !has(sectionSet, String(e.section_mm2))) { sectionSet[String(e.section_mm2)] = true; sectionsAsc.push(e.section_mm2); }
+    });
+    sectionsAsc.sort(function sortSec(a, b) { return a - b; });
+    var proj = computeMinimumProjection(sectionsAsc, candidateAlternatives, evaluatedCandidates.length, candidateAlternatives.length, maxParallel);
+    presentationProjection = proj.presentationProjection;
+    absenceEntries = proj.absenceEntries;
+    presentationSource = proj.minimumCandidates;
+  }
+  var presentationSorted = presentationSource.slice().sort(objectiveComparator(input.objective));
   var presentationOrder = presentationSorted.map(projectCandidate);
   var firstInPresentationOrder = presentationOrder.length > 0 ? presentationOrder[0] : null;
 
@@ -1085,8 +1180,12 @@ function enumerateCablingBTParallelAlternativesExperimental(input) {
     analysisMode: input.analysisMode,
     installationAuthorized: false,
     heading: 'ALTERNATIVA MATEMÁTICA CANDIDATA',
-    cards: candidateAlternatives.map(buildPresentationCard),
+    cards: presentationSorted.map(buildPresentationCard),
   };
+  if (minimumMode) {
+    presentationModel.projectionMode = 'MINIMUM_PASSING_PER_SECTION';
+    presentationModel.absenceEntries = absenceEntries;
+  }
 
   var universe = {
     sections_mm2: retainedEntries.filter(function hv(e) { return e.section_mm2 !== null; }).map(function sm(e) { return e.section_mm2; }),
@@ -1113,6 +1212,8 @@ function enumerateCablingBTParallelAlternativesExperimental(input) {
     installationAuthorized: false,
     presentationModel: presentationModel,
   };
+  // CAB-004: no modo minimo por secao, a projecao e materializada; no legado permanece fisicamente ausente.
+  if (minimumMode) data.presentationProjection = presentationProjection;
 
   // 19-20. Finitude de todo resultado numerico e envelope imutavel.
   if (!allFinite(data)) {
