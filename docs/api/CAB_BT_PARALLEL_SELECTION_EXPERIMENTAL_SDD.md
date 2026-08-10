@@ -8,9 +8,9 @@ consumers:
   - "@Senior_Frontend_Dev"
 lifecycle: "candidato até ratificação do Conselho; experimental enquanto a fonte primária integral estiver ausente"
 governanca: v7.3
-os: CAB-BT-PARALLEL-004-SDD-MINIMUM-PER-SECTION-EXP
+os: CAB-BT-PARALLEL-004-SDD-UI-ORACLE-RECONCILIATION-R2
 classe: CHG-3 arquitetural/contratual experimental
-baseline_imutavel: b58254bf8ecffcaa4825d2c3225977c30eb01174
+baseline_imutavel: 1ce82df2740988fab1c0ac2cd463b04ed651c7ee
 baseline_cientifica_minimum_per_section: b58254bf8ecffcaa4825d2c3225977c30eb01174
 baseline_cientifica_300mm2: 122b885db40f69b422dac8ea4c2e419dc547220f
 baseline_errata_nonfinite: dc37b9c56a6bb28da72f86a0ce8c190c1168b7c1
@@ -22,14 +22,19 @@ baseline_core_green_300mm2: 71e3f78a5160203c524d3ae3ff5cee0ae0c7f017
 baseline_ui_green_anterior: c3e49d1a8bf6e8376e9f1ddd6d1c2737d5ce8f81
 baseline_ui_green_300mm2: 27186bb595c0f0719809303ccb72c0f9ef684700
 baseline_red_visual_anterior: 0984fb0c0881df8d4e5c9f7ad520e383b8a586a8
-parecer_origem: CAB-BT-PARALLEL-004-SCI-MINIMUM-PER-SECTION-EXP-R2-AUDIT
+baseline_sdd_cab004_r1: eedb9270c9bac25b855c624635fdcaf23fa93ef5
+baseline_core_green_cab004: 9d046bd837ea558c8fdea20a88c428f47dea119f
+baseline_red_ui_cab004: 1ce82df2740988fab1c0ac2cd463b04ed651c7ee
+parecer_origem_cientifico: CAB-BT-PARALLEL-004-SCI-MINIMUM-PER-SECTION-EXP-R2-AUDIT
+parecer_origem_r2: CAB-BT-PARALLEL-004-FRONTEND-GREEN-UI-MINIMUM-PER-SECTION-R1
 parecer_contratual_r1: RATIFICADO_COM_CONDICOES_CONTRATUAIS_PRECEDENTES_AO_RED
+parecer_contratual_r2: BLOQUEADO_PARA_CORRECAO_CONTRATUAL_PRECEDENTE
 baseline_main_de_origem: 83e24131c0cc09813be65a5fa269961b9cc80c5c
 fonte_primaria_completa: AUSENTE
 estado_producao: BLOQUEADO
 productionAllowed: false
 teste_do_ceo: APROVADO_COM_AJUSTES_VISUAIS_FOCAIS_ENCERRAMENTO_PENDENTE
-data: 2026-08-09
+data: 2026-08-10
 ---
 
 # SDD experimental — Enumeração e comparação preliminar de cabos BT em paralelo
@@ -186,6 +191,24 @@ dois sucessos, torna as contagens do summary core factuais em `CONFIG_ERROR` e t
 oráculo nominal dos dois paths observados pelo CEO. Ciência, contagens, ordenações, traduções e guardrails não
 foram reabertos.
 
+### 1.8 Reconciliação contratual visual CAB-004 R2
+
+Esta R2 corrige exclusivamente três inconsistências reveladas depois do RED visual funcional remoto
+`1ce82df…` e da candidata Frontend R1 ainda não commitada. Não altera ciência, core, contagens, projeção,
+ordenações, traduções nem guardrails:
+
+1. o oráculo visual passa a navegar explicitamente para `cabling`, preservando e restaurando em `finally` o
+   estado anterior de `localStorage['ampai-active-module']`; o módulo inicial produtivo permanece
+   `shortcircuit` quando não existe preferência salva;
+2. o `displayNotice` bruto continua exatamente sem ponto final, enquanto os dois nós visuais apresentam a
+   tradução completa com ponto;
+3. os dois testes visuais históricos continuam regressão, mas suas assertions de apresentação legado são
+   substituídas nominalmente pelas assertions CAB-004, preservando envelope bruto, ciência, IDs e contagens.
+
+É proibido satisfazer o RED alterando o módulo inicial da aplicação, envolvendo o enumerador ou mutando seu
+envelope. A candidata Frontend R1 permanece congelada até esta R2 ser ratificada e até o QA corrigir os
+oráculos vinculantes.
+
 ## 2. Fontes, autoridade e precedência
 
 | Fonte | Identificação | Classe | Autoridade neste SDD |
@@ -217,12 +240,13 @@ Qualquer divergência científica retorna ao Conselho; Backend, Frontend e QA n�
 | Camada | Arquivo/função | Responsabilidade |
 | --- | --- | --- |
 | L0 existente | `js/core_cabos_bt_parallel_experimental.js` / `calculateCablingBTParallelExperimental(input)` | admitâncias, correntes, `Zeq`, `deltaLoad`, proxy térmico, queda em V e adiabático |
-| L1–L3 integrado | `js/core_cabos_bt_parallel_selection_experimental.js` / `enumerateCablingBTParallelAlternativesExperimental(input)` em `71e3f78a…` | validar catálogo, enumerar, chamar L0, avaliar critérios, fronteira e ordenação; ainda não expõe CAB-004 |
-| UI GREEN 300 mm² | `index.html` e `js/ui_render.js` em `27186bb5…` | seis seções e correção OS044R; ainda apresenta todas as válidas |
+| L1–L3 integrado | `js/core_cabos_bt_parallel_selection_experimental.js` / `enumerateCablingBTParallelAlternativesExperimental(input)` em `9d046bd8…` | validar catálogo, enumerar, chamar L0, avaliar critérios, fronteira, ordenação e projeção CAB-004 |
+| UI GREEN 300 mm² | `index.html` e `js/ui_render.js` em `27186bb5…` | baseline visual estável anterior; seis seções e correção OS044R, ainda sem CAB-004 |
+| Candidata UI CAB-004 R1 | worktree `codex/cab-bt-parallel-minimum-per-section-green-ui-r1` sobre `1ce82df…` | implementação não commitada e congelada; contém dois workarounds proibidos que devem ser removidos após a ratificação desta R2 |
 | Regressão core | `tests/test_cab_bt_parallel_selection_experimental.js` | 74 contratos processáveis: 48 científicos + 26 técnicos |
-| Regressão visual | `tests/test_cab_bt_parallel_selection_ui_experimental.js` | 15 contratos da UI anterior |
+| Regressão visual | `tests/test_cab_bt_parallel_selection_ui_experimental.js` e `tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js` | contratos científicos, de integração e acessibilidade preservados; assertions visuais supersedidas são reconciliadas na §14.6.3 |
 | Caracterização/RED focal | arquivos definidos em §14.5 | provar core dinâmico e produzir RED visual específico de 300 mm² |
-| RED CAB-004 | arquivos definidos em §14.6 | provar projeção mínima por seção, default 10 e localização integral |
+| RED CAB-004 | arquivos definidos em §14.6; visual selado em `1ce82df…` | provar projeção mínima por seção, default 10 e localização integral; correções focais R2 precedem novo RED remoto |
 
 ### 3.2 Regras arquiteturais vinculantes
 
@@ -242,6 +266,12 @@ Qualquer divergência científica retorna ao Conselho; Backend, Frontend e QA n�
 - Nenhum valor de `material`, `insulation` ou `installationMethod` deriva silenciosamente ampacidade,
   impedância, `k`, `k_g` ou geometria.
 - A UI não contém fórmulas, fronteira, ordenação, interpretação IEC ou regra de elegibilidade.
+- A UI trata o envelope L1–L3 como imutável: não envolve o enumerador, não substitui sua função global e não
+  acrescenta, remove ou altera pontuação, campos ou valores do resultado.
+- Navegação é responsabilidade do fluxo visual: testes focais chamam `window.switchModule('cabling')`; a
+  funcionalidade experimental não altera o módulo inicial global. Como a função produtiva persiste a seleção,
+  o harness captura e restaura diretamente em `localStorage` o estado anterior da preferência, sem segunda
+  chamada a `switchModule`.
 - O vocabulário produtivo “recomendado”, “selecionado”, “solução final” e “dimensionamento final” é proibido.
 
 ## 4. Contrato público L1–L3
@@ -1507,9 +1537,17 @@ computacional já declarada e o valor apresentado por igualdade com o arredondam
 
 O core não traduz frases. A UI mantém um catálogo único de chaves PT/EN/ES e troca todo texto visível quando
 `document.documentElement.lang` muda. O aviso bruto `displayNotice` permanece no envelope e deve ser exatamente
-o literal histórico em português; a UI reconhece esse valor apenas para selecionar a chave semântica
-`PRELIMINARY_DO_NOT_USE`. Valor bruto desconhecido nunca é ocultado: gera `uiFailure` fail-closed e é mostrado
-verbatim junto da advertência localizada.
+o literal histórico em português, **sem ponto final**:
+
+```text
+PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO
+```
+
+A UI reconhece esse valor apenas para selecionar a chave semântica `PRELIMINARY_DO_NOT_USE`. Ela não pode
+envolver ou substituir `window.enumerateCablingBTParallelAlternativesExperimental`, nem mutar o objeto retornado
+para acrescentar pontuação. Valor bruto desconhecido nunca é ocultado: gera `uiFailure` fail-closed e é mostrado
+verbatim junto da advertência localizada. O ponto final pertence exclusivamente às traduções visuais da tabela
+abaixo; não pertence ao envelope.
 
 Os onze grupos vinculantes são:
 
@@ -1526,6 +1564,12 @@ Os onze grupos vinculantes são:
 | `criteria` | `Critérios: ampacidade, queda de tensão, curto-circuito` | `Criteria: ampacity, voltage drop, short-circuit` | `Criterios: ampacidad, caída de tensión, cortocircuito` |
 | `absence(S,N)` | `Nenhuma alternativa da seção S atende dentro do intervalo avaliado de 1 até N cabos por fase.` | `No alternative for section S meets the criteria within the evaluated range of 1 to N conductors per phase.` | `Ninguna alternativa de la sección S cumple dentro del intervalo evaluado de 1 a N conductores por fase.` |
 | `printLabel` | `Impressão preliminar — não é memorial final` | `Preliminary print — not a final report` | `Impresión preliminar — no es memoria final` |
+
+`#cbpsx-notice.textContent` e `[data-cab-bt-parallel-display-notice].textContent` exibem o valor `warning`
+localizado da tabela, incluindo o ponto final. O segundo nó é projeção semântica do `displayNotice`; não é o
+próprio campo bruto e não autoriza reescrevê-lo. O oráculo registra separadamente o valor visual localizado e
+`engineResult.displayNotice`, exigindo simultaneamente tradução com ponto nos nós e literal PT sem ponto no
+envelope.
 
 `S` e `N` são interpolados somente depois de selecionar a tradução; o BDD materializa `N=7` e `N=10`.
 Comparação do oráculo atual usa igualdade UTF-8 integral: sem NFD, remoção de acentos, substring, tradução
@@ -2668,6 +2712,26 @@ CAB_BT_PARALLEL_MINIMUM_PER_SECTION_UI_EXP_REPORT
 CAB_BT_PARALLEL_MINIMUM_PER_SECTION_UI_EXP_SUMMARY
 ```
 
+Precondição de navegação do harness: depois do boot e antes de capturar controles, textos, dimensões ou foco, o
+RED executa o protocolo transacional abaixo:
+
+1. captura, antes da navegação, `localStorage.getItem('ampai-active-module')` e
+   `Object.prototype.hasOwnProperty.call(localStorage, 'ampai-active-module')`, preservando separadamente o
+   valor anterior e a semântica chave ausente × chave presente;
+2. chama a função produtiva original `window.switchModule('cabling')` exatamente uma vez e aguarda a
+   estabilização por frames;
+3. realiza todas as assertions no módulo `cabling`;
+4. em `finally`, restaura diretamente por `localStorage.setItem('ampai-active-module', previousValue)` quando a
+   chave existia, ou por `localStorage.removeItem('ampai-active-module')` quando a chave não existia;
+5. lê novamente existência e valor e exige igualdade exata com o par capturado antes da navegação.
+
+A ausência da função, a região ainda invisível, o módulo incorreto ou qualquer falha de restauração é
+`CONFIG_ERROR`. É proibido chamar `switchModule` uma segunda vez para restaurar o estado visual ou persistido.
+O harness não precisa retornar visualmente ao módulo anterior depois das assertions; apenas o estado persistido
+deve ser restaurado. Sem preferência salva, `savedMod` continua resolvendo para `shortcircuit`; uma preferência
+legítima existente termina byte-conceitualmente idêntica. O código produtivo e o default `shortcircuit`
+permanecem intactos.
+
 | ID | Casos | Contrato |
 | --- | ---: | --- |
 | `MPS-UI-01` | 1 | controle inicia em 10 e possui `min=1`, `max=10`, `step=1` |
@@ -2685,6 +2749,17 @@ CAB_BT_PARALLEL_MINIMUM_PER_SECTION_UI_EXP_SUMMARY
 | `MPS-UI-13` | 5 | vazio, fração, zero, negativo e 11 bloqueiam antes do core, sem números parciais |
 | `MPS-UI-14` | 4 | 375 px claro/escuro, acessibilidade e foco permanecem conformes com catálogo visível |
 | `MPS-UI-15` | 4 | guardrails, códigos invariantes e vocabulário não instalável permanecem íntegros |
+
+`MPS-UI-15-CASE-04` separa obrigatoriamente apresentação e envelope. O valor esperado em
+`engineResult.displayNotice` é exatamente, sem ponto final:
+
+```text
+PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO
+```
+
+No mesmo cenário, os nós visuais continuam sujeitos à tabela localizada da §9.4 e exibem a frase completa com
+ponto. Qualquer wrapper, monkey-patch ou mutação do retorno do enumerador torna o caso não conforme, mesmo que
+o texto visual coincida.
 
 Oráculo autossuficiente de `MPS-UI-11`:
 
@@ -2737,16 +2812,45 @@ não nulo. Qualquer outra quebra é `CONFIG_ERROR`/exit `3`, com contagens obser
 
 #### 14.6.3 Correção de fixtures históricas
 
-Os testes visuais existentes continuam regressão, mas seus cenários CAB-003 devem fixar explicitamente
-`maxParallelCount=4` antes de calcular:
+Os testes visuais existentes continuam regressão e mantêm seus `15+15` IDs, summaries, schemas e quantidades de
+casos. Seus cenários CAB-003 fixam explicitamente `maxParallelCount=4` e, no caminho visual compartilhado,
+enviam a política CAB-004 exata antes de calcular:
 
 ```text
 tests/test_cab_bt_parallel_selection_ui_experimental.js
 tests/test_cab_bt_parallel_selection_300mm2_ui_experimental.js
 ```
 
-Essa correção não muda IDs, expectativas, contagens ou assertions históricas; apenas remove a dependência do
-novo default visual `10`. Alterar tops, relaxar asserts ou aceitar `4` e `10` simultaneamente é proibido.
+```json
+{
+  "mode": "MINIMUM_PASSING_PER_SECTION",
+  "confirmed": true,
+  "provenance": "CEO_APPROVED_PRESENTATION_POLICY"
+}
+```
+
+O envelope bruto continua reconciliando `24/14/10/14`, inclusive todos os IDs de
+`evaluatedCandidates`, `candidateAlternatives`, `rejectedCandidates` e `nonDominatedAlternatives`. A árvore
+visual, porém, deixa de ser um espelho de `candidateAlternatives`: usa somente `presentationModel.cards`,
+`presentationOrder` e `absenceEntries`. Assertions que exigiam todas as válidas como cards, aviso PT invariante
+ou impressão da fronteira inteira são supersedidas, não relaxadas.
+
+Matriz vinculante de reconciliação:
+
+| Teste/relatório | Antes — apresentação legado | Depois — contrato CAB-004 | Paths e assertions negativas |
+| --- | --- | --- | --- |
+| `UI-08` | quatro tops obtidos da ordenação das 14 válidas; `MAX_MINIMUM_MARGIN=4x300` | com fixture `600/400/3`, `maxParallelCount=4` e política explícita: `NONE=2x185`, `MIN_PARALLEL_COUNT=2x300`, `MIN_TOTAL_COPPER=3x120`, `MAX_MINIMUM_MARGIN=2x300` | `capturedInput.presentationPolicy` por igualdade profunda; exatamente uma chamada; `data.firstInPresentationOrder.candidateId = data.presentationOrder[0].candidateId`; nenhum card fora de `presentationModel.cards` |
+| `UI-09` | todos os `candidateAlternatives` e toda a fronteira precisavam existir como cards | os conjuntos completos permanecem acessíveis no envelope capturado; DOM contém exatamente os mínimos da projeção | igualdade profunda dos IDs brutos nos quatro arrays; cards profundamente iguais a `presentationModel.cards[].candidateId`; cada `hiddenCandidateIds[]` ausente do DOM; nenhuma busca recursiva |
+| `UI-12` | `noticeInvariant=true` exigia o literal PT nos três idiomas | PT/EN/ES exigem os onze grupos e as listas fechadas da §9.4; aviso bruto PT permanece apenas no envelope | `#cbpsx-notice.textContent` e `[data-cab-bt-parallel-display-notice].textContent` por igualdade UTF-8; EN/ES rejeitam o literal PT completo; cognatos ES não são vazamento |
+| `UI-15` | impressão exigia aviso PT e alternativas/fronteira completas | impressão usa somente cards mínimos, aviso/rótulo localizados, critérios, hipóteses, blockers e não autorização | `hiddenCandidateIds[]` ausentes da árvore imprimível; `displayNotice` bruto não é mutado; ausência de memorial final positivo, seleção e conformidade IEC |
+| `UI300-11` | `MAX_MINIMUM_MARGIN=4x300` na apresentação legado | com `maxParallelCount=4` e projeção mínima, o primeiro card é `2x300`; o resultado científico histórico `4x300` permanece coberto pelo core legado sem política | `data.presentationOrder[0].candidateId="2x300"`; card inicial igual; `candidateAlternatives` continua contendo `2x300`, `3x300` e `4x300`; `3x300`/`4x300` não são cards |
+| `UI300-13` | aviso PT invariante e vocabulário histórico | linha 300 permanece visível; PT/EN/ES usam traduções integrais e listas fechadas CAB-004, além do vocabulário histórico proibido | três `caseId` preservados; igualdade dos paths visuais; zero vazamento cruzado; `Bloqueadores`, `Entradas confirmadas` e `PRELIMINAR` válidos em ES |
+| `UI300-15` | impressão exigia literal PT e todos os tops históricos | impressão preserva seis entradas de catálogo e 300 mm², mas apresenta somente mínimos da política, aviso/rótulo localizados e critérios | candidatas 300 superiores ao mínimo ausentes dos cards/print; arrays brutos intactos; instalação não autorizada; zero alegação IEC |
+
+Os demais relatórios, casos e expectativas desses dois arquivos permanecem byte-conceitualmente iguais. Em
+particular, `UI300-05` continua com sete casos de DTO, `UI300-12` com cinco casos fail-closed e `UI300-14` com
+quatro casos de responsividade/acessibilidade. É proibido remover relatórios, reduzir cobertura, aceitar
+alternativas de expectativa ou fazer o primeiro resultado observado “vencer”.
 
 #### 14.6.4 Oráculo exato e proibições
 
@@ -2899,7 +3003,11 @@ O aceite valida clareza e utilidade experimental; não remove nenhum bloqueio pr
 
 Estado atual recebido e preservado:
 
-- core L1–L3 com seção de 300 mm² e validação nonfinite está GREEN em `71e3f78a5160203c524d3ae3ff5cee0ae0c7f017`;
+- o SDD CAB-004 R1 foi publicado em `eedb9270c9bac25b855c624635fdcaf23fa93ef5`;
+- o RED core foi publicado em `cf5633fba63e64157a181f3dcfcfa782c36483ce`;
+- o core CAB-004 está GREEN cumulativo e publicado em `9d046bd837ea558c8fdea20a88c428f47dea119f`;
+- o RED visual CAB-004 está publicado em `1ce82df2740988fab1c0ac2cd463b04ed651c7ee` e foi comprovado
+  remotamente no run `31352179247`, com `15/15` relatórios e `87/87` casos exercidos;
 - UI de 300 mm², localização precedente e correção de foco OS044R está GREEN em
   `27186bb595c0f0719809303ccb72c0f9ef684700`;
 - a validação remota cumulativa dessa UI passou nos runs `31313774728`, `31313846258` e `31313907711`;
@@ -2907,14 +3015,18 @@ Estado atual recebido e preservado:
   saída e mostrar somente o menor `nParallel` válido por seção, com default `10`;
 - a ciência CAB-004 que fecha esses ajustes está publicada em
   `b58254bf8ecffcaa4825d2c3225977c30eb01174`;
-- este SDD CAB-004 está materializado somente no worktree documental, permanece candidato e não commitado;
-- ainda não existem RED CAB-004, implementação Backend CAB-004, GREEN Frontend CAB-004, PR ou merge.
+- a candidata Frontend R1 existe somente no worktree
+  `codex/cab-bt-parallel-minimum-per-section-green-ui-r1`, não está commitada e permanece bloqueada por conter
+  mudança do módulo inicial e mutação do `displayNotice`, ambas proibidas nesta R2;
+- esta R2 existe somente no worktree documental, permanece candidata e não commitada;
+- não existe GREEN visual CAB-004 ratificado, PR ou merge.
 
-Sequência vinculante após auditoria e commit documental: QA produz o RED core e corrige somente as duas
-fixtures históricas identificadas → Backend implementa exclusivamente a projeção CAB-004 no L1–L3 → QA GREEN
-independente do core → QA produz RED visual → Frontend implementa localização/default/apresentação sem fórmula
-científica → QA independente local/remoto na mesma SHA → DevOps/SRE serve nova prévia → CEO executa o reteste
-de encerramento. A PR #40 continua **DO NOT MERGE**. Após futura integração:
+Sequência vinculante após auditoria e commit desta R2: QA corrige exclusivamente a navegação e a expectativa
+bruta do RED CAB-004, além das assertions históricas listadas na §14.6.3 → QA comprova RED visual funcional
+contra a UI anterior → Frontend produz R2 removendo a mudança do módulo inicial e o wrapper do motor, sem
+perder default 10, projeção mínima ou localização → QA independente local/remoto na mesma SHA → DevOps/SRE
+serve nova prévia → CEO executa o reteste de encerramento. Core e ciência não são reabertos. A PR #40 continua
+**DO NOT MERGE**. Após futura integração:
 
 - `MERGE_VALIDADO` exige PR, SHA e Gate remoto;
 - `ENCERRAMENTO_OPERACIONAL` exige `origin/main → AmpAI/ em main → Google Drive`, hashes aplicáveis,
@@ -2950,6 +3062,9 @@ de encerramento. A PR #40 continua **DO NOT MERGE**. Após futura integração:
 - [x] RED core CAB-004 fechado em 16 relatórios/134 casos e RED visual em 15 relatórios/87 casos.
 - [x] Summary core distingue expected invariável de contagens observadas factuais em `CONFIG_ERROR`.
 - [x] `MPS-UI-11` fecha EN/ES, dois paths, valores proibidos/esperados e listas aplicáveis.
+- [x] RED visual navega uma única vez para `cabling` e restaura em `finally` existência/valor anteriores de `ampai-active-module`; default global `shortcircuit` permanece intacto.
+- [x] `displayNotice` bruto sem ponto é separado dos dois textos visuais localizados com ponto; mutação do envelope é proibida.
+- [x] Regressões visuais históricas preservam envelope bruto e substituem nominalmente somente assertions de apresentação supersedidas.
 - [x] Cenário de reteste do CEO atualizado para `1800 A / 400 V / 3% / max=7`, com default `10`.
 - [x] Regressão stable, artifact remoto e CodeRabbit consultivo previstos.
 - [x] `FUNCTIONAL_FAILURE`, `INFRA_BLOCKED` e `CONFIG_ERROR` separados.
@@ -2961,6 +3076,6 @@ de encerramento. A PR #40 continua **DO NOT MERGE**. Após futura integração:
 
 ---
 
-**Estado vinculante:** `SDD_CANDIDATO_PARA_AUDITORIA`. Commit, push, caracterização core, RED visual, Backend,
-Frontend, QA independente, PR e merge permanecem bloqueados até conferência focalizada do
+**Estado vinculante:** `SDD_CANDIDATO_PARA_AUDITORIA`. Commit, push, correção dos oráculos, Frontend, QA
+independente, PR e merge permanecem bloqueados até conferência focalizada do
 `@Conselho_de_Arquitetura_e_Governanca` e autorização correspondente do `@CTO/@CEO`.
