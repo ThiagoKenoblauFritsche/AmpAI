@@ -10,6 +10,7 @@
 const fs = require('node:fs');
 const http = require('node:http');
 const path = require('node:path');
+const { isDeepStrictEqual } = require('node:util');
 
 const ROOT = path.resolve(__dirname, '..');
 const HOST = '127.0.0.1';
