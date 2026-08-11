@@ -906,7 +906,7 @@ function buildReports(snapshot) {
           && /(curto|short-circuit|cortocircuito)/.test(text) && /(hipot|assumption|supuesto)/.test(text)
           && /(bloque|block)/.test(text) && /(instalacao autorizada|installation authorized|instalacion autorizada)\s*:\s*(nao|no)/.test(text);
       }),
-      noPositiveFinalMemorialSelectionAuthorizationOrIec: Object.values(snapshot.printable).every((item) => !/(memorial final positivo|positive final report|memoria final positiva|selecionad[oa]|selected|seleccionad[oa]|conforme iec|iec compliant|conformidad iec)/i.test(normalize(item.text))),
+      noPositiveFinalMemorialSelectionAuthorizationOrIec: Object.values(snapshot.printable).every((item) => !/(memorial final positivo|positive final report|memoria final positiva|selecionad[oa]|selected|seleccionad[oa]|conforme iec|iec (?:compliant|conformant)|conforme con iec)/i.test(normalize(item.text))),
       rawDisplayNoticeUnmutated: envelope?.displayNotice === RAW_NOTICE,
     }), { printable: snapshot.printable, objectiveRun: d.objectiveRuns.find((run) => run.objective === 'MAX_MINIMUM_MARGIN'), rawDisplayNotice: envelope?.displayNotice ?? null }),
   ];
