@@ -840,6 +840,8 @@ window.switchModule = function(moduleName) {
     const navIMP = document.getElementById('nav-impedances');
 
     if (moduleName === 'impedances') {
+        // O.S.003-R3: saímos do Cabling — cancela pré-cálculo MT pendente (evita substituir #card-mt).
+        clearTimeout(window._mtPrecalcTimer); window._mtPrecalcTimer = null;
         // Oculta a sidebar de inputs do Curto-Circuito e o dashboard de CC
         if (sidebarSC)   sidebarSC.style.display   = 'none';
         if (dashboardSC) dashboardSC.style.display  = 'none';
@@ -883,7 +885,18 @@ window.switchModule = function(moduleName) {
         
         // Pré-calcular MT para que _lastMTPayload fique disponível para i18n
         // Delay de 350ms: aguarda o cooldown de isRendering do BT (50ms + sync template + 100ms lock)
-        setTimeout(() => {
+        // O.S. CAB-BT-PARALLEL-003-R3: este pré-cálculo re-injeta #card-mt (substituindo seus nós,
+        // inclusive memorial-mt/export). Se, ao disparar (350ms depois), o módulo Cabling já não
+        // estiver visível — porque trocamos para shortcircuit/impedances — a re-injeção é inútil e
+        // apenas substituiria os controles enquanto o OS044R os percorre por Tab no runner remoto
+        // (removendo o data-os044r-focus-id → 49/47). Guardamos o timer para cancelá-lo ao sair do
+        // módulo e verificamos a visibilidade no disparo. Nada muda no fluxo Cabling (o timer vive
+        // enquanto o módulo permanece visível, preservando o observador de estabilidade do OS044R).
+        clearTimeout(window._mtPrecalcTimer);
+        window._mtPrecalcTimer = setTimeout(() => {
+            window._mtPrecalcTimer = null;
+            const mc = document.getElementById('module-cabling');
+            if (mc && getComputedStyle(mc).display === 'none') return;
             if (typeof window.calculateCablingMT === 'function') {
                 const input = window.readMTInputsFromUI();
                 consumeCablingEnvelope('MT', window.calculateCablingMT(input));
@@ -892,6 +905,8 @@ window.switchModule = function(moduleName) {
 
     } else {
         // shortcircuit (default)
+        // O.S.003-R3: saímos do Cabling — cancela pré-cálculo MT pendente (evita substituir #card-mt).
+        clearTimeout(window._mtPrecalcTimer); window._mtPrecalcTimer = null;
         if (sidebarSC)   sidebarSC.style.display   = '';
         if (dashboardSC) dashboardSC.style.display  = '';
         moduleCabling.style.display = 'none';
@@ -1006,6 +1021,9 @@ document.addEventListener('click', function(e) {
                 const input = window.readMTInputsFromUI();
                 consumeCablingEnvelope('MT', window.calculateCablingMT(input));
             }
+            break;
+        case 'enumerate-parallel-selection':
+            if (typeof window.parSelCalculate === 'function') window.parSelCalculate();
             break;
         case 'calc-icc-rede':
             if (typeof window.calcIccRede === 'function') window.calcIccRede();
@@ -1813,4 +1831,529 @@ window.calcIccAgr = function() {
     
     window.showIccToaster("Cálculo de Agregação concluído com sucesso.");
 };
+
+// ─────────────────────────────────────────────────────────────────────────────
+// O.S. CAB-BT-PARALLEL-002-UI — Alternativas paralelas preliminares (experimental).
+// Região isolada do card BT produtivo. Primeira leitura: "quantos cabos por fase e
+// de qual seção". Constrói o DTO confirmado do contrato de referência, aciona
+// window.enumerateCablingBTParallelAlternativesExperimental exatamente uma vez por
+// clique e projeta o resultado real (presentationModel/arrays), sem recalcular,
+// reordenar ou derivar alternativas. Estado: EXPERIMENTAL_PRELIMINAR_NAO_CANONICO;
+// productionAllowed=false; installableSelection=null; instalação NÃO autorizada.
+// ─────────────────────────────────────────────────────────────────────────────
+(function parSelLab() {
+    'use strict';
+
+    // Entrada de referência reproduzível (SDD 4.2). Catálogo laboratorial confirmado
+    // como conjunto (ASSUMPTION_ONLY); os campos práticos/avançados sobrescrevem o clone.
+    function referenceInput() {
+        return {
+            contractVersion: 'CAB-BT-PARALLEL-SELECTION-EXP-1', analysisMode: 'MODO_GUIADO_PRELIMINAR', objective: 'NONE',
+            totalLoadCurrent_A: 600, lineVoltage_V: 400,
+            powerFactor: { value: 0.9, inputClass: 'SUGERIDA_COM_CONFIRMACAO', confirmed: true, provenance: 'ASSUMPTION_ONLY' },
+            maximumVoltageDrop_percent: 3, maxParallelCount: 10, nCircuits: 1, arrangement: 'LAB_IDENTICAL_BRANCHES',
+            // O.S.003 §3: sem fixture estático de catálogo. mode/source/sourceVersion/provenance/
+            // impedanceBasis/candidates são construídos EXCLUSIVAMENTE do DOM em buildInput().
+            catalog: { candidates: [] },
+            grouping: { mode: 'LAB_CONSTANT_CONFIRMED', value: 0.8, confirmed: true, source: 'laboratory sensitivity', sourceVersion: 'PRELIM-1', provenance: 'ASSUMPTION_ONLY' },
+            guidedHypothesis: { displayedBeforeCalculation: true, confirmed: true, provenance: 'ASSUMPTION_ONLY' },
+            advancedBranchesByCombination: [],
+            fault: { totalFaultCurrent_A: 20000, clearingTime_s: 0.2, adiabaticK_A_sqrt_s_per_mm2: { value: 115, provenance: 'ASSUMPTION_ONLY' }, imbalance: { mode: 'EXPLICIT_ASSUMPTION', deltaFault: 1, provenance: 'ASSUMPTION_ONLY' } },
+            pruning: { maximumSection_mm2: null, confirmed: false, provenance: null },
+            // CAB-004-R3 — a UI não tem controle de combinação fornecida pelo usuário: DTO envia
+            // null (sem combinação silenciosa/hardcoded). Válido inclusive com maxParallelCount 1/2
+            // (nParallel:3 hardcoded disparava PROVIDED_COMBINATION_INVALID em max<3).
+            providedCombination: null,
+        };
+    }
+
+    // Rótulos de resultado por idioma (JS): tokens contratuais/códigos permanecem invariantes.
+    var L = {
+        installAuth: { pt: 'Instalação autorizada', en: 'Installation authorized', es: 'Instalación autorizada' },
+        no: { pt: 'NÃO', en: 'NO', es: 'NO' },
+        perPhase: { pt: 'por fase', en: 'per phase', es: 'por fase' },
+        heading: { pt: 'Menor quantidade que atende por seção no intervalo avaliado', en: 'Smallest quantity meeting the criteria per section within the evaluated range', es: 'Menor cantidad que cumple por sección en el intervalo evaluado' },
+        crit: {
+            AMPACIDADE: { pt: 'Ampacidade', en: 'Ampacity', es: 'Ampacidad' },
+            QUEDA: { pt: 'Queda de tensão', en: 'Voltage drop', es: 'Caída de tensión' },
+            CURTO: { pt: 'Curto-circuito', en: 'Short-circuit', es: 'Cortocircuito' },
+        },
+        st: { ATENDE: { pt: 'atende', en: 'meets', es: 'cumple' }, NAO_ATENDE: { pt: 'não atende', en: 'does not meet', es: 'no cumple' } },
+        dominant: { pt: 'Critério dominante', en: 'Dominant criterion', es: 'Criterio dominante' },
+        temperature: { pt: 'Temperatura de referência', en: 'Reference temperature', es: 'Temperatura de referencia' },
+        firstOrder: { pt: 'Primeira na ordem de apresentação', en: 'First in presentation order', es: 'Primera en el orden de presentación' },
+        frontier: { pt: 'Fronteira não dominada', en: 'Non-dominated frontier', es: 'Frontera no dominada' },
+        confirmedInputs: { pt: 'Entradas confirmadas', en: 'Confirmed inputs', es: 'Entradas confirmadas' },
+        assumptions: { pt: 'Hipóteses', en: 'Assumptions', es: 'Supuestos' },
+        blockers: { pt: 'Bloqueadores', en: 'Blockers', es: 'Bloqueadores' },
+        primaryAbsent: { pt: 'Fonte primária ausente', en: 'Primary source absent', es: 'Fuente primaria ausente' },
+        iecNotDeclared: { pt: 'Conformidade não declarada (IEC)', en: 'Conformity not declared (IEC)', es: 'Conformidad no declarada (IEC)' },
+        userLimit: { pt: 'limite do usuário', en: 'user limit', es: 'límite del usuario' },
+        margin: { pt: 'margem', en: 'margin', es: 'margen' },
+        minSection: { pt: 'seção mínima', en: 'minimum section', es: 'sección mínima' },
+        errorTitle: { pt: 'Não foi possível comparar', en: 'Comparison unavailable', es: 'Comparación no disponible' },
+        sourceStatus: { pt: 'Status da fonte', en: 'Source status', es: 'Estado de la fuente' },
+        yes: { pt: 'SIM', en: 'YES', es: 'SÍ' },
+        uiFailureTitle: { pt: 'Falha interna da camada visual', en: 'Internal visual-layer failure', es: 'Falla interna de la capa visual' },
+        uiFailureNote: { pt: 'Exceção da integração da interface — não é um envelope do motor; sem números parciais.', en: 'UI integration exception — not an engine envelope; no partial numbers.', es: 'Excepción de integración de la interfaz — no es un envelope del motor; sin números parciales.' },
+        integrationFailClosed: { pt: 'Falha de integração fail-closed: guardrails do envelope divergem do contrato experimental; apresentação de alternativas bloqueada.', en: 'Fail-closed integration failure: envelope guardrails diverge from the experimental contract; alternatives display blocked.', es: 'Falla de integración fail-closed: los guardrails del envelope divergen del contrato experimental; presentación de alternativas bloqueada.' },
+        guardrailLabel: { pt: 'Guardrails divergentes', en: 'Divergent guardrails', es: 'Guardrails divergentes' },
+        catalogStructuralInvalid: { pt: 'Catálogo com entrada estruturalmente inválida — apresentação de alternativas bloqueada (fail-closed).', en: 'Catalog contains a structurally invalid entry — alternatives display blocked (fail-closed).', es: 'Catálogo con una entrada estructuralmente inválida — presentación de alternativas bloqueada (fail-closed).' },
+        structuralReasons: { pt: 'Motivos', en: 'Reasons', es: 'Motivos' },
+        // CAB-004 — textos exatos (UTF-8 NFC) da apresentação mínima por seção. O aviso é uma
+        // frase completa (com ponto final), igual ao #cbpsx-notice permanente. O motor entrega o
+        // displayNotice cru SEM ponto (preservado intacto no envelope); os DOIS nós visuais de aviso
+        // usam esta L.warning localizada (com ponto). A UI não envolve nem muta o motor/envelope.
+        warning: {
+            pt: 'PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.',
+            en: 'PRELIMINARY — DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION.',
+            es: 'PRELIMINAR — NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN.',
+        },
+        installation: { pt: 'Instalação autorizada: NÃO', en: 'Installation authorized: NO', es: 'Instalación autorizada: NO' },
+        production: { pt: 'Estado de produção: BLOQUEADO', en: 'Production state: BLOCKED', es: 'Estado de producción: BLOQUEADO' },
+        source: {
+            pt: 'Fonte primária IEC integral: AUSENTE — sem conformidade IEC',
+            en: 'Full primary IEC source: ABSENT — no IEC conformity',
+            es: 'Fuente primaria IEC íntegra: AUSENTE — sin conformidad IEC',
+        },
+        assumptionsLine: { pt: 'Hipóteses (ASSUMPTION_ONLY)', en: 'Assumptions (ASSUMPTION_ONLY)', es: 'Hipótesis (ASSUMPTION_ONLY)' },
+        criteria: {
+            pt: 'Critérios: ampacidade, queda de tensão, curto-circuito',
+            en: 'Criteria: ampacity, voltage drop, short-circuit',
+            es: 'Criterios: ampacidad, caída de tensión, cortocircuito',
+        },
+        printLabel: {
+            pt: 'Impressão preliminar — não é memorial final',
+            en: 'Preliminary print — not a final report',
+            es: 'Impresión preliminar — no es memoria final',
+        },
+        invalidMax: {
+            pt: 'Informe um número inteiro de 1 a 10 para o máximo por fase.',
+            en: 'Enter an integer from 1 to 10 for the maximum per phase.',
+            es: 'Ingrese un número entero de 1 a 10 para el máximo por fase.',
+        },
+    };
+    // CAB-004 — sentença exata de ausência por seção (args do envelope: seção, mínimo=1, máximo).
+    var ABSENCE = {
+        pt: function (section, minimum, maximum) { return 'Nenhuma alternativa da seção ' + section + ' atende dentro do intervalo avaliado de ' + minimum + ' até ' + maximum + ' cabos por fase.'; },
+        en: function (section, minimum, maximum) { return 'No alternative for section ' + section + ' meets the criteria within the evaluated range of ' + minimum + ' to ' + maximum + ' conductors per phase.'; },
+        es: function (section, minimum, maximum) { return 'Ninguna alternativa de la sección ' + section + ' cumple dentro del intervalo evaluado de ' + minimum + ' a ' + maximum + ' conductores por fase.'; },
+    };
+    function absenceText(lang, section, minimum, maximum) { return (ABSENCE[lang] || ABSENCE.pt)(section, minimum, maximum); }
+
+    function el(id) { return document.getElementById(id); }
+    function curLang() {
+        var lang = (document.documentElement.lang || 'pt').toLowerCase();
+        if (lang.indexOf('en') === 0) return 'en';
+        if (lang.indexOf('es') === 0) return 'es';
+        return 'pt';
+    }
+    function tr(entry, lang) { return (entry && (entry[lang] || entry.pt)) || ''; }
+    function esc(v) { return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function num(v, d) {
+        if (typeof v !== 'number' || !isFinite(v)) return null;
+        return String(Number(v.toFixed(d == null ? 2 : d)));
+    }
+    function fieldNum(id) { var e = el(id); return e ? parseFloat(e.value) : NaN; }
+    function fieldInt(id) { var e = el(id); return e ? parseInt(e.value, 10) : NaN; }
+    // CAB-004 — validação fail-closed do máximo por fase. Aceita EXCLUSIVAMENTE um inteiro
+    // decimal em [1..10]; vazio, fração ('1.5'), zero, negativo, acima de 10, não numérico ou
+    // ausente ⇒ null. null ⇒ o motor NÃO é chamado (sem default silencioso de 10, sem fixture).
+    function validMaxParallel() {
+        var e = el('bt-parallel-selection-maxparallel');
+        if (!e) return null;
+        var raw = String(e.value == null ? '' : e.value).trim();
+        if (!/^\d+$/.test(raw)) return null;
+        var n = Number(raw);
+        if (!isFinite(n) || n < 1 || n > 10) return null;
+        return n;
+    }
+
+    // Campo do catálogo laboratorial no DOM (por índice/campo). Sem defaults silenciosos:
+    // valores ausentes/invalidos permanecem NaN/'' e seguem fail-closed pelo motor real.
+    function catField(idx, field) {
+        return document.querySelector('[data-catalog-index="' + idx + '"][data-catalog-field="' + field + '"]');
+    }
+    // Lê um metadado materializado no DOM (atributo data-value); ausência ⇒ null (sem fallback).
+    function metaValue(rootSelector, name) {
+        var e = document.querySelector(rootSelector + ' [data-meta="' + name + '"]');
+        return e ? e.getAttribute('data-value') : null;
+    }
+    // Escalar numérico: vazio/ausente ⇒ chave OMITIDA (candidate_incomplete no motor);
+    // presente ⇒ parseFloat (NaN/Infinity se não numérico ⇒ candidate_value_invalid).
+    function setNumField(obj, key, rawVal) {
+        if (rawVal === '' || rawVal == null) return;
+        obj[key] = parseFloat(rawVal);
+    }
+    // Escalar textual: vazio/ausente ⇒ chave OMITIDA; presente ⇒ String.
+    function setStrField(obj, key, rawVal) {
+        if (rawVal === '' || rawVal == null) return;
+        obj[key] = String(rawVal);
+    }
+
+    // R1 §2 + R2 §2 + O.S.003: catalog.candidates DIRETAMENTE do DOM. Metadados homogêneos
+    // (insulation/installationMethod/units/source/sourceVersion) vêm do DOM materializado
+    // ([data-catalog-shared-metadata]); representação EXCLUSIVA resistance_ohm/reactance_ohm
+    // (nunca impedance_ohm). Catálogo DOM ausente ⇒ coleção VAZIA (fail-closed pelo motor);
+    // sem fixture/fallback estático.
+    function buildCatalogFromDom() {
+        var nodes = document.querySelectorAll('#cbpsx-catalog [data-catalog-index][data-catalog-field]');
+        var order = [];
+        var seen = {};
+        Array.prototype.forEach.call(nodes, function (n) {
+            var i = n.getAttribute('data-catalog-index');
+            if (!Object.prototype.hasOwnProperty.call(seen, i)) { seen[i] = true; order.push(i); }
+        });
+        order.sort(function (a, b) { return Number(a) - Number(b); });
+        var shared = {
+            insulation: metaValue('[data-catalog-shared-metadata]', 'insulation'),
+            installationMethod: metaValue('[data-catalog-shared-metadata]', 'installationMethod'),
+            units: metaValue('[data-catalog-shared-metadata]', 'units'),
+            source: metaValue('[data-catalog-shared-metadata]', 'source'),
+            sourceVersion: metaValue('[data-catalog-shared-metadata]', 'entrySourceVersion'),
+        };
+        return order.map(function (i) {
+            function raw(field) { var e = catField(i, field); return e ? e.value : ''; }
+            var cand = {};
+            setNumField(cand, 'section_mm2', raw('section'));
+            setNumField(cand, 'tabulatedAmpacity_A', raw('ampacity'));
+            setStrField(cand, 'material', raw('material'));
+            cand.insulation = shared.insulation;
+            cand.installationMethod = shared.installationMethod;
+            setNumField(cand, 'referenceTemperature_C', raw('temp'));
+            cand.units = shared.units;
+            cand.source = shared.source;
+            cand.sourceVersion = shared.sourceVersion;
+            setStrField(cand, 'provenance', raw('provenance'));
+            setNumField(cand, 'resistance_ohm', raw('r'));
+            setNumField(cand, 'reactance_ohm', raw('x'));
+            return cand;
+        });
+    }
+
+    // Constrói o DTO a partir do DOM. referenceInput() fornece APENAS o andaime não editável
+    // (contractVersion, modes, provenance, impedanceBasis, providedCombination). R2 §2: todo
+    // campo EDITÁVEL é atribuído com o valor observado no DOM, MESMO inválido (NaN/''),
+    // sem preservar 600/400/3/0,9/0,8 etc. Campo vazio chega ao motor como inválido/ausente
+    // e segue fail-closed — nunca recupera o default de referenceInput().
+    function buildInput() {
+        var input = referenceInput();
+        var obj = el('bt-parallel-selection-objective');
+        input.objective = obj ? obj.value : undefined;
+        input.totalLoadCurrent_A = fieldNum('bt-parallel-selection-current');
+        input.lineVoltage_V = fieldNum('bt-parallel-selection-voltage');
+        input.maximumVoltageDrop_percent = fieldNum('bt-parallel-selection-drop');
+        input.powerFactor.value = fieldNum('bt-parallel-selection-pf');
+        input.grouping.value = fieldNum('bt-parallel-selection-kg');
+        input.nCircuits = fieldInt('bt-parallel-selection-ncircuits');
+        input.maxParallelCount = fieldInt('bt-parallel-selection-maxparallel');
+        input.fault.totalFaultCurrent_A = fieldNum('bt-parallel-selection-ifault');
+        input.fault.clearingTime_s = fieldNum('bt-parallel-selection-time');
+        input.fault.adiabaticK_A_sqrt_s_per_mm2.value = fieldNum('bt-parallel-selection-k');
+        input.fault.imbalance.deltaFault = fieldNum('bt-parallel-selection-delta');
+        // Confirmações: elemento ausente ⇒ confirmed=false; nunca true como fallback.
+        var catEl = el('bt-parallel-selection-catalog-confirmed');
+        var hypEl = el('bt-parallel-selection-hypothesis-confirmed'); input.guidedHypothesis.confirmed = hypEl ? hypEl.checked === true : false;
+        // O.S.003 §5/§6: catálogo construído INTEGRALMENTE do DOM — metadados materializados
+        // em [data-catalog-metadata] e candidatas em [data-catalog-index]; sem constante JS.
+        // catalog.sourceVersion vem EXCLUSIVAMENTE do DOM.
+        var impLen = metaValue('[data-catalog-metadata]', 'impedanceLength_m');
+        input.catalog = {
+            mode: metaValue('[data-catalog-metadata]', 'catalogMode'),
+            confirmed: catEl ? catEl.checked === true : false,
+            source: metaValue('[data-catalog-metadata]', 'catalogSource'),
+            sourceVersion: metaValue('[data-catalog-metadata]', 'catalogSourceVersion'),
+            provenance: metaValue('[data-catalog-metadata]', 'catalogProvenance'),
+            impedanceBasis: {
+                length_m: impLen == null ? null : Number(impLen),
+                description: metaValue('[data-catalog-metadata]', 'impedanceDescription'),
+                provenance: metaValue('[data-catalog-metadata]', 'impedanceProvenance'),
+            },
+            candidates: buildCatalogFromDom(),
+        };
+        // CAB-004 §2/§5 — política de apresentação aprovada pelo CEO: o motor projeta a menor
+        // quantidade que atende por seção. EXATAMENTE {mode, confirmed, provenance} (sem extras).
+        input.presentationPolicy = {
+            mode: 'MINIMUM_PASSING_PER_SECTION',
+            confirmed: true,
+            provenance: 'CEO_APPROVED_PRESENTATION_POLICY',
+        };
+        return input;
+    }
+
+    function critLine(lang, token, statusToken, extras) {
+        var status = tr(L.st[statusToken] || L.st.ATENDE, lang);
+        var parts = [tr(L.crit[token], lang) + ': ' + status].concat(extras.filter(Boolean));
+        return '<div class="cbpsx-crit">' + esc(parts.join(' · ')) + '</div>';
+    }
+
+    // CAB-004 §3/§4 — cartão da ÚNICA alternativa mínima aprovada por seção. Apresentação enxuta
+    // e integralmente localizada (código da combinação + forma humana n × S mm² · por fase), sem
+    // números parciais que possam produzir tokens 'NaN'/'undefined'/'--'. Nada de vocabulário de
+    // recomendação/seleção/instalação (guardrails). A ordem entre cartões vem do presentationOrder.
+    function cardHtml(card, lang, isFirst) {
+        var qty = card.quantityPerPhase;
+        var sec = card.section_mm2;
+        var human = qty + ' × ' + sec + ' mm² · ' + tr(L.perPhase, lang);
+        var lines = [];
+        lines.push('<div class="cbpsx-alt-head"><span class="cbpsx-alt-code">' + esc(card.candidateId) + '</span></div>');
+        lines.push('<div class="cbpsx-alt-human">' + esc(human) + '</div>');
+        return '<div class="cbpsx-alt' + (isFirst ? ' cbpsx-first' : '') + '" data-candidate-id="' + esc(card.candidateId) + '">' + lines.join('') + '</div>';
+    }
+
+    // Representação fiel de installableSelection (null permanece "null", nunca omitido).
+    function installableRepr(sel) {
+        if (sel === null) return 'null';
+        if (sel === undefined) return 'undefined';
+        try { return JSON.stringify(sel); } catch (serializeError) { return String(sel); }
+    }
+
+    // installableSelection real: sob data no caminho feliz; ausente (data null) no erro.
+    function installableFrom(envelope) {
+        if (envelope && envelope.data && typeof envelope.data === 'object'
+            && Object.prototype.hasOwnProperty.call(envelope.data, 'installableSelection')) {
+            return envelope.data.installableSelection;
+        }
+        if (envelope && Object.prototype.hasOwnProperty.call(envelope, 'installableSelection')) {
+            return envelope.installableSelection;
+        }
+        return undefined;
+    }
+
+    // R1 §3 + R2 §3: verificação de guardrails contra o contrato experimental. installable/
+    // installation só se aplicam quando há data (caminho feliz); no erro, data é ausente.
+    function guardrailViolations(envelope) {
+        var v = [];
+        var ss = envelope.sourceStatus;
+        if (envelope.productionAllowed !== false) v.push('productionAllowed');
+        if (!ss || typeof ss !== 'object') {
+            v.push('sourceStatus');
+        } else {
+            if (ss.iecConformity !== false) v.push('sourceStatus.iecConformity');
+            if (ss.primarySourceComplete !== false) v.push('sourceStatus.primarySourceComplete');
+        }
+        var codes = (envelope.blockers || []).map(function (b) { return b.code; });
+        ['B-01', 'B-02', 'B-03', 'B-04', 'B-05', 'B-06'].forEach(function (req) {
+            if (codes.indexOf(req) < 0) v.push('blocker:' + req);
+        });
+        if (envelope.data && typeof envelope.data === 'object') {
+            if (envelope.data.installableSelection !== null) v.push('data.installableSelection');
+            if (envelope.data.installationAuthorized !== false) v.push('data.installationAuthorized');
+        }
+        return v;
+    }
+
+    // R2 §3: linhas de guardrail projetadas DIRETAMENTE do envelope (caminho feliz e de erro).
+    // Sem números parciais; installationAuthorized só quando há data.
+    function envelopeGuardrailLines(envelope, lang) {
+        var ss = envelope.sourceStatus || {};
+        var hasData = envelope.data && typeof envelope.data === 'object';
+        var lines = [];
+        lines.push('<div>productionAllowed = ' + esc(String(envelope.productionAllowed))
+            + ' · installableSelection = ' + esc(installableRepr(installableFrom(envelope)))
+            + (hasData ? ' · installationAuthorized = ' + esc(String(envelope.data.installationAuthorized)) : '') + '</div>');
+        lines.push('<div>' + esc(tr(L.sourceStatus, lang) + ': ' + String(ss.classification)
+            + ' · primarySourceComplete = ' + String(ss.primarySourceComplete)
+            + ' · iecConformity = ' + String(ss.iecConformity)) + '</div>');
+        if (envelope.displayNotice != null) lines.push('<div>' + esc(String(envelope.displayNotice)) + '</div>');
+        var assumptionIds = (envelope.assumptions || []).map(function (a) { return a.id + ' (' + a.provenance + ')'; });
+        if (assumptionIds.length) lines.push('<div>' + esc(tr(L.assumptions, lang)) + ': ' + esc(assumptionIds.join('; ')) + '</div>');
+        var blockerCodes = (envelope.blockers || []).map(function (b) { return b.code; });
+        lines.push('<div>' + esc(tr(L.blockers, lang)) + ': ' + esc(blockerCodes.join(', ') || '—') + '</div>');
+        return lines;
+    }
+
+    // CAB-004 — governança da apresentação mínima. PROJEÇÃO FIEL do envelope (R1 §1/§3): cada
+    // sentença localizada é DERIVADA do valor REAL (installationAuthorized/productionAllowed/
+    // sourceStatus/assumptions), e a linha bruta expõe os literais (false/null). O aviso projetado
+    // é LOCALIZADO (não o displayNotice cru em PT — evitaria vazamento de idioma no MPS-UI-09);
+    // o displayNotice cru (SEM ponto, base do núcleo) permanece intacto no envelope — a UI não muta.
+    function govMinimumHtml(envelope, input, lang) {
+        var data = envelope.data || {};
+        var ss = envelope.sourceStatus || {};
+        var codes = (envelope.blockers || []).map(function (b) { return b.code; });
+        var leaves = [];
+        leaves.push('<p class="cbpsx-proj-notice" data-cab-bt-parallel-display-notice>' + esc(tr(L.warning, lang)) + '</p>');
+        leaves.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + (data.installationAuthorized === true ? tr(L.yes, lang) : tr(L.no, lang))) + '</div>');
+        leaves.push('<div>' + esc(envelope.productionAllowed === false ? tr(L.production, lang) : ('productionAllowed = ' + String(envelope.productionAllowed))) + '</div>');
+        leaves.push('<div>' + esc((ss.primarySourceComplete === false && ss.iecConformity === false) ? tr(L.source, lang) : (tr(L.sourceStatus, lang) + ': primarySourceComplete = ' + String(ss.primarySourceComplete) + ' · iecConformity = ' + String(ss.iecConformity))) + '</div>');
+        if ((envelope.assumptions || []).length > 0) leaves.push('<div>' + esc(tr(L.assumptionsLine, lang)) + '</div>');
+        leaves.push('<div>productionAllowed = ' + esc(String(envelope.productionAllowed)) + ' · installableSelection = ' + esc(installableRepr(installableFrom(envelope))) + ' · installationAuthorized = ' + esc(String(data.installationAuthorized)) + '</div>');
+        leaves.push('<div>' + esc(tr(L.blockers, lang)) + '</div>');
+        leaves.push('<div class="cbpsx-codes">' + esc(codes.join(' · ') || '—') + '</div>');
+        leaves.push('<div>' + esc(tr(L.confirmedInputs, lang)) + '</div>');
+        leaves.push('<div>' + esc(String(input.totalLoadCurrent_A) + ' A · ' + String(input.lineVoltage_V) + ' V · ' + String(input.maximumVoltageDrop_percent) + ' %') + '</div>');
+        return '<div class="cbpsx-gov">' + leaves.join('') + '</div>';
+    }
+
+    function renderResults() {
+        var container = el('cbpsx-results');
+        if (!container) return;
+        var store = window._parSelLast;
+        if (!store) { container.innerHTML = ''; return; }
+        var lang = curLang();
+
+        // CAB-004 §1/§6/§7 — máximo por fase inválido (vazio/fração/zero/negativo/>10): fail-closed
+        // ANTES do motor. Sem cartões, sem números parciais, sem código de domínio; apenas dica
+        // localizada. uiFailure permanece null (separado do envelope) — não é falha da camada visual.
+        if (store.invalidControl) {
+            container.innerHTML = '<div class="cbpsx-gov" role="alert"><div class="cbpsx-install">' + esc(tr(L.invalidMax, lang)) + '</div></div>';
+            return;
+        }
+
+        // R1 §4: exceção da CAMADA VISUAL — separada do envelope, sem código de domínio
+        // nem números parciais. Apresentada como falha interna da interface.
+        if (store.uiFailure) {
+            var uf = store.uiFailure;
+            var ub = [];
+            ub.push('<div class="cbpsx-install">' + esc(tr(L.uiFailureTitle, lang)) + '</div>');
+            ub.push('<div>' + esc(tr(L.uiFailureNote, lang)) + '</div>');
+            ub.push('<div>' + esc((uf.name || 'Error') + ': ' + (uf.message || '')) + '</div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + ub.join('') + '</div>';
+            return;
+        }
+
+        var envelope = store.envelope;
+        var input = store.input;
+
+        // R2 §3: envelope de erro real do motor — PROJEÇÃO COMPLETA e fiel (productionAllowed,
+        // installableSelection, sourceStatus.*, displayNotice, error.code/status/title, blockers,
+        // assumptions quando presentes), sem constantes, sem mascarar e sem números parciais.
+        if (!envelope || envelope.ok !== true || !envelope.data) {
+            if (!envelope || typeof envelope !== 'object') {
+                // Estado indefinido sem envelope nem uiFailure → falha interna da camada visual.
+                container.innerHTML = '<div class="cbpsx-gov" role="alert"><div class="cbpsx-install">'
+                    + esc(tr(L.uiFailureTitle, lang)) + '</div><div>' + esc(tr(L.uiFailureNote, lang)) + '</div></div>';
+                return;
+            }
+            var problem = envelope.error || {};
+            var eb = [];
+            eb.push('<div class="cbpsx-install"><strong>' + esc(tr(L.errorTitle, lang)) + '</strong></div>');
+            eb.push('<div>ok = ' + esc(String(envelope.ok)) + '</div>');
+            eb.push('<div>error.code = ' + esc(String(problem.code)) + ' · status = ' + esc(String(problem.status))
+                + (problem.title != null ? ' · title = ' + esc(String(problem.title)) : '') + '</div>');
+            eb = eb.concat(envelopeGuardrailLines(envelope, lang));
+            // Guardrail obrigatório ausente/divergente → falha de integração identificada
+            // SEPARADAMENTE; permanece sem alternativas e sem números parciais.
+            var evio = guardrailViolations(envelope);
+            if (evio.length > 0) {
+                eb.push('<div><strong>' + esc(tr(L.integrationFailClosed, lang)) + '</strong></div>');
+                eb.push('<div>' + esc(tr(L.guardrailLabel, lang) + ': ' + evio.join(', ')) + '</div>');
+            }
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + eb.join('') + '</div>';
+            return;
+        }
+
+        // R1 §3: guardrail ausente/divergente → bloquear alternativas + falha de integração fail-closed.
+        var violations = guardrailViolations(envelope);
+        if (violations.length > 0) {
+            var gb = [];
+            gb.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + tr(L.no, lang)) + '</div>');
+            gb.push('<div><strong>' + esc(tr(L.integrationFailClosed, lang)) + '</strong></div>');
+            gb.push('<div>' + esc(tr(L.guardrailLabel, lang) + ': ' + violations.join(', ')) + '</div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + gb.join('') + '</div>';
+            return;
+        }
+
+        var data = envelope.data;
+        // O.S.003 UI300-12: entrada de catálogo estruturalmente inválida (campo ausente/inválido
+        // ou catálogo heterogêneo) ⇒ fail-closed: sem alternativas nem números parciais.
+        var structuralReasons = {};
+        (data.evaluatedCandidates || []).forEach(function (c) {
+            (c.blockers || []).forEach(function (b) {
+                if (b && b.code === 'CANDIDATE_STRUCTURE_INVALID' && b.params && b.params.reason) structuralReasons[b.params.reason] = true;
+            });
+        });
+        if (Object.keys(structuralReasons).length > 0) {
+            var sb = [];
+            sb.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + tr(L.no, lang)) + '</div>');
+            sb.push('<div><strong>' + esc(tr(L.catalogStructuralInvalid, lang)) + '</strong></div>');
+            sb.push('<div>' + esc(tr(L.structuralReasons, lang) + ': CANDIDATE_STRUCTURE_INVALID (' + Object.keys(structuralReasons).join(', ') + ')') + '</div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + sb.join('') + '</div>';
+            return;
+        }
+        // CAB-004 §5/§6 — apresentar EXCLUSIVAMENTE a projeção do motor: presentationModel.cards
+        // ordenados por presentationOrder (uma alternativa mínima por seção). Candidatas superiores
+        // válidas da mesma seção ficam em hiddenCandidateIds e NÃO são renderizadas (nem impressão).
+        var proj = data.presentationProjection || {};
+        var isMinimum = proj.mode === 'MINIMUM_PASSING_PER_SECTION';
+        var model = data.presentationModel || {};
+        var cardsById = {};
+        (model.cards || []).forEach(function (c) { cardsById[c.candidateId] = c; });
+        var order = (data.presentationOrder || []).map(function (p) { return p.candidateId; });
+        // Integração fail-closed: a ordem e o modelo têm de coincidir (mesmo conjunto). Divergência
+        // ⇒ NÃO renderizar cartões parciais — bloquear com falha de integração identificada.
+        var orderHasAllCards = order.every(function (id) { return Object.prototype.hasOwnProperty.call(cardsById, id); });
+        if (!isMinimum || !orderHasAllCards) {
+            var ib = [];
+            ib.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + tr(L.no, lang)) + '</div>');
+            ib.push('<div><strong>' + esc(tr(L.integrationFailClosed, lang)) + '</strong></div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + ib.join('') + '</div>';
+            return;
+        }
+        var firstId = order[0] || null;
+        var cards = order.map(function (id, idx) {
+            var card = cardsById[id];
+            if (!card) return '';
+            return cardHtml(card, lang, id === firstId && idx === 0);
+        }).join('');
+        var absenceEntries = model.absenceEntries || [];
+        var absences = absenceEntries.map(function (e) {
+            var a = e.messageArgs || {};
+            return '<div class="cbpsx-absence">' + esc(absenceText(lang, a.section_mm2, a.minimum, a.maximum)) + '</div>';
+        }).join('');
+        var html = govMinimumHtml(envelope, input, lang)
+            + '<div class="cbpsx-heading">' + esc(tr(L.heading, lang)) + '</div>'
+            + '<div class="cbpsx-criteria">' + esc(tr(L.criteria, lang)) + '</div>'
+            + '<div class="cbpsx-alts">' + cards + '</div>'
+            + (absences ? '<div class="cbpsx-absences">' + absences + '</div>' : '')
+            + '<div class="cbpsx-print-label">' + esc(tr(L.printLabel, lang)) + '</div>';
+        container.innerHTML = html;
+    }
+
+    window.parSelCalculate = function parSelCalculate() {
+        // CAB-004 §1 — máximo por fase inválido ⇒ o motor NÃO é chamado (engineCalls permanece 0),
+        // sem recuperar o default 10 nem fixture. Estado separado do envelope (uiFailure = null).
+        if (validMaxParallel() === null) {
+            window._parSelLast = { envelope: null, input: null, uiFailure: null, invalidControl: true };
+            renderResults();
+            return;
+        }
+        try {
+            var input = buildInput();
+            var envelope = window.enumerateCablingBTParallelAlternativesExperimental(input);
+            window._parSelLast = { envelope: envelope, input: input, uiFailure: null };
+        } catch (failure) {
+            // R1 §4: exceção da integração fica SEPARADA do envelope (uiFailure). Sem envelope
+            // sintético, sem error.code de domínio inventado, sem números parciais.
+            window._parSelLast = { envelope: null, input: null, uiFailure: { name: String(failure && failure.name || 'Error'), message: String(failure && failure.message || failure) } };
+        }
+        renderResults();
+    };
+
+    // Re-localiza os resultados ao trocar de idioma. CAB-004 §2: o #cbpsx-notice permanente também
+    // acompanha o idioma (aviso localizado, frase com ponto final) a partir da MESMA fonte
+    // (L.warning) que alimenta o aviso projetado — garante bytes idênticos entre os dois avisos.
+    if (typeof window.setLanguage === 'function') {
+        var prevSetLanguage = window.setLanguage;
+        window.setLanguage = function (lang) {
+            var out = prevSetLanguage.apply(this, arguments);
+            // O.S.003 UI300-13: o atributo lang do documento usa o código simples (pt/en/es).
+            var norm = 'pt';
+            try {
+                var raw = String(lang || '').toLowerCase();
+                if (raw.indexOf('en') === 0) norm = 'en';
+                else if (raw.indexOf('es') === 0) norm = 'es';
+                else norm = 'pt';
+                document.documentElement.lang = norm;
+            } catch (langErr) { /* noop */ }
+            // CAB-004 §2 — aviso PERMANENTE localizado (mesma string exata do aviso projetado).
+            try { var notice = el('cbpsx-notice'); if (notice) notice.textContent = tr(L.warning, norm); } catch (noticeErr) { /* noop */ }
+            // O.S.003 UI300-15: reprojeta com o DOM/idioma atuais. Recalcula quando já houve
+            // um cálculo, para a projeção refletir o catálogo vigente no novo idioma.
+            try { if (window._parSelLast) window.parSelCalculate(); } catch (ignore) { /* noop */ }
+            return out;
+        };
+    }
+})();
 

@@ -1925,6 +1925,210 @@
                             <!-- O conteúdo dinâmico (Clonagem Curto-Circuito) será injetado via js/ui_render.js -->
                         </section>
                     </div>
+
+                    <!-- ═══════════════════════════════════════════════════════════════
+                         O.S. CAB-BT-PARALLEL-002-UI — Alternativas paralelas preliminares
+                         (experimental). Região isolada do card BT produtivo; consome
+                         window.enumerateCablingBTParallelAlternativesExperimental. Primeira
+                         leitura: "quantos cabos por fase e de qual seção". Dados técnicos
+                         recolhidos em <details>. Estado: EXPERIMENTAL_PRELIMINAR_NAO_CANONICO.
+                         ═══════════════════════════════════════════════════════════════ -->
+                    <style>
+                        #cab-bt-parallel-selection-experimental { min-width:0; background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.1rem; margin-top:1.5rem; color:var(--text-primary); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-title { font-size:1rem; font-weight:800; margin:0 0 0.4rem 0; color:var(--text-primary); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-notice { margin:0 0 0.9rem 0; padding:0.5rem 0.65rem; border:1px solid var(--warning); border-radius:8px; font-weight:700; font-size:0.74rem; overflow-wrap:anywhere; white-space:normal; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:0.65rem; }
+                        @media (max-width:480px){ #cab-bt-parallel-selection-experimental .cbpsx-grid { grid-template-columns:1fr; } }
+                        #cab-bt-parallel-selection-experimental .cbpsx-field { display:flex; flex-direction:column; gap:0.22rem; font-size:0.72rem; color:var(--text-secondary); min-width:0; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-check { flex-direction:row; align-items:center; gap:0.45rem; }
+                        #cab-bt-parallel-selection-experimental input, #cab-bt-parallel-selection-experimental select { box-sizing:border-box; min-width:0; max-width:100%; padding:0.35rem 0.4rem; border:1px solid var(--border); border-radius:6px; background:var(--bg-primary); color:var(--text-primary); font-size:0.82rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-field:not(.cbpsx-check) input, #cab-bt-parallel-selection-experimental .cbpsx-field select { width:100%; }
+                        #cab-bt-parallel-selection-experimental input[type="checkbox"] { width:auto; min-width:16px; }
+                        #cbpsx-calculate { margin-top:0.85rem; }
+                        #cab-bt-parallel-selection-experimental details[data-advanced] { margin-top:0.9rem; border:1px dashed var(--border); border-radius:8px; padding:0.5rem 0.65rem; }
+                        #cab-bt-parallel-selection-experimental details[data-advanced] > summary { cursor:pointer; font-weight:700; font-size:0.78rem; color:var(--text-secondary); }
+                        /* Recolhido = conteúdo não renderizado (getClientRects()=0): mantém os
+                           controles avançados fora da ordem de foco quando fechado, sem perder o
+                           valor para o DTO nem impedir a abertura. */
+                        #cab-bt-parallel-selection-experimental details[data-advanced]:not([open]) > :not(summary) { display: none; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-adv-note { font-size:0.68rem; color:var(--text-muted); margin:0.35rem 0; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat, #cab-bt-parallel-selection-experimental .cbpsx-hyp { min-width:0; border:1px solid var(--border); border-radius:8px; padding:0.6rem 0.65rem; margin-top:0.9rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat > legend, #cab-bt-parallel-selection-experimental .cbpsx-hyp > legend { font-weight:800; font-size:0.8rem; padding:0 0.35rem; color:var(--text-primary); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat-note { font-size:0.68rem; color:var(--text-muted); margin:0.15rem 0 0.55rem 0; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat-row { min-width:0; border:1px dashed var(--border); border-radius:8px; padding:0.45rem 0.5rem; margin-bottom:0.5rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat-name { font-weight:700; font-size:0.74rem; color:var(--text-secondary); margin-bottom:0.3rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:0.4rem; min-width:0; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-hyp-list { margin:0.15rem 0 0.55rem 0; padding-left:1.05rem; font-size:0.72rem; color:var(--text-secondary); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-hyp-list li { margin:0.12rem 0; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-confirm { margin-top:0.35rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-lab-summary { font-size:0.74rem; color:var(--text-secondary); margin:0.7rem 0 0.5rem 0; padding:0.5rem 0.6rem; border:1px dashed var(--border); border-radius:8px; overflow-wrap:anywhere; }
+                        @media (max-width:480px){ #cab-bt-parallel-selection-experimental .cbpsx-cat-fields { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+                        #cbpsx-results { margin-top:1rem; min-width:0; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-gov { border:1px solid var(--border); border-radius:8px; padding:0.6rem; font-size:0.74rem; overflow-wrap:anywhere; margin-bottom:0.8rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-gov .cbpsx-install { font-weight:800; color:var(--warning); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alts { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:0.7rem; }
+                        @media (max-width:480px){ #cab-bt-parallel-selection-experimental .cbpsx-alts { grid-template-columns:1fr; } }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt { border:1px solid var(--border); border-radius:10px; padding:0.65rem; min-width:0; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt.cbpsx-first { border-color:var(--accent); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt-head { font-size:0.98rem; font-weight:800; color:var(--text-primary); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt-code { font-size:0.72rem; font-weight:700; color:var(--accent); background:var(--bg-secondary); border:1px solid var(--border); border-radius:5px; padding:0.02rem 0.28rem; margin-right:0.25rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt-order { font-size:0.66rem; font-weight:700; color:var(--accent); text-transform:uppercase; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-crit { font-size:0.72rem; color:var(--text-secondary); padding:0.08rem 0; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-badge { font-size:0.66rem; color:var(--text-muted); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-proj-notice { margin:0 0 0.8rem 0; padding:0.5rem 0.65rem; border:1px solid var(--warning); border-radius:8px; font-weight:700; font-size:0.74rem; overflow-wrap:anywhere; white-space:normal; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-gov > div { overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-codes { font-size:0.7rem; color:var(--text-muted); overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-heading { font-weight:800; font-size:0.82rem; margin:0.2rem 0 0.15rem 0; color:var(--text-primary); overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-criteria { font-size:0.72rem; color:var(--text-secondary); margin:0 0 0.55rem 0; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt-human { font-size:0.78rem; color:var(--text-secondary); margin-top:0.2rem; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-absences { margin-top:0.7rem; display:flex; flex-direction:column; gap:0.4rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-absence { font-size:0.72rem; color:var(--text-secondary); border:1px dashed var(--border); border-radius:8px; padding:0.4rem 0.5rem; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-print-label { font-size:0.68rem; color:var(--text-muted); margin-top:0.7rem; overflow-wrap:anywhere; }
+                        @media print { #cab-bt-parallel-selection-experimental details[data-advanced][open] { } #cab-bt-parallel-selection-experimental { break-inside:avoid; } }
+                    </style>
+                    <section id="cab-bt-parallel-selection-experimental"
+                             data-cab-bt-parallel-selection-experimental
+                             data-experimental-module="cab-bt-parallel-selection"
+                             role="region" aria-labelledby="cbpsx-title">
+                        <h3 id="cbpsx-title" class="cbpsx-title" data-i18n="parsel.title">Alternativas paralelas preliminares (experimental)</h3>
+                        <p class="cbpsx-notice" id="cbpsx-notice">PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.</p>
+                        <form id="cbpsx-form" novalidate autocomplete="off">
+                            <div class="cbpsx-grid">
+                                <label class="cbpsx-field"><span data-i18n="parsel.f.current">Corrente de projeto (A)</span><input type="number" step="any" data-selection-field="totalLoadCurrent_A" id="bt-parallel-selection-current" value="600"></label>
+                                <label class="cbpsx-field"><span data-i18n="parsel.f.voltage">Tensão de linha (V)</span><input type="number" step="any" data-selection-field="lineVoltage_V" id="bt-parallel-selection-voltage" value="400"></label>
+                                <label class="cbpsx-field"><span data-i18n="parsel.f.drop">Limite de queda de tensão (%)</span><input type="number" step="any" data-selection-field="maximumVoltageDrop_percent" id="bt-parallel-selection-drop" value="3"></label>
+                                <label class="cbpsx-field"><span data-i18n="parsel.f.objective">Ordenar alternativas por</span>
+                                    <select data-selection-field="objective" id="bt-parallel-selection-objective">
+                                        <option value="NONE" data-i18n="parsel.obj.NONE">Ordem canônica (sem eleição)</option>
+                                        <option value="MIN_PARALLEL_COUNT" data-i18n="parsel.obj.MIN_PARALLEL_COUNT">Menor nº de cabos por fase</option>
+                                        <option value="MIN_TOTAL_COPPER" data-i18n="parsel.obj.MIN_TOTAL_COPPER">Menor cobre total</option>
+                                        <option value="MAX_MINIMUM_MARGIN" data-i18n="parsel.obj.MAX_MINIMUM_MARGIN">Maior margem mínima</option>
+                                    </select></label>
+                                <label class="cbpsx-field"><span data-i18n="parsel.adv.maxparallel">Máximo de cabos por fase</span><input type="number" step="1" min="1" max="10" data-selection-field="maxParallelCount" id="bt-parallel-selection-maxparallel" value="10"></label>
+                            </div>
+                            <button type="button" id="cbpsx-calculate" class="btn-action btn-accent" data-selection-action="calculate" data-action="enumerate-parallel-selection" data-i18n="parsel.f.calculate">Comparar alternativas</button>
+                            <p class="cbpsx-lab-summary" id="cbpsx-lab-summary" data-i18n="parsel.mainsummary">O catálogo laboratorial (6 entradas, incluindo 300 mm²) está apresentado abaixo para revisão e edição; as hipóteses e os dados técnicos profundos ficam na seção avançada. Confirme antes de comparar.</p>
+                            <label class="cbpsx-field cbpsx-check cbpsx-confirm"><input type="checkbox" data-selection-confirm="catalog" id="bt-parallel-selection-catalog-confirmed"><span data-i18n="parsel.f.catalog">Confirmo o catálogo laboratorial apresentado (ASSUMPTION_ONLY)</span></label>
+                            <label class="cbpsx-field cbpsx-check cbpsx-confirm"><input type="checkbox" data-selection-confirm="hypothesis" id="bt-parallel-selection-hypothesis-confirmed"><span data-i18n="parsel.f.hypothesis">Confirmo as hipóteses laboratoriais revisadas na seção avançada (ASSUMPTION_ONLY)</span></label>
+                            <fieldset class="cbpsx-cat" id="cbpsx-catalog">
+                                <legend data-i18n="parsel.cat.legend">Catálogo laboratorial — 6 entradas, editável (ASSUMPTION_ONLY)</legend>
+                                <p class="cbpsx-cat-note" data-i18n="parsel.cat.note">Dados laboratoriais apresentados e editáveis (ASSUMPTION_ONLY). Uso preliminar; o DTO é construído a partir destes campos.</p>
+                                <div class="cbpsx-cat-meta" data-catalog-shared-metadata hidden>
+                                    <span data-meta="insulation" data-value="LAB_UNSPECIFIED"></span>
+                                    <span data-meta="installationMethod" data-value="LAB_UNSPECIFIED"></span>
+                                    <span data-meta="units" data-value="SI"></span>
+                                    <span data-meta="source" data-value="LAB_CATALOG"></span>
+                                    <span data-meta="entrySourceVersion" data-value="PRELIM-1"></span>
+                                </div>
+                                <div class="cbpsx-cat-meta" data-catalog-metadata hidden>
+                                    <span data-meta="catalogMode" data-value="CATALOGO_LAB_ASSUMPTION_ONLY"></span>
+                                    <span data-meta="catalogSource" data-value="CAB_BT_PARALLEL_SELECTION_PRELIM_Memorial.md"></span>
+                                    <span data-meta="catalogSourceVersion" data-value="122b885db40f69b422dac8ea4c2e419dc547220f"></span>
+                                    <span data-meta="catalogProvenance" data-value="ASSUMPTION_ONLY"></span>
+                                    <span data-meta="impedanceLength_m" data-value="100"></span>
+                                    <span data-meta="impedanceDescription" data-value="Z(S)=2.25/S+j0.008 ohm; laboratory placeholder"></span>
+                                    <span data-meta="impedanceProvenance" data-value="ASSUMPTION_ONLY"></span>
+                                </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="0">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>1</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="0" data-catalog-field="section" id="bt-parallel-selection-cat-0-section" value="95"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="0" data-catalog-field="ampacity" id="bt-parallel-selection-cat-0-ampacity" value="240"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="0" data-catalog-field="r" id="bt-parallel-selection-cat-0-r" value="0.02368421052631579"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="0" data-catalog-field="x" id="bt-parallel-selection-cat-0-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="0" data-catalog-field="temp" id="bt-parallel-selection-cat-0-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="0" data-catalog-field="material" id="bt-parallel-selection-cat-0-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="0" data-catalog-field="provenance" id="bt-parallel-selection-cat-0-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="1">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>2</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="1" data-catalog-field="section" id="bt-parallel-selection-cat-1-section" value="120"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="1" data-catalog-field="ampacity" id="bt-parallel-selection-cat-1-ampacity" value="285"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="1" data-catalog-field="r" id="bt-parallel-selection-cat-1-r" value="0.01875"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="1" data-catalog-field="x" id="bt-parallel-selection-cat-1-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="1" data-catalog-field="temp" id="bt-parallel-selection-cat-1-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="1" data-catalog-field="material" id="bt-parallel-selection-cat-1-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="1" data-catalog-field="provenance" id="bt-parallel-selection-cat-1-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="2">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>3</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="2" data-catalog-field="section" id="bt-parallel-selection-cat-2-section" value="150"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="2" data-catalog-field="ampacity" id="bt-parallel-selection-cat-2-ampacity" value="330"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="2" data-catalog-field="r" id="bt-parallel-selection-cat-2-r" value="0.015"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="2" data-catalog-field="x" id="bt-parallel-selection-cat-2-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="2" data-catalog-field="temp" id="bt-parallel-selection-cat-2-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="2" data-catalog-field="material" id="bt-parallel-selection-cat-2-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="2" data-catalog-field="provenance" id="bt-parallel-selection-cat-2-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="3">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>4</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="3" data-catalog-field="section" id="bt-parallel-selection-cat-3-section" value="185"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="3" data-catalog-field="ampacity" id="bt-parallel-selection-cat-3-ampacity" value="380"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="3" data-catalog-field="r" id="bt-parallel-selection-cat-3-r" value="0.012162162162162163"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="3" data-catalog-field="x" id="bt-parallel-selection-cat-3-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="3" data-catalog-field="temp" id="bt-parallel-selection-cat-3-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="3" data-catalog-field="material" id="bt-parallel-selection-cat-3-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="3" data-catalog-field="provenance" id="bt-parallel-selection-cat-3-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="4">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>5</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="4" data-catalog-field="section" id="bt-parallel-selection-cat-4-section" value="240"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="4" data-catalog-field="ampacity" id="bt-parallel-selection-cat-4-ampacity" value="445"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="4" data-catalog-field="r" id="bt-parallel-selection-cat-4-r" value="0.009375"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="4" data-catalog-field="x" id="bt-parallel-selection-cat-4-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="4" data-catalog-field="temp" id="bt-parallel-selection-cat-4-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="4" data-catalog-field="material" id="bt-parallel-selection-cat-4-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="4" data-catalog-field="provenance" id="bt-parallel-selection-cat-4-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
+                                <div class="cbpsx-cat-row" data-catalog-index="5">
+                                    <div class="cbpsx-cat-name"><span data-i18n="parsel.cat.entry">Cabo</span> <span>6</span> <span>— 300 mm²</span></div>
+                                    <div class="cbpsx-cat-fields">
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.section">Seção (mm²)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="section" id="bt-parallel-selection-cat-5-section" value="300"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.ampacity">Ampacidade (A)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="ampacity" id="bt-parallel-selection-cat-5-ampacity" value="516"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.r">R (Ω)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="r" id="bt-parallel-selection-cat-5-r" value="0.0075"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.x">X (Ω)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="x" id="bt-parallel-selection-cat-5-x" value="0.008"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.temp">Temperatura (°C)</span><input type="number" step="any" data-catalog-index="5" data-catalog-field="temp" id="bt-parallel-selection-cat-5-temp" value="30"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.material">Material</span><input type="text" data-catalog-index="5" data-catalog-field="material" id="bt-parallel-selection-cat-5-material" value="COPPER_LAB"></label>
+                                        <label class="cbpsx-field"><span data-i18n="parsel.cat.provenance">Proveniência</span><input type="text" data-catalog-index="5" data-catalog-field="provenance" id="bt-parallel-selection-cat-5-provenance" value="ASSUMPTION_ONLY"></label>
+                                    </div>
+                                </div>
+                                </fieldset>
+                                <details data-advanced data-selection-advanced>
+                                <summary data-i18n="parsel.advanced.summary">Laboratório avançado (dados técnicos ASSUMPTION_ONLY)</summary>
+                                <p class="cbpsx-adv-note" data-i18n="parsel.advanced.note">Valores preliminares editáveis do pacote científico. Nunca normativos.</p>
+                                <fieldset class="cbpsx-hyp" id="cbpsx-hypotheses">
+                                <legend data-i18n="parsel.hyp.legend">Hipóteses laboratoriais apresentadas</legend>
+                                <ul class="cbpsx-hyp-list">
+                                    <li data-i18n="parsel.hyp.impedance">Impedância laboratorial por seção (ASSUMPTION_ONLY)</li>
+                                    <li data-i18n="parsel.hyp.grouping">Fator de agrupamento constante k_g (ASSUMPTION_ONLY)</li>
+                                    <li data-i18n="parsel.hyp.fault">Falta total e constante adiabática (EXPLICIT_ASSUMPTION)</li>
+                                    <li data-i18n="parsel.hyp.arrangement">Ramais idênticos em laboratório (LAB_IDENTICAL_BRANCHES)</li>
+                                </ul>
+                                </fieldset>
+                                <div class="cbpsx-grid">
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.pf">Fator de potência</span><input type="number" step="any" data-selection-field="powerFactor.value" id="bt-parallel-selection-pf" value="0.9"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.kg">Fator de agrupamento (k_g)</span><input type="number" step="any" data-selection-field="grouping.value" id="bt-parallel-selection-kg" value="0.8"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.ncircuits">Circuitos agrupados (nCircuits)</span><input type="number" step="1" min="1" data-selection-field="nCircuits" id="bt-parallel-selection-ncircuits" value="1"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.ifault">Corrente de falta total (A)</span><input type="number" step="any" data-selection-field="fault.totalFaultCurrent_A" id="bt-parallel-selection-ifault" value="20000"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.time">Tempo de eliminação (s)</span><input type="number" step="any" data-selection-field="fault.clearingTime_s" id="bt-parallel-selection-time" value="0.2"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.k">Constante adiabática k</span><input type="number" step="any" data-selection-field="fault.adiabaticK" id="bt-parallel-selection-k" value="115"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.delta">Desbalanço de falta (deltaFault)</span><input type="number" step="any" data-selection-field="fault.imbalance.deltaFault" id="bt-parallel-selection-delta" value="1"></label>
+                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.arrangement">Arranjo</span><input type="text" data-selection-field="arrangement" id="bt-parallel-selection-arrangement" value="LAB_IDENTICAL_BRANCHES" readonly></label>
+                                </div>
+                            </details>
+                        </form>
+                        <div id="cbpsx-results" role="status" aria-live="polite" aria-labelledby="cbpsx-title"></div>
+                    </section>
+                </div>
                 </div>
 
                 <!-- ═══════════════════════════════════════════════
@@ -2419,6 +2623,46 @@
             pt: {
                 'theme.toggle.toLight': 'Mudar para tema claro',
                 'theme.toggle.toDark': 'Mudar para tema escuro',
+                'parsel.title': 'Alternativas paralelas preliminares (experimental)',
+                'parsel.f.current': 'Corrente de projeto (A)',
+                'parsel.f.voltage': 'Tensão de linha (V)',
+                'parsel.f.drop': 'Limite de queda de tensão (%)',
+                'parsel.f.objective': 'Ordenar alternativas por',
+                'parsel.f.catalog': 'Confirmo o catálogo laboratorial apresentado (ASSUMPTION_ONLY)',
+                'parsel.f.hypothesis': 'Confirmo as hipóteses laboratoriais revisadas na seção avançada (ASSUMPTION_ONLY)',
+                'parsel.mainsummary': 'O catálogo laboratorial (6 entradas, incluindo 300 mm²) está apresentado abaixo para revisão e edição; as hipóteses e os dados técnicos profundos ficam na seção avançada. Confirme antes de comparar.',
+                'parsel.f.calculate': 'Comparar alternativas',
+                'parsel.cat.legend': 'Catálogo laboratorial — 6 entradas, editável (ASSUMPTION_ONLY)',
+                'parsel.cat.note': 'Dados laboratoriais apresentados e editáveis (ASSUMPTION_ONLY). Uso preliminar; o DTO é construído a partir destes campos.',
+                'parsel.cat.entry': 'Cabo',
+                'parsel.cat.section': 'Seção (mm²)',
+                'parsel.cat.ampacity': 'Ampacidade (A)',
+                'parsel.cat.r': 'R (Ω)',
+                'parsel.cat.x': 'X (Ω)',
+                'parsel.cat.temp': 'Temperatura (°C)',
+                'parsel.cat.material': 'Material',
+                'parsel.cat.provenance': 'Proveniência',
+                'parsel.hyp.legend': 'Hipóteses laboratoriais apresentadas',
+                'parsel.hyp.impedance': 'Impedância laboratorial por seção (ASSUMPTION_ONLY)',
+                'parsel.hyp.grouping': 'Fator de agrupamento constante k_g (ASSUMPTION_ONLY)',
+                'parsel.hyp.fault': 'Falta total e constante adiabática (EXPLICIT_ASSUMPTION)',
+                'parsel.hyp.arrangement': 'Ramais idênticos em laboratório (LAB_IDENTICAL_BRANCHES)',
+                'parsel.obj.NONE': 'Ordem canônica (sem eleição)',
+                'parsel.obj.MIN_PARALLEL_COUNT': 'Menor nº de cabos por fase',
+                'parsel.obj.MIN_TOTAL_COPPER': 'Menor cobre total',
+                'parsel.obj.MAX_MINIMUM_MARGIN': 'Maior margem mínima',
+                'parsel.advanced.summary': 'Laboratório avançado (dados técnicos ASSUMPTION_ONLY)',
+                'parsel.advanced.note': 'Valores preliminares editáveis; permanecem ASSUMPTION_ONLY.',
+                'parsel.adv.pf': 'Fator de potência',
+                'parsel.adv.kg': 'Fator de agrupamento (k_g)',
+                'parsel.adv.ncircuits': 'Circuitos agrupados (nCircuits)',
+                'parsel.adv.maxparallel': 'Máximo de cabos por fase',
+                'parsel.adv.ifault': 'Corrente de falta total (A)',
+                'parsel.adv.time': 'Tempo de eliminação (s)',
+                'parsel.adv.k': 'Constante adiabática k',
+                'parsel.adv.delta': 'Desbalanço de falta (deltaFault)',
+                'parsel.adv.arrangement': 'Arranjo',
+                'parsel.adv.temperature': 'Temperatura de referência (°C)',
                 'header.title': 'Assistente de Engenharia Elétrica',
                 'header.subtitle': 'Soluções em Engenharia Elétrica',
                 'header.method': 'Método das Impedâncias Percentuais',
@@ -2640,6 +2884,46 @@
             en: {
                 'theme.toggle.toLight': 'Switch to light theme',
                 'theme.toggle.toDark': 'Switch to dark theme',
+                'parsel.title': 'Preliminary parallel alternatives (experimental)',
+                'parsel.f.current': 'Design current (A)',
+                'parsel.f.voltage': 'Line voltage (V)',
+                'parsel.f.drop': 'Voltage drop limit (%)',
+                'parsel.f.objective': 'Sort alternatives by',
+                'parsel.f.catalog': 'I confirm the laboratory catalog presented (ASSUMPTION_ONLY)',
+                'parsel.f.hypothesis': 'I confirm the laboratory hypotheses reviewed in the advanced section (ASSUMPTION_ONLY)',
+                'parsel.mainsummary': 'The laboratory catalog (6 entries, including 300 mm²) is presented below for review and editing; the hypotheses and deep technical data stay in the advanced section. Confirm before comparing.',
+                'parsel.f.calculate': 'Compare alternatives',
+                'parsel.cat.legend': 'Laboratory catalog — 6 entries, editable (ASSUMPTION_ONLY)',
+                'parsel.cat.note': 'Laboratory data presented and editable (ASSUMPTION_ONLY). Preliminary use; the DTO is built from these fields.',
+                'parsel.cat.entry': 'Cable',
+                'parsel.cat.section': 'Section (mm²)',
+                'parsel.cat.ampacity': 'Ampacity (A)',
+                'parsel.cat.r': 'R (Ω)',
+                'parsel.cat.x': 'X (Ω)',
+                'parsel.cat.temp': 'Temperature (°C)',
+                'parsel.cat.material': 'Material',
+                'parsel.cat.provenance': 'Provenance',
+                'parsel.hyp.legend': 'Laboratory hypotheses presented',
+                'parsel.hyp.impedance': 'Laboratory impedance per section (ASSUMPTION_ONLY)',
+                'parsel.hyp.grouping': 'Constant grouping factor k_g (ASSUMPTION_ONLY)',
+                'parsel.hyp.fault': 'Total fault and adiabatic constant (EXPLICIT_ASSUMPTION)',
+                'parsel.hyp.arrangement': 'Identical laboratory branches (LAB_IDENTICAL_BRANCHES)',
+                'parsel.obj.NONE': 'Canonical order (no election)',
+                'parsel.obj.MIN_PARALLEL_COUNT': 'Fewest cables per phase',
+                'parsel.obj.MIN_TOTAL_COPPER': 'Least total copper',
+                'parsel.obj.MAX_MINIMUM_MARGIN': 'Largest minimum margin',
+                'parsel.advanced.summary': 'Advanced laboratory (technical data ASSUMPTION_ONLY)',
+                'parsel.advanced.note': 'Editable preliminary values; remain ASSUMPTION_ONLY.',
+                'parsel.adv.pf': 'Power factor',
+                'parsel.adv.kg': 'Grouping factor (k_g)',
+                'parsel.adv.ncircuits': 'Grouped circuits (nCircuits)',
+                'parsel.adv.maxparallel': 'Max cables per phase',
+                'parsel.adv.ifault': 'Total fault current (A)',
+                'parsel.adv.time': 'Clearing time (s)',
+                'parsel.adv.k': 'Adiabatic constant k',
+                'parsel.adv.delta': 'Fault imbalance (deltaFault)',
+                'parsel.adv.arrangement': 'Arrangement',
+                'parsel.adv.temperature': 'Reference temperature (°C)',
                 'header.title': 'Electrical Engineering Assistant',
                 'header.subtitle': 'Electrical Engineering Solutions',
                 'header.method': 'Percentage Impedance Method',
@@ -2860,6 +3144,46 @@
             es: {
                 'theme.toggle.toLight': 'Cambiar a tema claro',
                 'theme.toggle.toDark': 'Cambiar a tema oscuro',
+                'parsel.title': 'Alternativas paralelas preliminares (experimental)',
+                'parsel.f.current': 'Corriente de diseño (A)',
+                'parsel.f.voltage': 'Tensión de línea (V)',
+                'parsel.f.drop': 'Límite de caída de tensión (%)',
+                'parsel.f.objective': 'Ordenar alternativas por',
+                'parsel.f.catalog': 'Confirmo el catálogo de laboratorio presentado (ASSUMPTION_ONLY)',
+                'parsel.f.hypothesis': 'Confirmo las hipótesis de laboratorio revisadas en la sección avanzada (ASSUMPTION_ONLY)',
+                'parsel.mainsummary': 'El catálogo de laboratorio (6 entradas, incluyendo 300 mm²) está presentado abajo para revisión y edición; las hipótesis y los datos técnicos profundos quedan en la sección avanzada. Confirme antes de comparar.',
+                'parsel.f.calculate': 'Comparar alternativas',
+                'parsel.cat.legend': 'Catálogo de laboratorio — 6 entradas, editable (ASSUMPTION_ONLY)',
+                'parsel.cat.note': 'Datos de laboratorio presentados y editables (ASSUMPTION_ONLY). Uso preliminar; el DTO se construye a partir de estos campos.',
+                'parsel.cat.entry': 'Cable',
+                'parsel.cat.section': 'Sección (mm²)',
+                'parsel.cat.ampacity': 'Ampacidad (A)',
+                'parsel.cat.r': 'R (Ω)',
+                'parsel.cat.x': 'X (Ω)',
+                'parsel.cat.temp': 'Temperatura (°C)',
+                'parsel.cat.material': 'Material',
+                'parsel.cat.provenance': 'Procedencia',
+                'parsel.hyp.legend': 'Hipótesis de laboratorio presentadas',
+                'parsel.hyp.impedance': 'Impedancia de laboratorio por sección (ASSUMPTION_ONLY)',
+                'parsel.hyp.grouping': 'Factor de agrupamiento constante k_g (ASSUMPTION_ONLY)',
+                'parsel.hyp.fault': 'Falla total y constante adiabática (EXPLICIT_ASSUMPTION)',
+                'parsel.hyp.arrangement': 'Ramales idénticos de laboratorio (LAB_IDENTICAL_BRANCHES)',
+                'parsel.obj.NONE': 'Orden canónico (sin elección)',
+                'parsel.obj.MIN_PARALLEL_COUNT': 'Menor nº de cables por fase',
+                'parsel.obj.MIN_TOTAL_COPPER': 'Menor cobre total',
+                'parsel.obj.MAX_MINIMUM_MARGIN': 'Mayor margen mínimo',
+                'parsel.advanced.summary': 'Laboratorio avanzado (datos técnicos ASSUMPTION_ONLY)',
+                'parsel.advanced.note': 'Valores preliminares editables; permanecen ASSUMPTION_ONLY.',
+                'parsel.adv.pf': 'Factor de potencia',
+                'parsel.adv.kg': 'Factor de agrupamiento (k_g)',
+                'parsel.adv.ncircuits': 'Circuitos agrupados (nCircuits)',
+                'parsel.adv.maxparallel': 'Máximo de cables por fase',
+                'parsel.adv.ifault': 'Corriente de falla total (A)',
+                'parsel.adv.time': 'Tiempo de despeje (s)',
+                'parsel.adv.k': 'Constante adiabática k',
+                'parsel.adv.delta': 'Desequilibrio de falla (deltaFault)',
+                'parsel.adv.arrangement': 'Arreglo',
+                'parsel.adv.temperature': 'Temperatura de referencia (°C)',
                 'header.title': 'Asistente de Ingeniería Eléctrica',
                 'header.subtitle': 'Soluciones en Ingeniería Eléctrica',
                 'header.method': 'Método de las Impedancias Porcentuales',
@@ -3583,6 +3907,47 @@
     <script src="js/core_cabos_bt.js" defer></script>
     <script src="js/core_cabos_mt.js" defer></script>
     <script src="js/core_curto_circuito.js" defer></script>
+    <!-- O.S. CAB-BT-PARALLEL-002-R1 §1 — Isolamento do carregamento dos motores.
+         O motor de seleção L1-L3 depende do motor L0 via require(). No navegador não há
+         CommonJS. O shim abaixo é ESCOPADO e ESTRITO: instalado antes dos motores, resolve
+         EXCLUSIVAMENTE o identificador './core_cabos_bt_parallel_experimental.js' a partir do
+         window (L0 já carregado); qualquer outro identificador FALHA explicitamente (nunca
+         retorna {}). O require anterior é guardado e restaurado/removido após a carga. Nenhum
+         arquivo de core é alterado. Ordem de execução diferida: L0 → L1-L3 → restauração. -->
+    <script>
+      (function parselInstallScopedRequire() {
+        var HAD_REQUIRE = Object.prototype.hasOwnProperty.call(window, 'require');
+        var PREVIOUS_REQUIRE = window.require;
+        var L0_ID = './core_cabos_bt_parallel_experimental.js';
+        window.__parselRestoreRequire = function parselRestoreRequire() {
+          if (HAD_REQUIRE) { window.require = PREVIOUS_REQUIRE; }
+          else { try { delete window.require; } catch (removeError) { window.require = undefined; } }
+          try { delete window.__parselRestoreRequire; } catch (cleanupError) { window.__parselRestoreRequire = undefined; }
+        };
+        window.require = function parselScopedRequire(moduleId) {
+          if (moduleId === L0_ID) {
+            if (typeof window.calculateCablingBTParallelExperimental !== 'function') {
+              throw new Error('parsel boot: motor L0 (calculateCablingBTParallelExperimental) indisponível antes do L1-L3.');
+            }
+            return { calculateCablingBTParallelExperimental: window.calculateCablingBTParallelExperimental };
+          }
+          throw new Error('parsel boot: require não suportado para ' + JSON.stringify(moduleId) + ' — dependência desconhecida rejeitada.');
+        };
+      })();
+    </script>
+    <!-- type="module": escopo isolado por módulo evita a colisão de globais homônimas
+         (var KNOWN_KEYS/isPlainObject/NOTICE) entre o motor L0 e o L1-L3, preservando
+         os efeitos window.* (window.calculateCablingBTParallelExperimental / window.
+         enumerateCablingBTParallelAlternativesExperimental). L0 antes de L1-L3. Nenhum core é alterado. -->
+    <script type="module" src="js/core_cabos_bt_parallel_experimental.js"></script>
+    <script type="module" src="js/core_cabos_bt_parallel_selection_experimental.js"></script>
+    <!-- L1-L3 já avaliado (require consumido). Restaura/remove o require e confirma que a
+         API L1-L3 ficou pronta antes do término do boot (módulos executam antes do
+         DOMContentLoaded e antes do ui_render.js diferido). -->
+    <script type="module">
+      if (typeof window.__parselRestoreRequire === 'function') window.__parselRestoreRequire();
+      window.__parselEnginesReady = typeof window.enumerateCablingBTParallelAlternativesExperimental === 'function';
+    </script>
     <script src="js/ui_render.js" defer></script>
 </body>
 </html>
