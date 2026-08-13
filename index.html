@@ -1975,6 +1975,15 @@
                         #cab-bt-parallel-selection-experimental .cbpsx-alt-order { font-size:0.66rem; font-weight:700; color:var(--accent); text-transform:uppercase; }
                         #cab-bt-parallel-selection-experimental .cbpsx-crit { font-size:0.72rem; color:var(--text-secondary); padding:0.08rem 0; }
                         #cab-bt-parallel-selection-experimental .cbpsx-badge { font-size:0.66rem; color:var(--text-muted); }
+                        #cab-bt-parallel-selection-experimental .cbpsx-proj-notice { margin:0 0 0.8rem 0; padding:0.5rem 0.65rem; border:1px solid var(--warning); border-radius:8px; font-weight:700; font-size:0.74rem; overflow-wrap:anywhere; white-space:normal; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-gov > div { overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-codes { font-size:0.7rem; color:var(--text-muted); overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-heading { font-weight:800; font-size:0.82rem; margin:0.2rem 0 0.15rem 0; color:var(--text-primary); overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-criteria { font-size:0.72rem; color:var(--text-secondary); margin:0 0 0.55rem 0; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-alt-human { font-size:0.78rem; color:var(--text-secondary); margin-top:0.2rem; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-absences { margin-top:0.7rem; display:flex; flex-direction:column; gap:0.4rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-absence { font-size:0.72rem; color:var(--text-secondary); border:1px dashed var(--border); border-radius:8px; padding:0.4rem 0.5rem; overflow-wrap:anywhere; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-print-label { font-size:0.68rem; color:var(--text-muted); margin-top:0.7rem; overflow-wrap:anywhere; }
                         @media print { #cab-bt-parallel-selection-experimental details[data-advanced][open] { } #cab-bt-parallel-selection-experimental { break-inside:avoid; } }
                     </style>
                     <section id="cab-bt-parallel-selection-experimental"
@@ -1995,6 +2004,7 @@
                                         <option value="MIN_TOTAL_COPPER" data-i18n="parsel.obj.MIN_TOTAL_COPPER">Menor cobre total</option>
                                         <option value="MAX_MINIMUM_MARGIN" data-i18n="parsel.obj.MAX_MINIMUM_MARGIN">Maior margem mínima</option>
                                     </select></label>
+                                <label class="cbpsx-field"><span data-i18n="parsel.adv.maxparallel">Máximo de cabos por fase</span><input type="number" step="1" min="1" max="10" data-selection-field="maxParallelCount" id="bt-parallel-selection-maxparallel" value="10"></label>
                             </div>
                             <button type="button" id="cbpsx-calculate" class="btn-action btn-accent" data-selection-action="calculate" data-action="enumerate-parallel-selection" data-i18n="parsel.f.calculate">Comparar alternativas</button>
                             <p class="cbpsx-lab-summary" id="cbpsx-lab-summary" data-i18n="parsel.mainsummary">O catálogo laboratorial (6 entradas, incluindo 300 mm²) está apresentado abaixo para revisão e edição; as hipóteses e os dados técnicos profundos ficam na seção avançada. Confirme antes de comparar.</p>
@@ -2108,7 +2118,6 @@
                                     <label class="cbpsx-field"><span data-i18n="parsel.adv.pf">Fator de potência</span><input type="number" step="any" data-selection-field="powerFactor.value" id="bt-parallel-selection-pf" value="0.9"></label>
                                     <label class="cbpsx-field"><span data-i18n="parsel.adv.kg">Fator de agrupamento (k_g)</span><input type="number" step="any" data-selection-field="grouping.value" id="bt-parallel-selection-kg" value="0.8"></label>
                                     <label class="cbpsx-field"><span data-i18n="parsel.adv.ncircuits">Circuitos agrupados (nCircuits)</span><input type="number" step="1" min="1" data-selection-field="nCircuits" id="bt-parallel-selection-ncircuits" value="1"></label>
-                                    <label class="cbpsx-field"><span data-i18n="parsel.adv.maxparallel">Máximo de cabos por fase</span><input type="number" step="1" min="1" data-selection-field="maxParallelCount" id="bt-parallel-selection-maxparallel" value="4"></label>
                                     <label class="cbpsx-field"><span data-i18n="parsel.adv.ifault">Corrente de falta total (A)</span><input type="number" step="any" data-selection-field="fault.totalFaultCurrent_A" id="bt-parallel-selection-ifault" value="20000"></label>
                                     <label class="cbpsx-field"><span data-i18n="parsel.adv.time">Tempo de eliminação (s)</span><input type="number" step="any" data-selection-field="fault.clearingTime_s" id="bt-parallel-selection-time" value="0.2"></label>
                                     <label class="cbpsx-field"><span data-i18n="parsel.adv.k">Constante adiabática k</span><input type="number" step="any" data-selection-field="fault.adiabaticK" id="bt-parallel-selection-k" value="115"></label>

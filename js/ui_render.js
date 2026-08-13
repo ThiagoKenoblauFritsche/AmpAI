@@ -1851,7 +1851,7 @@ window.calcIccAgr = function() {
             contractVersion: 'CAB-BT-PARALLEL-SELECTION-EXP-1', analysisMode: 'MODO_GUIADO_PRELIMINAR', objective: 'NONE',
             totalLoadCurrent_A: 600, lineVoltage_V: 400,
             powerFactor: { value: 0.9, inputClass: 'SUGERIDA_COM_CONFIRMACAO', confirmed: true, provenance: 'ASSUMPTION_ONLY' },
-            maximumVoltageDrop_percent: 3, maxParallelCount: 4, nCircuits: 1, arrangement: 'LAB_IDENTICAL_BRANCHES',
+            maximumVoltageDrop_percent: 3, maxParallelCount: 10, nCircuits: 1, arrangement: 'LAB_IDENTICAL_BRANCHES',
             // O.S.003 §3: sem fixture estático de catálogo. mode/source/sourceVersion/provenance/
             // impedanceBasis/candidates são construídos EXCLUSIVAMENTE do DOM em buildInput().
             catalog: { candidates: [] },
@@ -1860,7 +1860,10 @@ window.calcIccAgr = function() {
             advancedBranchesByCombination: [],
             fault: { totalFaultCurrent_A: 20000, clearingTime_s: 0.2, adiabaticK_A_sqrt_s_per_mm2: { value: 115, provenance: 'ASSUMPTION_ONLY' }, imbalance: { mode: 'EXPLICIT_ASSUMPTION', deltaFault: 1, provenance: 'ASSUMPTION_ONLY' } },
             pruning: { maximumSection_mm2: null, confirmed: false, provenance: null },
-            providedCombination: { section_mm2: 150, nParallel: 3 },
+            // CAB-004-R3 — a UI não tem controle de combinação fornecida pelo usuário: DTO envia
+            // null (sem combinação silenciosa/hardcoded). Válido inclusive com maxParallelCount 1/2
+            // (nParallel:3 hardcoded disparava PROVIDED_COMBINATION_INVALID em max<3).
+            providedCombination: null,
         };
     }
 
@@ -1869,7 +1872,7 @@ window.calcIccAgr = function() {
         installAuth: { pt: 'Instalação autorizada', en: 'Installation authorized', es: 'Instalación autorizada' },
         no: { pt: 'NÃO', en: 'NO', es: 'NO' },
         perPhase: { pt: 'por fase', en: 'per phase', es: 'por fase' },
-        heading: { pt: 'Alternativas matemáticas preliminares', en: 'Preliminary mathematical alternatives', es: 'Alternativas matemáticas preliminares' },
+        heading: { pt: 'Menor quantidade que atende por seção no intervalo avaliado', en: 'Smallest quantity meeting the criteria per section within the evaluated range', es: 'Menor cantidad que cumple por sección en el intervalo evaluado' },
         crit: {
             AMPACIDADE: { pt: 'Ampacidade', en: 'Ampacity', es: 'Ampacidad' },
             QUEDA: { pt: 'Queda de tensão', en: 'Voltage drop', es: 'Caída de tensión' },
@@ -1897,7 +1900,46 @@ window.calcIccAgr = function() {
         guardrailLabel: { pt: 'Guardrails divergentes', en: 'Divergent guardrails', es: 'Guardrails divergentes' },
         catalogStructuralInvalid: { pt: 'Catálogo com entrada estruturalmente inválida — apresentação de alternativas bloqueada (fail-closed).', en: 'Catalog contains a structurally invalid entry — alternatives display blocked (fail-closed).', es: 'Catálogo con una entrada estructuralmente inválida — presentación de alternativas bloqueada (fail-closed).' },
         structuralReasons: { pt: 'Motivos', en: 'Reasons', es: 'Motivos' },
+        // CAB-004 — textos exatos (UTF-8 NFC) da apresentação mínima por seção. O aviso é uma
+        // frase completa (com ponto final), igual ao #cbpsx-notice permanente. O motor entrega o
+        // displayNotice cru SEM ponto (preservado intacto no envelope); os DOIS nós visuais de aviso
+        // usam esta L.warning localizada (com ponto). A UI não envolve nem muta o motor/envelope.
+        warning: {
+            pt: 'PRELIMINAR — NÃO UTILIZAR PARA PROJETO, COMPRA OU INSTALAÇÃO.',
+            en: 'PRELIMINARY — DO NOT USE FOR DESIGN, PURCHASE OR INSTALLATION.',
+            es: 'PRELIMINAR — NO UTILIZAR PARA PROYECTO, COMPRA O INSTALACIÓN.',
+        },
+        installation: { pt: 'Instalação autorizada: NÃO', en: 'Installation authorized: NO', es: 'Instalación autorizada: NO' },
+        production: { pt: 'Estado de produção: BLOQUEADO', en: 'Production state: BLOCKED', es: 'Estado de producción: BLOQUEADO' },
+        source: {
+            pt: 'Fonte primária IEC integral: AUSENTE — sem conformidade IEC',
+            en: 'Full primary IEC source: ABSENT — no IEC conformity',
+            es: 'Fuente primaria IEC íntegra: AUSENTE — sin conformidad IEC',
+        },
+        assumptionsLine: { pt: 'Hipóteses (ASSUMPTION_ONLY)', en: 'Assumptions (ASSUMPTION_ONLY)', es: 'Hipótesis (ASSUMPTION_ONLY)' },
+        criteria: {
+            pt: 'Critérios: ampacidade, queda de tensão, curto-circuito',
+            en: 'Criteria: ampacity, voltage drop, short-circuit',
+            es: 'Criterios: ampacidad, caída de tensión, cortocircuito',
+        },
+        printLabel: {
+            pt: 'Impressão preliminar — não é memorial final',
+            en: 'Preliminary print — not a final report',
+            es: 'Impresión preliminar — no es memoria final',
+        },
+        invalidMax: {
+            pt: 'Informe um número inteiro de 1 a 10 para o máximo por fase.',
+            en: 'Enter an integer from 1 to 10 for the maximum per phase.',
+            es: 'Ingrese un número entero de 1 a 10 para el máximo por fase.',
+        },
     };
+    // CAB-004 — sentença exata de ausência por seção (args do envelope: seção, mínimo=1, máximo).
+    var ABSENCE = {
+        pt: function (section, minimum, maximum) { return 'Nenhuma alternativa da seção ' + section + ' atende dentro do intervalo avaliado de ' + minimum + ' até ' + maximum + ' cabos por fase.'; },
+        en: function (section, minimum, maximum) { return 'No alternative for section ' + section + ' meets the criteria within the evaluated range of ' + minimum + ' to ' + maximum + ' conductors per phase.'; },
+        es: function (section, minimum, maximum) { return 'Ninguna alternativa de la sección ' + section + ' cumple dentro del intervalo evaluado de ' + minimum + ' a ' + maximum + ' conductores por fase.'; },
+    };
+    function absenceText(lang, section, minimum, maximum) { return (ABSENCE[lang] || ABSENCE.pt)(section, minimum, maximum); }
 
     function el(id) { return document.getElementById(id); }
     function curLang() {
@@ -1914,6 +1956,18 @@ window.calcIccAgr = function() {
     }
     function fieldNum(id) { var e = el(id); return e ? parseFloat(e.value) : NaN; }
     function fieldInt(id) { var e = el(id); return e ? parseInt(e.value, 10) : NaN; }
+    // CAB-004 — validação fail-closed do máximo por fase. Aceita EXCLUSIVAMENTE um inteiro
+    // decimal em [1..10]; vazio, fração ('1.5'), zero, negativo, acima de 10, não numérico ou
+    // ausente ⇒ null. null ⇒ o motor NÃO é chamado (sem default silencioso de 10, sem fixture).
+    function validMaxParallel() {
+        var e = el('bt-parallel-selection-maxparallel');
+        if (!e) return null;
+        var raw = String(e.value == null ? '' : e.value).trim();
+        if (!/^\d+$/.test(raw)) return null;
+        var n = Number(raw);
+        if (!isFinite(n) || n < 1 || n > 10) return null;
+        return n;
+    }
 
     // Campo do catálogo laboratorial no DOM (por índice/campo). Sem defaults silenciosos:
     // valores ausentes/invalidos permanecem NaN/'' e seguem fail-closed pelo motor real.
@@ -2017,6 +2071,13 @@ window.calcIccAgr = function() {
             },
             candidates: buildCatalogFromDom(),
         };
+        // CAB-004 §2/§5 — política de apresentação aprovada pelo CEO: o motor projeta a menor
+        // quantidade que atende por seção. EXATAMENTE {mode, confirmed, provenance} (sem extras).
+        input.presentationPolicy = {
+            mode: 'MINIMUM_PASSING_PER_SECTION',
+            confirmed: true,
+            provenance: 'CEO_APPROVED_PRESENTATION_POLICY',
+        };
         return input;
     }
 
@@ -2026,30 +2087,17 @@ window.calcIccAgr = function() {
         return '<div class="cbpsx-crit">' + esc(parts.join(' · ')) + '</div>';
     }
 
-    function cardHtml(card, lang, isFirst, onFrontier) {
-        var cr = card.criteria || {};
-        var amp = cr.ampacity || { values: {} };
-        var vd = cr.voltageDrop || { values: {} };
-        var sc = cr.shortCircuit || { values: {} };
-        var admissible = num(amp.values.admissibleCurrent_A, 0);
-        var ampMargin = num(amp.values.margin != null ? amp.values.margin * 100 : null, 1);
-        var actual = num(vd.values.actualPercent, 2);
-        var limit = num(vd.values.userLimitPercent, 2);
-        var minSec = num(sc.values.minimumSectionContinuous_mm2, 1);
-        var temp = num((card.catalogMetadata || {}).referenceTemperature_C, 0);
-        var domLabels = (card.dominantCriteria || []).map(function (t) { return tr(L.crit[t] || { pt: t, en: t, es: t }, lang); });
-        var head = card.quantityPerPhase + ' × ' + card.section_mm2 + ' mm² ' + tr(L.perPhase, lang);
+    // CAB-004 §3/§4 — cartão da ÚNICA alternativa mínima aprovada por seção. Apresentação enxuta
+    // e integralmente localizada (código da combinação + forma humana n × S mm² · por fase), sem
+    // números parciais que possam produzir tokens 'NaN'/'undefined'/'--'. Nada de vocabulário de
+    // recomendação/seleção/instalação (guardrails). A ordem entre cartões vem do presentationOrder.
+    function cardHtml(card, lang, isFirst) {
+        var qty = card.quantityPerPhase;
+        var sec = card.section_mm2;
+        var human = qty + ' × ' + sec + ' mm² · ' + tr(L.perPhase, lang);
         var lines = [];
-        // Código da combinação (ex.: 2x185) em texto, além da forma humana "n × S mm²".
-        lines.push('<div class="cbpsx-alt-head"><span class="cbpsx-alt-code">' + esc(card.candidateId) + '</span> ' + esc(head) + '</div>');
-        if (isFirst) lines.push('<div class="cbpsx-alt-order">' + esc(tr(L.firstOrder, lang)) + '</div>');
-        lines.push(critLine(lang, 'AMPACIDADE', amp.status, [admissible ? admissible + ' A' : null, ampMargin ? tr(L.margin, lang) + ' ' + ampMargin + '%' : null]));
-        lines.push(critLine(lang, 'QUEDA', vd.status, [actual ? actual + ' %' : null, limit ? tr(L.userLimit, lang) + ' ' + limit + ' %' : null]));
-        lines.push(critLine(lang, 'CURTO', sc.status, [minSec ? tr(L.minSection, lang) + ' ' + minSec + ' mm²' : null]));
-        if (domLabels.length) lines.push('<div class="cbpsx-crit">' + esc(tr(L.dominant, lang) + ': ' + domLabels.join(', ')) + '</div>');
-        var badge = tr(L.temperature, lang) + ': ' + (temp || '30') + ' °C';
-        if (onFrontier) badge += ' · ' + tr(L.frontier, lang);
-        lines.push('<div class="cbpsx-badge">' + esc(badge) + '</div>');
+        lines.push('<div class="cbpsx-alt-head"><span class="cbpsx-alt-code">' + esc(card.candidateId) + '</span></div>');
+        lines.push('<div class="cbpsx-alt-human">' + esc(human) + '</div>');
         return '<div class="cbpsx-alt' + (isFirst ? ' cbpsx-first' : '') + '" data-candidate-id="' + esc(card.candidateId) + '">' + lines.join('') + '</div>';
     }
 
@@ -2115,16 +2163,27 @@ window.calcIccAgr = function() {
         return lines;
     }
 
-    // R1 §3: caminho feliz — instalação NÃO autorizada + guardrails reais + entradas confirmadas.
-    function governanceHtml(envelope, input, lang) {
+    // CAB-004 — governança da apresentação mínima. PROJEÇÃO FIEL do envelope (R1 §1/§3): cada
+    // sentença localizada é DERIVADA do valor REAL (installationAuthorized/productionAllowed/
+    // sourceStatus/assumptions), e a linha bruta expõe os literais (false/null). O aviso projetado
+    // é LOCALIZADO (não o displayNotice cru em PT — evitaria vazamento de idioma no MPS-UI-09);
+    // o displayNotice cru (SEM ponto, base do núcleo) permanece intacto no envelope — a UI não muta.
+    function govMinimumHtml(envelope, input, lang) {
         var data = envelope.data || {};
-        var installAuthorized = data.installationAuthorized === true;
-        var lines = [];
-        lines.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + (installAuthorized ? tr(L.yes, lang) : tr(L.no, lang))) + '</div>');
-        lines = lines.concat(envelopeGuardrailLines(envelope, lang));
-        var ci = tr(L.confirmedInputs, lang) + ': ' + input.totalLoadCurrent_A + ' A · ' + input.lineVoltage_V + ' V · ' + input.maximumVoltageDrop_percent + ' %';
-        lines.push('<div>' + esc(ci) + '</div>');
-        return '<div class="cbpsx-gov">' + lines.join('') + '</div>';
+        var ss = envelope.sourceStatus || {};
+        var codes = (envelope.blockers || []).map(function (b) { return b.code; });
+        var leaves = [];
+        leaves.push('<p class="cbpsx-proj-notice" data-cab-bt-parallel-display-notice>' + esc(tr(L.warning, lang)) + '</p>');
+        leaves.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + (data.installationAuthorized === true ? tr(L.yes, lang) : tr(L.no, lang))) + '</div>');
+        leaves.push('<div>' + esc(envelope.productionAllowed === false ? tr(L.production, lang) : ('productionAllowed = ' + String(envelope.productionAllowed))) + '</div>');
+        leaves.push('<div>' + esc((ss.primarySourceComplete === false && ss.iecConformity === false) ? tr(L.source, lang) : (tr(L.sourceStatus, lang) + ': primarySourceComplete = ' + String(ss.primarySourceComplete) + ' · iecConformity = ' + String(ss.iecConformity))) + '</div>');
+        if ((envelope.assumptions || []).length > 0) leaves.push('<div>' + esc(tr(L.assumptionsLine, lang)) + '</div>');
+        leaves.push('<div>productionAllowed = ' + esc(String(envelope.productionAllowed)) + ' · installableSelection = ' + esc(installableRepr(installableFrom(envelope))) + ' · installationAuthorized = ' + esc(String(data.installationAuthorized)) + '</div>');
+        leaves.push('<div>' + esc(tr(L.blockers, lang)) + '</div>');
+        leaves.push('<div class="cbpsx-codes">' + esc(codes.join(' · ') || '—') + '</div>');
+        leaves.push('<div>' + esc(tr(L.confirmedInputs, lang)) + '</div>');
+        leaves.push('<div>' + esc(String(input.totalLoadCurrent_A) + ' A · ' + String(input.lineVoltage_V) + ' V · ' + String(input.maximumVoltageDrop_percent) + ' %') + '</div>');
+        return '<div class="cbpsx-gov">' + leaves.join('') + '</div>';
     }
 
     function renderResults() {
@@ -2133,6 +2192,14 @@ window.calcIccAgr = function() {
         var store = window._parSelLast;
         if (!store) { container.innerHTML = ''; return; }
         var lang = curLang();
+
+        // CAB-004 §1/§6/§7 — máximo por fase inválido (vazio/fração/zero/negativo/>10): fail-closed
+        // ANTES do motor. Sem cartões, sem números parciais, sem código de domínio; apenas dica
+        // localizada. uiFailure permanece null (separado do envelope) — não é falha da camada visual.
+        if (store.invalidControl) {
+            container.innerHTML = '<div class="cbpsx-gov" role="alert"><div class="cbpsx-install">' + esc(tr(L.invalidMax, lang)) + '</div></div>';
+            return;
+        }
 
         // R1 §4: exceção da CAMADA VISUAL — separada do envelope, sem código de domínio
         // nem números parciais. Apresentada como falha interna da interface.
@@ -2205,24 +2272,53 @@ window.calcIccAgr = function() {
             container.innerHTML = '<div class="cbpsx-gov" role="alert">' + sb.join('') + '</div>';
             return;
         }
+        // CAB-004 §5/§6 — apresentar EXCLUSIVAMENTE a projeção do motor: presentationModel.cards
+        // ordenados por presentationOrder (uma alternativa mínima por seção). Candidatas superiores
+        // válidas da mesma seção ficam em hiddenCandidateIds e NÃO são renderizadas (nem impressão).
+        var proj = data.presentationProjection || {};
+        var isMinimum = proj.mode === 'MINIMUM_PASSING_PER_SECTION';
+        var model = data.presentationModel || {};
         var cardsById = {};
-        (data.presentationModel && data.presentationModel.cards ? data.presentationModel.cards : []).forEach(function (c) { cardsById[c.candidateId] = c; });
+        (model.cards || []).forEach(function (c) { cardsById[c.candidateId] = c; });
         var order = (data.presentationOrder || []).map(function (p) { return p.candidateId; });
-        var firstId = data.firstInPresentationOrder ? data.firstInPresentationOrder.candidateId : (order[0] || null);
-        var frontierIds = {};
-        (data.nonDominatedAlternatives || []).forEach(function (f) { frontierIds[f.candidateId] = true; });
+        // Integração fail-closed: a ordem e o modelo têm de coincidir (mesmo conjunto). Divergência
+        // ⇒ NÃO renderizar cartões parciais — bloquear com falha de integração identificada.
+        var orderHasAllCards = order.every(function (id) { return Object.prototype.hasOwnProperty.call(cardsById, id); });
+        if (!isMinimum || !orderHasAllCards) {
+            var ib = [];
+            ib.push('<div class="cbpsx-install">' + esc(tr(L.installAuth, lang) + ': ' + tr(L.no, lang)) + '</div>');
+            ib.push('<div><strong>' + esc(tr(L.integrationFailClosed, lang)) + '</strong></div>');
+            container.innerHTML = '<div class="cbpsx-gov" role="alert">' + ib.join('') + '</div>';
+            return;
+        }
+        var firstId = order[0] || null;
         var cards = order.map(function (id, idx) {
             var card = cardsById[id];
             if (!card) return '';
-            return cardHtml(card, lang, id === firstId && idx === 0, frontierIds[id] === true);
+            return cardHtml(card, lang, id === firstId && idx === 0);
         }).join('');
-        var html = governanceHtml(envelope, input, lang)
-            + '<div class="cbpsx-alt-heading" style="font-weight:800;margin:0.2rem 0 0.5rem 0;">' + esc(tr(L.heading, lang)) + '</div>'
-            + '<div class="cbpsx-alts">' + cards + '</div>';
+        var absenceEntries = model.absenceEntries || [];
+        var absences = absenceEntries.map(function (e) {
+            var a = e.messageArgs || {};
+            return '<div class="cbpsx-absence">' + esc(absenceText(lang, a.section_mm2, a.minimum, a.maximum)) + '</div>';
+        }).join('');
+        var html = govMinimumHtml(envelope, input, lang)
+            + '<div class="cbpsx-heading">' + esc(tr(L.heading, lang)) + '</div>'
+            + '<div class="cbpsx-criteria">' + esc(tr(L.criteria, lang)) + '</div>'
+            + '<div class="cbpsx-alts">' + cards + '</div>'
+            + (absences ? '<div class="cbpsx-absences">' + absences + '</div>' : '')
+            + '<div class="cbpsx-print-label">' + esc(tr(L.printLabel, lang)) + '</div>';
         container.innerHTML = html;
     }
 
     window.parSelCalculate = function parSelCalculate() {
+        // CAB-004 §1 — máximo por fase inválido ⇒ o motor NÃO é chamado (engineCalls permanece 0),
+        // sem recuperar o default 10 nem fixture. Estado separado do envelope (uiFailure = null).
+        if (validMaxParallel() === null) {
+            window._parSelLast = { envelope: null, input: null, uiFailure: null, invalidControl: true };
+            renderResults();
+            return;
+        }
         try {
             var input = buildInput();
             var envelope = window.enumerateCablingBTParallelAlternativesExperimental(input);
@@ -2235,18 +2331,24 @@ window.calcIccAgr = function() {
         renderResults();
     };
 
-    // Re-localiza os resultados ao trocar de idioma (tokens/aviso invariantes).
+    // Re-localiza os resultados ao trocar de idioma. CAB-004 §2: o #cbpsx-notice permanente também
+    // acompanha o idioma (aviso localizado, frase com ponto final) a partir da MESMA fonte
+    // (L.warning) que alimenta o aviso projetado — garante bytes idênticos entre os dois avisos.
     if (typeof window.setLanguage === 'function') {
         var prevSetLanguage = window.setLanguage;
         window.setLanguage = function (lang) {
             var out = prevSetLanguage.apply(this, arguments);
             // O.S.003 UI300-13: o atributo lang do documento usa o código simples (pt/en/es).
+            var norm = 'pt';
             try {
-                var norm = String(lang || '').toLowerCase();
-                if (norm.indexOf('pt') === 0) document.documentElement.lang = 'pt';
-                else if (norm.indexOf('en') === 0) document.documentElement.lang = 'en';
-                else if (norm.indexOf('es') === 0) document.documentElement.lang = 'es';
+                var raw = String(lang || '').toLowerCase();
+                if (raw.indexOf('en') === 0) norm = 'en';
+                else if (raw.indexOf('es') === 0) norm = 'es';
+                else norm = 'pt';
+                document.documentElement.lang = norm;
             } catch (langErr) { /* noop */ }
+            // CAB-004 §2 — aviso PERMANENTE localizado (mesma string exata do aviso projetado).
+            try { var notice = el('cbpsx-notice'); if (notice) notice.textContent = tr(L.warning, norm); } catch (noticeErr) { /* noop */ }
             // O.S.003 UI300-15: reprojeta com o DOM/idioma atuais. Recalcula quando já houve
             // um cálculo, para a projeção refletir o catálogo vigente no novo idioma.
             try { if (window._parSelLast) window.parSelCalculate(); } catch (ignore) { /* noop */ }
