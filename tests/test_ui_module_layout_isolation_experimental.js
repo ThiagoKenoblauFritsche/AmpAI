@@ -451,7 +451,7 @@ async function executeVisualScenario(puppeteer) {
     }
     if (page) await page.close().catch(() => {});
     if (browser) await browser.close().catch(() => {});
-    await closeServer(server);
+    await closeServer(server?.server);
   }
   screenshots.push(...matrix.flatMap((item) => item.screenshotPaths), ...stability.flatMap((item) => item.screenshotPaths), ...repeated.flatMap((item) => item.screenshotPaths));
   return { matrix, stability, repeated, consoleErrors, pageErrors, requestFailures, screenshots, preferencesRestored };
