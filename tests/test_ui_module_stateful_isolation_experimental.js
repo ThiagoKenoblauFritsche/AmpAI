@@ -298,6 +298,12 @@ async function auditBrowserState(page, expectedState, context) {
       impedances: { active: ['impedances'], inactive: ['cabling', 'wrapperBT', 'wrapperMT', 'mtParams', 'cardMT', 'sidebar', 'dashboard'] },
       shortcircuit: { active: ['sidebar', 'dashboard'], inactive: ['cabling', 'wrapperBT', 'wrapperMT', 'impedances'] },
     }[state];
+    const geometryPolicy = {
+      'cabling-bt': { requiresHeaderContinuity: true },
+      'cabling-mt': { requiresHeaderContinuity: true },
+      impedances: { requiresHeaderContinuity: true },
+      shortcircuit: { requiresHeaderContinuity: false },
+    }[state];
     const activeConfig = {
       'cabling-bt': {
         root: elements.cabling,
@@ -316,29 +322,46 @@ async function auditBrowserState(page, expectedState, context) {
       },
       shortcircuit: {
         root: elements.dashboard,
-        header: document.querySelector('main.dashboard > div:first-child'),
-        functional: document.querySelector('main.dashboard .result-card'),
+        header: null,
+        functional: null,
       },
     }[state];
+    const activeRoots = state === 'shortcircuit'
+      ? [elements.sidebar, elements.dashboard]
+      : [activeConfig.root];
     const rootRect = rectOf(activeConfig.root);
-    const headerRect = rectOf(activeConfig.header);
-    const firstFunctionalRect = rectOf(activeConfig.functional);
+    const sidebarRect = rectOf(elements.sidebar);
+    const dashboardRect = rectOf(elements.dashboard);
+    const headerRect = geometryPolicy.requiresHeaderContinuity ? rectOf(activeConfig.header) : null;
+    const firstFunctionalRect = geometryPolicy.requiresHeaderContinuity ? rectOf(activeConfig.functional) : null;
     const navRect = rectOf(elements.nav);
     const layoutRect = rectOf(elements.layout);
-    const activeControls = renderedFocusable(activeConfig.root);
+    const activeControls = activeRoots.flatMap((root) => renderedFocusable(root));
+    const activeRects = state === 'shortcircuit' ? [sidebarRect, dashboardRect] : [rootRect];
     const navControlOverlaps = activeControls.map((control) => ({
       id: control.id || null,
       rect: rectOf(control),
       intersection: intersection(navRect, rectOf(control)),
     })).filter((item) => item.intersection.area > 0.5);
-    const controlsOutsideRoot = activeControls.map((control) => ({ id: control.id || null, rect: rectOf(control) }))
-      .filter((item) => item.rect && rootRect
-        && (item.rect.left < rootRect.left - 1 || item.rect.right > rootRect.right + 1));
-    const gapPx = headerRect && firstFunctionalRect ? round(firstFunctionalRect.top - headerRect.bottom) : null;
-    const activeWithinViewportWidth = rootRect && rootRect.left >= -1 && rootRect.right <= innerWidth + 1;
-    const firstFunctionalInFirstViewport = firstFunctionalRect && firstFunctionalRect.top < innerHeight
-      && firstFunctionalRect.bottom > 0;
-    const headerVisible = headerRect && headerRect.top < innerHeight && headerRect.bottom > 0;
+    const controlsOutsideRoot = activeControls.map((control) => {
+      const controlRect = rectOf(control);
+      const container = activeRoots.find((root) => root?.contains(control));
+      const containerRect = rectOf(container);
+      return { id: control.id || null, rect: controlRect, containerRect };
+    }).filter((item) => item.rect && item.containerRect
+      && (item.rect.left < item.containerRect.left - 1 || item.rect.right > item.containerRect.right + 1));
+    const gapPx = geometryPolicy.requiresHeaderContinuity && headerRect && firstFunctionalRect
+      ? round(firstFunctionalRect.top - headerRect.bottom)
+      : null;
+    const activeWithinViewportWidth = activeRects.every((rect) => rect
+      && rect.left >= -1 && rect.right <= innerWidth + 1);
+    const firstFunctionalInFirstViewport = geometryPolicy.requiresHeaderContinuity
+      ? firstFunctionalRect && firstFunctionalRect.top < innerHeight && firstFunctionalRect.bottom > 0
+      : null;
+    const headerVisible = geometryPolicy.requiresHeaderContinuity
+      ? headerRect && headerRect.top < innerHeight && headerRect.bottom > 0
+      : null;
+    const navActiveIntersections = activeRects.map((rect) => intersection(navRect, rect));
     const activeAndInactive = [...expectation.active, ...expectation.inactive];
     const stateKeysValid = new Set(activeAndInactive).size === activeAndInactive.length;
     const issues = [];
@@ -351,23 +374,48 @@ async function auditBrowserState(page, expectedState, context) {
       }
     }
     if (state === 'impedances' && states.mtInputs.rendered !== 0) issues.push('INACTIVE_MT_CONTROLS_RENDERED');
-    if (!finiteRect(rootRect) || !finiteRect(headerRect) || !finiteRect(firstFunctionalRect)) issues.push('ACTIVE_RECTS_NON_FINITE');
-    if (!headerVisible) issues.push('ACTIVE_HEADER_OUTSIDE_VIEWPORT');
-    if (!firstFunctionalInFirstViewport) issues.push('FIRST_FUNCTIONAL_BELOW_FIRST_VIEWPORT');
-    if (gapPx === null || gapPx < -1 || gapPx > 64) issues.push('ANOMALOUS_HEADER_FUNCTIONAL_GAP');
+    if (!activeRects.every(finiteRect)) issues.push('ACTIVE_RECTS_NON_FINITE');
+    if (geometryPolicy.requiresHeaderContinuity) {
+      if (!finiteRect(headerRect) || !finiteRect(firstFunctionalRect)) issues.push('ACTIVE_RECTS_NON_FINITE');
+      if (!headerVisible) issues.push('ACTIVE_HEADER_OUTSIDE_VIEWPORT');
+      if (!firstFunctionalInFirstViewport) issues.push('FIRST_FUNCTIONAL_BELOW_FIRST_VIEWPORT');
+      if (gapPx === null || gapPx < -1 || gapPx > 64) issues.push('ANOMALOUS_HEADER_FUNCTIONAL_GAP');
+    }
     if (document.documentElement.scrollWidth > document.documentElement.clientWidth + 1) issues.push('DOCUMENT_HORIZONTAL_OVERFLOW');
     if (!activeWithinViewportWidth) issues.push('ACTIVE_MODULE_OUTSIDE_VIEWPORT_WIDTH');
-    if (intersection(navRect, rootRect).area > 0.5) issues.push('NAV_OVERLAPS_ACTIVE_MODULE');
+    if (navActiveIntersections.some((item) => item.area > 0.5)) issues.push('NAV_OVERLAPS_ACTIVE_MODULE');
     if (navControlOverlaps.length) issues.push('NAV_OVERLAPS_ACTIVE_CONTROL');
     if (controlsOutsideRoot.length) issues.push('ACTIVE_CONTROL_OUTSIDE_CONTAINER');
-    if (innerWidth > 1024 && rootRect && layoutRect && rootRect.top - layoutRect.top > 64) issues.push('ACTIVE_MODULE_LATE_GRID_ROW');
+    if (innerWidth > 1024 && layoutRect
+      && activeRects.some((rect) => rect && rect.top - layoutRect.top > 64)) {
+      issues.push('ACTIVE_MODULE_LATE_GRID_ROW');
+    }
+    const shortcircuitMobileFlow = state === 'shortcircuit' && innerWidth <= 1024;
+    if (shortcircuitMobileFlow) {
+      const navSidebarIntersection = intersection(navRect, sidebarRect);
+      const sidebarDashboardIntersection = intersection(sidebarRect, dashboardRect);
+      const documentScrollHeight = Math.max(
+        document.documentElement.scrollHeight,
+        document.body?.scrollHeight || 0,
+      );
+      if (!finiteRect(navRect) || !finiteRect(sidebarRect) || !finiteRect(dashboardRect)) {
+        issues.push('SHORTCIRCUIT_FLOW_RECTS_NON_FINITE');
+      } else {
+        if (navRect.bottom > sidebarRect.top + 1) issues.push('SHORTCIRCUIT_NAV_SIDEBAR_ORDER_INVALID');
+        if (sidebarRect.bottom > dashboardRect.top + 1) issues.push('SHORTCIRCUIT_SIDEBAR_DASHBOARD_ORDER_INVALID');
+        if (navSidebarIntersection.area > 0.5 || sidebarDashboardIntersection.area > 0.5) {
+          issues.push('SHORTCIRCUIT_VERTICAL_FLOW_OVERLAP');
+        }
+        if (dashboardRect.bottom > documentScrollHeight + 1) issues.push('SHORTCIRCUIT_DASHBOARD_UNREACHABLE');
+      }
+    }
     const expectedTheme = auditContext.theme;
     const actualTheme = document.documentElement.hasAttribute('data-theme') ? 'light' : 'dark';
     const actualLanguage = (document.documentElement.lang || '').toLowerCase();
     const languageMatches = auditContext.language === 'pt' ? actualLanguage.startsWith('pt') : actualLanguage === auditContext.language;
     if (actualTheme !== expectedTheme) issues.push('THEME_STATE_MISMATCH');
     if (!languageMatches) issues.push('LANGUAGE_STATE_MISMATCH');
-    const activeText = activeConfig.root?.innerText || '';
+    const activeText = activeRoots.map((root) => root?.innerText || '').join('\n');
     const invalidTokens = ['undefined', 'NaN'].filter((token) => activeText.includes(token));
     if (invalidTokens.length) issues.push('INVALID_ACTIVE_TOKEN');
     return {
@@ -375,6 +423,10 @@ async function auditBrowserState(page, expectedState, context) {
       expectedState: state,
       active: expectation.active,
       inactive: expectation.inactive,
+      geometryPolicy: {
+        requiresHeaderContinuity: geometryPolicy.requiresHeaderContinuity,
+        shortcircuitMobileFlow,
+      },
       states,
       geometry: {
         viewport: { width: innerWidth, height: innerHeight },
@@ -382,10 +434,13 @@ async function auditBrowserState(page, expectedState, context) {
         layoutRect,
         navRect,
         activeRect: rootRect,
+        sidebarRect,
+        dashboardRect,
         headerRect,
         firstFunctionalRect,
         headerToFunctionalGapPx: gapPx,
         navActiveIntersection: intersection(navRect, rootRect),
+        navActiveIntersections,
         gridTemplateColumns: elements.layout ? getComputedStyle(elements.layout).gridTemplateColumns : null,
         activeGridColumnStart: activeConfig.root ? getComputedStyle(activeConfig.root).gridColumnStart : null,
         activeGridColumnEnd: activeConfig.root ? getComputedStyle(activeConfig.root).gridColumnEnd : null,
