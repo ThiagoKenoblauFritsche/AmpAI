@@ -238,19 +238,18 @@
             }
         }
 
-        /* #module-cabling, #module-impedances e #wrapper-mt (irmão da grade) ocupam a mesma
-           região funcional 2/-1 no desktop; no mobile fluem em coluna única. */
+        /* AMP-UI-MODULE-LAYOUT-002: #module-cabling e #module-impedances ocupam a região
+           funcional 2/-1 no desktop; no mobile fluem em coluna única. #wrapper-mt NÃO entra
+           aqui — ele é filho estrutural de #module-cabling (não item da grade principal). */
         #module-cabling,
-        #module-impedances,
-        #wrapper-mt {
+        #module-impedances {
             grid-column: 2 / -1;
             min-width: 0;
         }
 
         @media (max-width: 1024px) {
             #module-cabling,
-            #module-impedances,
-            #wrapper-mt {
+            #module-impedances {
                 grid-column: auto;
             }
         }
@@ -274,11 +273,28 @@
         /* AMP-UI-MODULE-LAYOUT-001: em coluna única (mobile/estreito) a nav não é sticky nem
            ocupa 100vh — flui no topo e sai da rolagem, sem sobrepor os controles do módulo ativo. */
         @media (max-width: 1024px) {
+            /* AMP-UI-MODULE-LAYOUT-002-R2 (Contrato D): em coluna única a nav vira uma BARRA
+               HORIZONTAL COMPACTA (~52px), para que Cabling e Impedances iniciem na primeira
+               viewport. Todos os itens continuam acessíveis (rolagem horizontal CONTIDA na nav,
+               sem overflow do documento); nenhum item é ocultado permanentemente; sem largura
+               fixa global. O botão ☰ (window.toggleSidebar) permanece como controle acessível de
+               recolhimento (colapsa para apenas ícones). */
             .nav-sidebar {
                 position: static;
                 height: auto;
                 max-height: none;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.4rem;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 0.5rem 0.75rem;
+                margin-bottom: 1rem;
             }
+            .nav-sidebar > div:first-child { flex: 0 0 auto; margin: 0 0.3rem 0 0; }
+            .nav-sidebar > div:first-child .nav-section-title { display: none; }
+            .nav-sidebar .nav-item { flex: 0 0 auto; white-space: nowrap; padding: 0.5rem 0.7rem; }
         }
 
         .nav-section-title {
@@ -2179,7 +2195,9 @@
                         <div id="cbpsx-results" role="status" aria-live="polite" aria-labelledby="cbpsx-title"></div>
                     </section>
                 </div>
-                </div>
+                <!-- AMP-UI-MODULE-LAYOUT-002: aqui fecha SOMENTE #wrapper-bt. O </div> que fechava
+                     #module-cabling prematuramente foi removido, para que #wrapper-mt seja filho
+                     estrutural de #module-cabling (e não item independente da .main-layout). -->
 
                 <!-- ═══════════════════════════════════════════════
                      CARD MT — Média Tensão (IEC 60502-2)
@@ -2298,6 +2316,10 @@
                     </div>
                 </div>
             </div>
+        <!-- AMP-UI-MODULE-LAYOUT-002-R2 (Contrato A): #module-cabling fecha aqui; a .main-layout
+             permanece ABERTA para englobar #module-impedances como ITEM PRÓPRIO da grade (fecha
+             após o módulo, na linha rotulada /.main-layout). Assim Impedances ocupa a mesma linha
+             funcional (col 2/-1) ao lado da nav, deixando de herdar a altura da nav no app-container. -->
 
 
     <!-- ================================================================
