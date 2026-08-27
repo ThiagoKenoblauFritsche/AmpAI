@@ -227,33 +227,75 @@ async function installBrowserAuditor(page) {
             : ['#icc-unq', '[data-action="calc-icc-rede"]', '.icc-panel'];
       const activeControls = activeRoots.flatMap((root) => Array.from(root?.querySelectorAll('input,select,textarea,button,[role="button"]') || []))
         .filter((element) => rendered(element));
-      const visibleControls = activeControls.filter((element) => inViewport(element));
+      const cablingResultDensitySelector = '#card-bt .results-grid > .result-card,#card-mt .results-grid > .result-card';
+      const activeCablingCard = state.module === 'cabling'
+        ? document.querySelector(state.card === 'bt' ? '#card-bt' : '#card-mt')
+        : null;
+      const cablingResultDensityCards = Array.from(document.querySelectorAll(cablingResultDensitySelector))
+        .filter((element) => rendered(element));
+      const activeCablingResultDensityCards = cablingResultDensityCards
+        .filter((element) => activeCablingCard?.contains(element));
+      const isCablingResultDensityCard = (element) => {
+        const resultsGrid = element?.parentElement;
+        const cablingCard = resultsGrid?.closest('#card-bt,#card-mt');
+        return element?.matches('.result-card') === true
+          && resultsGrid?.matches('.results-grid') === true
+          && element.matches(cablingResultDensitySelector)
+          && cablingCard === activeCablingCard
+          && elements.cabling?.contains(cablingCard) === true
+          && activeRoots.some((root) => root?.contains(element))
+          && rendered(element);
+      };
+      const delegatedCablingResultDensityCards = activeCablingResultDensityCards
+        .filter((element) => isCablingResultDensityCard(element));
+      const geometryTargets = Array.from(new Set([...activeControls, ...activeCablingResultDensityCards]));
+      const visibleGeometryTargets = geometryTargets.filter((element) => inViewport(element));
       const navRect = rectOf(elements.nav);
-      const navOverlaps = visibleControls.map((element) => ({ selector: selectorOf(element), intersection: intersection(navRect, rectOf(element)) }))
+      const navOverlaps = visibleGeometryTargets.map((element) => ({ selector: selectorOf(element), intersection: intersection(navRect, rectOf(element)) }))
         .filter((item) => item.intersection?.area > 0.5);
       const inactiveVisibleDescendants = inactiveRoots.flatMap((root) => Array.from(root?.querySelectorAll('*') || []))
         .filter((element) => inViewport(element)).map((element) => ({ selector: selectorOf(element), rect: rectOf(element) }));
       const activeBounds = union(activeRoots.map(rectOf));
-      const outOfContainer = activeControls.filter((element) => {
+      const outOfContainer = geometryTargets.filter((element) => {
         const rect = rectOf(element);
         const owner = activeRoots.find((root) => root?.contains(element));
         const bounds = rectOf(owner);
+        if (activeCablingResultDensityCards.includes(element)) {
+          const resultsGrid = element.parentElement;
+          const cablingCard = resultsGrid?.closest('#card-bt,#card-mt');
+          const containers = [resultsGrid, cablingCard, elements.cabling, owner];
+          return !isCablingResultDensityCard(element) || containers.some((container) => {
+            const containerRect = rectOf(container);
+            return !container?.contains(element) || !containerRect || !rect
+              || rect.left < containerRect.left - 1 || rect.right > containerRect.right + 1
+              || rect.top < containerRect.top - 1 || rect.bottom > containerRect.bottom + 1;
+          });
+        }
         return !rect || !bounds || rect.left < bounds.left - 1 || rect.right > bounds.right + 1 || rect.top < bounds.top - 1 || rect.bottom > bounds.bottom + 1;
       }).map((element) => ({ selector: selectorOf(element), rect: rectOf(element) }));
-      const panels = activeRoots.flatMap((root) => [root, ...Array.from(root?.querySelectorAll('.icc-panel,.cabling-grid > aside,#card-bt,#card-mt,.result-card') || [])])
-        .filter((element) => rendered(element));
+      const panels = Array.from(new Set([
+        ...activeRoots.flatMap((root) => [root, ...Array.from(root?.querySelectorAll('.icc-panel,.cabling-grid > aside,#card-bt,#card-mt,.result-card') || [])]),
+        ...activeCablingResultDensityCards,
+      ])).filter((element) => rendered(element));
       const slivers = panels.filter((element) => {
         const rect = element.getBoundingClientRect();
-        return rect.width < Math.max(120, innerWidth * 0.18) || rect.height < 32;
+        const delegatedToRcd = isCablingResultDensityCard(element);
+        return (!delegatedToRcd && rect.width < Math.max(120, innerWidth * 0.18)) || rect.height < 32;
       }).map((element) => ({ selector: selectorOf(element), rect: rectOf(element) }));
       const required = requiredSelectors.map((selector) => {
         const element = document.querySelector(selector);
         return { selector, exists: Boolean(element), rendered: rendered(element), rect: rectOf(element) };
       });
-      const clipped = activeControls.filter((element) => {
+      const clipped = geometryTargets.filter((element) => {
         const rect = element.getBoundingClientRect();
-        return rect.left < -1 || rect.right > innerWidth + 1 || element.scrollWidth > element.clientWidth + 1;
-      }).map((element) => ({ selector: selectorOf(element), rect: rectOf(element), scrollWidth: element.scrollWidth, clientWidth: element.clientWidth }));
+        return rect.left < -1 || rect.right > innerWidth + 1
+          || element.scrollWidth > element.clientWidth + 1
+          || (activeCablingResultDensityCards.includes(element) && element.scrollHeight > element.clientHeight + 1);
+      }).map((element) => ({
+        selector: selectorOf(element), rect: rectOf(element),
+        scrollWidth: element.scrollWidth, clientWidth: element.clientWidth,
+        scrollHeight: element.scrollHeight, clientHeight: element.clientHeight,
+      }));
       const activeText = activeRoots.map((root) => root?.innerText || '').join('\n');
       const invalidTokens = ['undefined', 'NaN', '--'].filter((token) => activeText.includes(token));
       const modulesVisible = [
@@ -304,7 +346,13 @@ async function installBrowserAuditor(page) {
         modulesVisible,
         requiredControls: required,
         activeControlCount: activeControls.length,
-        visibleActiveControlCount: visibleControls.length,
+        visibleActiveControlCount: activeControls.filter((element) => inViewport(element)).length,
+        cablingResultDensityDelegation: {
+          selector: cablingResultDensitySelector,
+          candidates: cablingResultDensityCards.map((element) => selectorOf(element)),
+          activeCandidates: activeCablingResultDensityCards.map((element) => selectorOf(element)),
+          delegated: delegatedCablingResultDensityCards.map((element) => selectorOf(element)),
+        },
         inactiveVisibleDescendantCount: inactiveVisibleDescendants.length,
         inactiveVisibleDescendants: inactiveVisibleDescendants.slice(0, 40),
         navOverlaps: navOverlaps.slice(0, 40),
