@@ -588,6 +588,17 @@
             margin-bottom: 1.5rem;
         }
 
+        /* AMP-UI-MODULE-LAYOUT-003 (RCD): densidade compacta dos cards de resultado de Cabling
+           BT/MT. Mínimo intrínseco reduzido para 12.5rem e auto-fill (não auto-fit — para o card
+           solitário da última linha NÃO esticar full-width), recuperando ~3 colunas no grid de
+           ~664px (desktop amplo: 1920/1600) e ~2 colunas no grid de ~590px (1366). Escopo restrito
+           a #card-bt/#card-mt: preserva o .results-grid de Shortcircuit (main.dashboard) e demais
+           consumidores. min(100%,...) impede overflow em telas estreitas (uma coluna no mobile). */
+        #card-bt .results-grid,
+        #card-mt .results-grid {
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
+        }
+
         .result-card {
             background: var(--bg-secondary);
             border: none;
