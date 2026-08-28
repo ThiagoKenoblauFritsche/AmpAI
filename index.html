@@ -202,15 +202,19 @@
         /* Main Grid Layout */
         .main-layout {
             display: grid;
-            grid-template-columns: 280px 360px 1fr;
+            grid-template-columns: 280px 360px minmax(0, 1fr);
             gap: var(--spacing-lg);
             align-items: start;
             transition: grid-template-columns 0.3s ease;
+            min-width: 0;
         }
 
         .main-layout.sidebar-collapsed {
-            grid-template-columns: 80px 360px 1fr;
+            grid-template-columns: 80px 360px minmax(0, 1fr);
         }
+        /* AMP-UI-MODULE-LAYOUT-001: todo filho direto da grade não reserva largura mínima
+           de conteúdo (evita overflow horizontal do documento). */
+        .main-layout > * { min-width: 0; }
 
         /* Quando recolhido, esconde títulos e textos dos itens do menu */
         .sidebar-collapsed .nav-section-title,
@@ -224,24 +228,28 @@
             padding: 0.75rem 0;
         }
 
-        @media (max-width: 1200px) {
-            .main-layout {
-                grid-template-columns: 280px 1fr;
-            }
-        }
-
+        /* AMP-UI-MODULE-LAYOUT-001: os breakpoints DEVEM vencer .main-layout.sidebar-collapsed
+           (especificidade 0,2,0). Repetimos o seletor composto para igualar a especificidade e,
+           pela ordem de origem + media, prevalecer — colapsando a grade ao estreitar. */
         @media (max-width: 1024px) {
-            .main-layout {
-                grid-template-columns: 1fr;
+            .main-layout,
+            .main-layout.sidebar-collapsed {
+                grid-template-columns: minmax(0, 1fr);
             }
         }
 
-        #module-cabling {
+        /* AMP-UI-MODULE-LAYOUT-002: #module-cabling e #module-impedances ocupam a região
+           funcional 2/-1 no desktop; no mobile fluem em coluna única. #wrapper-mt NÃO entra
+           aqui — ele é filho estrutural de #module-cabling (não item da grade principal). */
+        #module-cabling,
+        #module-impedances {
             grid-column: 2 / -1;
+            min-width: 0;
         }
 
         @media (max-width: 1024px) {
-            #module-cabling {
+            #module-cabling,
+            #module-impedances {
                 grid-column: auto;
             }
         }
@@ -260,6 +268,33 @@
             flex-direction: column;
             gap: var(--spacing-sm);
             overflow-y: auto;
+        }
+
+        /* AMP-UI-MODULE-LAYOUT-001: em coluna única (mobile/estreito) a nav não é sticky nem
+           ocupa 100vh — flui no topo e sai da rolagem, sem sobrepor os controles do módulo ativo. */
+        @media (max-width: 1024px) {
+            /* AMP-UI-MODULE-LAYOUT-002-R2 (Contrato D): em coluna única a nav vira uma BARRA
+               HORIZONTAL COMPACTA (~52px), para que Cabling e Impedances iniciem na primeira
+               viewport. Todos os itens continuam acessíveis (rolagem horizontal CONTIDA na nav,
+               sem overflow do documento); nenhum item é ocultado permanentemente; sem largura
+               fixa global. O botão ☰ (window.toggleSidebar) permanece como controle acessível de
+               recolhimento (colapsa para apenas ícones). */
+            .nav-sidebar {
+                position: static;
+                height: auto;
+                max-height: none;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.4rem;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 0.5rem 0.75rem;
+                margin-bottom: 1rem;
+            }
+            .nav-sidebar > div:first-child { flex: 0 0 auto; margin: 0 0.3rem 0 0; }
+            .nav-sidebar > div:first-child .nav-section-title { display: none; }
+            .nav-sidebar .nav-item { flex: 0 0 auto; white-space: nowrap; padding: 0.5rem 0.7rem; }
         }
 
         .nav-section-title {
@@ -357,8 +392,14 @@
             box-shadow: var(--card-shadow);
             position: sticky;
             top: 1.5rem;
-            max-height: calc(100vh - 3rem);
-            overflow-y: auto;
+            /* AMP-UI-MODULE-LAYOUT-001: sem clip vertical interno. O conteúdo do sidebar de
+               curto-circuito é mais alto que a viewport na maioria das resoluções; com
+               max-height + overflow-y:auto os últimos controles (RN/XN) ficavam rolados
+               para FORA da caixa do container (geometricamente abaixo de aside.bottom),
+               violando o contrato "todo controle dentro do container funcional". A barra
+               agora cresce com o conteúdo e a página rola normalmente — nada é ocultado. */
+            max-height: none;
+            overflow-y: visible;
         }
 
         .sidebar-title {
@@ -540,9 +581,22 @@
         /* Quick Results / Data-Dense KPI Cards */
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            /* AMP-UI-MODULE-LAYOUT-001: cartões KPI ocupam largura suficiente (>= ~18% da viewport
+               em telas largas) evitando slivers; min(100%,...) impede overflow no mobile. */
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
             gap: 1rem;
             margin-bottom: 1.5rem;
+        }
+
+        /* AMP-UI-MODULE-LAYOUT-003 (RCD): densidade compacta dos cards de resultado de Cabling
+           BT/MT. Mínimo intrínseco reduzido para 12.5rem e auto-fill (não auto-fit — para o card
+           solitário da última linha NÃO esticar full-width), recuperando ~3 colunas no grid de
+           ~664px (desktop amplo: 1920/1600) e ~2 colunas no grid de ~590px (1366). Escopo restrito
+           a #card-bt/#card-mt: preserva o .results-grid de Shortcircuit (main.dashboard) e demais
+           consumidores. min(100%,...) impede overflow em telas estreitas (uma coluna no mobile). */
+        #card-bt .results-grid,
+        #card-mt .results-grid {
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
         }
 
         .result-card {
@@ -626,6 +680,9 @@
         /* Tabs Navigation */
         .tabs-header {
             display: flex;
+            /* AMP-UI-MODULE-LAYOUT-001: abas quebram em telas estreitas (sem transbordar a nav/documento). */
+            flex-wrap: wrap;
+            min-width: 0;
             background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -667,6 +724,7 @@
             padding: var(--spacing-lg);
             box-shadow: var(--card-shadow);
             min-height: 380px;
+            min-width: 0;
         }
 
         .tab-pane {
@@ -675,6 +733,10 @@
 
         .tab-pane.active {
             display: block;
+            /* AMP-UI-MODULE-LAYOUT-001: tabela técnica larga rola dentro do painel (o documento
+               não transborda horizontalmente em telas estreitas). */
+            min-width: 0;
+            overflow-x: auto;
             animation: fadeIn 0.15s ease-out;
         }
 
@@ -732,6 +794,9 @@
         }
 
         .accordion-content {
+            /* AMP-UI-MODULE-LAYOUT-001: colapsado NÃO é renderizado (display:none) — seu conteúdo
+               (botões/valores) não fica disposto fora do container ativo nem entra no innerText. */
+            display: none;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-out, padding 0.3s;
@@ -739,6 +804,7 @@
         }
 
         .accordion-content.open {
+            display: block;
             max-height: 4000px;
             padding: 1.5rem;
             border-top: 1px solid var(--border);
@@ -989,6 +1055,8 @@
                 margin: 0 !important;
                 padding: 0 !important;
             }
+            /* AMP-UI-MODULE-LAYOUT-001: na impressão o memorial (accordion) fica visível mesmo colapsado. */
+            .accordion-content { display: block !important; }
 
             .main-layout {
                 display: block !important;
@@ -1163,8 +1231,17 @@
         .icc-panel-body{padding:1.25rem}
         .icc-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.25rem}
         @media(max-width:900px){.icc-form-grid{grid-template-columns:1fr}}
-        .cabling-grid{display:grid;grid-template-columns:320px 1fr;gap:1.5rem}
-        @media(max-width:900px){.cabling-grid{grid-template-columns:1fr}}
+        /* AMP-UI-MODULE-LAYOUT-001: painel de parâmetros com largura >= ~18% da viewport (sem sliver);
+           minmax + min-width:0 nos filhos evita overflow. */
+        .cabling-grid{display:grid;grid-template-columns:minmax(22rem, 24rem) minmax(0, 1fr);gap:1.5rem}
+        @media(max-width:900px){.cabling-grid{grid-template-columns:minmax(0, 1fr)}}
+        /* AMP-UI-MODULE-LAYOUT-001: em telas muito estreitas as grades internas de Impedâncias
+           (inclusive as inline) colapsam para 1 coluna — selects/inputs não sofrem clipping. */
+        @media (max-width: 640px) {
+            #module-impedances .icc-form-grid,
+            #module-impedances [style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+            #module-impedances select, #module-impedances input { min-width: 0; max-width: 100%; }
+        }
         .cabling-grid > aside,
         .cabling-grid > section {
             min-width: 0;
@@ -1503,7 +1580,7 @@
                         <div class="result-title">
                             <span data-i18n="kpi.nomCurrentTitle">Rated Current (In)</span>
                         </div>
-                        <div class="result-value" id="val-int">-- <span class="result-unit">A</span></div>
+                        <div class="result-value" id="val-int">—<span class="result-unit">A</span></div>
                         <div class="result-desc" data-i18n="kpi.nomCurrentDesc">Rated current at full secondary load.</div>
                     </div>
 
@@ -1511,7 +1588,7 @@
                         <div class="result-title">
                             <span data-i18n="kpi.ik3Title">Three-Phase Fault (I\</span>
                         </div>
-                        <div class="result-value" id="val-ik3">-- <span class="result-unit">kA</span></div>
+                        <div class="result-value" id="val-ik3">—<span class="result-unit">kA</span></div>
                         <div class="result-desc" data-i18n="kpi.ik3Desc">Maximum initial symmetric three-phase fault.</div>
                     </div>
 
@@ -1519,7 +1596,7 @@
                         <div class="result-title">
                             <span data-i18n="kpi.ik2Title">Two-Phase Fault (I\</span>
                         </div>
-                        <div class="result-value" id="val-ik2">-- <span class="result-unit">kA</span></div>
+                        <div class="result-value" id="val-ik2">—<span class="result-unit">kA</span></div>
                         <div class="result-desc" data-i18n="kpi.ik2Desc">Phase-to-phase fault, earth free.</div>
                     </div>
 
@@ -1527,7 +1604,7 @@
                         <div class="result-title">
                             <span data-i18n="kpi.ik1Title">Single-Phase Fault (I\</span>
                         </div>
-                        <div class="result-value" id="val-ik1">-- <span class="result-unit">kA</span></div>
+                        <div class="result-value" id="val-ik1">—<span class="result-unit">kA</span></div>
                         <div class="result-desc" data-i18n="kpi.ik1Desc">Phase-to-earth. Highly dependent on neutral.</div>
                     </div>
                 </div>
@@ -1565,50 +1642,50 @@
                                 <tr>
                                     <td data-i18n="tbl.rq">Upstream Grid Resistance</td>
                                     <td>RQ</td>
-                                    <td id="tbl-rq-1">--</td>
+                                    <td id="tbl-rq-1">—</td>
                                     <td data-i18n="tbl.naIsolated">N/A (Isolated Grid)</td>
                                 </tr>
                                 <tr>
                                     <td data-i18n="tbl.xq">Upstream Grid Reactance</td>
                                     <td>XQ</td>
-                                    <td id="tbl-xq-1">--</td>
+                                    <td id="tbl-xq-1">—</td>
                                     <td data-i18n="tbl.naIsolated">N/A (Isolated Grid)</td>
                                 </tr>
                                 <tr>
                                     <td data-i18n="tbl.rt">Transformer Internal Resistance</td>
                                     <td>RT</td>
-                                    <td id="tbl-rt-1">--</td>
-                                    <td id="tbl-rt-0">--</td>
+                                    <td id="tbl-rt-1">—</td>
+                                    <td id="tbl-rt-0">—</td>
                                 </tr>
                                 <tr>
                                     <td data-i18n="tbl.xt">Transformer Internal Reactance</td>
                                     <td>XT</td>
-                                    <td id="tbl-xt-1">--</td>
-                                    <td id="tbl-xt-0">--</td>
+                                    <td id="tbl-xt-1">—</td>
+                                    <td id="tbl-xt-0">—</td>
                                 </tr>
                                 <tr>
                                     <td data-i18n="tbl.zn">Neutral Grounding Impedance</td>
                                     <td>3ZN</td>
                                     <td>N/A</td>
-                                    <td id="tbl-zn-0">--</td>
+                                    <td id="tbl-zn-0">—</td>
                                 </tr>
                                 <tr style="border-top: 1.5px solid var(--border); font-weight: 700;">
                                     <td data-i18n="tbl.req">Equivalent Resistance at Fault Point</td>
                                     <td>R_eq</td>
-                                    <td id="tbl-req-1">--</td>
-                                    <td id="tbl-req-0">--</td>
+                                    <td id="tbl-req-1">—</td>
+                                    <td id="tbl-req-0">—</td>
                                 </tr>
                                 <tr style="font-weight: 700;">
                                     <td data-i18n="tbl.xeq">Equivalent Reactance at Fault Point</td>
                                     <td>X_eq</td>
-                                    <td id="tbl-xeq-1">--</td>
-                                    <td id="tbl-xeq-0">--</td>
+                                    <td id="tbl-xeq-1">—</td>
+                                    <td id="tbl-xeq-0">—</td>
                                 </tr>
                                 <tr style="font-weight: 700; border-bottom: 2px solid var(--text-primary);">
                                     <td data-i18n="tbl.zeq">Total Equivalent Impedance</td>
                                     <td>Z_eq</td>
-                                    <td id="tbl-zeq-1" style="color: var(--accent-hover);">--</td>
-                                    <td id="tbl-zeq-0" style="color: var(--accent-hover);">--</td>
+                                    <td id="tbl-zeq-1" style="color: var(--accent-hover);">—</td>
+                                    <td id="tbl-zeq-0" style="color: var(--accent-hover);">—</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1623,7 +1700,7 @@
                                     data-i18n="diagram.peakDesc">Maximum mechanical peak current in the first short-circuit semi-cycle.</p>
                             </div>
                             <div style="font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700;"
-                                id="val-ip3-aux">-- kA</div>
+                                id="val-ip3-aux">—kA</div>
                         </div>
                     </div>
 
@@ -1650,14 +1727,14 @@
                                 <text x="271" y="35" id="diag-transformer-label" fill="var(--text-primary)" font-weight="700" font-size="10"
                                     text-anchor="middle">Trafo Industrial</text>
                                 <text x="271" y="98" id="diag-transformer-info" fill="var(--text-muted)" font-size="9"
-                                    text-anchor="middle">-- kVA</text>
+                                    text-anchor="middle">—kVA</text>
 
                                 <!-- Secondary Busbar -->
                                 <line x1="330" y1="65" x2="480" y2="65" stroke="var(--text-primary)" stroke-width="3" />
                                 <text x="405" y="52" id="diag-secondary-label" fill="var(--text-primary)" font-weight="700" font-size="9"
                                     text-anchor="middle">BORNES SECUNDÁRIOS</text>
                                 <text x="405" y="80" id="diag-unt" fill="var(--text-secondary)" font-weight="700"
-                                    font-size="9" text-anchor="middle">-- V</text>
+                                    font-size="9" text-anchor="middle">—V</text>
 
                                 <!-- Point of Fault Indicator -->
                                 <path d="M 405,105 L 398,125 L 412,125 Z" fill="var(--danger)" />
@@ -1674,15 +1751,15 @@
 
                                 <text x="320" y="220" id="diag-ik3-label" fill="var(--text-secondary)" font-size="10">Curto Trifásico (I''k3):</text>
                                 <text x="540" y="220" id="diag-ik3" fill="var(--text-primary)" font-weight="700"
-                                    font-size="10" text-anchor="end">-- kA</text>
+                                    font-size="10" text-anchor="end">—kA</text>
 
                                 <text x="320" y="245" id="diag-ik2-label" fill="var(--text-secondary)" font-size="10">Curto Bifásico (I''k2):</text>
                                 <text x="540" y="245" id="diag-ik2" fill="var(--text-primary)" font-weight="700"
-                                    font-size="10" text-anchor="end">-- kA</text>
+                                    font-size="10" text-anchor="end">—kA</text>
 
                                 <text x="320" y="270" id="diag-ik1-label" fill="var(--text-secondary)" font-size="10">Curto Monofásico (I''k1):</text>
                                 <text x="540" y="270" id="diag-ik1" fill="var(--danger)" font-weight="700"
-                                    font-size="10" text-anchor="end">-- kA</text>
+                                    font-size="10" text-anchor="end">—kA</text>
                             </svg>
                         </div>
                     </div>
@@ -1734,8 +1811,8 @@
                             <div class="math-block">
                                 <div class="math-line">ZQ = (c · UnT²) / Scc</div>
                                 <div class="math-line" id="m-calc-zq">ZQ = -- Ω</div>
-                                <div class="math-line">XQ = 0.995 · ZQ = <span id="m-val-xq">--</span> Ω</div>
-                                <div class="math-line">RQ = 0.1 · XQ = <span id="m-val-rq">--</span> Ω</div>
+                                <div class="math-line">XQ = 0.995 · ZQ = <span id="m-val-xq">—</span> Ω</div>
+                                <div class="math-line">RQ = 0.1 · XQ = <span id="m-val-rq">—</span> Ω</div>
                             </div>
                         </div>
 
@@ -1754,7 +1831,7 @@
                                 <div class="math-line" id="m-calc-zt">ZT = -- Ω</div>
                                 <div class="math-line">RT = Pcu · UnT² / SnT²</div>
                                 <div class="math-line" id="m-calc-rt">RT = -- Ω</div>
-                                <div class="math-line">XT = √(ZT² - RT²) = <span id="m-val-xt">--</span> Ω</div>
+                                <div class="math-line">XT = √(ZT² - RT²) = <span id="m-val-xt">—</span> Ω</div>
                             </div>
                             <p style="font-size: 0.85rem; color: var(--text-secondary);">A impedância de sequência zero
                                 ($Z_{(0)T}$) é estimada de acordo com o grupo de ligação do enrolamento secundário
@@ -1773,12 +1850,12 @@
                                     Equivalentes de Loop</span>
                             </div>
                             <div class="math-block">
-                                <div class="math-line">R(1) = RQ + RT = <span id="m-val-req1">--</span> Ω</div>
-                                <div class="math-line">X(1) = XQ + XT = <span id="m-val-xeq1">--</span> Ω</div>
-                                <div class="math-line">Z(1) = √(R(1)² + X(1)²) = <span id="m-val-zeq1">--</span> Ω</div>
-                                <div class="math-line">R(0) = R0T + 3·RN = <span id="m-val-req0">--</span> Ω</div>
-                                <div class="math-line">X(0) = X0T + 3·XN = <span id="m-val-xeq0">--</span> Ω</div>
-                                <div class="math-line">Z(0) = √(R(0)² + X(0)²) = <span id="m-val-zeq0">--</span> Ω</div>
+                                <div class="math-line">R(1) = RQ + RT = <span id="m-val-req1">—</span> Ω</div>
+                                <div class="math-line">X(1) = XQ + XT = <span id="m-val-xeq1">—</span> Ω</div>
+                                <div class="math-line">Z(1) = √(R(1)² + X(1)²) = <span id="m-val-zeq1">—</span> Ω</div>
+                                <div class="math-line">R(0) = R0T + 3·RN = <span id="m-val-req0">—</span> Ω</div>
+                                <div class="math-line">X(0) = X0T + 3·XN = <span id="m-val-xeq0">—</span> Ω</div>
+                                <div class="math-line">Z(0) = √(R(0)² + X(0)²) = <span id="m-val-zeq0">—</span> Ω</div>
                             </div>
                         </div>
 
@@ -1804,7 +1881,7 @@
                                 <br>
                                 <div class="math-line" data-i18n="memorial.step5item4">4. Peak Short-Circuit Current Factor and Value (ip3):</div>
                                 <div class="math-line">κ = 1.02 + 0.98 · e^(-3 · R(1)/X(1)) = <span
-                                        id="m-val-kappa">--</span></div>
+                                        id="m-val-kappa">—</span></div>
                                 <div class="math-line">ip3 = κ · √2 · I''k3</div>
                                 <div class="math-line" id="m-calc-ip3" class="math-result">ip3 = -- kA</div>
                             </div>
@@ -1937,7 +2014,7 @@
                         #cab-bt-parallel-selection-experimental { min-width:0; background:var(--bg-secondary); border:1px solid var(--border); border-radius:12px; padding:1.1rem; margin-top:1.5rem; color:var(--text-primary); }
                         #cab-bt-parallel-selection-experimental .cbpsx-title { font-size:1rem; font-weight:800; margin:0 0 0.4rem 0; color:var(--text-primary); }
                         #cab-bt-parallel-selection-experimental .cbpsx-notice { margin:0 0 0.9rem 0; padding:0.5rem 0.65rem; border:1px solid var(--warning); border-radius:8px; font-weight:700; font-size:0.74rem; overflow-wrap:anywhere; white-space:normal; }
-                        #cab-bt-parallel-selection-experimental .cbpsx-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:0.65rem; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:0.65rem; }
                         @media (max-width:480px){ #cab-bt-parallel-selection-experimental .cbpsx-grid { grid-template-columns:1fr; } }
                         #cab-bt-parallel-selection-experimental .cbpsx-field { display:flex; flex-direction:column; gap:0.22rem; font-size:0.72rem; color:var(--text-secondary); min-width:0; }
                         #cab-bt-parallel-selection-experimental .cbpsx-check { flex-direction:row; align-items:center; gap:0.45rem; }
@@ -1957,12 +2034,12 @@
                         #cab-bt-parallel-selection-experimental .cbpsx-cat-note { font-size:0.68rem; color:var(--text-muted); margin:0.15rem 0 0.55rem 0; overflow-wrap:anywhere; }
                         #cab-bt-parallel-selection-experimental .cbpsx-cat-row { min-width:0; border:1px dashed var(--border); border-radius:8px; padding:0.45rem 0.5rem; margin-bottom:0.5rem; }
                         #cab-bt-parallel-selection-experimental .cbpsx-cat-name { font-weight:700; font-size:0.74rem; color:var(--text-secondary); margin-bottom:0.3rem; }
-                        #cab-bt-parallel-selection-experimental .cbpsx-cat-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(96px,1fr)); gap:0.4rem; min-width:0; }
+                        #cab-bt-parallel-selection-experimental .cbpsx-cat-fields { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0.4rem; min-width:0; }
                         #cab-bt-parallel-selection-experimental .cbpsx-hyp-list { margin:0.15rem 0 0.55rem 0; padding-left:1.05rem; font-size:0.72rem; color:var(--text-secondary); }
                         #cab-bt-parallel-selection-experimental .cbpsx-hyp-list li { margin:0.12rem 0; overflow-wrap:anywhere; }
                         #cab-bt-parallel-selection-experimental .cbpsx-confirm { margin-top:0.35rem; }
                         #cab-bt-parallel-selection-experimental .cbpsx-lab-summary { font-size:0.74rem; color:var(--text-secondary); margin:0.7rem 0 0.5rem 0; padding:0.5rem 0.6rem; border:1px dashed var(--border); border-radius:8px; overflow-wrap:anywhere; }
-                        @media (max-width:480px){ #cab-bt-parallel-selection-experimental .cbpsx-cat-fields { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+                        @media (max-width:480px){ #cab-bt-parallel-selection-experimental .cbpsx-cat-fields { grid-template-columns:1fr; } }
                         #cbpsx-results { margin-top:1rem; min-width:0; }
                         #cab-bt-parallel-selection-experimental .cbpsx-gov { border:1px solid var(--border); border-radius:8px; padding:0.6rem; font-size:0.74rem; overflow-wrap:anywhere; margin-bottom:0.8rem; }
                         #cab-bt-parallel-selection-experimental .cbpsx-gov .cbpsx-install { font-weight:800; color:var(--warning); }
@@ -2129,7 +2206,9 @@
                         <div id="cbpsx-results" role="status" aria-live="polite" aria-labelledby="cbpsx-title"></div>
                     </section>
                 </div>
-                </div>
+                <!-- AMP-UI-MODULE-LAYOUT-002: aqui fecha SOMENTE #wrapper-bt. O </div> que fechava
+                     #module-cabling prematuramente foi removido, para que #wrapper-mt seja filho
+                     estrutural de #module-cabling (e não item independente da .main-layout). -->
 
                 <!-- ═══════════════════════════════════════════════
                      CARD MT — Média Tensão (IEC 60502-2)
@@ -2150,7 +2229,7 @@
                             </div>
                             <form id="form-mt" novalidate autocomplete="off" data-lpignore="true">
 
-                            <div class="form-control"><label for="mt-ull" data-i18n="cabling.mt.ull">Operating Voltage (ULL - kV)</label>
+                            <div class="form-control" id="mt-voltage"><label for="mt-ull" data-i18n="cabling.mt.ull">Operating Voltage (ULL - kV)</label>
                                 <input type="number" step="any" min="0" id="mt-ull" value="13.8" data-input-mt="true" required>
                             </div>
                             <div class="form-control"><label for="mt-insulation-class" data-i18n="cabling.mt.insulClass">IEC Insulation Class (Um)</label>
@@ -2240,20 +2319,24 @@
                             <div class="results-grid" style="margin-bottom:1rem;">
                                 <div class="result-card primary">
                                     <div class="result-title">Seção Adotada</div>
-                                    <div class="result-value" id="mt-val-section">-- <span class="result-unit">mm²</span></div>
-                                    <div class="result-desc" id="mt-val-dominant">Dominante: --</div>
+                                    <div class="result-value" id="mt-val-section">—<span class="result-unit">mm²</span></div>
+                                    <div class="result-desc" id="mt-val-dominant">Dominante: —</div>
                                 </div>
                             </div>
                         </section>
                     </div>
                 </div>
             </div>
+        <!-- AMP-UI-MODULE-LAYOUT-002-R2 (Contrato A): #module-cabling fecha aqui; a .main-layout
+             permanece ABERTA para englobar #module-impedances como ITEM PRÓPRIO da grade (fecha
+             após o módulo, na linha rotulada /.main-layout). Assim Impedances ocupa a mesma linha
+             funcional (col 2/-1) ao lado da nav, deixando de herdar a altura da nav no app-container. -->
 
 
     <!-- ================================================================
          M&#211;DULO: IMPED&#194;NCIAS IEC 60909-0:2016 (overlay fullscreen)
          ================================================================ -->
-    <div id="module-impedances" style="display:none; padding:0; max-width:1440px; margin:0 auto; grid-column:2 / -1;">
+    <div id="module-impedances" style="display:none; padding:0; max-width:1440px; margin:0 auto;">
 
         <div style="max-width:1440px;margin:0 auto;">
             <!-- Cabeçalho -->

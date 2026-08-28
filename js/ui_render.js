@@ -1588,8 +1588,10 @@ window.renderCardMT = function(r) {
                         <div class="math-line" style="font-weight:700;">Ib ≤ Iz: ${i.Ib_A} A ≤ ${_fmt(p.Iz_corr, 1)} A ${p.Iz_corr >= i.Ib_A ? '✓ ' + _tbt('mt.allOk') : '✗ ' + _tbt('mt.checkFails')}</div>
                     </div>
                 </div>
-                <div style="margin-top: 1rem; text-align: right;"><button class="btn-action btn-secondary" id="btn-export-memorial-mt" data-action="export-memorial-mt"><i data-lucide="printer" style="width: 18px; height: 18px; color: currentColor;"></i> <span>${_tbt('memorial.exportPDF')}</span></button></div>
                 </div>
+                <!-- AMP-UI-MODULE-LAYOUT-001: botão de exportação FORA do conteúdo colapsável (sempre
+                     visível/alcançável por Tab — contrato OS044R — e dentro dos limites de #wrapper-mt). -->
+                <div style="margin-top: 1rem; text-align: right;"><button class="btn-action btn-secondary" id="btn-export-memorial-mt" data-action="export-memorial-mt"><i data-lucide="printer" style="width: 18px; height: 18px; color: currentColor;"></i> <span>${_tbt('memorial.exportPDF')}</span></button></div>
             </div>
         `;
     };
